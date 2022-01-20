@@ -3,13 +3,13 @@
 #### 项目介绍
 ​		**六零导航页**（LyLme Spage）基于D.Young开发的 <u>5IUX搜索</u> 开发，包含多种搜索引擎，致力于简洁高效无广告的上网导航和搜索入口，沉淀最具价值链接，全站无商业推广，简约而不简单。
 
-**项目名称：**六零导航页
+ **项目名称：** 六零导航页
 
-**项目地址：**[https://github.com/LyLme/lylme_spage](https://github.com/LyLme/lylme_spage)
+ **项目地址：**[https://github.com/LyLme/lylme_spage](https://github.com/LyLme/lylme_spage)
 
-**演示站点：**[https://hao.lylme.com](https://hao.lylme.com/)
+ **演示站点：**[https://hao.lylme.com](https://hao.lylme.com/)
 
-**演示截图：**
+ **演示截图：**
 
 ![截图1](https://cdn.lylme.com/img/lylme_spage/lylme_spage1.png)
 
