@@ -106,9 +106,9 @@ $_SESSION['checksession']=1;
 	</thead>
 	<tbody>
 		<tr>
-			<td>PHP 5.4+</td>
+			<td>PHP 5.2+</td>
 			<td>必须</td>
-			<td><?php echo version_compare(PHP_VERSION, '5.4.0', '>')?'<font color="green">'.PHP_VERSION.'</font>':'<font color="red">'.PHP_VERSION.'</font>'; ?></td>
+			<td><?php echo version_compare(PHP_VERSION, '5.2.0', '>')?'<font color="green">'.PHP_VERSION.'</font>':'<font color="red">'.PHP_VERSION.'</font>'; ?></td>
 			<td>PHP版本支持</td>
 		</tr>
 
