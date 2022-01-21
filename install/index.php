@@ -112,12 +112,6 @@ $_SESSION['checksession']=1;
 			<td>PHP版本支持</td>
 		</tr>
 
-		<tr>
-			<td>PDO</td>
-			<td>必须</td>
-			<td><?php echo checkclass('PDO',true); ?></td>
-			<td>数据库连接</td>
-		</tr>
 
 	</tbody>
 </table>
