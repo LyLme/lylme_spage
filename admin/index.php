@@ -18,14 +18,14 @@
     </tr>
         <tr>
 	<td><b>当前版本：</td>
-	<td>v0.2.0-Beta</td>
+	<td>v0.2.1</td>
 	 </tr>
         <tr>
 	<td><b>项目地址：</td>
 	<td><a href="https://github.com/lylme/lylme_spage">Github</a></td>
 	 </tr>
 	 </table>
-	  <p><b>注意：当前版本为开发阶段，暂无后台功能。请查看前往GitHub查看是否有更新</b></p>
+	  <p><b>注意：当前版本暂无后台功能。请查看前往GitHub查看是否有更新</b></p>
 
 </div>
 
