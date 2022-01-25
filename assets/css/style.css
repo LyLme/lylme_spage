@@ -579,6 +579,10 @@ svg.icon {
 		font-size: 12px;
 	}
 }
+a:hover {
+    text-decoration: none !important;
+    font-weight: bold !important;
+}
 
 .navbar-toggler svg {
 	width: 24px;
