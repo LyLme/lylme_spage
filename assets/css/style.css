@@ -2,6 +2,15 @@
 原作者: D.Young  Github：https://github.com/5iux/5iux.github.io
 二开: LyLme    Github：https://github.com/lylme/lylme_spage
 */
+a:hover {
+    text-decoration: none !important;
+    font-weight: bold !important;
+}
+a.icp {
+    font-size: 12px;
+    color: #bbb;
+    text-align: center;
+}
 .navbar .navbar-expand-lg .navbar-light .fixed-top {
 	position: absolute;
 	z-index: 10000;
@@ -11,15 +20,10 @@
 	background-image: linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(244 248 251 / 0.6) 50%, rgb(244 248 251) 100%);
 }
 
-p#copyright {
-    font-size: 14px;
-    margin-top: 8px;
-}
-a.icp {
-	/* 备案号 */
-    font-size: 13px;
-    color: #bbb;
-    text-align: center;
+
+
+.wztj {
+	display: none !important;
 }
 
 .navbar-light .navbar-toggler {
@@ -135,15 +139,8 @@ svg.icon {
 .navbar-light .navbar-nav .nav-link {
 	color: #fff !important;
 	font-size: 16px;
-	text-shadow: 0px 1px 0px #000;
-}
-.navbar-light .navbar-nav .active .nav-link {
-	color: #fff;
-}
-
-.navbar-light .navbar-nav .nav-link:hover {
-	color: #fff;
 	font-weight: bold;
+	text-shadow: 0px 1px 0px #000;
 }
 
 /* --- search --- */
@@ -578,10 +575,6 @@ svg.icon {
 	.mylist li.col-3 span {
 		font-size: 12px;
 	}
-}
-a:hover {
-    text-decoration: none !important;
-    font-weight: bold !important;
 }
 
 .navbar-toggler svg {

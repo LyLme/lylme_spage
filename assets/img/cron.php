@@ -1,11 +1,7 @@
 <?php
 /**
- * 作者：LyLme
- * 说明：将bing壁纸保存到当前目录/background.jpg文件
- * 请求方式：GET
- * 示例：http://xxx.com/assets/img/cron.php?idx=1&n=1
- * 参数：idx：0-7		0为今天，1为昨天，以此类推可以获取过去7天的壁纸
- * 时间：2022-01-20
+ * PHP获取bing每日壁纸
+ * bing每日壁纸更新时间为UTC+8 16：00
  */
 if($_GET['idx']==null){
 $str=file_get_contents('http://cn.bing.com/HPImageArchive.aspx?idx=0&n=1');
