@@ -1,6 +1,11 @@
 <?php
 header ("Content-type:text/html;charset=utf-8");
-include_once 'config.php';
+
+define('SYS_KEY', 'lylme_key');
+define('SYSTEM_ROOT', dirname(__FILE__).'/');
+define('ROOT', dirname(SYSTEM_ROOT).'/');
+
+include ROOT.'config.php';
 if(!$con =mysqli_connect($dbconfig['host'],$dbconfig['user'],$dbconfig['pwd'],$dbconfig['dbname'],$dbconfig['port'])) {
 	if(mysqli_connect_errno()==2002) {
 		echo '连接数据库失败，数据库地址填写错误！';
@@ -13,36 +18,35 @@ if(!$con =mysqli_connect($dbconfig['host'],$dbconfig['user'],$dbconfig['pwd'],$d
 	}
 }
 
-// 判断UA
-function isMobile() {
-    // 如果有HTTP_X_WAP_PROFILE则一定是移动设备
-    if (isset($_SERVER['HTTP_X_WAP_PROFILE'])) {
-        return true;
-    }
-    // 如果via信息含有wap则一定是移动设备,部分服务商会屏蔽该信息
-    if (isset($_SERVER['HTTP_VIA'])) {
-        // 找不到为flase,否则为true
-        return stristr($_SERVER['HTTP_VIA'], "wap") ? true : false;
-    }
-    // 判断手机发送的客户端标志,兼容性有待提高。其中'MicroMessenger'是电脑微信
-    if (isset($_SERVER['HTTP_USER_AGENT'])) {
-        $clientkeywords = array('nokia', 'sony', 'ericsson', 'mot', 'samsung', 'htc', 'sgh', 'lg', 'sharp', 'sie-', 'philips', 'panasonic', 'alcatel', 'lenovo', 'iphone', 'ipod', 'blackberry', 'meizu', 'android', 'netfront', 'symbian', 'ucweb', 'windowsce', 'palm', 'operamini', 'operamobi', 'openwave', 'nexusone', 'cldc', 'midp', 'wap', 'mobile', 'MicroMessenger');
-        // 从HTTP_USER_AGENT中查找手机浏览器的关键字
-        if (preg_match("/(" . implode('|', $clientkeywords) . ")/i", strtolower($_SERVER['HTTP_USER_AGENT']))) {
-            return true;
-        }
-    }
-    // 协议法，因为有可能不准确，放到最后判断
-    if (isset($_SERVER['HTTP_ACCEPT'])) {
-        // 如果只支持wml并且不支持html那一定是移动设备
-        // 如果支持wml和html但是wml在html之前则是移动设备
-        if ((strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') !== false) && (strpos($_SERVER['HTTP_ACCEPT'], 'text/html') === false || (strpos($_SERVER['HTTP_ACCEPT'], 'vnd.wap.wml') < strpos($_SERVER['HTTP_ACCEPT'], 'text/html')))) {
-            return true;
-        }
-    }
-    return false;
+mysqli_query($con,"set sql_mode = ''");
+ //字符转换，读库
+mysqli_query($con,"set character set 'utf8'");
+//写库
+mysqli_query($con,"set names 'utf8'");
+
+$rs= mysqli_query($con,"SELECT * FROM `lylme_config`");
+while($row = mysqli_fetch_assoc($rs)) { 
+	$conf[$row['k']]=$row['v'];
 }
-if (ismobile() == true) {$ua = 'wap';}else {$ua = 'pc';}
+
+if(strpos($_SERVER['REQUEST_URI'],'admin')==false){
+    if(!file_exists(SYSTEM_ROOT."log.txt")){
+        $one_file=fopen(SYSTEM_ROOT."log.txt","w+"); //建立一个统计文本，如果不存在就创建
+        fwrite(SYSTEM_ROOT."log.txt",1);  //把数字1写入文本
+        fclose("$one_file");
+     }else{ //如果不是第一次访问直接读取内容，并+1,写入更新后再显示新的访客数
+        $num=file_get_contents(SYSTEM_ROOT."log.txt");
+        $num++;
+        file_put_contents(SYSTEM_ROOT."log.txt","$num");
+        //$pvnum=file_get_contents(SYSTEM_ROOT."log.txt");
+    }
+}
+$pvnum=file_get_contents(SYSTEM_ROOT."log.txt");
+include_once(SYSTEM_ROOT."function.php");
+include_once(SYSTEM_ROOT."member.php");
+mysqli_query($con,'set names utf8');
+$links = mysqli_query($con, "SELECT * FROM `lylme_links`");
+$numrows=mysqli_num_rows($links);
 
 ?>
 
