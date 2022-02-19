@@ -24,9 +24,12 @@ INSERT INTO `lylme_config` VALUES ('admin_user', 'admin', '管理员账号');
 INSERT INTO `lylme_config` VALUES ('admin_pwd', '1234546', '管理员密码');
 INSERT INTO `lylme_config` VALUES ('title', '上网导航 - LyLme Spage', '网站名称');
 INSERT INTO `lylme_config` VALUES ('description', '六零导航页(LyLme Spage)致力于简洁高效无广告的上网导航和搜索入口，沉淀最具价值链接，全站无商业推广，简约而不简单。', '网站描述');
-INSERT INTO `lylme_config` VALUES ('keywords', '六零导航页,百度搜索,哔哩哔哩搜索,知乎搜索,六零导航,LyLme Spage,六零,LyLme,网站导航,上网导航', '网站关键字');
-INSERT INTO `lylme_config` VALUES ('icon', './assets/img/logo.png', '网站图标');
-INSERT INTO `lylme_config` VALUES ('version', 'v0.2.1', '程序版本');
+INSERT INTO `lylme_config` VALUES ('icp', '京ICP备xxxxxx号', '备案号');
+INSERT INTO `lylme_config` VALUES ('copyright', 'LyLme', '版权');
+INSERT INTO `lylme_config` VALUES ('keywords', '六零导航页,百度搜索,哔哩哔哩搜索,知乎搜索,六零导航,LyLme Spage,六零,LyLme,网站导航,上网导航', '关键字');
+INSERT INTO `lylme_config` VALUES ('logo', './assets/img/logo.png', '网站图标');
+INSERT INTO `lylme_config` VALUES ('background', '/assets/img/background.jpg', '背景图片');
+INSERT INTO `lylme_config` VALUES ('version', 'v1.0-beta', '程序版本');
 
 -- ----------------------------
 -- Table structure for lylme_groups
@@ -89,7 +92,7 @@ INSERT INTO `lylme_links` VALUES (16, '虎牙直播', 1, 'https://www.huya.com/'
 INSERT INTO `lylme_links` VALUES (17, '斗鱼直播', 1, 'https://www.douyu.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-douyu00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (18, '企鹅电竞', 1, 'https://egame.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-qie00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (19, '微信文件传输助手', 1, 'https://filehelper.weixin.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wechat00\"></use></svg>', NULL);
-INSERT INTO `lylme_links` VALUES (20, '中国大学MOOC', 1, 'https://www.icourse163.org/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-daxue\"></use></svg>', NULL);
+INSERT INTO `lylme_links` VALUES (20, '云南开放大学登录', 1, 'https://teach.ynou.edu.cn/index.action', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-daxue\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (21, 'Office模板', 2, 'https://www.officeplus.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-office00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (22, '搞定设计', 2, 'https://www.gaoding.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gaoding00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (23, '急切网设计', 2, 'http://jiqie.zhenbi.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-ji00\"></use></svg>', NULL);
@@ -108,7 +111,7 @@ INSERT INTO `lylme_links` VALUES (35, '蓝奏云', 3, 'https://www.lanzou.com/',
 INSERT INTO `lylme_links` VALUES (36, '迅雷云盘', 3, 'https://pan.xunlei.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-xunleipan00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (37, 'OneDrive', 3, 'https://onedrive.live.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-OneDrive00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (38, '天翼云盘', 3, 'https://cloud.189.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-tianyipan00\"></use></svg>', NULL);
-INSERT INTO `lylme_links` VALUES (39, 'UC网盘', 3, 'https://www.yun.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-yunpan\"></use></svg>', NULL);
+INSERT INTO `lylme_links` VALUES (39, '391盘', 3, 'https://391pan.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-yunpan\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (40, 'QQ邮箱', 3, 'https://mail.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-qqmail00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (41, 'Gmail', 3, 'https://mail.google.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gmail\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (42, 'Hotmail', 3, 'https://outlook.live.com/mail/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-windows\"></use></svg>', NULL);
@@ -147,7 +150,8 @@ INSERT INTO `lylme_links` VALUES (74, '永劫无间', 6, 'https://www.yjwujian.c
 INSERT INTO `lylme_links` VALUES (75, 'STEAM', 6, 'https://store.steampowered.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-steam00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (76, '王者荣耀', 6, 'https://pvp.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wzry00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (77, '3DM GAME', 6, 'https://www.3dmgame.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-games00\"></use></svg>', NULL);
-INSERT INTO `lylme_links` VALUES (78, '官方主页', 7, '/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-home00\"></use></svg>', NULL);
-INSERT INTO `lylme_links` VALUES (79, '建议&反馈', 7, 'https://support.qq.com/products/356339', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-fk00\"></use></svg>', NULL);
+INSERT INTO `lylme_links` VALUES (78, '官方主页', 7, 'https://www.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-home00\"></use></svg>', NULL);
+INSERT INTO `lylme_links` VALUES (79, '申请收录', 7, 'https://blog.lylme.com/archives/included.html', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sq00\"></use></svg>', NULL);
+INSERT INTO `lylme_links` VALUES (80, '建议&反馈', 7, 'https://support.qq.com/products/356339', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-fk00\"></use></svg>', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

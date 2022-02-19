@@ -106,12 +106,18 @@ $_SESSION['checksession']=1;
 	</thead>
 	<tbody>
 		<tr>
-			<td>PHP 5.2+</td>
+			<td>PHP 5.4+</td>
 			<td>必须</td>
-			<td><?php echo version_compare(PHP_VERSION, '5.2.0', '>')?'<font color="green">'.PHP_VERSION.'</font>':'<font color="red">'.PHP_VERSION.'</font>'; ?></td>
+			<td><?php echo version_compare(PHP_VERSION, '5.4.0', '>')?'<font color="green">'.PHP_VERSION.'</font>':'<font color="red">'.PHP_VERSION.'</font>'; ?></td>
 			<td>PHP版本支持</td>
 		</tr>
 
+		<tr>
+			<td>PDO</td>
+			<td>必须</td>
+			<td><?php echo checkclass('PDO',true); ?></td>
+			<td>数据库连接</td>
+		</tr>
 
 	</tbody>
 </table>
@@ -311,7 +317,7 @@ if($e==0) {
 <?php
 	@file_put_contents("install.lock",'安装锁');
 	clearpack();
-	echo '<div class="alert alert-info"><font color="green">安装完成！管理账号和密码是:admin/123456</font><br/><br/><a href="../">>>网站首页</a>｜<a href="../admin/">>>后台管理</a><hr/>更多设置选项请登录后台管理进行修改。<br/><br/><font color="#FF0033">如果你的空间不支持本地文件读写，请自行在install/ 目录建立 install.lock 文件！</font></br></div>';
+	echo '<div class="alert alert-info"><font color="green">安装完成！管理账号和密码是:admin/123456</font><br/><br/><a href="../">>>网站首页</a>｜<a href="../admin/">>>后台管理</a><hr/>更多设置选项请登录后台管理进行修改。<br/><br/><font color="#FF0033">如果你的空间不支持本地文件读写，请自行在install/ 目录建立 install.lock 文件！</font><br>提示：本程序使用Bing每日壁纸作为网站背景<br>添加每天（北京时间16点以后）的CRON任务[非必需]<br><font color="orange">GET http://'.$_SERVER['HTTP_HOST'].'/assets/img/cron.php</font> <br>执行后会每天更新网站背景为Bing每日壁纸，忽略将使用默认图片作为背景<br/></div></div>';
 ?>
 	</div>
 </div>
@@ -330,7 +336,7 @@ if($e==0) {
 <?php
 	@file_put_contents("install.lock",'安装锁');
 	clearpack();
-	echo '<div class="alert alert-info"><font color="green">安装完成！管理账号和密码是:admin/123456</font><br/><br/><a href="../">>>网站首页</a>｜<a href="../admin/">>>后台管理</a><hr/>更多设置选项请登录后台管理进行修改。<br/><br/><font color="#FF0033">如果你的空间不支持本地文件读写，请自行在install/ 目录建立 install.lock 文件！</font></div>';
+	echo '<div class="alert alert-info"><font color="green">安装完成！管理账号和密码是:admin/123456</font><br/><br/><a href="../">>>网站首页</a>｜<a href="../admin/">>>后台管理</a><hr/>更多设置选项请登录后台管理进行修改。<br/><br/><font color="#FF0033">如果你的空间不支持本地文件读写，请自行在install/ 目录建立 install.lock 文件！</font><br>提示：本程序使用Bing每日壁纸作为网站背景<br>添加每天（北京时间16点以后）的CRON任务[非必需]<br><font color="orange">GET http://'.$_SERVER['HTTP_HOST'].'/assets/img/cron.php</font> <br>执行后会每天更新网站背景为Bing每日壁纸，忽略将使用默认图片作为背景<br/></div>';
 ?>
 	</div>
 </div>

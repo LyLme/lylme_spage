@@ -5,11 +5,17 @@ if(!file_exists('install/install.lock')){
 }
 include "include/head.php"; 
 echo '<body onload="FocusOnInput()"><div class="banner-video">';
-if(file_exists('./assets/img/background.jpg')){
-    echo '<img src="./assets/img/background.jpg" alt="本地背景">';
+if ($conf['background']  == '') {
+    if(!file_exists('./assets/img/background.jpg')){
+        echo '<img src="./assets/img/cron.php" alt="Bing每日背景">';
+    }
+    else{
+        echo '<img src="./assets/img/background.jpg" alt="本地背景">';
+}
 }
 else{
-    echo '<img src="./assets/img/bing.php" alt="自定义背景">';
+       echo '<img src="'.$conf['background'].'" alt="自定义背景">';
+
 }
 ?> 
 			<div class="bottom-cover" style="background-image: linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(244 248 251 / 0.6) 50%, rgb(244 248 251) 100%);">
