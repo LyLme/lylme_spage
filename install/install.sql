@@ -21,7 +21,7 @@ CREATE TABLE `lylme_config`  (
 -- Records of lylme_config
 -- ----------------------------
 INSERT INTO `lylme_config` VALUES ('admin_user', 'admin', '管理员账号');
-INSERT INTO `lylme_config` VALUES ('admin_pwd', '1234546', '管理员密码');
+INSERT INTO `lylme_config` VALUES ('admin_pwd', '123456', '管理员密码');
 INSERT INTO `lylme_config` VALUES ('title', '上网导航 - LyLme Spage', '网站名称');
 INSERT INTO `lylme_config` VALUES ('description', '六零导航页(LyLme Spage)致力于简洁高效无广告的上网导航和搜索入口，沉淀最具价值链接，全站无商业推广，简约而不简单。', '网站描述');
 INSERT INTO `lylme_config` VALUES ('icp', '京ICP备xxxxxx号', '备案号');
