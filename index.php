@@ -6,37 +6,20 @@ if(!file_exists('install/install.lock')){
 include "include/head.php"; 
 echo '<body onload="FocusOnInput()"><div class="banner-video">';
 if ($conf['background']  == '') {
-    if(!file_exists('./assets/img/background.jpg')){
-        echo '<img src="./assets/img/cron.php" alt="Bing每日背景">';
-    }
-    else{
-        echo '<img src="./assets/img/background.jpg" alt="本地背景">';
-}
-}
-else{
-       echo '<img src="'.$conf['background'].'" alt="自定义背景">';
-
-}
+    if(!file_exists('./assets/img/background.jpg')){echo '<img src="./assets/img/cron.php" alt="Bing每日背景">';}
+    else{echo '<img src="./assets/img/background.jpg" alt="本地背景">';}}
+    else{echo '<img src="'.$conf['background'].'" alt="自定义背景">';}
 ?> 
 			<div class="bottom-cover" style="background-image: linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(244 248 251 / 0.6) 50%, rgb(244 248 251) 100%);">
 			</div>
 		</div>
 		<!--topbar开始-->
 		<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="position: absolute; z-index: 10000;">
-		<!--<a class="navbar-brand" href="/"><img src="./assets/img/logos.png" height="25"  title="六零起始页"></a>-->
-			<button class="navbar-toggler collapsed" style="border: none; outline: none;"
-			type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05"
-			aria-expanded="false" aria-label="Toggle navigation">
-			<svg t="1636792421852" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3801" width="200" height="200"><path d="M901.632 896H122.368c-30.72 0-55.808-25.088-55.808-55.808v-1.536c0-30.72 25.088-55.808 55.808-55.808h779.776c30.72 0 55.808 25.088 55.808 55.808v1.536c-0.512 30.72-25.6 55.808-56.32 55.808zM901.632 568.32H122.368c-30.72 0-55.808-25.088-55.808-55.808v-1.536c0-30.72 25.088-55.808 55.808-55.808h779.776c30.72 0 55.808 25.088 55.808 55.808v1.536c-0.512 30.72-25.6 55.808-56.32 55.808zM901.632 240.64H122.368c-30.72 0-55.808-25.088-55.808-55.808v-1.536c0-30.72 25.088-55.808 55.808-55.808h779.776c30.72 0 55.808 25.088 55.808 55.808v1.536c-0.512 30.72-25.6 55.808-56.32 55.808z" p-id="3802" fill="#ffffff"></path></svg>
-				<span>
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="bi bi-x"
-					fill="currentColor" id="x">
-						<path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 010 .708l-7 7a.5.5 0 01-.708-.708l7-7a.5.5 0 01.708 0z">
-						</path>
-						<path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 000 .708l7 7a.5.5 0 00.708-.708l-7-7a.5.5 0 00-.708 0z">
-						</path>
-					</svg>
-					<span>
+		<!--<a class="navbar-brand" href="/"><img src="./assets/img/logo.png" height="25"  title="六零起始页"></a>-->
+		<button class="navbar-toggler collapsed" style="border: none; outline: none;"type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
+			    
+		<svg class="icon" width="200" height="200"><use xlink:href="#icon-menus"></use></svg>
+		<span><svg class="bi bi-x" 	fill="currentColor" id="x"><use xlink:href="#icon-closes"></use></svg><span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarsExample05">
 				<ul class="navbar-nav mr-auto">
@@ -58,30 +41,28 @@ else{
 <div id="show_time"></div>
  </div>	
 
-				<div id="he-plugin-simple">
-				</div>
-				
-				<script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0">
-				</script>
+<?php
+if($conf['tq'] != 'false'){
+    echo '<div id="he-plugin-simple"></div>
+		<script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>';}
+?>
 			</div>
 			
 		</nav>
 				<!--topbar结束-->
 		<div class="container" style="margin-top:10vh; position: relative; z-index: 100;">
-			<h2 class="title">上网，从这里开始!</h2>
+			<h2 class="title"><?php echo $conf['home-title']?></h2>
 
- <?php
+<?php
+if($conf['yan']!='false'){
+$filename = './assets/data/data.dat';  //随机一言文件路径
 
-$filename = './assets/data/data.dat';  //随机一言文件目录
-
-if (!file_exists($filename)) {
-    die($filename . ' Error');
-}
-$data = file_get_contents($filename);
-$data = explode(PHP_EOL, $data);
-$result = $data[array_rand($data)];
-$result = str_replace(array("\r", "\n", "\r\n"), '', $result);
+if (file_exists($filename)) {
+$data = explode(PHP_EOL, file_get_contents($filename));
+$result = str_replace(array("\r", "\n", "\r\n"), '', $data[array_rand($data)]);
 echo '<p class="content"><b>随机一言:</b>'.$result;
+}
+}
 ?>
 		</p>
 			<!--搜索开始-->
@@ -90,7 +71,7 @@ echo '<p class="content"><b>随机一言:</b>'.$result;
 					<div class="search-group group-a s-current" style=" margin-top: 50px;">
 						<ul class="search-type">
 							<li>
-								<input checked="" hidden="" type="radio" name="type" id="type-baidu" value="<?php if($ua == "pc"){echo 'https://www.baidu.com/s?tn=simple&word=';}else{echo 'https://m.baidu.com/s?tn=simple&word=';}?>"
+								<input checked="" hidden="" type="radio" name="type" id="type-baidu" value="<?php if($ua == "pc"){echo 'https://www.baidu.com/s?word=';}else{echo 'https://m.baidu.com/s?word=';}?>"
 								data-placeholder="百度一下，你就知道">
 								<label for="type-baidu">
 									<svg class="icon" aria-hidden="true">
