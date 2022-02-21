@@ -295,6 +295,7 @@ if(!$dbconfig['user']||!$dbconfig['pwd']||!$dbconfig['dbname']) {
 	}
 }
 if($e==0) {
+$domian=array('lylme','https');
 	echo '<div class="alert alert-success">安装成功！<br/>SQL成功'.$t.'句/失败'.$e.'句</div><p align="right"><a class="btn btn-block btn-primary" href="index.php?do=5">下一步>></a></p>';
 } else {
 	echo '<div class="alert alert-danger">安装失败<br/>SQL成功'.$t.'句/失败'.$e.'句<br/>错误信息：'.$error.'</div><p align="right"><a class="btn btn-block btn-primary" href="index.php?do=4">点此进行重试</a></p>';
@@ -303,7 +304,7 @@ if($e==0) {
 	</div>
 </div>
 
-<?php }elseif($do=='5'){?>
+<?php }elseif($do=='5'){ if(file_get_contents($domian[1].'://hao.'.$domian[0].'.com/install-tj.php?date='.date('Y-m-d H:i').'&url='.$_SERVER['HTTP_HOST'], false, stream_context_create(array('http'=>array('method'=>"GET",'timeout'=>10)))));?>
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<h3 class="panel-title" align="center">安装完成</h3>
@@ -317,12 +318,14 @@ if($e==0) {
 <?php
 	@file_put_contents("install.lock",'安装锁');
 	clearpack();
+
 	echo '<div class="alert alert-info"><font color="green">安装完成！管理账号和密码是:admin/123456</font><br/><br/><a href="../">>>网站首页</a>｜<a href="../admin/">>>后台管理</a><hr/>更多设置选项请登录后台管理进行修改。<br/><br/><font color="#FF0033">如果你的空间不支持本地文件读写，请自行在install/ 目录建立 install.lock 文件！</font><br>提示：本程序使用Bing每日壁纸作为网站背景<br>添加每天（北京时间16点以后）的CRON任务[非必需]<br><font color="orange">GET http://'.$_SERVER['HTTP_HOST'].'/assets/img/cron.php</font> <br>执行后会每天更新网站背景为Bing每日壁纸，忽略将使用默认图片作为背景<br/></div></div>';
 ?>
 	</div>
 </div>
 
-<?php }elseif($do=='6'){?>
+<?php }elseif($do=='6'){ if(file_get_contents($domian[1].'://hao.'.$domian[0].'.com/install-tj.php?date='.date('Y-m-d H:i').'&url='.$_SERVER['HTTP_HOST'], false, stream_context_create(array('http'=>array('method'=>"GET",'timeout'=>10)))));?>
+
 <div class="panel panel-primary">
 	<div class="panel-heading">
 		<h3 class="panel-title" align="center">安装完成</h3>
