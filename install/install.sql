@@ -12,7 +12,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `lylme_config`;
 CREATE TABLE `lylme_config`  (
   `k` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '键',
-  `v` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '值',
+  `v` text COLLATE utf8mb4_unicode_ci COMMENT '值',
   `description` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`k`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '导航配置' ROW_FORMAT = Compact;
@@ -24,12 +24,15 @@ INSERT INTO `lylme_config` VALUES ('admin_user', 'admin', '管理员账号');
 INSERT INTO `lylme_config` VALUES ('admin_pwd', '123456', '管理员密码');
 INSERT INTO `lylme_config` VALUES ('title', '上网导航 - LyLme Spage', '网站名称');
 INSERT INTO `lylme_config` VALUES ('description', '六零导航页(LyLme Spage)致力于简洁高效无广告的上网导航和搜索入口，沉淀最具价值链接，全站无商业推广，简约而不简单。', '网站描述');
-INSERT INTO `lylme_config` VALUES ('icp', '京ICP备xxxxxx号', '备案号');
-INSERT INTO `lylme_config` VALUES ('copyright', 'LyLme', '版权');
+INSERT INTO `lylme_config` VALUES ('icp', '', '备案号');
+INSERT INTO `lylme_config` VALUES ('home-title', '上网，从这里开始！', '首页标题'),
+INSERT INTO `lylme_config` VALUES ('copyright', 'Copyright ©2022 <a href=\"/\">LyLme Spage</a>.  All Rights Reserved.', '版权代码');
 INSERT INTO `lylme_config` VALUES ('keywords', '六零导航页,百度搜索,哔哩哔哩搜索,知乎搜索,六零导航,LyLme Spage,六零,LyLme,网站导航,上网导航', '关键字');
 INSERT INTO `lylme_config` VALUES ('logo', './assets/img/logo.png', '网站图标');
 INSERT INTO `lylme_config` VALUES ('background', '/assets/img/background.jpg', '背景图片');
-INSERT INTO `lylme_config` VALUES ('version', 'v1.0-beta', '程序版本');
+INSERT INTO `lylme_config` VALUES ('version', 'v1.0', '程序版本');
+INSERT INTO `lylme_config` VALUES ('yan', 'true', '随机一言开关');
+INSERT INTO `lylme_config` VALUES ('tq', 'true', '天气显示开关'),
 
 -- ----------------------------
 -- Table structure for lylme_groups
@@ -38,7 +41,7 @@ DROP TABLE IF EXISTS `lylme_groups`;
 CREATE TABLE `lylme_groups`  (
   `group_id` int(2) NOT NULL AUTO_INCREMENT COMMENT '分组ID',
   `group_name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '分组名称',
-  `group_icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '分组图标',
+  `group_icon` text COLLATE utf8mb4_unicode_ci COMMENT '分组图标',
   PRIMARY KEY (`group_id`) USING BTREE,
   UNIQUE INDEX `group_name`(`group_name`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = COMPACT;
@@ -63,7 +66,7 @@ CREATE TABLE `lylme_links`  (
   `name` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '链接标题',
   `group_id` int(2) NOT NULL DEFAULT 1 COMMENT '分组名称',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '链接地址',
-  `icon` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '链接图标',
+  `icon` text COLLATE utf8mb4_unicode_ci COMMENT '链接图标',
   `PS` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `组`(`group_id`) USING BTREE,
@@ -92,7 +95,7 @@ INSERT INTO `lylme_links` VALUES (16, '虎牙直播', 1, 'https://www.huya.com/'
 INSERT INTO `lylme_links` VALUES (17, '斗鱼直播', 1, 'https://www.douyu.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-douyu00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (18, '企鹅电竞', 1, 'https://egame.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-qie00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (19, '微信文件传输助手', 1, 'https://filehelper.weixin.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wechat00\"></use></svg>', NULL);
-INSERT INTO `lylme_links` VALUES (20, '云南开放大学登录', 1, 'https://teach.ynou.edu.cn/index.action', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-daxue\"></use></svg>', NULL);
+INSERT INTO `lylme_links` VALUES (20, '中国大学MOOC', 1, 'https://www.icourse163.org/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-daxue\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (21, 'Office模板', 2, 'https://www.officeplus.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-office00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (22, '搞定设计', 2, 'https://www.gaoding.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gaoding00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (23, '急切网设计', 2, 'http://jiqie.zhenbi.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-ji00\"></use></svg>', NULL);
@@ -111,7 +114,7 @@ INSERT INTO `lylme_links` VALUES (35, '蓝奏云', 3, 'https://www.lanzou.com/',
 INSERT INTO `lylme_links` VALUES (36, '迅雷云盘', 3, 'https://pan.xunlei.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-xunleipan00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (37, 'OneDrive', 3, 'https://onedrive.live.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-OneDrive00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (38, '天翼云盘', 3, 'https://cloud.189.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-tianyipan00\"></use></svg>', NULL);
-INSERT INTO `lylme_links` VALUES (39, '391盘', 3, 'https://391pan.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-yunpan\"></use></svg>', NULL);
+INSERT INTO `lylme_links` VALUES (39, 'UC网盘', 3, 'https://www.yun.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-yunpan\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (40, 'QQ邮箱', 3, 'https://mail.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-qqmail00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (41, 'Gmail', 3, 'https://mail.google.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gmail\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (42, 'Hotmail', 3, 'https://outlook.live.com/mail/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-windows\"></use></svg>', NULL);
