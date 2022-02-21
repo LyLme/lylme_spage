@@ -10,7 +10,13 @@ while($group = mysqli_fetch_assoc($groups)) { //循环所有分组
 		$link_num=mysqli_num_rows($group_links);  // 获取返回字段条目数量
 		if($link_num > $i ) {
 			$i = $i+1;
-			echo "\n\n".'<li class="col-3 col-sm-3 col-md-3 col-lg-1"><a rel="nofollow" href="'.$link["url"].'" target="_blank">'.$link["icon"].'<span>'.$link["name"].'</span></a></li>';
+			echo "\n".'<li class="col-3 col-sm-3 col-md-3 col-lg-1"><a rel="nofollow" href="'.$link["url"].'" target="_blank">';
+			if ($link["icon"]=='') {echo '<img src="/assets/img/default-icon.png" alt="默认'.$link["name"].'" />';   }
+       else  if (!preg_match("/^<svg*/", $link["icon"])) {
+            echo '<img src="'.$link["icon"].'" alt="'.$link["name"].'" />'; }
+        
+        else{echo $link["icon"];}
+			echo '<span>'.$link["name"].'</span></a></li>';
 			//输出图标和链接
 		}
 		if($link_num == $i) {
