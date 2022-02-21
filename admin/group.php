@@ -2,154 +2,127 @@
 $title='链接管理';
 include './head.php';
 ?>
-  <div class="container" style="padding-top:100px;">
-    <div class="col-sm-12 col-md-10 center-block" style="float: none;">
+ <main class="lyear-layout-content">
+      
+      <div class="container-fluid">
+        
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-body">
 <?php
+
 $set=isset($_GET['set'])?$_GET['set']:null;
 
 if($set=='add')
 {
-echo '<div class="col-lg-12">
-<div class="card">
-<div class="card-header">
-<h4>新增链接</h4>	</div>';
-echo '<div class="panel-body">';
-echo '<form action="./set_link.php?set=add_submit" method="POST">
+echo '<h4>新增分组</h4>	
+<div class="panel-body"><form action="./group.php?set=add_submit" method="POST">
 <div class="form-group">
 <label>*名称:</label><br>
-<input type="text" class="form-control" name="name" value="" required>
+<input type="text" class="form-control" name="group_name" value="" required>
 </div>
 <div class="form-group">
-<label>*URL链接地址:</label><br>
-<input type="text" class="form-control" name="url" value="" required>
+<label>分组图标:</label><br>
+<textarea type="text" class="form-control" name="group_icon" value=""></textarea>
+<small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
+方式2：粘贴图标的<code>SVG</code>代码，<a href="/admin/help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
-<div class="form-group">
-<label>链接图标:</label><br>
-<input type="text" class="form-control" name="url" value="" required>
-</div>
-<div class="form-group">
-<label>*是否显示:</label><br>
-<select class="form-control" name="active"><option value="1">1_是</option><option value="0">0_否</option></select>
-</div>
-<br/>
 
-<input type="submit" class="btn btn-primary btn-block" value="确定添加"></form>';
-echo '<br/><a href="./set_link.php">>>返回链接列表</a>';
-echo '</div></div>
-<script>
-$("select[name=\'is_curl\']").change(function(){
-	if($(this).val() == 1){
-		$("#curl_display").css("display","inherit");
-	}else{
-		$("#curl_display").css("display","none");
-	}
-});
-function Addstr(id, str) {
-	$("#"+id).val($("#"+id).val()+str);
-}
-</script>';
+<div class="form-group">
+<input type="submit" class="btn btn-primary btn-block" value="确定添加"></form>
+</div>
+<br/><a href="./group.php"><<返回分组列表</a>
+</div></div>
+';
 }
 elseif($set=='edit')
 {
 $id=$_GET['id'];
-$row=$DB->get_row("select * from lylme_links where id='$id' limit 1");
-echo '<div class="col-lg-12">
-<div class="card">
-<div class="card-header"><h4>修改链接信息</h4></div>';
-echo '<div class="panel-body">';
-echo '<form action="./set_link.php?set=edit_submit&id='.$id.'" method="POST">
+$row2 = mysqli_query($con,"select * from lylme_groups where group_id='$id' limit 1");
+$row=mysqli_fetch_assoc($row2);
+echo '<h4>修改分组信息</h4>
+<div class="panel-body">
+<form action="./group.php?set=edit_submit&id='.$id.'" method="POST">
 <div class="form-group">
-<label>链接名称:</label><br>
-<input type="text" class="form-control" name="name" value="'.$row['name'].'" required>
+<label>*名称:</label><br>
+<input type="text" class="form-control" name="group_name" value="'.$row['group_name'].'" required>
 </div>
 <div class="form-group">
-<label>价格:</label><br>
-<input type="text" class="form-control" name="url" value="'.$row['url'].'" required>
+<label>分组图标:</label><br>
+<textarea type="text" class="form-control" name="group_icon">'.$row['group_icon'].'</textarea>
+<small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
+方式2：粘贴图标的<code>SVG</code>代码，<a href="/admin/help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
-<div class="form-group">
-<label>是否显示:</label><br>
-<select class="form-control" name="active" default="'.$row['active'].'"><option value="1">1_是</option><option value="0">0_否</option></select>
-</div>
-<br/>
 
-<input type="submit" class="btn btn-primary btn-block"
-value="确定修改"></form>
-';
-echo '<br/><a href="./set_link.php">>>返回链接列表</a>';
-echo '</div></div>
-<script>
-$("select[name=\'is_curl\']").change(function(){
-	if($(this).val() == 1){
-		$("#curl_display").css("display","inherit");
-	}else{
-		$("#curl_display").css("display","none");
-	}
-});
-function Addstr(id, str) {
-	$("#"+id).val($("#"+id).val()+str);
-}
-var items = $("select[default]");
-for (i = 0; i < items.length; i++) {
-	$(items[i]).val($(items[i]).attr("default")||0);
-}
-</script>';
+<div class="form-group">
+<input type="submit" class="btn btn-primary btn-block" value="确定修改"></form>
+</div>
+<br/><a href="./group.php"><<返回分组列表</a></div></div>';
 }
 elseif($set=='add_submit')
 {
-$name=$_POST['name'];
-$url=$_POST['url'];
-$active=$_POST['active'];
-if($name==NULL or $url==NULL){
-showmsg('保存错误,请确保每项都不为空!',3);
+$name=$_POST['group_name'];
+$icon=$_POST['group_icon'];
+if($name==NULL){
+    echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
 } else {
-$sql="insert into `lylme_links` (`name`,`url`,`active`) values ('".$name."','".$url."','".$active."')";
-if($DB->query($sql)){
-	showmsg('添加链接成功！<br/><br/><a href="./set_link.php">>>返回链接列表</a>',1);
+    
+$sql="INSERT INTO `lylme_groups` (`group_id`, `group_name`, `group_icon`) VALUES (NULL, '".$name."', '".$icon."')";
+
+if(mysqli_query($con,$sql)){
+ echo '<script>alert("添加分组 '.$name.' 成功！");window.location.href="/admin/group.php";</script>';
+ exit();
 }else
-	showmsg('添加链接失败！'.$DB->error(),4);
+ echo '<script>alert("添加分组失败);history.go(-1);</script>';
+  exit();
 }
+echo '<script>alert("添加分组失败,名称重复);history.go(-1);</script>';
 }
 elseif($set=='edit_submit')
 {
 $id=$_GET['id'];
-$rows=$DB->get_row("select * from lylme_links where id='$id' limit 1");
+$rows2 = mysqli_query($con,"select * from lylme_groups where group_id='$id' limit 1");
+$rows=mysqli_fetch_assoc($rows2);
 if(!$rows)
-	showmsg('当前记录不存在！',3);
-$name=$_POST['name'];
-$url=$_POST['url'];
-$active=$_POST['active'];
-if($name==NULL or $url==NULL){
-showmsg('保存错误,请确保每项都不为空!',3);
+ echo '<script>alert("当前记录不存在！");history.go(-1);</script>';
+$name=$_POST['group_name'];
+$icon=$_POST['group_icon'];
+if($name==NULL){
+     echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
 } else {
-if($DB->query("update lylme_links set name='$name',url='$url',active='$active' where id='{$id}'"))
-	showmsg('修改链接成功！<br/><br/><a href="./set_link.php">>>返回链接列表</a>',1);
+    
+$sql = "UPDATE `lylme_groups` SET `group_name` = '".$name."', `group_icon` = '".$icon."' WHERE `lylme_groups`.`group_id` = '".$id."';";
+
+if(mysqli_query($con,$sql))
+echo '<script>alert("修改分组 '.$name.' 成功！");window.location.href="/admin/group.php";</script>';
 else
-	showmsg('修改链接失败！'.$DB->error(),4);
+ echo '<script>alert("'.$sql.'修改分组失败");history.go(-1);</script>';
 }
 }
 elseif($set=='delete')
 {
 $id=$_GET['id'];
-$sql="DELETE FROM lylme_links WHERE id='$id'";
+$sql="DELETE FROM lylme_groups WHERE group_id='$id'";
 if(mysqli_query($con,$sql))
-	showmsg('删除成功！<br/><br/><a href="./set_link.php">>>返回链接列表</a>',1);
+ echo '<script>alert("删除成功！");window.location.href="/admin/group.php";</script>';
 else
-	showmsg('删除失败！'.$DB->error(),4);
+ echo '<script>alert("删除失败");history.go(-1);</script>';
 }
 else
 {
 
 $sql=" 1";
-$con='系统共有 <b>'.$numrows.'</b> 个链接<br/><a href="./set_link.php?set=add" class="btn btn-primary">新增链接</a>';
+$cons='系统共有 <b>'.$groupsrows.'</b> 个分组<br/><a href="./group.php?set=add" class="btn btn-primary">新建分组</a>';
 
 echo '<div class="alert alert-info">';
-echo $con;
+echo $cons;
 echo '</div>';
 
 ?>
       <div class="table-responsive">
         <table class="table table-striped">
-          <thead><tr><th>ID</th><th>名称</th><th>链接</th><th>状态</th><th>操作</th></tr></thead>
+          <thead><tr><th>ID</th><th>名称</th><th>操作</th></tr></thead>
           <tbody>
 <?php
 $pagesize=30;
@@ -166,18 +139,26 @@ $page=1;
 }
 $offset=$pagesize*($page - 1);
 
-$rs=mysqli_query("SELECT * FROM lylme_links WHERE{$sql} order by id asc");
+$rs=mysqli_query($con,"SELECT * FROM lylme_groups WHERE{$sql} order by group_id asc");
 while($res = mysqli_fetch_array($rs))
 {
-echo '<tr><td><b>'.$res['id'].'</b></td><td>'.$res['name'].'</td><td>'.$res['url'].'</td><td>'.($res['active']==1?'<font color=green>显示中</font>':'<font color=red>未显示</font>').'</td><td><a href="./set_link.php?set=edit&id='.$res['id'].'" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./set_link.php?set=delete&id='.$res['id'].'" class="btn btn-xs btn-danger" onclick="return confirm(\'你确实要删除此链接链接吗？\');">删除</a></td></tr>';
+echo '<tr><td><b>'.$res['group_id'].'</b></td><td>'.$res['group_name'].'</td><td><a href="./group.php?set=edit&id='.$res['group_id'].'" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./group.php?set=delete&id='.$res['group_id'].'" class="btn btn-xs btn-danger" onclick="return confirm(\'你确实要删除 '.$res['group_name'].' 吗？\');">删除</a></td></tr>';
 }
 ?>
           </tbody>
         </table>
       </div>
+                    </div>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
       
+    </main>
 <?php 
-include './footer.php';
+
 }
+include './footer.php';
 ?>
-  </div>
