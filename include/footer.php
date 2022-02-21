@@ -14,7 +14,7 @@
    
   
   <!--版权信息-->
-  <p>&copy;2021 - <?php echo date("Y");?>   By <a href="/"><?php echo $conf['copyright']?></a> LyLme Spage.</p>
+  <p> <?php echo $conf['copyright']; ?></p>
   </div> 
 
     <script>
@@ -90,16 +90,6 @@ function() {
 }();
 
     </script>
-   
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?da909acf5145a279a505611d16ce5c30";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
 
 	<script>
 			(function(a) {
