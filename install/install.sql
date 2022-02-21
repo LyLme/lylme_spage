@@ -105,7 +105,7 @@ INSERT INTO `lylme_links` VALUES (26, '站酷', 2, 'https://www.zcool.com.cn/', 
 INSERT INTO `lylme_links` VALUES (27, '阿里图标', 2, 'https://www.iconfont.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-iconfont\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (28, 'IconFinder', 2, 'https://www.iconfinder.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-eye\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (29, '优设教程', 2, 'https://uiiiuiii.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-jiaocheng\"></use></svg>', NULL);
-INSERT INTO `lylme_links` VALUES (30, '知乎', 3, 'https://www.zhihu.com/explore', '\r\n<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-zhihu\"></use></svg>', NULL);
+INSERT INTO `lylme_links` VALUES (30, '知乎', 3, 'https://www.zhihu.com/explore', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-zhihu\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (31, '豆瓣', 3, 'https://www.douban.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-douban\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (32, '简书', 3, 'https://www.jianshu.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-jianshu\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (33, '阿里云盘', 3, 'https://www.aliyundrive.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-alipan00\"></use></svg>', NULL);
@@ -124,7 +124,7 @@ INSERT INTO `lylme_links` VALUES (45, '阿里邮箱', 3, 'https://mail.aliyun.co
 INSERT INTO `lylme_links` VALUES (46, '在线工具', 4, 'https://tool.lu/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-ai-tool\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (47, 'IP查询', 4, 'https://ip.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wangluo\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (48, '文档在线转换', 4, 'https://xpdf.net/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-docto\"></use></svg>', NULL);
-INSERT INTO `lylme_links` VALUES (49, '谷歌翻译', 4, 'https://translate.google.cn/?hl=zh-CN', '\r\n<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-fanyi\"></use></svg>', NULL);
+INSERT INTO `lylme_links` VALUES (49, '谷歌翻译', 4, 'https://translate.google.cn/?hl=zh-CN', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-fanyi\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (50, '有道翻译', 4, 'https://fanyi.youdao.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-youdao00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (51, 'HTML在线运行', 4, 'https://c.runoob.com/front-end/61/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-html00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (52, 'MD编辑器', 4, 'https://pandao.github.io/editor.md/index.html', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-md\"></use></svg>', NULL);
@@ -135,7 +135,7 @@ INSERT INTO `lylme_links` VALUES (56, '站长工具', 4, 'http://tool.chinaz.com
 INSERT INTO `lylme_links` VALUES (57, '在线Ping', 4, 'https://ping.chinaz.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wangluo1\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (58, 'ICP备案查询', 4, 'https://icp.chinaz.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-icp00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (59, '在线PS', 4, 'https://www.photopea.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-ps00\"></use></svg>', NULL);
-INSERT INTO `lylme_links` VALUES (60, 'W3school', 5, 'http://www.w3school.com.cn/', '\r\n<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-h5\"></use></svg>', NULL);
+INSERT INTO `lylme_links` VALUES (60, 'W3school', 5, 'http://www.w3school.com.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-h5\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (61, 'Github', 5, 'https://github.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-github\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (62, '码云Gitee', 5, 'https://gitee.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gitee00\"></use></svg>', NULL);
 INSERT INTO `lylme_links` VALUES (63, '吾爱破解', 5, 'https://www.52pojie.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-theater-masks\"></use></svg>', NULL);
