@@ -70,12 +70,12 @@ else{
                   </div>
                     <div class="form-group">
                     <label for="old-password">新用户名</label>
-                    <input type="text" class="form-control" name="new-usernameuser" id="new-username" placeholder="请输入新用户名" value="">
+                    <input type="text" class="form-control" name="new-usernameuser" id="new-username" placeholder="请输入新用户名" autocomplete="new-password" value="">
                     <small class="help-block">留空为不修改用户名</small>
                   </div>
                   <div class="form-group">
                     <label for="old-password">*当前密码</label>
-                    <input type="password" class="form-control" name="oldpwd" id="old-password" placeholder="输入账号的原登录密码" required>
+                    <input type="password" class="form-control" name="oldpwd" id="old-password" placeholder="输入账号的原登录密码" required autocomplete="new-password">
                 
                   </div>
                   <div class="form-group">
@@ -100,10 +100,7 @@ else{
       
     </main>
     <!--End 页面主要内容-->
-  </div>
-</div>
 <?php 
-
-include './footer.php';
 }
+include './footer.php';
 ?>
