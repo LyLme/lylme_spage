@@ -126,8 +126,8 @@ echo '</div>';
           <tbody>
 <?php
 $pagesize=30;
-$pages=intval($numrows/$pagesize);
-if ($numrows%$pagesize)
+$pages=intval($groupsrows/$pagesize);
+if ($groupsrows%$pagesize)
 {
  $pages++;
  }
