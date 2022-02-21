@@ -24,16 +24,16 @@ if ($conf['background']  == '') {
 			<div class="collapse navbar-collapse" id="navbarsExample05">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item">
-						<a class="nav-link" href="https://www.lylme.com" target="_blant">主页</a>
+						<a class="nav-link" href="/" target="_blant">主页</a>
 					</li>
+					<!--<li class="nav-item">-->
+					<!--	<a class="nav-link" href="https://blog.lylme.com" target="_blant">博客</a>-->
+					<!--</li>-->
+					<!--<li class="nav-item">-->
+					<!--	<a class="nav-link" href="https://github.com/lylme" target="_blant">Github</a>-->
+					<!--</li>-->
 					<li class="nav-item">
-						<a class="nav-link" href="https://blog.lylme.com" target="_blant">博客</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="https://github.com/lylme" target="_blant">Github</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="https://blog.lylme.com/about.html" target="_blant">关于</a>
+						<a class="nav-link" href="https://gitee.com/LyLme/lylme_spage/blob/master/README.md" target="_blant">关于</a>
 					</li>
 				</ul>
 				<div id="main">  
