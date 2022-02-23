@@ -1,5 +1,5 @@
 <?php 
-$title = '基本设置';
+$title = '网站设置';
 include './head.php';
 function uploadimg($arr,$uppath,$uptype)
 {
@@ -28,6 +28,7 @@ if($set=='save'){
 	$yan = $_POST['yan'];
 	$tq = $_POST['tq'];
     $wztj = $_POST['wztj'];
+    $home_title= $_POST['home-title'];
 	if($yan=='true'){saveSetting('yan','true');}else{saveSetting('yan','false');}
 	if($tq=='true'){saveSetting('tq','true');}else{saveSetting('tq','false');}
 	saveSetting('title',$title);
@@ -38,7 +39,7 @@ if($set=='save'){
 	saveSetting('copyright',$copyright);
 	saveSetting('icp',$icp);
 	saveSetting('wztj',$wztj);
-	saveSetting('home-title',$home-title);
+	saveSetting('home-title',$home_title);
 	uploadimg($_FILES["logoimg"],'assets/img/logo.png','logo');
     uploadimg($_FILES["backgroundimg"],'assets/img/background.jpg','background');
 	
