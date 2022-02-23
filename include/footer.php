@@ -1,7 +1,3 @@
-<!--
-作者: D.Young  Github：https://github.com/5iux/5iux.github.io
-二开: LyLme    Github：https://github.com/lylme/lylme_spage
--->
 
   <div style="display:none;" class="back-to" id="toolBackTop"> 
    <a title="返回顶部" onclick="window.scrollTo(0,0);return false;" href="#top" class="back-top"></a> 
@@ -16,7 +12,12 @@
   <!--版权信息-->
   <p> <?php echo $conf['copyright']; ?></p>
   </div> 
-
+  <!--网站统计-->
+ <?php if($conf['tjcode'] != NULL){echo $conf["baiduhm"];}else{echo <<<HTML
+<p style='display:none;'><script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1280566550&web_id=1280566550"></script></p>
+HTML;
+} ?>
+   
     <script>
 //切换搜索引擎
 !
