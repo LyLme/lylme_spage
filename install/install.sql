@@ -25,7 +25,7 @@ INSERT INTO `lylme_config` VALUES ('admin_pwd', '123456', '管理员密码');
 INSERT INTO `lylme_config` VALUES ('title', '上网导航 - LyLme Spage', '网站名称');
 INSERT INTO `lylme_config` VALUES ('description', '六零导航页(LyLme Spage)致力于简洁高效无广告的上网导航和搜索入口，沉淀最具价值链接，全站无商业推广，简约而不简单。', '网站描述');
 INSERT INTO `lylme_config` VALUES ('icp', '', '备案号');
-INSERT INTO `lylme_config` VALUES ('home-title', '上网，从这里开始！', '首页标题');
+INSERT INTO `lylme_config` VALUES ('home-title', '<h2 class="title">上网，从这里开始！</h2>', '首页标题');
 INSERT INTO `lylme_config` VALUES ('copyright', 'Copyright ©2022 <a href=\"/\">LyLme Spage</a>.  All Rights Reserved.', '版权代码');
 INSERT INTO `lylme_config` VALUES ('keywords', '六零导航页,百度搜索,哔哩哔哩搜索,知乎搜索,六零导航,LyLme Spage,六零,LyLme,网站导航,上网导航', '关键字');
 INSERT INTO `lylme_config` VALUES ('logo', './assets/img/logo.png', '网站图标');
