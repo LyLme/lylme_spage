@@ -93,6 +93,7 @@ $name=$_POST['name'];
 $url=$_POST['url'];
 $icon=$_POST['icon'];
 $group_id=$_POST['group_id'];
+$link_order = $linksrows+1;
 if($name==NULL or $url==NULL){
      echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
 } else {
@@ -123,7 +124,7 @@ $sql = "UPDATE `lylme_links` SET `name` = '".$name."', `url` = '".$url."', `icon
 if(mysqli_query($con,$sql))
 echo '<script>alert("修改链接 '.$name.' 成功！");window.location.href="/admin/link.php";</script>';
 else
- echo '<script>alert("修改链接失败");history.go(-1);</script>';
+ echo '<script>alert("修改链接失败！");history.go(-1);</script>';
 }
 }
 elseif($set=='delete')
@@ -133,7 +134,7 @@ $sql="DELETE FROM lylme_links WHERE id='$id'";
 if(mysqli_query($con,$sql))
  echo '<script>alert("删除成功！");window.location.href="/admin/link.php";</script>';
 else
- echo '<script>alert("删除失败");history.go(-1);</script>';
+ echo '<script>alert("删除失败！");history.go(-1);</script>';
 }
 else
 {
