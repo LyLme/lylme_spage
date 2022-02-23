@@ -27,6 +27,7 @@ if($set=='save'){
 	$icp=$_POST['icp'];
 	$yan = $_POST['yan'];
 	$tq = $_POST['tq'];
+    $wztj = $_POST['wztj'];
 	if($yan=='true'){saveSetting('yan','true');}else{saveSetting('yan','false');}
 	if($tq=='true'){saveSetting('tq','true');}else{saveSetting('tq','false');}
 	saveSetting('title',$title);
@@ -36,6 +37,8 @@ if($set=='save'){
 	saveSetting('description',$description);
 	saveSetting('copyright',$copyright);
 	saveSetting('icp',$icp);
+	saveSetting('wztj',$wztj);
+	saveSetting('home-title',$home-title);
 	uploadimg($_FILES["logoimg"],'assets/img/logo.png','logo');
     uploadimg($_FILES["backgroundimg"],'assets/img/background.jpg','background');
 	
@@ -103,12 +106,27 @@ document.getElementById(check).innerHTML="重新选择";
                       <small class="help-block">网站描述，有利于搜索引擎抓取相关信息</small>
                     </div>
                    
+                   <div class="form-group">
+
+                      <label for="web_site_home-title">首页提示语</label>
+                      <textarea type="text" class="form-control" name="home-title" placeholder="请输入首页提示语，支持HTML代码"><?php echo $conf['home-title']?></textarea>
+               <small class="help-block">首页提示语，<code>支持HTML代码</code> <a href="https://blog.lylme.com/archives/lylme_spage.html#hometitle" target="_blank">查看效果演示</a></small>
+                    </div>    
+                   
                     <div class="form-group">
 
                       <label for="web_site_copyright">底部版权</label>
                       <textarea type="text" class="form-control" name="copyright" placeholder="请输入版权信息，支持HTML代码"><?php echo $conf['copyright']?></textarea>
-               <small class="help-block">显示在首页底部的版权提示，<code>支持HTML代码</code>，可填写网站统计代码</small>
+               <small class="help-block">显示在首页底部的版权提示，<code>支持HTML代码</code></small>
                     </div>
+                
+                 <div class="form-group">
+
+                      <label for="web_site_wztj">统计代码</label>
+                      <textarea type="text" class="form-control" name="wztj" placeholder="请输入网站统计代码，支持HTML代码"><?php echo $conf['wztj']?></textarea>
+               <small class="help-block">网站统计代码，<code>支持HTML代码</code> <a href="https://blog.lylme.com/archives/lylme_spage.html#wztj" target="_blank">查看教程</a></small>
+                    </div>    
+                    
                     <div class="form-group">
                       <label for="web_site_icp">备案号</label>
                       <input class="form-control" type="text" id="web_site_icp" name="icp" value="<?php echo $conf['icp']?>" placeholder="请输入备案号，留空首页不显示备案信息" >
