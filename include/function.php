@@ -87,7 +87,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
 	}
 }
 
-
+$update_host = 'cdn.lylme.com'; //程序更新服务器,请勿删除和修改，否则将导致无法接收版本更新和报错
 
 function saveSetting($k, $v){
 	$v = daddslashes($v);
