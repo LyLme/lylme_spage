@@ -51,7 +51,7 @@ if($conf['tq'] != 'false'){
 		</nav>
 				<!--topbar结束-->
 		<div class="container" style="margin-top:10vh; position: relative; z-index: 100;">
-			<h2 class="title"><?php echo $conf['home-title']?></h2>
+			<?php echo $conf['home-title']?>
 
 <?php
 if($conf['yan']!='false'){
