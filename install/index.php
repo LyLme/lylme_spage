@@ -54,9 +54,8 @@ function random($length, $numeric = 0) {
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no,minimal-ui">
-<title>六零导航页 - 安装</title>
+<title>六零导航页 - 安装程序</title>
 <link href="//lib.baomitu.com/twitter-bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet"/>
-
 </head>
 <body>
 <nav class="navbar navbar-fixed-top navbar-default">
