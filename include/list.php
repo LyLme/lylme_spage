@@ -5,8 +5,9 @@ $groups = mysqli_query($con,"SELECT * FROM `lylme_groups`");  // 获取分类
 $i = 0;
 while($group = mysqli_fetch_assoc($groups)) { //循环所有分组
 	echo '<ul class="mylist row"><li class="title">'.$group["group_icon"].'<sapn>'.$group["group_name"].'</sapn></li>';	//输出分组图标和标题
-	while($link = mysqli_fetch_array($links)) {  // 循环每个链接
-		$group_links = mysqli_query($con,"SELECT * FROM `lylme_links` WHERE `group_id` = ".$group["group_id"]);		// 返回指定分组下的所有字段
+	$group_links = mysqli_query($con,"SELECT * FROM `lylme_links` WHERE `group_id` = ".$group["group_id"]);	
+	while($link = mysqli_fetch_array($group_links)) {  // 循环每个链接
+	// 返回指定分组下的所有字段
 		$link_num=mysqli_num_rows($group_links);  // 获取返回字段条目数量
 		if($link_num > $i ) {
 			$i = $i+1;
