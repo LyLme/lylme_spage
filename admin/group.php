@@ -100,14 +100,16 @@ else
  echo '<script>alert("'.$sql.'修改分组失败");history.go(-1);</script>';
 }
 }
+
 elseif($set=='delete')
 {
 $id=$_GET['id'];
-$sql="DELETE FROM lylme_groups WHERE group_id='$id'";
-if(mysqli_query($con,$sql))
+$delsql1='DELETE FROM `lylme_links` WHERE group_id ='.$id;
+$delsql2='DELETE FROM `lylme_groups` WHERE group_id='.$id;
+if(mysqli_query($con,$delsql1) && mysqli_query($con,$delsql2))
  echo '<script>alert("删除成功！");window.location.href="/admin/group.php";</script>';
 else
- echo '<script>alert("删除失败");history.go(-1);</script>';
+ echo '<script>alert("删除失败!\n);history.go(-1);</script>';
 }
 else
 {
@@ -142,7 +144,7 @@ $offset=$pagesize*($page - 1);
 $rs=mysqli_query($con,"SELECT * FROM lylme_groups WHERE{$sql} order by group_id asc");
 while($res = mysqli_fetch_array($rs))
 {
-echo '<tr><td><b>'.$res['group_id'].'</b></td><td>'.$res['group_name'].'</td><td><a href="./group.php?set=edit&id='.$res['group_id'].'" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./group.php?set=delete&id='.$res['group_id'].'" class="btn btn-xs btn-danger" onclick="return confirm(\'你确实要删除 '.$res['group_name'].' 吗？\');">删除</a></td></tr>';
+echo '<tr><td><b>'.$res['group_id'].'</b></td><td>'.$res['group_name'].'</td><td><a href="./group.php?set=edit&id='.$res['group_id'].'" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./group.php?set=delete&id='.$res['group_id'].'" class="btn btn-xs btn-danger" onclick="return confirm(\'你确实要删除分组 '.$res['group_name'].' 吗？\n\n注意：该操作组会同时删除分组下的链接\');">删除</a></td></tr>';
 }
 ?>
           </tbody>
