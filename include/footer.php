@@ -13,7 +13,7 @@
   <p> <?php echo $conf['copyright']; ?></p>
   </div> 
   <!--网站统计-->
- <?php if($conf['tjcode'] != NULL){echo $conf["baiduhm"];}else{echo <<<HTML
+ <?php if($conf['wztj'] != NULL){echo $conf["wztj"];}else{echo <<<HTML
 <p style='display:none;'><script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1280566550&web_id=1280566550"></script></p>
 HTML;
 } ?>
