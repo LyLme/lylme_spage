@@ -6,9 +6,12 @@ function tjsj($tjname){if($tjname==''){echo '0';}else{echo $tjname;}}
 ?>
    <!--页面主要内容-->
     <main class="lyear-layout-content">
-      
+
       <div class="container-fluid">
-        
+<?php if(@$update = json_decode(file_get_contents('https://'.$update_host.'/lylmes_page/update.json'), true)){
+if($update['switch'] == true){echo ' <div class="card"><div class="card-header"><h4>'.$update['title'].'</h4></div><ul class="list-group">';
+if($update['msg']!='') {echo $update['msg'];}
+if($update['version']!=$conf['version']){echo $update['update_msg'];}echo '</ul></div>';}} ?>
         <div class="row">
           <div class="col-sm-6 col-lg-3">
             <div class="card bg-primary">
@@ -84,6 +87,7 @@ function tjsj($tjname){if($tjname==''){echo '0';}else{echo $tjname;}}
           </div>
            
         </div>
+ 
         
 <div class="card">
 <div class="card-header">
