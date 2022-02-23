@@ -312,7 +312,7 @@ if($e==0) {
 	<div class="panel-body">
 <?php
 	$domian=array('lylme','https');
-	@file_get_contents($domian[1].'://hao.'.$domian[0].'.com/install-tj.php?v=1.1.0date='.date('Y-m-d H:i').'&url='.$_SERVER['HTTP_HOST'], false, stream_context_create(array('http'=>array('method'=>"GET",'timeout'=>10))));
+	@file_get_contents($domian[1].'://hao.'.$domian[0].'.com/install-tj.php?v=1.1.0&date='.date('Y-m-d H:i').'&url='.$_SERVER['HTTP_HOST'], false, stream_context_create(array('http'=>array('method'=>"GET",'timeout'=>10))));
 	@file_put_contents("install.lock",'安装锁');
 	echo '<div class="alert alert-info"><font color="green">安装完成！管理账号和密码是:admin/123456</font><br/><br/><a href="../" target="_blank">>>网站首页</a>｜<a href="../admin/" target="_blank">>>后台管理</a><hr/>更多设置选项请登录后台管理进行修改。<br/><br/><font color="#FF0033">如果你的空间不支持本地文件读写，请自行在install/ 目录建立 install.lock 文件！</font><br>提示：本程序使用Bing每日壁纸作为网站背景<br>添加每天的CRON任务[非必需]<br><font color="orange">GET http://'.$_SERVER['HTTP_HOST'].'/assets/img/cron.php</font> <br>执行后会每天更新网站背景为Bing每日壁纸，忽略将使用默认图片作为背景<br/></div></div>';
 ?>
