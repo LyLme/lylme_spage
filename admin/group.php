@@ -195,7 +195,7 @@ array_push($arr,$res['group_id']);
 echo '<tr  id="ordertd-'.$res['group_id'].'"><td><b>'.$res['group_order'].'</b></td><td>'.$res['group_name'].'</td><td>';
 if($arr[0] != $res['group_id']){
  echo '<a href="./group.php?set=up&id='.$res['group_id'].'&order='.$res['group_order'].'&arrid='.$arr[$arrid-1].'" class="btn btn-primary btn-xs">上移</a>&nbsp; ';}
-if($arr[$groupsrows-1] != $res['group_id']){   
+if(isset($arr[$groupsrows-1]) != $res['group_id']){ 
 echo '<a href="./group.php?set=down&id='.$res['group_id'].'&order='.$res['group_order'].'&arrid='.$arr[$arrid].'" class="btn btn-cyan btn-xs">下移</a>';}
     
 echo '</td><td>&nbsp;<a href="./group.php?set=edit&id='.$res['group_id'].'" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./group.php?set=delete&id='.$res['group_id'].'" class="btn btn-xs btn-danger" onclick="return confirm(\'你确实要删除分组 '.$res['group_name'].' 吗？\n\n注意：该操作组会同时删除分组下的链接\');">删除</a> </td></tr>';
