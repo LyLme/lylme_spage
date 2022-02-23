@@ -1,14 +1,18 @@
 <?php
 mysqli_query($con,'set names utf8');
 $links = mysqli_query($con, "SELECT * FROM `lylme_links`");  // 获取网站
-$groups = mysqli_query($con,"SELECT * FROM `lylme_groups`");  // 获取分类
+$groups = mysqli_query($con,"SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC");  // 获取分类
 $i = 0;
 while($group = mysqli_fetch_assoc($groups)) { //循环所有分组
-	echo '<ul class="mylist row"><li class="title">'.$group["group_icon"].'<sapn>'.$group["group_name"].'</sapn></li>';	//输出分组图标和标题
 	$group_links = mysqli_query($con,"SELECT * FROM `lylme_links` WHERE `group_id` = ".$group["group_id"]);	
+			$link_num=mysqli_num_rows($group_links);  // 获取返回字段条目数量
+			
+	echo '<ul class="mylist row"><li class="title">'.$group["group_icon"].'<sapn>'.$group["group_name"].'</sapn></li>';	//输出分组图标和标题
+if($link_num==0){echo '</ul>'."\n" ;$i = 0;	continue;}
+
 	while($link = mysqli_fetch_array($group_links)) {  // 循环每个链接
 	// 返回指定分组下的所有字段
-		$link_num=mysqli_num_rows($group_links);  // 获取返回字段条目数量
+
 		if($link_num > $i ) {
 			$i = $i+1;
 			echo "\n".'<li class="col-3 col-sm-3 col-md-3 col-lg-1"><a rel="nofollow" href="'.$link["url"].'" target="_blank">';
