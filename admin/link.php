@@ -97,7 +97,7 @@ $link_order = $linksrows+1;
 if($name==NULL or $url==NULL){
      echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
 } else {
-$sql="INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`) VALUES (NULL, '".$name."', '".$group_id."', '".$url."', '".$icon."', '".$name."');";
+$sql="INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`order`) VALUES (NULL, '".$name."', '".$group_id."', '".$url."', '".$icon."', '".$name."', '".$link_order."');";
 
 if(mysqli_query($con,$sql)){
  echo '<script>alert("添加链接 '.$name.' 成功！");window.location.href="/admin/link.php";</script>';
