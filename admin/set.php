@@ -80,7 +80,7 @@ document.getElementById(check).innerHTML="重新选择";
                                <input type="file" style="display:none" accept=".png,.jpeg,.jpg" id="logoimg" name="logoimg"  onclick = "updatetext('checklogo');"/>
                                 </div>
                       </div>
-                    <small class="help-block">填写图片的URL，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code>或从<code>本地上传</code></small>
+                    <small class="help-block">填写图片的URL，默认值：<code>./assets/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code>或从<code>本地上传</code></small>
                           
                       </div>
                       
@@ -94,7 +94,7 @@ document.getElementById(check).innerHTML="重新选择";
                                
                                <input type="file" style="display:none" accept="image/png,image/jpeg" id="backgroundimg" name="backgroundimg" onclick = "updatetext('checkbackground');"/>
                              </div></div>
-                              <small class="help-block">填写图片的URL，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code>或从<code>本地上传</code></small>
+                              <small class="help-block">填写图片的URL，默认值：<code>./assets/img/background.jpg</code>或<code>http://www.xxx.com/img/logo.png</code>或从<code>本地上传</code><br>设置Bing每日壁纸：<a href="https://blog.lylme.com/archives/lylme_spage.html#bing" target="_blank">查看教程</a></small>
                      </div>
                     <div class="form-group">
                       <label for="web_site_keywords">站点关键词</label>
