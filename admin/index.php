@@ -12,7 +12,7 @@ function tjsj($tjname){if($tjname==''){echo '0';}else{echo $tjname;}}
 if($update['switch'] == true){if($update['msg_switch'] == true ||$update['version']!=$conf['version']){echo ' <div class="card"><div class="card-header"><h4>'.$update['title'].'</h4></div><ul class="list-group">';}
 if($update['msg']!='') {echo $update['msg'];}
 if($update['version']!=$conf['version']){echo $update['update_msg'];}
-if($update['msg_switch'] == true){echo '</ul></div>';}}} ?>
+if($update['msg_switch'] == true ||$update['version']!=$conf['version']){echo '</ul></div>';}}} ?>
         <div class="row">
           <div class="col-sm-6 col-lg-3">
             <div class="card bg-primary">
