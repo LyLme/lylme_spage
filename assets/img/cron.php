@@ -12,9 +12,9 @@ else{
     $str=file_get_contents('http://cn.bing.com/HPImageArchive.aspx?idx='.$_GET['idx'].'&n=1');
 }
 
-if(preg_match("/<url>(.+?)<\/url>/ies",$str,$matches)){
+if(preg_match("/<url>(.+?)<\/url>/is",$str,$matches)){
 
-if(preg_match("/<fullstartdate>(.+?)<\/fullstartdate>/ies",$str,$cdata)){
+if(preg_match("/<fullstartdate>(.+?)<\/fullstartdate>/is",$str,$cdata)){
  
 }
 $crdate = date('Y年m月d日 H:i', strtotime($cdata[1]));
