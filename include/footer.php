@@ -8,16 +8,12 @@
   <?php if($conf['icp'] != NULL){
   echo '<img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" class="icp" target="_blank" _mstmutation="1" _istranslated="1">'.$conf['icp'].'</a>'; } ?>
    
-  
   <!--版权信息-->
   <p> <?php echo $conf['copyright']; ?></p>
-  </div> 
+
   <!--网站统计-->
- <?php if($conf['wztj'] != NULL){echo $conf["wztj"];}else{echo <<<HTML
-<p style='display:none;'><script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1280566550&web_id=1280566550"></script></p>
-HTML;
-} ?>
-   
+ <?php if($conf['wztj'] != NULL){echo $conf["wztj"];}?>
+  </div>  
     <script>
 //切换搜索引擎
 !
