@@ -1,7 +1,6 @@
 <?php
 include_once("../include/common.php");
-
- if($islogin==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
+if($islogin==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -19,8 +18,7 @@ include_once("../include/common.php");
 <div class="lyear-layout-web">
   <div class="lyear-layout-container">
     <!--左侧导航-->
-    <aside class="lyear-layout-sidebar">
-      
+    <aside class="lyear-layout-sidebar"> 
       <!-- logo -->
       <div id="logo" class="sidebar-header">
         <a href="./"><img src="/assets/img/logo-sidebar.png"  alt="LyLme" /></a>
@@ -34,7 +32,7 @@ include_once("../include/common.php");
               <a href="javascript:void(0)"><i class="mdi mdi-palette"></i>网站配置</a>
               <ul class="nav nav-subnav">
                 <li> <a href="./set.php">基本设置</a> </li>
-                <!--<li> <a href="./set_sou.php">搜索设置</a> </li>-->
+                <li> <a href="./sou.php">搜索设置</a> </li>
                 <li> <a href="./user.php">修改密码</a> </li>
               </ul>
             </li>
