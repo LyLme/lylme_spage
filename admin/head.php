@@ -32,9 +32,10 @@ if($islogin==1){}else exit("<script language='javascript'>window.location.href='
             <li class="nav-item nav-item-has-subnav">
               <a href="javascript:void(0)"><i class="mdi mdi-palette"></i>网站配置</a>
               <ul class="nav nav-subnav">
-                <li> <a href="./set.php">基本设置</a> </li>
-                <li> <a href="./sou.php">搜索设置</a> </li>
-                <li> <a href="./user.php">修改密码</a> </li>
+                <li> <a href="./set.php">网站基本设置</a> </li>
+                <li> <a href="./tag.php">导航菜单设置</a> </li>
+                <li> <a href="./sou.php">搜索引擎设置</a> </li>
+                <li> <a href="./user.php">修改账号密码</a> </li>
               </ul>
             </li>
             <li class="nav-item nav-item-has-subnav">
@@ -77,7 +78,7 @@ if($islogin==1){}else exit("<script language='javascript'>window.location.href='
               <span class="lyear-toggler-bar"></span>
               <span class="lyear-toggler-bar"></span>
             </div>
-            <span class="navbar-page-title"> 后台首页 </span>
+            <span class="navbar-page-title"> <?php echo $title;?></span>
           </div>
           
           <ul class="topbar-right">
@@ -98,3 +99,5 @@ if($islogin==1){}else exit("<script language='javascript'>window.location.href='
       
     </header>
     <!--End 头部信息-->
+    
+ 
