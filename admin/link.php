@@ -1,5 +1,5 @@
 <?php 
-$title='链接管理';
+$title='网站链接管理';
 include './head.php';
 $grouplists =mysqli_query($con,"SELECT * FROM `lylme_groups`");
 ?>
@@ -44,9 +44,9 @@ while($grouplist = mysqli_fetch_assoc($grouplists)) {
 }
 echo '</select></div>
 <div class="form-group">
-<input type="submit" class="btn btn-primary btn-block" value="确定添加"></form>
+<input type="submit" class="btn btn-primary btn-block" value="添加"></form>
 </div>
-<br/><a href="./link.php"><<返回链接列表</a>
+<br/><a href="./link.php"><<返回</a>
 </div></div>';
 }
 elseif($set=='edit')
@@ -62,14 +62,14 @@ echo '<h4>修改链接信息</h4>
 <input type="text" class="form-control" name="name" value="'.$row['name'].'" required>
 </div>
 <div class="form-group">
-<label>*URL链接地址:</label><br>
+<label>*链接URL地址:</label><br>
 <input type="text" class="form-control" name="url" value="'.$row['url'].'" required>
 </div>
 <div class="form-group">
 <label>链接图标:</label><br>
 <textarea type="text" class="form-control" name="icon" >'.$row['icon'].'</textarea>
 <small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
-方式2：粘贴图标的<code>SVG</code>代码，<a href="/admin/help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标<br>方式3：留空使用默认图标</small>
+方式2：粘贴图标的<code>SVG</code>代码，<a href="/admin/help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
 
 <div class="form-group">
@@ -82,9 +82,9 @@ while($grouplist = mysqli_fetch_assoc($grouplists)) {
 echo '</select>
 </div>
 <div class="form-group">
-<input type="submit" class="btn btn-primary btn-block" value="确定修改"></form>
+<input type="submit" class="btn btn-primary btn-block" value="修改"></form>
 </div>
-<br/><a href="./link.php"><<返回链接列表</a>
+<br/><a href="./link.php"><<返回</a>
 </div></div>';
 }
 elseif($set=='add_submit')
@@ -102,7 +102,7 @@ $sql="INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`
 if(mysqli_query($con,$sql)){
  echo '<script>alert("添加链接 '.$name.' 成功！");window.location.href="/admin/link.php";</script>';
 }else
- echo '<script>alert("添加链接失败");history.go(-1);</script>';
+ echo '<script>alert("添加链接失败！");history.go(-1);</script>';
 }
 }
 elseif($set=='edit_submit')
@@ -138,38 +138,19 @@ else
 }
 else
 {
-
-$sql=" 1";
-$cons='系统共有 <b>'.$linksrows.'</b> 个链接<br/><a href="./link.php?set=add" class="btn btn-primary">新增链接</a>';
-
-echo '<div class="alert alert-info">';
-echo $cons;
-echo '</div>';
-
-?>
+echo '<div class="alert alert-info">系统共有 <b>'.$linksrows.'</b> 个链接<br/><a href="./link.php?set=add" class="btn btn-primary">新增链接</a></div>
       <div class="table-responsive">
         <table class="table table-striped">
-          <thead><tr><th>ID</th><th>名称</th><th>链接</th><th>分组ID</th><th>操作</th></tr></thead>
-          <tbody>
-<?php
-$pagesize=30;
-$pages=intval($linksrows/$pagesize);
-if ($linksrows%$pagesize)
-{
- $pages++;
- }
-if (isset($_GET['page'])){
-$page=intval($_GET['page']);
-}
-else{
-$page=1;
-}
-$offset=$pagesize*($page - 1);
-
-$rs=mysqli_query($con,"SELECT * FROM lylme_links WHERE{$sql} order by id asc");
+          <thead><tr><th>序号</th><th>名称</th><th>链接</th><th>分组</th><th>操作</th></tr></thead>
+          <tbody>';
+$i = 0;
+$rs=mysqli_query($con,"SELECT * FROM `lylme_links` ORDER BY `lylme_links`.`id` ASC");
 while($res = mysqli_fetch_array($rs))
 {
-echo '<tr><td><b>'.$res['id'].'</b></td><td>'.$res['name'].'</td><td>'.$res['url'].'</td><td>'.$res['group_id'].'</td><td><a href="./link.php?set=edit&id='.$res['id'].'" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./link.php?set=delete&id='.$res['id'].'" class="btn btn-xs btn-danger" onclick="return confirm(\'你确实要删除 '.$res['name'].' 吗？\');">删除</a></td></tr>';
+$i = $i+1;
+echo '<tr><td><b>'.$i.'</b></td><td>'.$res['name'].'</td><td>'.$res['url'].'</td><td>';
+echo mysqli_fetch_assoc(mysqli_query($con,"SELECT * FROM `lylme_groups` WHERE `group_id` = ".$res['group_id']))["group_name"];
+echo '</td><td><a href="./link.php?set=edit&id='.$res['id'].'" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./link.php?set=delete&id='.$res['id'].'" class="btn btn-xs btn-danger" onclick="return confirm(\'删除 '.$res['name'].' ？\');">删除</a></td></tr>';
 }
 ?>
           </tbody>
