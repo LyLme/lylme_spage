@@ -23,18 +23,14 @@ if ($conf['background']  == '') {
 			</button>
 			<div class="collapse navbar-collapse" id="navbarsExample05">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="/" target="_blant">主页</a>
-					</li>
-					<!--<li class="nav-item">-->
-					<!--	<a class="nav-link" href="https://blog.lylme.com" target="_blant">博客</a>-->
-					<!--</li>-->
-					<!--<li class="nav-item">-->
-					<!--	<a class="nav-link" href="https://github.com/lylme" target="_blant">Github</a>-->
-					<!--</li>-->
-					<li class="nav-item">
-						<a class="nav-link" href="https://gitee.com/LyLme/lylme_spage/blob/master/README.md" target="_blant">关于</a>
-					</li>
+			<?php 
+				$tagslists = mysqli_query($con, "SELECT * FROM `lylme_tags`"); 
+				while($taglists = mysqli_fetch_assoc($tagslists)) { 
+				    echo '<li class="nav-item"><a class="nav-link" href="'.$taglists["tag_link"].'"';
+				    if($taglists["tag_target"]==1)echo ' target="_blant"';
+				    echo '>'.$taglists["tag_name"].'</a></li>
+				    ';
+			}?>
 				</ul>
 				<div id="main">  
 <div id="show_date"></div>  
@@ -70,119 +66,35 @@ echo '<p class="content"><b>随机一言:</b>'.$result;
 				<div id="search-list" class="hide-type-list">
 					<div class="search-group group-a s-current" style=" margin-top: 50px;">
 						<ul class="search-type">
-							<li>
-								<input checked="" hidden="" type="radio" name="type" id="type-baidu" value="<?php if($ua == "pc"){echo 'https://www.baidu.com/s?word=';}else{echo 'https://m.baidu.com/s?word=';}?>"
-								data-placeholder="百度一下，你就知道">
-								<label for="type-baidu">
-									<svg class="icon" aria-hidden="true">
-										<use xlink:href="#icon-icon_baidulogo">
-										</use>
-									</svg>
-									<span style="color:#0c498c;font-weight:600">
-										百度一下
+						<?php 
+						    $soulists = mysqli_query($con, "SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` ASC"); 
+							while($soulist = mysqli_fetch_assoc($soulists)) { 
+							    if($soulist["sou_st"]==1){
+							        echo '	<li>
+								<input hidden=""  checked="" type="radio" name="type" id="type-'.$soulist["sou_alias"].'" value="';
+								if($ua=='wap'&&$soulist["sou_waplink"]!=NULL){echo $soulist["sou_waplink"];}else{echo $soulist["sou_link"];}
+								echo '"data-placeholder="'.$soulist["sou_hint"].'">
+								<label for="type-'.$soulist["sou_alias"].'" style="font-weight:600">
+								'.$soulist["sou_icon"].'
+									<span style="color:'.$soulist["sou_color"].'">
+										'.$soulist["sou_name"].'
 									</span>
 								</label>
 							</li>
-						
-							<li>
-								<input hidden="" type="radio" name="type" id="type-sogou" value="https://www.sogou.com/web?query="
-								data-placeholder="上网从搜狗开始">
-								<label for="type-sogou" style="font-weight:600">
-									<svg class="icon" aria-hidden="true">
-										<use xlink:href="#icon-sougou">
-										</use>
-									</svg>
-									<span style="color:#696a6d">
-										搜狗搜索
-									</span>
-								</label>
-							</li>
-							
-								<li>
-								<input hidden="" type="radio" name="type" id="type-bing" value="https://cn.bing.com/search?q="
-								data-placeholder="微软必应搜索引擎">
-								<label for="type-bing" style="font-weight:600">
-									<svg class="icon" aria-hidden="true">
-										<use xlink:href="#icon-bing">
-										</use>
-									</svg>
-									<span style="color:#696a6d">
-										Bing必应
-									</span>
-								</label>
-							</li>
-							<li>
-								<input hidden="" type="radio" name="type" id="type-zhihu" value="https://www.zhihu.com/search?q="
-								data-placeholder="有问题，上知乎">
-								<label for="type-zhihu">
-									<svg class="icon" aria-hidden="true">
-										<use xlink:href="#icon-zhihu">
-										</use>
-									</svg>
-									<span style="color:#06f;font-weight:600">
-										知乎搜索
-									</span>
-								</label>
-							</li>
-							<li>
-								<input hidden="" type="radio" name="type" id="type-bilibili" value="https://search.bilibili.com/all?keyword="
-								data-placeholder=" (゜-゜)つロ 干杯">
-								<label for="type-bilibili">
-							<svg class="icon" aria-hidden="true">
-										<use xlink:href="#icon-bili">
-										</use>
-									</svg>
-									<span style="color:#00aeec;font-weight:600">
-										哔哩哔哩
-									</span>
-								</label>
-							</li>
-							<li>
-								<input hidden="" type="radio" name="type" id="type-weibo" value="https://s.weibo.com/weibo/"
-								data-placeholder="随时随地发现新鲜事">
-								<label for="type-weibo">
-									<svg class="icon" aria-hidden="true">
-										<use xlink:href="#icon-weibo">
-										</use>
-									</svg>
-									<span style="color:#ff5722;font-weight:600">
-										微博搜索
-									</span>
-								</label>
-							</li>
-							
-							<li>
-								<input hidden="" type="radio" name="type" id="type-google" value="https://www.google.com.hk/search?hl=zh-CN&q="
-								data-placeholder="值得信任的搜索引擎">
-								<label for="type-google" style="font-weight:600">
-								<svg class="icon" aria-hidden="true">
-										<use xlink:href="#icon-google00">
-										</use>
-									</svg>
-									<span style="color:#3B83FA">
-										谷歌搜索
-									</span>
-								</label>
-							</li>
-								<li>
-								<input hidden="" type="radio" name="type" id="type-fanyi" value="https://translate.google.cn/?hl=zh-CN&sl=auto&tl=zh-CN&text="
-								data-placeholder="输入翻译内容（自动检测语言）后回车">
-								<label for="type-fanyi">
-									<svg class="icon" aria-hidden="true">
-										<use xlink:href="#icon-fanyi">
-										</use>
-									</svg>
-									<span style="color:#06f;font-weight:600">
-										在线翻译
-									</span>
-								</label>
-							</li>
+							';
+							}
+							        
+							    }
+							    ?>
+							    
+							    
+							  
 						</ul>
 					</div>
 				</div>
 				<form action="https://www.baidu.com/s?wd=" method="get" target="_blank"
 				id="super-search-fm">
-					<input type="text" id="search-text" placeholder="百度一下" style="outline:0"
+					<input type="text" id="search-text" placeholder="百度一下，你就知道" style="outline:0"
 					autocomplete="off">
 					<button class="submit" type="submit">
 						<svg style="width: 22px; height: 22px; margin: 0 20px 0 20px; color: #fff;"
