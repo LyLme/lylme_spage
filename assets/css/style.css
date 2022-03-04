@@ -438,11 +438,15 @@ svg.icon {
 
 .mylist li.col-3 span {
 	width: 100%;
-	display: block;
 	height: 26px;
 	line-height: 26px;
 	text-align: center;
 	font-size: 13px;
+	word-break:break-all;
+	display:-webkit-box;
+	-webkit-line-clamp:1;
+	-webkit-box-orient:vertical;
+	overflow:hidden;
 }
 
 .mylist li a {
