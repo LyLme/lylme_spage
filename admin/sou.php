@@ -1,8 +1,7 @@
 <?php 
-$title='搜索设置';
+$title='搜索引擎设置';
 include './head.php';
 $sousrows=mysqli_num_rows(mysqli_query($con, "SELECT * FROM `lylme_sou`"));
-$sous =mysqli_query($con,"SELECT * FROM `lylme_sou`");
 ?>
     <main class="lyear-layout-content">
       
@@ -201,13 +200,7 @@ else
 }
 else
 {
-
-$sql=" 1";
-$cons='系统共有 <b>'.$sousrows.'</b> 个搜索引擎<br/><a href="./sou.php?set=add" class="btn btn-primary">新增搜索引擎</a>';
-
-echo '<div class="alert alert-info">';
-echo $cons;
-echo '</div>';
+echo '<div class="alert alert-info">系统共有 <b>'.$sousrows.'</b> 个搜索引擎<br/><a href="./sou.php?set=add" class="btn btn-primary">新增搜索引擎</a></div>';
 
 ?>
       <div class="table-responsive">
@@ -222,7 +215,7 @@ echo '<tr><td><b>'.$res['sou_order'].'</b></td><td><b><font color="'.$res['sou_c
 
 if($res['sou_st'] == 1){echo '<span class="label label-success">开启</span>';}else{echo '<span class="label label-danger">关闭</span>';}
 
-echo '</td><td><a href="./sou.php?set=edit&id='.$res['sou_id'].'" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./sou.php?set=delete&id='.$res['sou_id'].'" class="btn btn-xs btn-danger" onclick="return confirm(\'确定删除 '.$res['sou_name'].' ？\');">删除</a></td></tr>';
+echo '</td><td><a href="./sou.php?set=edit&id='.$res['sou_id'].'" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./sou.php?set=delete&id='.$res['sou_id'].'" class="btn btn-xs btn-danger" onclick="return confirm(\'确定删除 '.$res['sou_name'].'\');">删除</a></td></tr>';
 }
 ?>
           </tbody>
