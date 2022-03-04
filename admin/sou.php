@@ -48,7 +48,7 @@ echo '<h4>新增搜索接</h4>
 <div class="form-group">
 <label>标题文字颜色: (*必填) </label><br>
 <input type="text" class="form-control" name="color" value="#696a6d" required>
-<small class="help-block">(*必填) 填写颜色的十六进制，如： <code>#FF0000</code>(红色)<br>默认值：<code>#696a6d</code></small>
+<small class="help-block">(*必填) 填写颜色的十六进制码，如： <code>#FF0000</code>(红色)<br>默认值：<code>#696a6d</code></small>
 </div>
 <div class="form-group">
 <label>搜索引擎图标:(*必填) </label><br>
@@ -85,7 +85,7 @@ echo '<h4>修改搜索引擎</h4>
 <div class="form-group">
 <label>*搜索引擎别名: (*必填)</label><br>
 <input type="text" class="form-control" name="alias" value="'.$row['sou_alias'].'" required  placeholder="如：baidu">
-<small class="help-block">注：仅支持字母，不能和其他搜索引擎的别名相同<br>建议填写搜索引擎的拼音或英文，如百度填写<code>baidu</code></small>
+<small class="help-block">注：仅支持字母，<code>不能和其他搜索引擎的别名相同</code><br>建议填写搜索引擎的拼音或英文，如百度填写<code>baidu</code></small>
 </div>
 <div class="form-group">
 <label>*搜索框提示: (*必填)</label><br>
@@ -100,12 +100,12 @@ echo '<h4>修改搜索引擎</h4>
 <div class="form-group">
 <label>搜索引擎手机端地址: (选填) </label><br>
 <input type="text" class="form-control" name="waplink" value="'.$row['sou_waplink'].'" placeholder="一般情况下留空">
-<small class="help-block">例：百度搜索的电脑端和手机端不会自适应，需要手动设置手机端，如<code>https://m.baidu.com/s?word=</code><br>如果你添加的搜索区分手机端和PC端，则需要手动设置。<code>一般情况下留空即可</code></small>
+<small class="help-block">注：百度搜索的电脑端和手机端不会自适应，需要手动设置手机端，如<code>https://m.baidu.com/s?word=</code><br>如果你添加的搜索区分手机端和PC端，则需要手动设置。<code>一般情况下留空即可</code></small>
 </div>
 <div class="form-group">
 <label>标题文字颜色: (*必填) </label><br>
 <input type="text" class="form-control" name="color" value="'.$row['sou_color'].'" required>
-<small class="help-block">(*必填) 填写颜色的十六进制，如： <code>#FF0000</code>(红色)<br>默认值：<code>#696a6d</code></small>
+<small class="help-block">(*必填) 填写颜色的十六进制码，如： <code>#FF0000</code>(红色)<br>默认值：<code>#696a6d</code></small>
 </div>
 <div class="form-group">
 <label>搜索引擎图标:(*必填) </label><br>
@@ -157,7 +157,7 @@ $sql="INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `s
 if(mysqli_query($con,$sql)){
  echo '<script>alert("添加搜索引擎 '.$name.' 成功！");window.location.href="/admin/sou.php";</script>';
 }else
- echo '<script>alert("添加搜索引擎失败");history.go(-1);</script>';
+ echo '<script>alert("添加搜索引擎失败！");history.go(-1);</script>';
 }
 }
 elseif($set=='edit_submit')
@@ -200,14 +200,11 @@ else
 }
 else
 {
-echo '<div class="alert alert-info">系统共有 <b>'.$sousrows.'</b> 个搜索引擎<br/><a href="./sou.php?set=add" class="btn btn-primary">新增搜索引擎</a></div>';
-
-?>
-      <div class="table-responsive">
+echo '<div class="alert alert-info">系统共有 <b>'.$sousrows.'</b> 个搜索引擎<br/><a href="./sou.php?set=add" class="btn btn-primary">新增搜索引擎</a></div> <div class="table-responsive">
         <table class="table table-striped">
-          <thead><tr><th>排序权重</th><th>名称</th><th>别名</th><th>链接</th><th>状态</th><th>操作</th></tr></thead>
-          <tbody>
-<?php
+          <thead><tr><th>排序权重</th><th>名称</th><th>别名</th><th>地址</th><th>状态</th><th>操作</th></tr></thead>
+          <tbody>';
+          
 $rs=mysqli_query($con,"SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` ASC");
 while($res = mysqli_fetch_array($rs))
 {
