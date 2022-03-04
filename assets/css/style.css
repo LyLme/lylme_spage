@@ -23,7 +23,7 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 #search button{position:absolute;top:0;right:0;background:none;border:0;border-radius:20px;width:auto;height:50px;border-radius:0 10px 10px 0;outline:none;background-color:#4e6ef2}
 #search button:hover{cursor:pointer;background-color:#4662d9}
 #search button i{color:#ddd;font-size:18px}
-.search-group{display:none;padding-left:75px}
+.search-group{text-align: center;}
 .s-current .search-type{padding-left:0;display:block}
 .s-current{display:block}
 #search-list{position:relative;overflow-x:auto}
@@ -40,6 +40,7 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 .type-text{position:absolute;left:0;width:75px;padding-left:9pt;font-size:1pc;line-height:31px}
 .search-type{white-space:nowrap;margin:0}
 .search-type label{margin:0}
+.search-type img {width: 14px;height: 14px;margin: 0 5px 0 8px;vertical-align: -0.15em;fill: currentColor;overflow: hidden;}
 .search-type li{margin-bottom:10px;display:inline-block;background:#ffffffAD !important;background:rgba(255,255,255,70%);border-radius:10px}
 .search-type li label{display:inline-block;padding:0 11px;font-size:14px;border-radius:3px 3px 0 0;cursor:pointer}
 .search-type input:checked+label,.search-type input:hover+label{background-color:#fff;height:50px;border-radius:10px}
