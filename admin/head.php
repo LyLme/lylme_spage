@@ -27,7 +27,8 @@ if($islogin==1){}else exit("<script language='javascript'>window.location.href='
         
         <nav class="sidebar-main">
           <ul class="nav nav-drawer">
-            <li class="nav-item active"> <a href="./"><i class="mdi mdi-home"></i> 后台首页</a> </li>
+            <li class="nav-item active"> <a href="./"><i class="mdi mdi-home-map-marker"></i> 后台首页</a> </li>
+            <li class="nav-item active"> <a href="/"><i class="mdi mdi-home"></i> 网站首页</a> </li>
             <li class="nav-item nav-item-has-subnav">
               <a href="javascript:void(0)"><i class="mdi mdi-palette"></i>网站配置</a>
               <ul class="nav nav-subnav">
@@ -97,5 +98,3 @@ if($islogin==1){}else exit("<script language='javascript'>window.location.href='
       
     </header>
     <!--End 头部信息-->
-    
- 
