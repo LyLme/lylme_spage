@@ -88,6 +88,12 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
 }
 
 $update_host = 'cdn.lylme.com'; //程序更新服务器,请勿删除和修改，否则将导致无法接收版本更新和报错
+if(@$update = json_decode(file_get_contents('https://'.$update_host.'/lylmes_page/update.json'), true)){}
+
+function getver($ver){
+    $vn=explode('.',str_replace('v','',$ver));
+	return $vn[0].sprintf("%02d",$vn[1]).sprintf("%02d",$vn[2]);
+}
 
 function saveSetting($k, $v){
 	$v = daddslashes($v);
