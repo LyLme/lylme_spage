@@ -24,13 +24,15 @@ if ($conf['background']  == '') {
 			<div class="collapse navbar-collapse" id="navbarsExample05">
 				<ul class="navbar-nav mr-auto">
 			<?php 
-				$tagslists = mysqli_query($con, "SELECT * FROM `lylme_tags`"); 
+				if($tagslists = mysqli_query($con, "SELECT * FROM `lylme_tags`")){ 
 				while($taglists = mysqli_fetch_assoc($tagslists)) { 
 				    echo '<li class="nav-item"><a class="nav-link" href="'.$taglists["tag_link"].'"';
 				    if($taglists["tag_target"]==1)echo ' target="_blant"';
 				    echo '>'.$taglists["tag_name"].'</a></li>
-				    ';
-			}?>
+				    ';}}
+else{
+echo '<script>alert("网站版本已更新，请前往后台=>检查更新，更新数据库");</script>';}
+?>
 				</ul>
 				<div id="main">  
 <div id="show_date"></div>  
