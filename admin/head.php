@@ -21,14 +21,13 @@ if($islogin==1){}else exit("<script language='javascript'>window.location.href='
     <aside class="lyear-layout-sidebar"> 
       <!-- logo -->
       <div id="logo" class="sidebar-header">
-        <a href="./"><img src="/assets/img/logo-sidebar.png"  alt="LyLme" /></a>
+        <a href="/"><img src="/assets/img/logo-sidebar.png"  alt="LyLme" title="返回首页" /></a>
       </div>
       <div class="lyear-layout-sidebar-scroll"> 
         
         <nav class="sidebar-main">
           <ul class="nav nav-drawer">
-            <li class="nav-item active"> <a href="./"><i class="mdi mdi-home-map-marker"></i> 后台首页</a> </li>
-            <li class="nav-item active"> <a href="/"><i class="mdi mdi-home"></i> 网站首页</a> </li>
+            <li class="nav-item active"> <a href="./"><i class="mdi mdi-home-map-marker"></i>后台首页</a> </li>
             <li class="nav-item nav-item-has-subnav">
               <a href="javascript:void(0)"><i class="mdi mdi-palette"></i>网站配置</a>
               <ul class="nav nav-subnav">
@@ -53,9 +52,9 @@ if($islogin==1){}else exit("<script language='javascript'>window.location.href='
                 <li> <a href="./link.php">管理链接</a> </li>
               </ul>
             </li>
-           
-            
+             <li class="nav-item active"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
              <li> <a href="javascript:loginout()"><i class="mdi mdi-logout"></i> 退出登录</a> </li>
+             </ul>
         </nav>
         
         <div class="sidebar-footer">
