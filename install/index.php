@@ -48,7 +48,7 @@ function random($length, $numeric = 0) {
 	}
 	return $hash;
 }
-$ver = 'v1.1.1'
+$ver = '1.1.1'
 ?>
 <html lang="zh-cn">
 <head>
