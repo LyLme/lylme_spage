@@ -8,11 +8,12 @@ function tjsj($tjname){if($tjname==''){echo '0';}else{echo $tjname;}}
     <main class="lyear-layout-content">
 
       <div class="container-fluid">
-<?php if(@$update = json_decode(file_get_contents('https://'.$update_host.'/lylmes_page/update.json'), true)){
-if($update['switch'] == true){if($update['msg_switch'] == true ||$update['version']!=$conf['version']){echo ' <div class="card"><div class="card-header"><h4>'.$update['title'].'</h4></div><ul class="list-group">';}
+<?php 
+if(!empty($update)){
+if($update['switch'] == true){if($update['msg_switch'] == true || getver($update['version']) > getver($conf['version'])){echo ' <div class="card"><div class="card-header"><h4>'.$update['title'].'</h4></div><ul class="list-group">';}
 if($update['msg']!='') {echo $update['msg'];}
-if($update['version']!=$conf['version']){echo $update['update_msg'];}
-if($update['msg_switch'] == true ||$update['version']!=$conf['version']){echo '</ul></div>';}}} ?>
+if(getver($update['version']) > getver($conf['version'])){echo $update['update_msg'];}
+if($update['msg_switch'] == true || getver($update['version']) > getver($conf['version'])){echo '</ul></div>';}}} ?>
         <div class="row">
           <div class="col-sm-6 col-lg-3">
             <div class="card bg-primary">
@@ -112,10 +113,10 @@ if($update['msg_switch'] == true ||$update['version']!=$conf['version']){echo '<
 			<b>建站日期：</b><?php echo $conf['build']?>
 		</li>
 		<li class="list-group-item">
-			<b>当前版本：</b><?php echo $conf['version']?>
+			<b>当前版本：</b><?php echo $conf['version']?> <a href="./update.php" target="_blant">检查更新</a>
 		</li>
 		<li class="list-group-item">
-			<b>最新版本：</b> <?php echo $update['version']?> <a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blant">检查更新</a>
+			<b>最新版本：</b> <?php echo $update['version']?> <a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blant">查看更新说明</a>
 		</li>
 		<li class="list-group-item">
 			<b>项目作者：</b>六零
