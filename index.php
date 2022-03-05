@@ -1,14 +1,14 @@
 <?php
 @header('Content-Type: text/html; charset=UTF-8');
 if(!file_exists('install/install.lock')){
-	exit('<title>六零导航页 - 安装</title>您还未安装，点击<a href="install"><font color="blue">这里</font></a>开始安装！');
+	exit('<title>六零导航页 - 安装程序</title>您还未安装，点击<a href="install"><font color="blue">这里</font></a>开始安装！');
 }
 include "include/head.php"; 
 echo '<body onload="FocusOnInput()"><div class="banner-video">';
 if ($conf['background']  == '') {
     if(!file_exists('./assets/img/background.jpg')){echo '<img src="./assets/img/cron.php">';}
-    else{echo '<img src="./assets/img/background.jpg" alt="本地背景">';}}
-    else{echo '<img src="'.$conf['background'].'" alt="自定义背景">';}
+    else{echo '<img src="./assets/img/background.jpg">';}}
+    else{echo '<img src="'.$conf['background'].'">';}
 ?> 
 			<div class="bottom-cover" style="background-image: linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(244 248 251 / 0.6) 50%, rgb(244 248 251) 100%);">
 			</div>
@@ -52,7 +52,6 @@ if($conf['tq'] != 'false'){
 <?php
 if($conf['yan']!='false'){
 $filename = './assets/data/data.dat';  //随机一言文件路径
-
 if (file_exists($filename)) {
 $data = explode(PHP_EOL, file_get_contents($filename));
 $result = str_replace(array("\r", "\n", "\r\n"), '', $data[array_rand($data)]);
@@ -82,13 +81,9 @@ echo '<p class="content"><b>随机一言:</b>'.$result;
 								</label>
 							</li>
 							';
-							}
-							        
+							} 
 							    }
-							    ?>
-							    
-							    
-							  
+							    ?>						  
 						</ul>
 					</div>
 				</div>
