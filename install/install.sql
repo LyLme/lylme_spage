@@ -141,7 +141,7 @@ INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`, `link_
 (60, 'W3school', 5, 'http://www.w3school.com.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-h5\"></use></svg>', NULL, 10),
 (61, 'Github', 5, 'https://github.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-github\"></use></svg>', NULL, 10),
 (62, '码云Gitee', 5, 'https://gitee.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gitee00\"></use></svg>', NULL, 10),
-(63, '吾爱破解', 5, 'https://www.52pojie.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-theater-masks\"></use></svg>', NULL, 10),
+(63, 'Linux命令查询', 5, 'https://linux.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-linux\"></use></svg>', NULL, 10),
 (64, 'CSDN', 5, 'https://www.csdn.net/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-csdn\"></use></svg>', NULL, 10),
 (65, 'CdnJs', 5, 'https://cdnjs.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-cdnjs\"></use></svg>', NULL, 10),
 (66, '字节跳动CDN', 5, 'https://cdn.bytedance.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-zjtd00\"></use></svg>', NULL, 10),
