@@ -1,7 +1,7 @@
 <?php 
 $title='搜索引擎设置';
 include './head.php';
-$sousrows=mysqli_num_rows(mysqli_query($con, "SELECT * FROM `lylme_sou`"));
+$sousrows=$DB->num_rows($DB->query("SELECT * FROM `lylme_sou`"));
 ?>
     <main class="lyear-layout-content">
       
@@ -72,8 +72,9 @@ echo '<h4>新增搜索接</h4>
 elseif($set=='edit')
 {
 $id=$_GET['id'];
-$row2 = mysqli_query($con,"select * from lylme_sou where sou_id='$id' limit 1");
-$row=mysqli_fetch_assoc($row2);
+
+$row2 = $DB->query("select * from lylme_sou where sou_id='$id' limit 1");
+$row= $DB->fetch($row2);
 echo '<h4>修改搜索引擎</h4>
 <div class="panel-body">
 <form action="./sou.php?set=edit_submit&id='.$id.'" method="POST">
@@ -153,8 +154,7 @@ $sql="INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `s
 (NULL, '".$alias."', '".$name."', '".$hint."', '".$color."', '".$link."', '".$waplink."', '".$icon."', '".$st."', '".$sou_order."');
 ";
 
-
-if(mysqli_query($con,$sql)){
+if($DB->query($sql)){
  echo '<script>alert("添加搜索引擎 '.$name.' 成功！");window.location.href="/admin/sou.php";</script>';
 }else
  echo '<script>alert("添加搜索引擎失败！");history.go(-1);</script>';
@@ -163,8 +163,8 @@ if(mysqli_query($con,$sql)){
 elseif($set=='edit_submit')
 {
 $id=$_GET['id'];
-$rows2 = mysqli_query($con,"select * from lylme_sou where sou_id='$id' limit 1");
-$rows=mysqli_fetch_assoc($rows2);
+$rows2 = $DB->query("select * from lylme_sou where sou_id='$id' limit 1");
+$rows=$DB->fetch($rows2);
 if(!$rows)
  echo '<script>alert("当前记录不存在！");history.go(-1);</script>';
 $name=$_POST['name'];
@@ -183,7 +183,8 @@ if (empty($name) && empty($alias)&& empty($hint) && empty($link) && empty($color
 
 $sql="UPDATE `lylme_sou` SET `sou_alias` = '".$alias."', `sou_name` = '".$name."', `sou_hint` = '".$hint."', `sou_color` = '".$color."', `sou_link` = '".$link."', `sou_waplink` = '".$waplink."', `sou_icon` = '".$icon."', `sou_st` = '".$st."', `sou_order` = '".$order."' WHERE `lylme_sou`.`sou_id` = ".$id.";";
 
-if(mysqli_query($con,$sql))
+
+if($DB->query($sql))
 echo '<script>alert("修改搜索引擎 '.$name.' 成功！");window.location.href="/admin/sou.php";</script>';
 else
  echo '<script>alert("修改失败！");history.go(-1);</script>';
@@ -193,7 +194,7 @@ elseif($set=='delete')
 {
 $id=$_GET['id'];
 $sql="DELETE FROM lylme_sou WHERE sou_id='$id'";
-if(mysqli_query($con,$sql))
+if($DB->query($sql))
  echo '<script>alert("删除成功！");window.location.href="/admin/sou.php";</script>';
 else
  echo '<script>alert("删除失败！");history.go(-1);</script>';
@@ -204,9 +205,10 @@ echo '<div class="alert alert-info">系统共有 <b>'.$sousrows.'</b> 个搜索�
         <table class="table table-striped">
           <thead><tr><th>排序权重</th><th>名称</th><th>别名</th><th>地址</th><th>状态</th><th>操作</th></tr></thead>
           <tbody>';
-          
-$rs=mysqli_query($con,"SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` ASC");
-while($res = mysqli_fetch_array($rs))
+ 
+        
+$rs=$DB->query("SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` ASC");
+while($res = $DB->fetch($rs))
 {
 echo '<tr><td><b>'.$res['sou_order'].'</b></td><td><b><font color="'.$res['sou_color'].'">'.$res['sou_name'].'</font></b></td><td>'.$res['sou_alias'].'</td><td>'.$res['sou_link'].'</td><td>';
 
