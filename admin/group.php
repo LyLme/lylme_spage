@@ -23,7 +23,7 @@ if ($set == 'add') {
 <label>分组图标:</label><br>
 <textarea type="text" class="form-control" name="group_icon" value=""></textarea>
 <small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
-方式2：粘贴图标的<code>SVG</code>代码，<a href="/admin/help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
+方式2：粘贴图标的<code>SVG</code>代码，<a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
 
 <div class="form-group">
@@ -47,7 +47,7 @@ if ($set == 'add') {
 <label>分组图标:</label><br>
 <textarea type="text" class="form-control" name="group_icon">' . $row['group_icon'] . '</textarea>
 <small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
-方式2：粘贴图标的<code>SVG</code>代码，<a href="/admin/help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
+方式2：粘贴图标的<code>SVG</code>代码，<a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
 
 <div class="form-group">
@@ -63,7 +63,7 @@ if ($set == 'add') {
     } else {
         $sql = "INSERT INTO `lylme_groups` (`group_id`, `group_name`, `group_icon`,`group_order`) VALUES (NULL, '" . $name . "', '" . $icon . "', '" . $group_order . "')";
         if ($DB->query($sql)) {
-            echo '<script>alert("添加分组 ' . $name . ' 成功！");window.location.href="/admin/group.php";</script>';
+            echo '<script>alert("添加分组 ' . $name . ' 成功！");window.location.href="./group.php";</script>';
             exit();
         } else echo '<script>alert("添加分组失败");history.go(-1);</script>';
         exit();
@@ -80,21 +80,21 @@ if ($set == 'add') {
         echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
     } else {
         $sql = "UPDATE `lylme_groups` SET `group_name` = '" . $name . "', `group_icon` = '" . $icon . "' WHERE `lylme_groups`.`group_id` = '" . $id . "';";
-        if ($DB->query($sql)) echo '<script>alert("修改分组 ' . $name . ' 成功！");window.location.href="/admin/group.php";</script>';
+        if ($DB->query($sql)) echo '<script>alert("修改分组 ' . $name . ' 成功！");window.location.href="./group.php";</script>';
         else echo '<script>alert("' . $sql . '修改分组失败");history.go(-1);</script>';
     }
 } elseif ($set == 'delete') {
     $id = $_GET['id'];
     $delsql1 = 'DELETE FROM `lylme_links` WHERE group_id =' . $id;
     $delsql2 = 'DELETE FROM `lylme_groups` WHERE group_id=' . $id;
-    if ($DB->query($delsql1) && $DB->query($delsql2)) echo '<script>alert("删除成功！");window.location.href="/admin/group.php";</script>';
+    if ($DB->query($delsql1) && $DB->query($delsql2)) echo '<script>alert("删除成功！");window.location.href="./group.php";</script>';
     else echo '<script>alert("删除失败！");history.go(-1);</script>';
 } elseif ($set == 'up') {
     $id = $_GET['id'];
     $order = $_GET['order'] - 1;
     $arrid = $_GET['arrid'];
     if ($order <= 0) {
-        echo '<script>window.location.href="/admin/group.php";</script>';
+        echo '<script>window.location.href="./group.php";</script>';
         exit();
     }
     // while($orderrow > 1){
@@ -104,7 +104,7 @@ if ($set == 'add') {
     // }
     $sql1 = 'UPDATE `lylme_groups` SET `group_order` = ' . $order . '  WHERE `group_id` = ' . $id;
     $sql2 = 'UPDATE `lylme_groups` SET `group_order` = ' . $_GET['order'] . '  WHERE `group_id` = ' . $arrid;
-    if ($DB->query($sql1)) echo '<script>window.location.href="/admin/group.php?orderid=' . $id . '";</script>';
+    if ($DB->query($sql1)) echo '<script>window.location.href="./group.php?orderid=' . $id . '";</script>';
     else echo '<script>alert("上移失败!");history.go(-1);</script>';
 } elseif ($set == 'down') {
     $id = $_GET['id'];
@@ -112,7 +112,7 @@ if ($set == 'add') {
     $arrid = $_GET['arrid'];
     $sql1 = 'UPDATE `lylme_groups` SET `group_order` = ' . $order . '  WHERE `group_id` = ' . $id;
     $sql2 = 'UPDATE `lylme_groups` SET `group_order` = ' . $order . '  WHERE `group_id` = ' . $arr[$arrid + 1];
-    if ($DB->query($sql1)) echo '<script>window.location.href="/admin/group.php?orderid=' . $id . '";</script>';
+    if ($DB->query($sql1)) echo '<script>window.location.href="./group.php?orderid=' . $id . '";</script>';
     else echo '<script>alert("下移失败!");history.go(-1);</script>';
 } else {
     $sql = " 1";

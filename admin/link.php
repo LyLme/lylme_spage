@@ -29,7 +29,7 @@ if ($set == 'add') {
 <label>链接图标:</label><br>
 <textarea type="text" class="form-control" name="icon"></textarea>
 <small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
-方式2：粘贴图标的<code>SVG</code>代码，<a href="/admin/help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
+方式2：粘贴图标的<code>SVG</code>代码，<a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
 <div class="form-group">
 <label>*分组:</label><br>
@@ -67,7 +67,7 @@ if ($set == 'add') {
 <label>链接图标:</label><br>
 <textarea type="text" class="form-control" name="icon" >' . $row['icon'] . '</textarea>
 <small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
-方式2：粘贴图标的<code>SVG</code>代码，<a href="/admin/help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
+方式2：粘贴图标的<code>SVG</code>代码，<a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
 
 <div class="form-group">
@@ -99,7 +99,7 @@ if ($set == 'add') {
     } else {
         $sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`link_order`) VALUES (NULL, '" . $name . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $name . "', '" . $link_order . "');";
         if ($DB->query($sql)) {
-            echo '<script>alert("添加链接 ' . $name . ' 成功！");window.location.href="/admin/link.php";</script>';
+            echo '<script>alert("添加链接 ' . $name . ' 成功！");window.location.href="./link.php";</script>';
         } else echo '<script>alert("添加链接失败！");history.go(-1);</script>';
     }
 } elseif ($set == 'edit_submit') {
@@ -115,13 +115,13 @@ if ($set == 'add') {
         echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
     } else {
         $sql = "UPDATE `lylme_links` SET `name` = '" . $name . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "' WHERE `lylme_links`.`id` = '" . $id . "';";
-        if ($DB->query($sql)) echo '<script>alert("修改链接 ' . $name . ' 成功！");window.location.href="/admin/link.php";</script>';
+        if ($DB->query($sql)) echo '<script>alert("修改链接 ' . $name . ' 成功！");window.location.href="./link.php";</script>';
         else echo '<script>alert("修改链接失败！");history.go(-1);</script>';
     }
 } elseif ($set == 'delete') {
     $id = $_GET['id'];
     $sql = "DELETE FROM lylme_links WHERE id='$id'";
-    if ($DB->query($sql)) echo '<script>alert("删除成功！");window.location.href="/admin/link.php";</script>';
+    if ($DB->query($sql)) echo '<script>alert("删除成功！");window.location.href="./link.php";</script>';
     else echo '<script>alert("删除失败！");history.go(-1);</script>';
 } else {
     echo '<div class="alert alert-info">系统共有 <b>' . $linksrows . '</b> 个链接<br/><a href="./link.php?set=add" class="btn btn-primary">新增链接</a></div>

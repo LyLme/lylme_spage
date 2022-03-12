@@ -18,7 +18,7 @@ if($oldpwd==$conf['admin_pwd'])
         else
         {
         saveSetting('admin_user',$user);
-        echo '<script>alert("用户名修改成功！\n新用户名：'.$user.'\n请牢记，将重新登录！");window.location.href="/admin";</script>'; 
+        echo '<script>alert("用户名修改成功！\n新用户名：'.$user.'\n请牢记，将重新登录！");window.location.href="./";</script>'; 
 		}
 }
     else if(!empty($newpwd))
@@ -26,13 +26,13 @@ if($oldpwd==$conf['admin_pwd'])
         if ($newpwd==$repwd  && empty($user)) 
         {
             saveSetting('admin_pwd',$newpwd);
-            echo '<script>alert("密码修改成功！\n新密码：'.$newpwd.'\n请牢记，将重新登录！");window.location.href="/admin";</script>';
+            echo '<script>alert("密码修改成功！\n新密码：'.$newpwd.'\n请牢记，将重新登录！");window.location.href="./";</script>';
         }
          else if($newpwd==$repwd)
         {
             saveSetting('admin_user',$user);
             saveSetting('admin_pwd',$newpwd);
-            echo '<script>alert("修改成功！\n新用户名：'.$user.'\n新密码：'.$newpwd.'\n请牢记，将重新登录！");window.location.href="/admin";</script>';
+            echo '<script>alert("修改成功！\n新用户名：'.$user.'\n新密码：'.$newpwd.'\n请牢记，将重新登录！");window.location.href="./";</script>';
         }
             
         }

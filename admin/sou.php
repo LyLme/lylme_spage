@@ -53,7 +53,7 @@ echo '<h4>新增搜索接</h4>
 <div class="form-group">
 <label>搜索引擎图标:(*必填) </label><br>
 <textarea type="text" class="form-control" name="icon" placeholder="<svg" required></textarea>
-<small class="help-block">方案1：粘贴图标的<code>SVG</code>代码(推荐) <a href="/admin/help.php?doc=icon" target="_blank">查看教程</a><br>方案2：使用图片地址，需要img标签，如<code>&lt;img src="/assets/img/logo.png" /&gt; </code></small>
+<small class="help-block">方案1：粘贴图标的<code>SVG</code>代码(推荐) <a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方案2：使用图片地址，需要img标签，如<code>&lt;img src="/assets/img/logo.png" /&gt; </code></small>
 </div>
 <div class="form-group">
                       <label class="btn-block" for="web_tq_status">启用开关</label>
@@ -111,7 +111,7 @@ echo '<h4>修改搜索引擎</h4>
 <div class="form-group">
 <label>搜索引擎图标:(*必填) </label><br>
 <textarea type="text" class="form-control" name="icon" placeholder="<svg" required>'.$row['sou_icon'].'</textarea>
-<small class="help-block">方案1：粘贴图标的<code>SVG</code>代码(推荐) <a href="/admin/help.php?doc=icon" target="_blank">查看教程</a><br>方案2：使用图片地址，需要img标签，如<code>&lt;img src="/assets/img/logo.png" /&gt; </code></small>
+<small class="help-block">方案1：粘贴图标的<code>SVG</code>代码(推荐) <a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方案2：使用图片地址，需要img标签，如<code>&lt;img src="/assets/img/logo.png" /&gt; </code></small>
 </div>
 <div class="form-group">
 <label>排序权重: (*必填) </label><br>
@@ -155,7 +155,7 @@ $sql="INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `s
 ";
 
 if($DB->query($sql)){
- echo '<script>alert("添加搜索引擎 '.$name.' 成功！");window.location.href="/admin/sou.php";</script>';
+ echo '<script>alert("添加搜索引擎 '.$name.' 成功！");window.location.href="./sou.php";</script>';
 }else
  echo '<script>alert("添加搜索引擎失败！");history.go(-1);</script>';
 }
@@ -185,7 +185,7 @@ $sql="UPDATE `lylme_sou` SET `sou_alias` = '".$alias."', `sou_name` = '".$name."
 
 
 if($DB->query($sql))
-echo '<script>alert("修改搜索引擎 '.$name.' 成功！");window.location.href="/admin/sou.php";</script>';
+echo '<script>alert("修改搜索引擎 '.$name.' 成功！");window.location.href="./sou.php";</script>';
 else
  echo '<script>alert("修改失败！");history.go(-1);</script>';
 }
@@ -195,7 +195,7 @@ elseif($set=='delete')
 $id=$_GET['id'];
 $sql="DELETE FROM lylme_sou WHERE sou_id='$id'";
 if($DB->query($sql))
- echo '<script>alert("删除成功！");window.location.href="/admin/sou.php";</script>';
+ echo '<script>alert("删除成功！");window.location.href="./sou.php";</script>';
 else
  echo '<script>alert("删除失败！");history.go(-1);</script>';
 }

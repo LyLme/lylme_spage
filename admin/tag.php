@@ -79,7 +79,7 @@ if ($set == 'add') {
     } else {
         $sql = "INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`) VALUES (NULL, '" . $name . "', '" . $link . "', '" . $target . "');";
         if ($DB->query($sql)) {
-            echo '<script>alert("添加导航菜单 ' . $name . ' 成功！");window.location.href="/admin/tag.php";</script>';
+            echo '<script>alert("添加导航菜单 ' . $name . ' 成功！");window.location.href="./tag.php";</script>';
         } else echo '<script>alert("添加导航菜单失败");history.go(-1);</script>';
     }
 } elseif ($set == 'edit_submit') {
@@ -98,13 +98,13 @@ if ($set == 'add') {
         echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
     } else {
         $sql = "UPDATE `lylme_tags` SET `tag_name` = '" . $name . "', `tag_link` = '" . $link . "', `tag_target` = '" . $target . "' WHERE `lylme_tags`.`tag_id` = " . $id . ";";
-        if ($DB->query($sql)) echo '<script>alert("修改导航菜单 ' . $name . ' 成功！");window.location.href="/admin/tag.php";</script>';
+        if ($DB->query($sql)) echo '<script>alert("修改导航菜单 ' . $name . ' 成功！");window.location.href="./tag.php";</script>';
         else echo '<script>alert("修改导航菜单失败！");history.go(-1);</script>';
     }
 } elseif ($set == 'delete') {
     $id = $_GET['id'];
     $sql = "DELETE FROM lylme_tags WHERE tag_id='$id'";
-    if ($DB->query($sql)) echo '<script>alert("删除成功！");window.location.href="/admin/tag.php";</script>';
+    if ($DB->query($sql)) echo '<script>alert("删除成功！");window.location.href="./tag.php";</script>';
     else echo '<script>alert("删除失败！");history.go(-1);</script>';
 } else {
     echo '<div class="alert alert-info">系统共有 <b>' . $tagsrows . '</b> 个导航菜单<br/><a href="./tag.php?set=add" class="btn btn-primary">新增导航菜单</a></div>';
