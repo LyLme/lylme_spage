@@ -78,7 +78,7 @@ while ($soulist = $DB->fetch($soulists)) {
     if ($soulist["sou_st"] == 1) {
         echo '	<li>
 								<input hidden=""  checked="" type="radio" name="type" id="type-' . $soulist["sou_alias"] . '" value="';
-        if ($ua == 'wap' && $soulist["sou_waplink"] != NULL) {
+        if (checkmobile() == 'wap' && $soulist["sou_waplink"] != NULL) {
             echo $soulist["sou_waplink"];
         } else {
             echo $soulist["sou_link"];
