@@ -38,17 +38,17 @@ function checkconnect($connect){
 	}
 }
 
-function random($length, $numeric = 0) {
-	$seed = base_convert(md5(microtime().$_SERVER['DOCUMENT_ROOT']), 16, $numeric ? 10 : 35);
-	$seed = $numeric ? (str_replace('0', '', $seed).'012340567890') : ($seed.'zZ'.strtoupper($seed));
-	$hash = '';
-	$max = strlen($seed) - 1;
-	for($i = 0; $i < $length; $i++) {
-		$hash .= $seed[mt_rand(0, $max)];
-	}
-	return $hash;
-}
-$ver = '1.1.1'
+// function random($length, $numeric = 0) {
+// 	$seed = base_convert(md5(microtime().$_SERVER['DOCUMENT_ROOT']), 16, $numeric ? 10 : 35);
+// 	$seed = $numeric ? (str_replace('0', '', $seed).'012340567890') : ($seed.'zZ'.strtoupper($seed));
+// 	$hash = '';
+// 	$max = strlen($seed) - 1;
+// 	for($i = 0; $i < $length; $i++) {
+// 		$hash .= $seed[mt_rand(0, $max)];
+// 	}
+// 	return $hash;
+// }
+$ver = '1.1.2'
 ?>
 <html lang="zh-cn">
 <head>
@@ -101,17 +101,28 @@ $_SESSION['checksession']=1;
 	</thead>
 	<tbody>
 		<tr>
-			<td>PHP 5.4+</td>
+			<td>PHP 5.4及以上</td>
 			<td>必须</td>
 			<td><?php echo version_compare(PHP_VERSION, '5.4.0', '>')?'<font color="green">'.PHP_VERSION.'</font>':'<font color="red">'.PHP_VERSION.'</font>'; ?></td>
 			<td>PHP版本支持</td>
 		</tr>
-
 		<tr>
-			<td>Mysqli</td>
+			<td>PDO</td>
 			<td>必须</td>
-			<td><?php checkconnect("mysqli_connect"); ?></td>
+			<td><?php echo checkclass('PDO',true); ?></td>
 			<td>数据库连接</td>
+		</tr>
+		<tr>
+			<td>file_get_contents()</td>
+			<td>必须</td>
+			<td><?php echo checkfunc('file_get_contents',true); ?></td>
+			<td>读取文件</td>
+		</tr>
+		<tr>
+			<td>session</td>
+			<td>必须</td>
+			<td><?php echo $_SESSION['checksession']==1?'<font color="green">可用</font>':'<font color="red">不支持</font>'; ?></td>
+			<td>PHP必备功能</td>
 		</tr>
 
 	</tbody>
@@ -132,11 +143,7 @@ $_SESSION['checksession']=1;
 </div>
 	<div class="panel-body">
 	<?php
-if(defined("SAE_ACCESSKEY"))
-echo <<<HTML
-检测到您使用的是SAE空间，支持一键安装，请点击 <a href="?do=3">下一步</a>
-HTML;
-else
+if(!defined("SAE_ACCESSKEY"))
 echo <<<HTML
 		<form action="?do=3" class="form-sign" method="post">
 		<label for="name">数据库地址:</label>
@@ -311,7 +318,7 @@ if($e==0) {
 	<div class="panel-body">
 <?php
 	$domian=array('lylme','https',$ver);
-	@file_get_contents($domian[1].'://cdn.'.$domian[0].'.com/lylmes_page/install.php?v='.$domian[2].'&date='.date('Y-m-d H:i').'&url='.$_SERVER['HTTP_HOST'], false, stream_context_create(array('http'=>array('method'=>"GET",'timeout'=>10))));
+	@file_get_contents($domian[1].'://dev.hao.'.$domian[0].'.com/installs?v='.$domian[2].'&date='.date('Y-m-d H:i').'&url='.$_SERVER['HTTP_HOST'], false, stream_context_create(array('http'=>array('method'=>"GET",'timeout'=>10))));
 	@file_put_contents("install.lock",'安装锁');
 	echo '<div class="alert alert-info"><font color="green">安装完成！管理账号和密码是:admin/123456</font><br/><br/><a href="../" target="_blank">>>网站首页</a>｜<a href="../admin/" target="_blank">>>后台管理</a><hr/>更多设置选项请登录后台管理进行修改。<br/><br/><font color="#FF0033">如果你的空间不支持本地文件读写，请自行在install/ 目录建立 install.lock 文件！</font><br>提示：本程序使用Bing每日壁纸作为网站背景<br>添加每天的CRON任务[非必需]<br><font color="orange">GET http://'.$_SERVER['HTTP_HOST'].'/assets/img/cron.php</font> <br>执行后会每天更新网站背景为Bing每日壁纸，忽略将使用默认图片作为背景<br/></div></div>';
 ?>
