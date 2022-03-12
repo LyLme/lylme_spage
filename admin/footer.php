@@ -14,3 +14,4 @@ return;
 <script type="text/javascript" src="js/main.min.js"></script>
 </body>
 </html>
+<?php $DB->close(); ?>
