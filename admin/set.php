@@ -43,7 +43,7 @@ if($set=='save'){
 	uploadimg($_FILES["logoimg"],'assets/img/logo.png','logo');
     uploadimg($_FILES["backgroundimg"],'assets/img/background.jpg','background');
 	
-	echo '<script>alert("修改成功！");window.location.href="/admin/set.php";</script>';
+	echo '<script>alert("修改成功！");window.location.href="./set.php";</script>';
 }
 else{
 ?>
