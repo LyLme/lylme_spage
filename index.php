@@ -1,6 +1,6 @@
 <?php
 @header('Content-Type: text/html; charset=UTF-8');
-define('version', 'v1.1.1');
+define('version', 'v1.1.2');
 include "./include/head.php";
 include './include/home.php';
 if (!file_exists('install/install.lock')) 
