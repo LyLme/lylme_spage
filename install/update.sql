@@ -44,3 +44,4 @@ ALTER TABLE `lylme_tags`
 ALTER TABLE `lylme_tags`
   MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
+UPDATE `lylme_config` SET `v` = 'v1.1.2' WHERE `lylme_config`.`k` = 'version';
