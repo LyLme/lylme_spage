@@ -1,7 +1,7 @@
 <?php 
 $title = '后台管理';
 include './head.php';
-$mysqlversion = mysqli_fetch_array(mysqli_query($con,"select VERSION()"))[0];
+$mysqlversion=$DB->count("select VERSION()");
 function tjsj($tjname){if($tjname==''){echo '0';}else{echo $tjname;}}
 ?>
    <!--页面主要内容-->
