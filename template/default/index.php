@@ -45,20 +45,19 @@ while ($taglists = $DB->fetch($tagslists)) {
     echo '>' . $taglists["tag_name"] . '</a></li>
 				    ';
 }
-?>
-				</ul>
-				<div id="main">  
-<div id="show_date"></div>  
-<div id="show_time"></div>
- </div>	
 
-<?php
 if ($conf['tq'] != 'false') {
     echo '<div id="he-plugin-simple"></div>
 		<script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>';
 }
 ?>
-			</div>
+
+				</ul>
+				<div id="main">  
+<div id="show_date"></div>  
+<div id="show_time"></div>
+ </div>	
+		</div>
 			
 		</nav>
 				<!--topbar结束-->
@@ -76,7 +75,7 @@ if ($conf['yan'] != 'false') {
             "\n",
             "\r\n"
         ) , '', $data[array_rand($data) ]);
-        echo '<p class="content"><b>随机一言:</b>' . $result;
+        echo '<p class="content">' . $result;
     }
 }
 ?>
