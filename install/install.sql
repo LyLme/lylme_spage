@@ -35,7 +35,7 @@ INSERT INTO `lylme_config` VALUES ('yan', 'true', '随机一言开关');
 INSERT INTO `lylme_config` VALUES ('tq', 'true', '天气显示开关');
 INSERT INTO `lylme_config` VALUES ('wztj', '', '网站统计代码');
 INSERT INTO `lylme_config` VALUES ('template', 'default','网站模板');
-INSERT INTO `lylme_config` VALUES ('template', NULL,'CDN地址');
+INSERT INTO `lylme_config` VALUES ('cdnpublic', NULL,'CDN地址');
 -- ----------------------------
 -- Table structure for lylme_groups
 -- ----------------------------
