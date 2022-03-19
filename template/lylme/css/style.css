@@ -21,7 +21,7 @@
     backdrop-filter: saturate(100%) blur(10px);
     border: 0;
     width: 100%;
-    /*height: 60px;*/
+    margin-bottom: 5px;
     line-height: 50px;
     text-indent: 10px;
     font-size: 18px;
@@ -505,17 +505,9 @@ ul#chso
 
 .mylist li.lylme-3 svg
 {
-    border-radius: 100%;
-    /* background-color: royalblue; */
-    /* margin-left: 10px; */
-    /* margin-right: 10px; */
     display: block;
     width: 45px;
     height: 45px;
-    /* padding: 8px; */
-    /* background: #fff; */
-    /* border: 1px solid #eee; */
-    /* border-radius: 10px; */
     margin: 25px auto;
 }
 
