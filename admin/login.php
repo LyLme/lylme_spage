@@ -4,7 +4,7 @@ if(isset($_POST['user']) && isset($_POST['pass'])){
 	$user=daddslashes($_POST['user']);
 	$pass=daddslashes($_POST['pass']);
 	if($user==$conf['admin_user'] && $pass==$conf['admin_pwd']) {
-		$session=md5($user.$pass.$password_hash);
+		$session=md5($user.$pass);
 		$token=authcode("{$user}\t{$session}", 'ENCODE', SYS_KEY);
 		setcookie("admin_token", $token, time() + 604800);
 		@header('Content-Type: text/html; charset=UTF-8');
@@ -17,7 +17,7 @@ if(isset($_POST['user']) && isset($_POST['pass'])){
 	setcookie("admin_token", "", time() - 604800);
 	@header('Content-Type: text/html; charset=UTF-8');
 	exit("<script language='javascript'>alert('您已成功注销本次登陆！');window.location.href='./login.php';</script>");
-}elseif($islogin==1){
+}elseif(isset($islogin)==1){
 	exit("<script language='javascript'>alert('您已登陆！');window.location.href='./';</script>");
 }
 ?>

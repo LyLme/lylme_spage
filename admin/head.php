@@ -1,6 +1,6 @@
 <?php
 include_once("../include/common.php");
-if($islogin==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
+if(isset($islogin)==1){}else exit("<script language='javascript'>window.location.href='./login.php';</script>");
 $update = update(); //检查更新
 ?>
 <!DOCTYPE html>
