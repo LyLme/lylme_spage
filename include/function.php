@@ -16,12 +16,10 @@ function dstrpos($string, $arr) {
 function checkmobile() {
 	$useragent = strtolower($_SERVER['HTTP_USER_AGENT']);
 	$ualist = array('android', 'midp', 'nokia', 'mobile', 'iphone', 'ipod', 'blackberry', 'windows phone');
-	if((dstrpos($useragent, $ualist) || strexists($_SERVER['HTTP_ACCEPT'], "VND.WAP") || strexists($_SERVER['HTTP_VIA'],"wap"))){
-		$ua = 'wap';
-		return $ua;
+	if((dstrpos($useragent, $ualist) || strexists($_SERVER['HTTP_ACCEPT'], "VND.WAP") || strexists(isset($_SERVER['HTTP_VIA']),"wap"))){
+		return true;
 	}else{
-	    $ua = 'pc';
-	    return $ua;
+	    return false;
 	}
 }
 
@@ -75,8 +73,24 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
         return $keyc . str_replace('=', '', base64_encode($result));
     }
 }
+
+function cdnpublic($cdnpublic) {
+    if(empty($cdnpublic)){
+        return '.';
+    }
+    else{
+        return $cdnpublic.$conf['version'];
+    }
+  
+}
+
+
+function background() {
+    if (empty($conf['background'])){if (file_exists(ROOT.'assets/img/background.jpg'))return '../assets/img/background.jpg';else return '../assets/img/bing.php';} 
+    else { return $conf['background'];}
+}
 function update() {
-    $update_host = 'cdn.lylme.com'; //程序更新服务器,请勿删除和修改，否则将导致无法接收版本更新和报错
+    $update_host = 'cdn.lylme.com'; //程序更新服务器,请勿删除和修改，否则将导致无法接收版本更新和程序报错
     @$update = json_decode(file_get_contents('https://' . $update_host . '/lylmes_page/update.json') , true);
     return $update;
 }
