@@ -30,10 +30,12 @@ INSERT INTO `lylme_config` VALUES ('copyright', 'Copyright ©2022 <a href=\"/\">
 INSERT INTO `lylme_config` VALUES ('keywords', '六零导航页,百度搜索,哔哩哔哩搜索,知乎搜索,六零导航,LyLme Spage,六零,LyLme,网站导航,上网导航', '关键字');
 INSERT INTO `lylme_config` VALUES ('logo', './assets/img/logo.png', '网站图标');
 INSERT INTO `lylme_config` VALUES ('background', '', '背景图片');
-INSERT INTO `lylme_config` VALUES ('version', 'v1.1.2', '程序版本');
+INSERT INTO `lylme_config` VALUES ('version', 'v1.1.3', '程序版本');
 INSERT INTO `lylme_config` VALUES ('yan', 'true', '随机一言开关');
 INSERT INTO `lylme_config` VALUES ('tq', 'true', '天气显示开关');
 INSERT INTO `lylme_config` VALUES ('wztj', '', '网站统计代码');
+INSERT INTO `lylme_config` VALUES ('template', 'default','网站模板');
+INSERT INTO `lylme_config` VALUES ('template', NULL,'CDN地址');
 -- ----------------------------
 -- Table structure for lylme_groups
 -- ----------------------------
@@ -98,7 +100,7 @@ INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`, `link_
 (17, '斗鱼直播', 1, 'https://www.douyu.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-douyu00\"></use></svg>', NULL, 10),
 (18, '企鹅电竞', 1, 'https://egame.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-qie00\"></use></svg>', NULL, 10),
 (19, '微信文件传输助手', 1, 'https://filehelper.weixin.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wechat00\"></use></svg>', NULL, 10),
-(20, '中国大学MOOC', 1, 'https://www.icourse163.org/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-daxue\"></use></svg>', NULL, 10),
+(20, '六零主页', 1, 'https://www.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-home00\"></use></svg>', NULL, 10),
 (21, 'Office模板', 2, 'https://www.officeplus.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-office00\"></use></svg>', NULL, 10),
 (22, '搞定设计', 2, 'https://www.gaoding.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gaoding00\"></use></svg>', NULL, 10),
 (23, '急切网设计', 2, 'http://jiqie.zhenbi.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-ji00\"></use></svg>', NULL, 10),
