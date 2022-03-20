@@ -68,12 +68,13 @@ elseif ($set == 'status') {
     $sw = $_GET['sw'];
     $sql = "UPDATE `lylme_apply` SET `apply_status` = '".$sw."' WHERE `lylme_apply`.`apply_id` = ".$id.";";
 
-    if ($DB->query($sql)) {echo '<script>window.location.href="./apply.php";</script>';
+    if ($DB->query($sql)) {
         if($sw==1){
-         echo '<script>alert("功能开发中！");history.go(-1);</script>';
+         echo '<script>alert("功能开发中！");</script>';
        //  $sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`link_order`) VALUES (NULL, '" . $name . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $mail ."的提交', '" . $link_order . "');";
        // $DB->query($sql);
         }
+        echo '<script>window.location.href="./apply.php";</script>';
     }
     else echo '<script>alert("审核失败！");history.go(-1);</script>';
 }
