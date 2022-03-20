@@ -34,6 +34,7 @@ INSERT INTO `lylme_config` VALUES ('version', 'v1.1.3', '程序版本');
 INSERT INTO `lylme_config` VALUES ('yan', 'true', '随机一言开关');
 INSERT INTO `lylme_config` VALUES ('tq', 'true', '天气显示开关');
 INSERT INTO `lylme_config` VALUES ('wztj', '', '网站统计代码');
+INSERT INTO `lylme_config` VALUES ('apply', '0','申请收录');
 INSERT INTO `lylme_config` VALUES ('template', 'default','网站模板');
 INSERT INTO `lylme_config` VALUES ('cdnpublic', NULL,'CDN地址');
 -- ----------------------------
@@ -214,3 +215,6 @@ ALTER TABLE `lylme_tags`
 ALTER TABLE `lylme_tags`
   MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
+
+-- 表`lylme_apply`
+CREATE TABLE `cloud`.`lylme_apply` ( `apply_id` INT(4) NOT NULL AUTO_INCREMENT , `apply_name` VARCHAR(20) NOT NULL , `apply_url` VARCHAR(255) NOT NULL , `apply_group` INT(2) NOT NULL , `apply_icon` TEXT NOT NULL , `apply_mail` VARCHAR(30) NOT NULL , `apply_time` DATETIME NOT NULL , `apply_status` INT NOT NULL , PRIMARY KEY (`apply_id`)) ENGINE = InnoDB COMMENT = '收录申请';
