@@ -20,12 +20,22 @@ if(isset($_REQUEST['authcode'])) {
 				$status=0;
 			}
 		}
+		function strlens($str){
+		    if(strlen($str) > 255){
+		        return true;  
+		    }
+		    else{
+		        return false;
+		    }
+		}
 		if($sw == 1) {
 			if(empty($name) || empty($url) || empty($icon) || empty($group_id) || empty($mail) ) {
 				exit('<script>alert("提交失败,请确保所有选项都不为空！");history.go(-1);</script>');
 			} else if(!preg_match('{^http[s]?://([\w-]+\.)+[\w]+(/[\w-./%&=]*)\.(jpg|png|ico)$}i', $icon) 
 						|| !preg_match('{^http[s]?://([\w-]+\.)+[\w-]+(/[\w-./?%&#=]*)?$}i', $url)) {
 				exit('<script>alert("提交失败！输入不符合要求");history.go(-1);</script>');
+			} else if(strlens($name)||strlens($url)||strlens($icon)||strlens($group_id)||strlens($mail)){
+			    exit('<script>alert("非法参数！");history.go(-1);</script>'); 
 			} else {
 				if($DB->num_rows($DB->query("SELECT * FROM `lylme_apply` WHERE `apply_url` LIKE '".$url."';"))>0) {
 					exit('<script>alert("链接已存在，请勿重复提交！");history.go(-1);</script>');
