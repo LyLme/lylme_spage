@@ -47,21 +47,47 @@ if($set=='update') {
 		}
 		return false;
 	}
-	$RemoteFile = $update['file'];
-	$ZipFile = "lylme_spage_update.zip";
-	copy($RemoteFile,$ZipFile) or die("无法下载更新包文件！".'<a href="update.php">返回上级</a>');
+	function deldir($dir) {
+		if(!is_dir($dir))return false;
+		$dh=opendir($dir);
+		while ($file=readdir($dh)) {
+			if($file!="." && $file!="..") {
+				$fullpath=$dir."/".$file;
+				if(!is_dir($fullpath)) {
+					unlink($fullpath);
+				} else {
+					deldir($fullpath);
+				}
+			}
+		}
+		closedir($dh);
+		if(rmdir($dir)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	$scriptpath=str_replace('\\','/',$_SERVER['SCRIPT_NAME']);
 	$scriptpath = substr($scriptpath, 0, strrpos($scriptpath, '/'));
 	$admin_path = substr($scriptpath, strrpos($scriptpath, '/')+1);
+	$RemoteFile = $update['file'];
+	$ZipFile = "lylme_spage_update.zip";
+	copy($RemoteFile,$ZipFile) or die("无法下载更新包文件！".'<a href="update.php">返回上级</a>');
 	if (zipExtract($ZipFile,ROOT)) {
 		if($admin_path!='admin' && is_dir(ROOT.'admin')) {
 			//修改后台地址
 			deldir(ROOT.$admin_path);
 			rename(ROOT.'admin',ROOT.$admin_path);
 		}
-		@header("Location: ./update.php?set=updatesql");
+		if(function_exists("opcache_reset"))@opcache_reset();
+		$upsql=true;
+		unlink($ZipFile);
+	} else {
+		unlink($ZipFile);
+		echo('<script language="javascript">alert("无法解压文件！");window.location.href="./update.php";</script>');
 	}
-} else if($set=='updatesql') {
+}
+if($set=='updatesql' || $upsql==true) {
 	$vn=explode('.',str_replace('v','',$conf['version']));
 	$vernum =  $vn[0].sprintf("%02d",$vn[1]).sprintf("%02d",$vn[2]);
 	if($vernum < 10100) {
