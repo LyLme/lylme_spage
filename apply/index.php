@@ -1,21 +1,23 @@
 <?php 
 include("../include/common.php");
 $grouplists =$DB->query("SELECT * FROM `lylme_groups`");
+
 if(isset($_REQUEST['authcode'])){
 	session_start();
 	if(strtolower($_REQUEST['authcode'])== $_SESSION['authcode']){
 		if(isset($_POST['name'])&& isset($_POST['url'])&& isset($_POST['icon'])&& isset($_POST['group_id'])&& isset($_POST['mail'])!=NULL){
-			$name=daddslashes($_POST['name']);
-			$url=daddslashes($_POST['url']);
-			$icon=daddslashes($_POST['icon']);
-			$group_id=daddslashes($_POST['group_id']);
-			$mail=daddslashes($_POST['mail']);
-			$sw = 1;
-			$date = date("Y-m-d H:i:s");
+			
 			$status = $conf["apply"];
 			if($status==2) {
 				exit('<script>alert("提交失败，网站已关闭申请收录功能！");window.location.href="./";</script>');
 			}
+			$name=strip_tags(daddslashes($_POST['name']));
+			$url=strip_tags(daddslashes($_POST['url']));
+			$icon=daddslashes($_POST['icon']);
+			$group_id=daddslashes($_POST['group_id']);
+			$mail=strip_tags(daddslashes($_POST['mail']));
+			$sw = 1;
+			$date = date("Y-m-d H:i:s");
 			if(empty($status)){
 				$status=0;
 			}
@@ -23,21 +25,22 @@ if(isset($_REQUEST['authcode'])){
 		if($sw == 1){
 			if(empty($name) || empty($url) || empty($icon) || empty($group_id) || empty($mail) ){
 				exit('<script>alert("提交失败,请确保所有选项都不为空！");history.go(-1);</script>');
-			} else if(strpos($icon, 'http') !== 0 && strpos($icon, '<svg') !== 0 ||strpos($url, 'http') !== 0) {
-				exit('<script>alert("提交失败，请按要求填写！");history.go(-1);</script>');
+			} else if(!preg_match('{^http[s]?://([\w-]+\.)+[\w]+(/[\w-./%&=]*)\.(jpg|png|ico)$}i', $icon) 
+			|| !preg_match('{^http[s]?://([\w-]+\.)+[\w-]+(/[\w-./?%&#=]*)?$}i', $url)) {
+				exit('<script>alert("提交失败！输入不符合要求");history.go(-1);</script>');
 			} else{
 				$sql = "INSERT INTO `lylme_apply` (`apply_id`, `apply_name`, `apply_url`, `apply_group`, `apply_icon`, `apply_mail`, `apply_time`, `apply_status`) VALUES (NULL, '".$name."', '".$url."', '".$group_id."', '".$icon."', '".$mail."', '".$date."', '".$status."');";
 				if($DB->query($sql)){
 					switch ($status) {
 						case 0:
-						    echo '<script>alert("提交成功，请等待管理员审核！");window.location.href="./";</script>';
+						    echo '<script>alert("提交成功！请等待管理员审核！");window.location.href="./";</script>';
 						break;
 						case 1:
-						    echo '<script>alert("提交成功，网站已成功收录！");window.location.href="./";</script>';
+						    echo '<script>alert("提交成功！网站已成功收录！");window.location.href="./";</script>';
 						break;
 					}
 				} else{
-					echo '<script>alert("提交失败,请联系网站管理员！");history.go(-1);</script>';
+					echo '<script>alert("提交失败！请联系网站管理员！");history.go(-1);</script>';
 				}
 			}
 		}
@@ -112,6 +115,9 @@ if(isset($_REQUEST['authcode'])){
 <div class="row lylme-wrapper" style="background-image: url(../assets/img/background.jpg);background-size: cover;">
 <div class="lylme-form">
     <div class="lylme-center">
+        <?php if($conf["apply"]==2) {
+        exit('<div class="lylme-header text-center"><h2>网站已关闭申请收录</h2></div> </div>');
+        }?>
     <div class="lylme-header text-center"><h2>申请收录</h2></div>
 <form action="" method="POST">
 <div class="form-group has-feedback feedback-left row">
@@ -147,17 +153,18 @@ if(isset($_REQUEST['authcode'])){
 <div class="form-group has-feedback feedback-left row">
     <div class="col-xs-12">
     <label>* 网站图标:</label>
-    <textarea type="text" class="form-control" name="icon" required placeholder="<svg 或 http://"></textarea>
+    <textarea type="text" id="icon" class="form-control" name="icon" required placeholder="如：https://hao.lylme.com/assets/img/logo.png"></textarea>
     <span class="mdi mdi-emoticon form-control-feedback" aria-hidden="true"></span>
-    <small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>http://www.xxx.com/img/logo.png</code><br>
-方式2：粘贴图标的<code>SVG</code>代码(建议)，<a href="https://blog.lylme.com/archives/lylme_spage-svg.html" target="_blank">查看教程</a></small>
+    <small class="help-block">1.填写图标的<code>URL</code>地址，如<code>http://www.xxx.com/img/logo.png</code><br>
+    2. 链接使用<code>http</code>或用<code>https</code>协议<br>
+    3. 仅支持<code>.ico .png .jpg .gif</code>的格式</small>
     </div>
 </div>
 
 <div class="form-group has-feedback feedback-left row">
     <div class="col-xs-12">
     <label>* 联系邮箱:</label>
-    <input type="text" class="form-control" name="mail" value="" required placeholder="填写邮箱">
+    <input type="text" class="form-control" name="mail" value="" autocomplete="off" required placeholder="填写邮箱">
     <span class="mdi mdi-email form-control-feedback" aria-hidden="true"></span>
     </div>
 </div>
@@ -177,9 +184,27 @@ if(isset($_REQUEST['authcode'])){
           </div>
     </div>
 <div class="form-group">
-<input type="submit" class="btn btn-primary btn-block" value="提交"></form>
+<input type="submit" id="submit"class="btn btn-primary btn-block" value="提交申请"></form>
     </div>
   </div>
 </div>
 </body>
+<script>
+      window.onload = function() {
+      var inputInt = document.getElementById('icon');
+      var submit = document.getElementById("submit");
+      function sw_on(){inputInt.style.borderColor = "#ebebeb";submit.disabled = false;submit.value = "提交";}
+      function sw_off(){inputInt.style.borderColor = "#ff0000";submit.disabled = true;submit.value = "输入不符合要求";}
+      inputInt.oninput  = function() {
+        var re =/^http[s]?:\/\/([\w-]+\.)+[\w]+(\/[\w-./%&=]*)\.(jpg|png|ico|gif)$/
+        if (!re.test(this.value)) {
+          sw_off();
+        } else {
+          sw_on();
+        }
+      };
+      sw_on();
+      }
+      
+    </script>
 </html>
