@@ -160,7 +160,7 @@ INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`, `link_
 (76, '王者荣耀', 6, 'https://pvp.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wzry00\"></use></svg>', NULL, 10),
 (77, '3DM GAME', 6, 'https://www.3dmgame.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-games00\"></use></svg>', NULL, 10),
 (78, '官方主页', 7, 'https://www.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-home00\"></use></svg>', NULL, 10),
-(79, '申请收录', 7, 'https://blog.lylme.com/archives/included.html', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sq00\"></use></svg>', NULL, 10),
+(79, '申请收录', 7, '/apply', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sq00\"></use></svg>', NULL, 10),
 (80, '建议&反馈', 7, 'https://support.qq.com/products/356339', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-fk00\"></use></svg>', NULL, 10);
 
 SET FOREIGN_KEY_CHECKS = 1;
@@ -209,7 +209,8 @@ INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`) VALUES
 (1, '主页', 'https://www.lylme.com/', 0),
 (2, '博客', 'https://blog.lylme.com/', 1),
 (3, 'Github', 'https://github.com/lylme', 1),
-(4, '关于', 'https://gitee.com/LyLme/lylme_spage/blob/master/README.md', 1);
+(4, '关于', 'https://gitee.com/LyLme/lylme_spage/blob/master/README.md', 1),
+(3, '申请收录', '/apply', 1);
 ALTER TABLE `lylme_tags`
   ADD PRIMARY KEY (`tag_id`);
 ALTER TABLE `lylme_tags`
