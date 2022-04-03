@@ -1,10 +1,31 @@
 <?php 
 include("../include/common.php");
+if(!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
+	function get_head($url) {
+		$get_heads = array();
+		$opts = array( 
+		    'http'=>array( 
+		    'method'=>"GET", 
+		    'timeout'=>4
+		    ) 
+		);
+		$contents = @file_get_contents("compress.zlib://".$url, false, stream_context_create($opts));
+		preg_match('/<title>(.*?)<\/title>/is',$contents,$title);
+		preg_match('/<link rel=".*?icon" * href="(.*?)".*?>/is', $contents,$icon);
+		
+		$get_heads['title'] = str_replace("'","\"",preg_replace("/\s/","",$title[1]));
+		$get_heads['icon'] = get_urlpath(preg_replace("/\s/","",$icon[1]),$url);
+		return $get_heads;
+	}
+	$head = get_head($url);
+	header('Content-Type:application/json');
+	exit("{'title': '".$head['title']."', 'icon': '".$head['icon']."'}");
+}
 $grouplists =$DB->query("SELECT * FROM `lylme_groups`");
 if(isset($_REQUEST['authcode'])) {
 	session_start();
 	if(strtolower($_REQUEST['authcode'])== $_SESSION['authcode']) {
-		if(isset($_POST['name'])&& isset($_POST['url'])&& isset($_POST['icon'])&& isset($_POST['group_id'])&& isset($_POST['mail'])!=NULL) {
+		if(isset($_POST['name'])&& isset($_POST['url'])&& isset($_POST['icon'])&& isset($_POST['group_id'])) {
 			$status = $conf["apply"];
 			if($status==2) {
 				exit('<script>alert("提交失败，网站已关闭申请收录功能！");window.location.href="./";</script>');
@@ -13,42 +34,42 @@ if(isset($_REQUEST['authcode'])) {
 			$url=strip_tags(daddslashes($_POST['url']));
 			$icon=strip_tags(daddslashes($_POST['icon']));
 			$group_id=strip_tags(daddslashes($_POST['group_id']));
-			$mail=strip_tags(daddslashes($_POST['mail']));
+			$userip=strip_tags(get_real_ip());
 			$sw = 1;
 			$date = date("Y-m-d H:i:s");
 			if(empty($status)) {
 				$status=0;
 			}
 		}
-		function strlens($str){
-		    if(strlen($str) > 255){
-		        return true;  
-		    }
-		    else{
-		        return false;
-		    }
+		function strlens($str) {
+			if(strlen($str) > 255) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 		if($sw == 1) {
-			if(empty($name) || empty($url) || empty($icon) || empty($group_id) || empty($mail) ) {
-				exit('<script>alert("提交失败,请确保所有选项都不为空！");history.go(-1);</script>');
-			} else if(!preg_match('{^http[s]?://([\w-]+\.)+[\w]+(/[\w-./%&=]*)\.(jpg|png|ico)$}i', $icon) 
-						|| !preg_match('{^http[s]?://([\w-]+\.)+[\w-]+(/[\w-./?%&#=]*)?$}i', $url)) {
-				exit('<script>alert("提交失败！输入不符合要求");history.go(-1);</script>');
-			} else if(strlens($name)||strlens($url)||strlens($icon)||strlens($group_id)||strlens($mail)){
-			    exit('<script>alert("非法参数！");history.go(-1);</script>'); 
+			if(empty($name) || empty($url) || empty($group_id) || empty($userip) ) {
+				//|| empty($icon)
+				exit('<script>alert("提交失败，请确保所有选项都不为空！");history.go(-1);</script>');
+			} else if(!preg_match('{^http[s]?://([\w-]+\.)+[\w-]+(/[\w-./?%&#=]*)?$}i', $url)) {
+				//!preg_match('{^http[s]?://([\w-]+\.)+[\w]+(/[\w-./%&=]*)\.(jpg|png|ico)$}i', $icon) ||
+				exit('<script>alert("提交失败，输入不符合要求！");history.go(-1);</script>');
+			} else if(strlens($name)||strlens($url)||strlens($icon)||strlens($group_id)||strlens($userip)) {
+				exit('<script>alert("非法参数！");history.go(-1);</script>');
 			} else {
 				if($DB->num_rows($DB->query("SELECT * FROM `lylme_apply` WHERE `apply_url` LIKE '".$url."';"))>0) {
-					exit('<script>alert("链接已存在，请勿重复提交！");history.go(-1);</script>');
+					exit('<script>alert("链接已存在，请勿重复提交，如需修改请联系站长！");history.go(-1);</script>');
 				}
-				$sql = "INSERT INTO `lylme_apply` (`apply_id`, `apply_name`, `apply_url`, `apply_group`, `apply_icon`, `apply_mail`, `apply_time`, `apply_status`) VALUES (NULL, '".$name."', '".$url."', '".$group_id."', '".$icon."', '".$mail."', '".$date."', '".$status."');";
+				$sql = "INSERT INTO `lylme_apply` (`apply_id`, `apply_name`, `apply_url`, `apply_group`, `apply_icon`, `apply_mail`, `apply_time`, `apply_status`) VALUES (NULL, '".$name."', '".$url."', '".$group_id."', '".$icon."', '".$userip."', '".$date."', '".$status."');";
 				if($DB->query($sql)) {
 					switch ($status) {
 						case 0:
-							echo '<script>alert("提交成功！请等待管理员审核！");window.location.href="./";</script>';
+													echo '<script>alert("提交成功！请等待管理员审核！");window.location.href="./";</script>';
 						break;
 						case 1:
-							$link_order = $DB->count('select MAX(id) from `lylme_links`')+1;
-						$sql1 = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`link_order`) VALUES (NULL, '" . $name . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $mail . "的提交 ', '" . $link_order . "');";
+													$link_order = $DB->count('select MAX(id) from `lylme_links`')+1;
+						$sql1 = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`link_order`) VALUES (NULL, '" . $name . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $userip . "的提交 ', '" . $link_order . "');";
 						if($DB->query($sql1)) {
 							echo '<script>alert("提交成功！网站已成功收录！");window.location.href="./";</script>';
 						} else {
@@ -72,14 +93,30 @@ if(isset($_REQUEST['authcode'])) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>申请收录 - <?php echo $conf['title'];
-?></title>
-<link rel="icon" href="/assets/img/logo.png" type="image/ico">
-<meta name="author" content="LyLme">
-<link href="../admin/css/materialdesignicons.min.css" rel="stylesheet">
-<link href="../admin/css/bootstrap.min.css" rel="stylesheet">
-<link href="../admin/css/style.min.css" rel="stylesheet">
+<title>申请收录 - <?php echo $conf['title']?></title>
+<link rel="icon" href="<?php echo get_urlpath($conf['logo'],siteurl().'/apply');?>" type="image/ico">
+<link href="https://cdn.lylme.com/admin/lyear/css/materialdesignicons.min.css" rel="stylesheet">
+<link href="https://cdn.lylme.com/admin/lyear/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.lylme.com/admin/lyear/css/style.min.css" rel="stylesheet">
 <style>
+#loading {
+	position:absolute;
+	left:0;
+	top:0;
+	height:100vh;
+	width:100vw;
+	z-index:1;
+	display:none;
+	align-items: center;
+	justify-content: center;
+	background-color:rgba(0,0,0,0.5);
+	color: #bbb;
+	font-size: 16px;
+}
+#loading>img {
+	height:32px;
+	width:32px;
+}
 .lylme-wrapper {
 	position: relative;
 }
@@ -128,6 +165,8 @@ if(isset($_REQUEST['authcode'])) {
 </style>
 </head>
 <body>
+ <div id="loading"><img src="https://cdn.lylme.com/admin/lyear/img/loading.gif"/>  &nbsp;
+正在获取....</div>
 <div class="row lylme-wrapper" style="background-image: url(<?php echo background()?>);background-size: cover;">
 <div class="lylme-form">
     <div class="lylme-center">
@@ -136,25 +175,18 @@ if(isset($_REQUEST['authcode'])) {
 }
 ?>
     <div class="lylme-header text-center"><h2>申请收录</h2></div>
-<form action="" method="POST">
-<div class="form-group has-feedback feedback-left row">
-    <div class="col-xs-12">
-    <label>* 网站名称:</label>
-    <input type="text" class="form-control" name="name" value="" required placeholder="网站名称">
-    <span class="mdi mdi-format-title form-control-feedback" aria-hidden="true"></span>
-    </div>
-</div>
+<form action="" method="POST" AUTOCOMPLETE="OFF">
 <div class="form-group has-feedback feedback-left row">
     <div class="col-xs-12">
     <label>* 网站链接:</label>
-    <input type="text" class="form-control" name="url" value="" required placeholder="http://或https://开头">
+    <input type="text" id="url" class="form-control" name="url" value="" onchange="get_head()" required placeholder="完整网址或域名">
     <span class="mdi mdi-link-variant form-control-feedback" aria-hidden="true"></span>
     </div>
 </div>
 <div class="form-group has-feedback feedback-left row">
     <div class="col-xs-12">
     <label>* 选择分组:</label>
-    <select class="form-control" name="group_id">
+    <select title="分组" class="form-control" name="group_id">
     <?php
     while($grouplist = $DB->fetch($grouplists)) {
 	if($grouplist["group_id"]==$row['group_id']) {
@@ -162,7 +194,7 @@ if(isset($_REQUEST['authcode'])) {
 	} else {
 		$select='';
 	}
-	echo '<option  value="'.$grouplist["group_id"].'">'.$grouplist["group_id"].'.  '.$grouplist["group_name"].'</option>';
+	echo '<option  value="'.$grouplist["group_id"].'">'.$grouplist["group_name"].'</option>';
 }
 ?>
     </select>
@@ -171,21 +203,27 @@ if(isset($_REQUEST['authcode'])) {
 </div>
 <div class="form-group has-feedback feedback-left row">
     <div class="col-xs-12">
-    <label>* 网站图标:</label>
-    <textarea type="text" id="icon" class="form-control" name="icon" required placeholder="如：https://hao.lylme.com/assets/img/logo.png"></textarea>
-    <span class="mdi mdi-emoticon form-control-feedback" aria-hidden="true"></span>
-    <small class="help-block">1.填写图标的<code>URL</code>地址，如<code>http://www.xxx.com/img/logo.png</code><br>
-2. 链接使用<code>http</code>或用<code>https</code>协议<br>
-    3. 仅支持<code>.ico .png .jpg .gif</code>的格式</small>
+    <label>* 网站名称:</label>
+    <input type="text" class="form-control" id="title" name="name" value="" required placeholder="网站名称">
+    <span class="mdi mdi-format-title form-control-feedback" aria-hidden="true"></span>
+        <small class="help-block">填写网站链接后点击空白处自动获取</small>
     </div>
 </div>
 <div class="form-group has-feedback feedback-left row">
     <div class="col-xs-12">
-    <label>* 联系邮箱:</label>
-    <input type="text" class="form-control" name="mail" value="" autocomplete="off" required placeholder="填写邮箱">
-    <span class="mdi mdi-email form-control-feedback" aria-hidden="true"></span>
-    </div>
+    <label>网站图标:</label>
+    <textarea type="text" id="icon" class="form-control" name="icon"  placeholder="如：https://hao.lylme.com/assets/img/logo.png"></textarea>
+    <span class="mdi mdi-emoticon form-control-feedback" aria-hidden="true"></span>
+    <small class="help-block">填写图标的<code>URL</code>地址，如：<code>http://www.xxx.com/img/logo.png</code></small>
 </div>
+</div>
+<!--<div class="form-group has-feedback feedback-left row">-->
+<!--    <div class="col-xs-12">-->
+<!--    <label>* 联系邮箱:</label>-->
+<!--    <input type="text" class="form-control" name="mail" value="" autocomplete="off" required placeholder="填写邮箱">-->
+<!--    <span class="mdi mdi-email form-control-feedback" aria-hidden="true"></span>-->
+<!--    </div>-->
+<!--</div>-->
     <label>* 验证码:</label>
 <div class="form-group has-feedback feedback-left row">
     <div class="col-xs-9">
@@ -193,7 +231,7 @@ if(isset($_REQUEST['authcode'])) {
     <span class="mdi mdi-check form-control-feedback" aria-hidden="true"></span>
     </div>
     <div class="col-xs-3">
-        <img id="captcha_img" src='../include/validatecode.php?r=echo rand(); ?>' class="pull-right code"
+        <img id="captcha_img" title="验证码" src='../include/validatecode.php?r=echo rand(); ?>' class="pull-right code"
         onclick="document.getElementById('captcha_img').src='../include/validatecode.php?r='+Math.random()"
         />
           </div>
@@ -205,29 +243,64 @@ if(isset($_REQUEST['authcode'])) {
 </div>
 </body>
 <script>
-      window.onload = function() {
-	var inputInt = document.getElementById('icon');
-	var submit = document.getElementById("submit");
-	function sw_on() {
-		inputInt.style.borderColor = "#ebebeb";
-		submit.disabled = false;
-		submit.value = "提交";
+function get_head() {
+	var xmlhttp;
+	if (window.XMLHttpRequest) {
+		//  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+		xmlhttp=new XMLHttpRequest();
+	} else {
+		// IE6, IE5 浏览器执行代码
+		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	function sw_off() {
-		inputInt.style.borderColor = "#ff0000";
-		submit.disabled = true;
-		submit.value = "输入不符合要求";
-	}
-	inputInt.oninput  = function() {
-		var re =/^http[s]?:\/\/([\w-]+\.)+[\w]+(\/[\w-./%&=]*)\.(jpg|png|ico|gif)$/
-		        if (!re.test(this.value)) {
-			sw_off();
-		} else {
-			sw_on();
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			document.getElementById('loading').style.display = "none";
+			var data=xmlhttp.responseText;
+			var jsonobj=eval("("+data+")");
+			document.getElementById("title").value=jsonobj.title;
+			if(jsonobj.title==''&& jsonobj.icon==''){
+			    document.getElementById('title').placeholder="自动获取失败！可能原因：网站无法访问、被防火墙拦截或代码不规范";  
+			}
+			document.getElementById("icon").value=jsonobj.icon;
 		}
 	}
-	;
-	sw_on();
+	document.getElementById('loading').style.display = "flex";
+	document.getElementById('title').placeholder="网站名称";
+	var url = document.getElementById('url').value;
+	var re =/^http[s]?:\/\/+/;
+	if (!re.test(url)&&url!="") {
+		var url =  "http://"+url;
+		document.getElementById("url").value=url;
+	}
+	
+	var strSendUrl = "?url=" + url;
+	xmlhttp.open("GET",strSendUrl,true);
+	xmlhttp.send();
 }
+//       window.onload = function() {
+// 	var inputInt = document.getElementById('icon');
+// 	var submit = document.getElementById("submit");
+// 	function sw_on() {
+// 		inputInt.style.borderColor = "#ebebeb";
+// 		submit.disabled = false;
+// 		submit.value = "提交";
+// 	}
+// 	function sw_off() {
+// 		inputInt.style.borderColor = "#ff0000";
+// 		submit.disabled = true;
+// 		submit.value = "输入不符合要求";
+// 	}
+// 	inputInt.oninput  = function() {
+// 		var re =/^http[s]?:\/\/([\w-]+\.)+[\w]+(\/[\w-./%&=]*)\.(jpg|png|ico|gif)$/
+// 		        if (!re.test(this.value)) {
+// 			sw_off();
+// 		} else {
+// 			sw_on();
+// 		}
+// 	}
+// 	;
+// 	sw_on();
+// }
 </script>
+
 </html>
