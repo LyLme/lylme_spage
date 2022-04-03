@@ -39,7 +39,28 @@ $update = update();
                 <li> <a href="./user.php">修改账号密码</a> </li>
               </ul>
             </li>
-            <li class="nav-item active"> <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理</a> </li>
+            <li class="nav-item active"> <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理 </a>
+<?php $applyrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_apply` WHERE `apply_status` = 0"));
+if($applyrows>0) {
+	echo'<style>
+    .applyrow{
+    width: 18px;
+    height: 18px;
+    top: 15px;
+    right: 24px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #fff;
+    background-color: red;
+    border-radius: 100%;
+    text-align: center;
+    vertical-align: middle;
+    position: absolute;
+    line-height: 1.5;
+    }
+    </style><div class="applyrow">'.$applyrows.'</div>';
+}
+?></li>
             <li class="nav-item nav-item-has-subnav">
               <a href="javascript:void(0)"><i class="mdi mdi-folder"></i> <span>分组管理</span></a>
               <ul class="nav nav-subnav">
