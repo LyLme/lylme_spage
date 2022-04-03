@@ -70,7 +70,7 @@ if ($set == 'edit') {
 		echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
 	} else {
 		$sql = "UPDATE `lylme_apply` SET `apply_name` = '" . $name . "', `apply_group` = '" . $group . "',`apply_icon` = '" . $icon . "',`apply_url` = '" . $url . "' WHERE `lylme_apply`.`apply_id` = '" . $id . "';";
-		if ($DB->query($sql)) echo '<script>alert("修改 ' . $name . ' 成功！");window.location.href="./apply.php";</script>'; else echo '<script>alert("' . $sql . '修改失败");history.go(-1);</script>';
+		if ($DB->query($sql)) echo '<script>alert("修改 ' . $name . ' 成功！");window.location.href="./apply.php";</script>'; else echo '<script>alert("' . $sql . '修改失败！原因：\n'.$DB->error().'");history.go(-1);</script>';
 	}
 } elseif ($set == 'delete') {
 	$id = $_GET['id'];
@@ -93,30 +93,52 @@ if ($set == 'edit') {
 			if($DB->query($sql1)) {
 				echo '<script>alert("成功！网站已成功收录！");window.location.href="./apply.php";</script>';
 			} else {
-				echo '<script>alert("收录失败！错误原因：\n'.$DB->error().$sql1.'");history.go(-1);</script>';
+				echo '<script>alert("收录失败！错误原因：\n'.$DB->error().'");history.go(-1);</script>';
 			}
 		}
-	} else {
-		if (!$DB->query($sql)) {
-			echo '<script>alert("审核失败！");history.go(-1);</script>';
+	} else if($sw==2){
+		if ($DB->query($sql)) {
+			echo '<script>window.location.href="./apply.php";</script>';
 		}
+		else{
+		    echo '<script>alert("审核失败！原因：\n'.$DB->error().'");history.go(-1);</script>';
+		}
+	}
+	else{
+	     echo '<script>alert("审核失败！未知参数");history.go(-1);</script>';
 	}
 } else {
 	echo '<div class="alert alert-info">
-    当前收到 <b>' . $applyrows . '</b> 次收录申请<br/>
-    </div>';
+    收录申请统计： <b>' . $applyrows . '</b> 次<br/>
+    收录申请开关： <b>';
+
+    switch ($conf['apply']) {
+        case 0:
+            echo '开启-需要审核';
+        break;
+        case 1:
+            echo '开启-无需审核';
+        break;
+        case 2:
+            echo '关闭-关闭申请';
+        break;
+    }
+    echo '</b> &nbsp;<a href="./set.php#apply">修改设置</a></div>';
 	?>
 		      <div class="table-responsive">
 		        <table class="table table-striped">
-		          <thead><tr><th>序号</th><th>图标</th><th>名称</th><th>链接</th><th>分组</th><th>申请人邮箱</th><th>审核</th><th>操作</th><th>申请时间</th></tr></thead>
+		          <thead><tr><th>序号</th><th>图标</th><th>名称</th><th>链接</th><th>分组</th><th>审核</th><th>操作</th><th>申请时间</th></tr></thead>
 		          <tbody>
 		<?php
 		    $rs = $DB->query("SELECT * FROM `lylme_apply` ORDER BY `lylme_apply`.`apply_time` DESC");
 	$i=0;
 	while ($res = $DB->fetch($rs)) {
 		$i++;
-		echo '<tr><td><b>'.$i.'</b></td><td><img src="' . $res["apply_icon"] . '" alt="' . $res["apply_name"] . '" /></td><td>' . $res['apply_name'] . '</td><td>' . $res['apply_url'] .'</td><td>'.$DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['apply_group'])) ["group_name"].'
-		</td><td>'.$res['apply_mail'].'</td><td>';
+		echo '<tr><td>';
+		if($res["apply_status"]==0) {echo '<font color="#48b0f7"><b>'.$i.'</b></font>';}
+		else{echo '<b>'.$i.'</b>';}
+		echo '</td><td><img src="' . $res["apply_icon"] . '" alt="' . $res["apply_name"] . '" /></td><td>' . $res['apply_name'] . '</td><td>' . $res['apply_url'] .'</td><td>'.$DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['apply_group'])) ["group_name"].'
+		</td><td>';
 		if($res["apply_status"]==2) {
 			echo '<font color="#f96868">已拒绝</font>';
 		} else if($res["apply_status"]==1) {
@@ -126,8 +148,9 @@ if ($set == 'edit') {
     <a href="./apply.php?set=status&id=' . $res['apply_id'] . '&sw=1" class="btn btn-primary btn-xs" onclick="return confirm(\'是否通过该条申请？\');">通过</a>&nbsp; 
     <a href="./apply.php?set=status&id=' . $res['apply_id'] . '&sw=2" class="btn btn-cyan btn-xs" onclick="return confirm(\'是否拒绝该条申请 ？\');">拒绝</a>';
 		}
-		echo '</td>
-        <td>&nbsp;<a href="./apply.php?set=edit&id=' . $res['apply_id'] . '" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./apply.php?set=delete&id=' . $res['apply_id'] . '" class="btn btn-xs btn-danger" onclick="return confirm(\'确定删除 ' . $res['apply_name'] . ' 的记录吗？\');">删除</a> </td>
+		echo '</td><td>';
+		if($res["apply_status"]==0) {echo '<a href="./apply.php?set=edit&id=' . $res['apply_id'] . '" class="btn btn-info btn-xs">编辑</a>&nbsp;';}
+		echo '<a href="./apply.php?set=delete&id=' . $res['apply_id'] . '" class="btn btn-xs btn-danger" onclick="return confirm(\'确定删除 ' . $res['apply_name'] . ' 的记录吗？\');">删除</a> </td>
         <td>'.$res['apply_time'].'</td>
         </tr>';
 	}
