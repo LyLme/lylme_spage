@@ -81,7 +81,7 @@ if(!empty($update)) {
             </div>
           </div>
         </div>
-        <?php $applyrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_apply` WHERE `apply_status` = 0"));
+<?php
 if($applyrows>0) {
 	echo'
         <div class="row">   
