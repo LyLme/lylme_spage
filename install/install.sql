@@ -214,7 +214,7 @@ INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`) VALUES
 ALTER TABLE `lylme_tags`
   ADD PRIMARY KEY (`tag_id`);
 ALTER TABLE `lylme_tags`
-  MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 -- 表`lylme_apply`
