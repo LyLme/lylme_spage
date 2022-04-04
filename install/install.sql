@@ -210,7 +210,7 @@ INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`) VALUES
 (2, '博客', 'https://blog.lylme.com/', 1),
 (3, 'Github', 'https://github.com/lylme', 1),
 (4, '关于', 'https://gitee.com/LyLme/lylme_spage/blob/master/README.md', 1),
-(3, '申请收录', '/apply', 1);
+(5, '申请收录', '/apply', 1);
 ALTER TABLE `lylme_tags`
   ADD PRIMARY KEY (`tag_id`);
 ALTER TABLE `lylme_tags`
