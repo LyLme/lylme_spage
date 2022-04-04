@@ -96,7 +96,6 @@ if($set=='updatesql' || $upsql==true) {
 	if($vernum < 10101) {
 		$sql = file_get_contents(ROOT.'install/update.sql');
 		$version = 'v1.1.1';
-		saveSetting('version',$version);
 	}
 	if($vernum < 10103) {
 		@unlink(ROOT.'include/head.php');
@@ -105,10 +104,13 @@ if($set=='updatesql' || $upsql==true) {
 		@unlink(ROOT.'include/footer.php');
 		$sql = $sql.file_get_contents(ROOT.'install/update1.sql');
 		$version = 'v1.1.3';
-		saveSetting('version',$version);
-	} else {
+	} 
+	if($vernum < 10104) {
+		$version = 'v1.1.4';
+	}else {
 		exit("<script language='javascript'>alert('你的网站已是最新版本！');window.location.href='./update.php';</script>");
 	}
+	saveSetting('version',$version);
 	$sql=explode(';',$sql);
 	$t=0;
 	$e=0;
@@ -122,6 +124,7 @@ if($set=='updatesql' || $upsql==true) {
 			$error.=$DB->error().'\n';
 		}
 	}
+	
 	echo('<script language="javascript">alert("网站升级完成！");window.location.href="./update.php";</script>');
 }
 include './footer.php';
