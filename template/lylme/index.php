@@ -15,7 +15,7 @@
 		<meta name="browsermode" content="application">
 		<meta name="x5-fullscreen" content="true">
 		<meta name="x5-page-mode" content="app">
-		<meta name="lsvn" content="Mi4w">
+		<meta name="lsvn" content="<?php echo base64_encode($conf['version'])?>">
 		<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js" type="application/javascript"></script>
 		<link href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.5.3/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 		<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.5.3/js/bootstrap.min.js" type="application/javascript"></script>

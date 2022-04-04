@@ -79,6 +79,7 @@ div#navbarsExample05{background:rgba(0,0,0,0.8);padding:10px 30px;border-radius:
 .mylist li.col-3{margin:5px 0 5px}
 .mylist li.col-3 svg{width:30px;height:30px;padding:5px;border-radius:5px}
 .mylist li.col-3 span{font-size:12px}
+.mylist li.col-3 img {display: block; width: 30px; height: 30px; padding: 5px; background: #fff; border: 1px solid #eee; border-radius: 10px; margin: 0 auto;}
 }.navbar-toggler svg{width:24px;height:24px}
 .navbar-toggler .bi-list-nested{display:none}
 .navbar-toggler.collapsed .bi-list-nested{display:block}
