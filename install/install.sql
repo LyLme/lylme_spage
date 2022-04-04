@@ -30,7 +30,7 @@ INSERT INTO `lylme_config` VALUES ('copyright', 'Copyright ©2022 <a href=\"/\">
 INSERT INTO `lylme_config` VALUES ('keywords', '六零导航页,百度搜索,哔哩哔哩搜索,知乎搜索,六零导航,LyLme Spage,六零,LyLme,网站导航,上网导航', '关键字');
 INSERT INTO `lylme_config` VALUES ('logo', './assets/img/logo.png', '网站图标');
 INSERT INTO `lylme_config` VALUES ('background', '', '背景图片');
-INSERT INTO `lylme_config` VALUES ('version', 'v1.1.3', '程序版本');
+INSERT INTO `lylme_config` VALUES ('version', 'v1.1.4', '程序版本');
 INSERT INTO `lylme_config` VALUES ('yan', 'true', '随机一言开关');
 INSERT INTO `lylme_config` VALUES ('tq', 'true', '天气显示开关');
 INSERT INTO `lylme_config` VALUES ('wztj', '', '网站统计代码');
