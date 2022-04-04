@@ -1,0 +1,82 @@
+@charset "utf-8";
+/*
+作者:D.Young
+主页：https://yyv.me/
+github：https://github.com/5iux/sou
+日期：2019-07-11
+版权所有，请勿删除
+*/
+
+*{padding:0;margin:0;outline:none;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;position:relative;overflow:hidden;background:#fff}
+html{font-family:'Noto Sans SC Sliced',PingFangSC-Light,Microsoft YaHei UI,Microsoft YaHei,helvetica,sans-serif;font-weight:500;color:#000}
+form,input,button{padding:0;margin:0;border:none;outline:none;background:none}
+input::-webkit-input-placeholder{color:#ccc;letter-spacing:2px;font-size:16px}
+ul,li{display:block;list-style:none}
+a{text-decoration:none;color:#000}
+#content{width:100%;height:100%}
+li img{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:currentColor;overflow:hidden}
+.nav-link{color:#adadad !important}
+.con{width:100%;transition:1s all;margin:auto;min-width:320px;height:380px;position:absolute;left:0;top:-100px;right:0;bottom:0}
+.con .shlogo{position:relative;width:auto;height:auto;margin:20px auto}
+h2.title{text-align:center;color:#fff;font-size:36px;font-weight:600;text-shadow:1px 1px 8px #504b4b}
+.con .shlogo a{width:100%;display:block;width:100%;height:100%}
+.con .sou{max-width:680px;position:relative;width:calc(100% - 60px);min-width:320px;margin:0 auto}
+.content{margin:10px}
+.con .sou form{width:100%;height:50px;display:block;margin:50px auto 30px;position:relative}
+.con .sou form .wd{background:#ffffff2e;padding-left:1em;width:100%;height:100%;display:block;border:1px solid #ddd;border-radius:25px;line-height:100%;font-size:17px;text-indent:50px;transition:0.3s all;color:#fff}
+.lg{z-index:1000}
+.con .sou form .lg svg{display:block;width:25px;height:25px;position:absolute;left:15px;top:12px;overflow:hidden;cursor:pointer}
+.con .sou form .lg img{display:block;width:25px;height:25px;position:absolute;left:25px;top:12px;overflow:hidden;cursor:pointer}
+.con .sou form .wd:focus{color:#000;background:#fff;box-shadow:0 0px 15px 0 rgba(32,33,36,0.2);border-color:#fff}
+.con .sou form button{width:40px;height:40px;display:block;position:absolute;z-index:10;right:6px;top:6px;cursor:pointer;font-size:22px;line-height:40px;border-radius:50%;color:#777}
+.con .sou #word{width:calc(100% - 70px);border:15px solid #f1f1f1;border-radius:10px;left:20px;position:absolute;z-index:500;top:65px;background:#f1f1f1;line-height:30px;font-size:16px;overflow:hidden;display:none}
+.con .sou #word li{cursor:pointer;color:#555}
+#word li:hover{background-color:#ddd}
+.foot{position:absolute;bottom:10px;text-align:center;width:100%;color:#adadad;height:20px;line-height:20px;font-size:12px;height:auto}
+.foot a{color:#fff}
+.home{width:50px;height:50px;position:absolute;right:70px;top:10px;z-index:200;cursor:pointer}
+.home a{font-size:20px;color:#999;line-height:50px;display:block;text-align:center}
+#menu{width:50px;height:50px;transform:scale(0.8);position:absolute;right:10px;top:5px;z-index:2000000;cursor:pointer;transition:0.5s}
+#menu i{position:absolute;left:0;right:0;margin:24px auto;width:30px;height:2px;background:#777}
+#menu i:before{content:'';width:20px;height:2px;top:-8px;background:#777;position:absolute;right:0}
+#menu i:after{content:'';width:20px;height:2px;bottom:-8px;background:#777;position:absolute;left:0}
+#menu.on{right:380px;background:#29f;border-radius:25px;box-shadow:0 6px 8px rgba(36,159,253,.3)}
+#menu.on i{width:20px;background:#fff}
+#menu.on i:before{top:-5px;transform:rotate(45deg);width:14px;right:-1px;left:auto;background:#fff}
+#menu.on i:after{bottom:-5px;transform:rotate(-45deg);width:14px;right:-1px;left:auto;background:#fff}
+.list{width:337px;padding:0 20px;height:100%;overflow:hidden;overflow-y:auto;position:absolute;right:0px;z-index:2000;background:#222d46;transition:0.3s all linear}
+.list.closed{right:-380px}
+.list ul{width:330px;float:left;padding:0 0 20px;margin-bottom:20px}
+.list ul li{word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;float:left;margin:5px;width:100px;height:30px;text-align:left;line-height:30px}
+.list ul li a{width:100%;border-radius:5px;transition:0.2s all linear;height:100%;display:block;color:#fff;font-weight:500;background:#293550;text-align:left;font-size:12px}
+.list ul li:hover a{color:#fff;background-color:#29f;background-image:linear-gradient(135deg,rgba(35,153,255) 0%,rgba(84,175,253) 100%);box-shadow:0 3px 3px rgba(0,40,70,.3)}
+.list ul li.title{width:100%;height:40px;line-height:40px;margin:30px 0 0;text-align:left;text-indent:10px;color:#fff;font-size:18px;font-weight:bold}
+svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:currentColor;overflow:hidden}
+.list ul li.title svg.icon{width:20px;height:20px}
+@media (max-width:640px){.con{top:0px}
+.con .shlogo{width:auto;height:auto}
+.con .sou form .wd:focus{background:#f1f1f1;box-shadow:none;border-color:#ccc}
+.con .sou form button{border-radius:25px}
+.con .sou #word{max-height:150px}
+#menu.on{right:270px}
+.list{width:227px}
+.list ul{width:220px}
+.con .sou ul li{width:100px;font-size:12px;text-indent:30px}
+.home,#menu{top:5px}
+.mywth{color:#777;left:10px}
+.mywth.hidden{display:none}
+}@media (max-height:420px){.con{margin:0;top:0px}
+.con .shlogo{display:none}
+.home,#menu,.mywth,.foot{display:none}
+}@media (prefers-color-scheme:dark){body{background-color:#162035}
+.mywth{color:#bbb}
+.con .sou form .wd:focus{background:#293550;border:1px solid #162035}
+.con .sou form .wd{border:1px solid #293550;color:#bbb}
+.con .sou #word{border:15px solid #293550;background:#293550}
+.con .sou #word .click_work{color:#89b}
+}::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#222d46;border-radius:0px}
+::-webkit-scrollbar-thumb{background:#293550;border-radius:0px}
+::-webkit-scrollbar-thumb:hover{background:#293550}
+::-webkit-scrollbar-corner{background:#222d46}
