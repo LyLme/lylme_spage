@@ -10,16 +10,22 @@ if(!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
 		    ) 
 		);
 		$contents = @file_get_contents("compress.zlib://".$url, false, stream_context_create($opts));
-		preg_match('/<title>(.*?)<\/title>/is',$contents,$title);
-		preg_match('/<link rel=".*?icon" * href="(.*?)".*?>/is', $contents,$icon);
-		
+		preg_match('/<title>(.*?)<\/title>/is',$contents,$title);  // 获取网站标题
+		preg_match('/<link rel=".*?icon" * href="(.*?)".*?>/is', $contents,$icon);  // 获取网站icon
+		preg_match('/<meta.+?charset=[^\w]?([-\w]+)/i', $contents,$charset);  //获取网站编码
+		$get_heads['charset']=$charset[1];
 		$get_heads['title'] = str_replace("'","\"",preg_replace("/\s/","",$title[1]));
 		$get_heads['icon'] = get_urlpath(preg_replace("/\s/","",$icon[1]),$url);
+		if(strtolower($get_heads['charset'])!="uft-8"){
+		    // 将非UTF-8编码转换
+		    $get_heads['title']  = iconv($get_heads['charset'], "UTF-8",$get_heads['title']);
+		    $get_heads['icon']  = iconv($get_heads['charset'], "UTF-8",$get_heads['icon']);
+		}
 		return $get_heads;
 	}
 	$head = get_head($url);
 	header('Content-Type:application/json');
-	exit("{'title': '".$head['title']."', 'icon': '".$head['icon']."'}");
+	exit("{'title': '".$head['title']."', 'icon': '".$head['icon']."','charset': '".$head['charset']."'}");
 }
 $grouplists =$DB->query("SELECT * FROM `lylme_groups`");
 if(isset($_REQUEST['authcode'])) {
@@ -214,7 +220,8 @@ if(isset($_REQUEST['authcode'])) {
     <label>网站图标:</label>
     <textarea type="text" id="icon" class="form-control" name="icon"  placeholder="如：https://hao.lylme.com/assets/img/logo.png"></textarea>
     <span class="mdi mdi-emoticon form-control-feedback" aria-hidden="true"></span>
-    <small class="help-block">填写图标的<code>URL</code>地址，如：<code>http://www.xxx.com/img/logo.png</code></small>
+    <small class="help-block">填写图标的<code>URL</code>地址，如：<code>http://www.xxx.com/img/logo.png</code><br>
+    部分网站无法自动获取，请手动填写</small>
 </div>
 </div>
 <!--<div class="form-group has-feedback feedback-left row">-->
