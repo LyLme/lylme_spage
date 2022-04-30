@@ -17,7 +17,6 @@ $update = update();
 <link href="css/materialdesignicons.min.css" rel="stylesheet">
 <link href="css/style.min.css" rel="stylesheet">
 </head>
-<body>
 <div class="lyear-layout-web">
   <div class="lyear-layout-container">
     <!--左侧导航-->
@@ -37,6 +36,7 @@ $update = update();
                 <li> <a href="./tag.php">导航菜单设置</a> </li>
                 <li> <a href="./sou.php">搜索引擎设置</a> </li>
                 <li> <a href="./user.php">修改账号密码</a> </li>
+                
               </ul>
             </li>
             <li class="nav-item active"> <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理 </a>
@@ -77,6 +77,7 @@ if($applyrows>0) {
             </li>
              <li class="nav-item active"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
              <li> <a href="javascript:loginout()"><i class="mdi mdi-logout"></i> 退出登录</a> </li>
+             
              </ul>
         </nav>
         <div class="sidebar-footer">
@@ -113,8 +114,39 @@ if($applyrows>0) {
                 <li> <a href="javascript:loginout()"><i class="mdi mdi-logout-variant"></i> 退出登录</a> </li>
               </ul>
             </li>
+            <li class="dropdown dropdown-skin">
+			  <span data-toggle="dropdown" class="icon-palette" aria-expanded="false"><i class="mdi mdi-palette"></i></span>
+			  <ul class="dropdown-menu dropdown-menu-right" data-stoppropagation="true">
+                <li class="drop-title"><p>主题</p></li>
+                <li class="drop-skin-li clearfix">
+                  <span class="inverse">
+                    <input type="radio" name="site_theme" value="default" id="site_theme_1" >
+                    <label for="site_theme_1" onclick="theme('default')"></label>
+                  </span>
+                  <span>
+                    <input type="radio" name="site_theme" value="dark" id="site_theme_2" checked="">
+                    <label for="site_theme_2" onclick="theme('dark')"></label>
+                  </span>
+                </li>
+			    
+			  </ul>
+			</li>
           </ul>
         </div>
       </nav>
     </header>
+    <script>
+        function theme(theme){
+          localStorage.setItem("theme", theme);  
+        }
+        var themes = localStorage.getItem("theme");
+        if(themes != "dark"){
+            var themes = 'default';
+            document.getElementById('site_theme_1').checked = true;
+        }
+        else{
+           document.getElementById('site_theme_2').checked = true;
+        }
+        document.write('<body data-theme="'+themes+'">');
+    </script>
     <!--End 头部信息-->
