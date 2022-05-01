@@ -4,7 +4,7 @@ define('IN_CRONLITE', true);
 define('SYS_KEY', 'lylme_key');
 define('SYSTEM_ROOT', dirname(__FILE__).'/');
 define('ROOT', dirname(SYSTEM_ROOT).'/');
-error_reporting(0);
+//error_reporting(E_ALL ^ E_NOTICE);
 require ROOT.'config.php';
 if(!defined('SQLITE') && (!$dbconfig['user']||!$dbconfig['pwd']||!$dbconfig['dbname']))
 {
@@ -25,4 +25,8 @@ $groupsrows=$DB->num_rows($DB->query("SELECT * FROM `lylme_groups`"));
 $cdnpublic = cdnpublic($conf['cdnpublic']);
 $templatepath ='./template/'.$conf["template"];
 $template =  $templatepath.'/index.php';
+$background = $conf["background"];
+$wap_background = $conf["wap_background"];
+if(checkmobile()){if(!empty($wap_background)){$background_img = $wap_background;}
+else{$background_img = $background; }}else{$background_img = $background; }
 ?>
