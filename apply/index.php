@@ -58,8 +58,7 @@ if(isset($_REQUEST['authcode'])) {
 			if(empty($name) || empty($url) || empty($group_id) || empty($userip) ) {
 				//|| empty($icon)
 				exit('<script>alert("提交失败，请确保所有选项都不为空！");history.go(-1);</script>');
-			} else if(!preg_match('{^http[s]?://([\w-]+\.)+[\w-]+(/[\w-./?%&#=]*)?$}i', $url)) {
-				//!preg_match('{^http[s]?://([\w-]+\.)+[\w]+(/[\w-./%&=]*)\.(jpg|png|ico)$}i', $icon) ||
+			} else if(!preg_match('/^http*/i', $url)) {
 				exit('<script>alert("提交失败，输入不符合要求！");history.go(-1);</script>');
 			} else if(strlens($name)||strlens($url)||strlens($icon)||strlens($group_id)||strlens($userip)) {
 				exit('<script>alert("非法参数！");history.go(-1);</script>');
@@ -140,7 +139,7 @@ if(isset($_REQUEST['authcode'])) {
 .lylme-center {
 	background: #fff;
 	min-width: 29.25rem;
-	padding: 2.14286em 3.57143em;
+	padding: 30px;
 	border-radius: 20px;
 	margin: 2.85714em;
 }
@@ -164,16 +163,25 @@ if(isset($_REQUEST['authcode'])) {
 	left: 15px;
 }
 .code {
-	padding-left:0px;
-	padding-right:0px;
-	height: 38px;
+    /*padding-left: 10px;*/
+    /*padding-right: 0px;*/
+    height: 38px;
+    /*max-width: 100px;*/
+}
+.apply_gg {
+    margin: 20px 0;
+    font-size: 15px;
+    line-height: 2;
 }
 </style>
 </head>
 <body>
  <div id="loading"><img src="https://cdn.lylme.com/admin/lyear/img/loading.gif"/>  &nbsp;
 正在获取....</div>
-<div class="row lylme-wrapper" style="background-image: url(<?php echo background()?>);background-size: cover;">
+<?php if(!empty(background())){
+	echo '<div class="row lylme-wrapper" style="background-image:  url('.background().');background-size: cover;">';}
+	else{ echo '<div class="row lylme-wrapper">';}?>
+
 <div class="lylme-form">
     <div class="lylme-center">
         <?php if($conf["apply"]==2) {
@@ -181,6 +189,9 @@ if(isset($_REQUEST['authcode'])) {
 }
 ?>
     <div class="lylme-header text-center"><h2>申请收录</h2></div>
+    <div class="apply_gg">
+      <?php echo $conf['apply_gg']?>
+    </div>
 <form action="" method="POST" AUTOCOMPLETE="OFF">
 <div class="form-group has-feedback feedback-left row">
     <div class="col-xs-12">
@@ -233,18 +244,18 @@ if(isset($_REQUEST['authcode'])) {
 <!--</div>-->
     <label>* 验证码:</label>
 <div class="form-group has-feedback feedback-left row">
-    <div class="col-xs-9">
+    <div class="col-xs-8">
     <input type="text" name="authcode" class="form-control" placeholder="验证码">
     <span class="mdi mdi-check form-control-feedback" aria-hidden="true"></span>
     </div>
-    <div class="col-xs-3">
+    <div class="col-xs-4">
         <img id="captcha_img" title="验证码" src='../include/validatecode.php?r=echo rand(); ?>' class="pull-right code"
         onclick="document.getElementById('captcha_img').src='../include/validatecode.php?r='+Math.random()"
         />
           </div>
     </div>
 <div class="form-group">
-<input type="submit" id="submit"class="btn btn-primary btn-block" value="提交申请"></form>
+<input type="submit" id="submit"class="btn btn-primary btn-block" value="提交"></form>
     </div>
   </div>
 </div>
