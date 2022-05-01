@@ -8,10 +8,11 @@
  **演示站点：**[https://hao.lylme.com](https://hao.lylme.com/)
 
  **前端截图：**
+![截图1](https://cdn.lylme.com/img/lylme_spage/lylme_spage1.png)
 
-<img src="https://cdn.lylme.com/img/lylme_spage/lylme_spage1.png" alt="截图1" style="zoom:80%;" />
+![六零导航页baisuTwo主题PC端截图](https://cdn.lylme.com/img/lylme_spage/image-20220501192454699.png)
 
-<img src="https://cdn.lylme.com/img/lylme_spage/lylme_spage6.png"/>
+![截图6](https://cdn.lylme.com/img/lylme_spage/lylme_spage6.png)
 
 ![截图2](https://cdn.lylme.com/img/lylme_spage/lylme_spage2.png)
 
@@ -63,3 +64,9 @@
 
 -   后台模板：Light Year Admin
 -   Gitee地址：https://gitee.com/yinqi/Light-Year-Admin-Template
+
+**BaiSu** 
+
+-   前端：baisuTwo模板
+-   原项目：[baisuTwo: onenav主题 (gitee.com)](https://gitee.com/baisucode/baisu-two)
+-   Fork仓库：[六零导航页(LyLme Spage)baisu主题，基于baisuTwo开发 (gitee.com)](https://gitee.com/LyLme/baisu)
