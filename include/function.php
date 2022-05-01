@@ -88,11 +88,7 @@ function siteurl() {
 $background = $conf["background"];
 //网站背景
 function background() {
-	if (empty($GLOBALS['background'])) {
-		if (file_exists(ROOT.'assets/img/background.jpg'))return '../assets/img/background.jpg'; else return '../assets/img/bing.php';
-	} else {
-		return $GLOBALS['background'];
-	}
+	return $GLOBALS['background_img'];
 }
 //程序更新
 function update() {
