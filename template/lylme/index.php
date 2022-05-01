@@ -22,7 +22,10 @@
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/style.css" type="text/css">
 		<link rel="stylesheet" href="<?php echo $cdnpublic ?>/assets/css/fontawesome-free5.13.0.css" type="text/css">
 	</head>
-    <body onload="FocusOnInput()" style="background-image: url(<?php echo background()?>);background-size: cover;">
+	<?php if(!empty(background())){
+	echo '<body onload="FocusOnInput()" style="background-image: url('.background().');background-size: cover;">';}
+	else{ echo '<body onload="FocusOnInput()">';}?>
+	
 		<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="position: absolute; z-index: 10000;">
 		<!--<a class="navbar-brand" href="/"><img src="./assets/img/logo.png" height="25"  title="六零起始页"></a>-->
 		<button class="navbar-toggler collapsed" style="border: none; outline: none;"type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
