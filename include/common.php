@@ -23,5 +23,6 @@ include_once(SYSTEM_ROOT."tj.php");
 $linksrows=$DB->num_rows($DB->query("SELECT * FROM `lylme_links`"));
 $groupsrows=$DB->num_rows($DB->query("SELECT * FROM `lylme_groups`"));
 $cdnpublic = cdnpublic($conf['cdnpublic']);
-$template =  './template/'.$conf["template"].'/index.php';
+$templatepath ='./template/'.$conf["template"];
+$template =  $templatepath.'/index.php';
 ?>
