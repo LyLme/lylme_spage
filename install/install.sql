@@ -29,13 +29,15 @@ INSERT INTO `lylme_config` VALUES ('home-title', '<h2 class="title">上网，从
 INSERT INTO `lylme_config` VALUES ('copyright', 'Copyright ©2022 <a href=\"/\">LyLme Spage</a>.  All Rights Reserved.', '版权代码');
 INSERT INTO `lylme_config` VALUES ('keywords', '六零导航页,百度搜索,哔哩哔哩搜索,知乎搜索,六零导航,LyLme Spage,六零,LyLme,网站导航,上网导航', '关键字');
 INSERT INTO `lylme_config` VALUES ('logo', './assets/img/logo.png', '网站图标');
-INSERT INTO `lylme_config` VALUES ('background', '', '背景图片');
-INSERT INTO `lylme_config` VALUES ('version', 'v1.1.4', '程序版本');
+INSERT INTO `lylme_config` VALUES ('background', './assets/img/background.jpg', '背景图片');
+INSERT INTO `lylme_config` VALUES ('wap_background', NULL,'手机端背景');
+INSERT INTO `lylme_config` VALUES ('version', 'v1.1.5', '程序版本');
 INSERT INTO `lylme_config` VALUES ('yan', 'true', '随机一言开关');
 INSERT INTO `lylme_config` VALUES ('tq', 'true', '天气显示开关');
 INSERT INTO `lylme_config` VALUES ('wztj', '', '网站统计代码');
 INSERT INTO `lylme_config` VALUES ('template', 'default','网站模板');
 INSERT INTO `lylme_config` VALUES ('cdnpublic', NULL,'CDN地址');
+INSERT INTO `lylme_config` VALUES ('apply_gg', '<b>收录说明：</b><br>\r\n1. 禁止提交违规违法站点<br> \r\n2. 页面整洁，无多个弹窗广告和恶意跳转<br>\r\n3. 非盈利性网站，网站正常访问<br>\r\n4. 添加本站友链或网站已ICP备案优先收录<br>','收录公告');
 INSERT INTO `lylme_config` VALUES ('apply', 0,'收录申请');
 -- ----------------------------
 -- Table structure for lylme_groups
