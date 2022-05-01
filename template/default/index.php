@@ -24,7 +24,8 @@
 		<link rel="stylesheet" href="<?php echo $templatepath;?>css/font.css" type="text/css">
 	</head>
     <body onload="FocusOnInput()"><div class="banner-video">
-<img src="<?php echo background()?>">
+	<?php if(!empty(background())){ echo '<img src="'.background().'">';}?>
+
 			<div class="bottom-cover" style="background-image: linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(244 248 251 / 0.6) 50%, rgb(244 248 251) 100%);">
 			</div>
 		</div>
