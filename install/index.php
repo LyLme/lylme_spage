@@ -48,7 +48,7 @@ function checkconnect($connect){
 // 	}
 // 	return $hash;
 // }
-$ver = '1.1.4'
+$ver = '1.1.5'
 ?>
 <html lang="zh-cn">
 <head>
