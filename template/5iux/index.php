@@ -38,7 +38,9 @@ if (!empty($q)) {
   <link href="<?php echo $templatepath;?>/css/wea.css" rel="stylesheet">
   <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js"></script>
 </head>
-<body style="background: url(<?php echo background()?>) no-repeat center/cover;">
+<?php if(!empty(background())){
+	echo '<body style="background: url('.background().') no-repeat center/cover;">';}
+	else{ echo '<body>';}?>
     <div id="menu"><i></i></div>
     <div class="list closed">
   <?php        
