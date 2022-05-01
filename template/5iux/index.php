@@ -34,8 +34,8 @@ if (!empty($q)) {
   <meta name="x5-fullscreen" content="true"><!--QQ强制全屏-->
   <meta name="x5-page-mode" content="app"><!--QQ应用模式-->
   <meta name="lsvn" content="<?php echo base64_encode($conf['version'])?>">
-  <link href="<?php echo $cdnpublic ?>/template/5iux/css/style.css" rel="stylesheet">
-  <link href="<?php echo $cdnpublic ?>/template/5iux/css/wea.css" rel="stylesheet">
+  <link href="<?php echo $templatepath;?>/css/style.css" rel="stylesheet">
+  <link href="<?php echo $templatepath;?>/css/wea.css" rel="stylesheet">
   <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body style="background: url(<?php echo background()?>) no-repeat center/cover;">
@@ -183,7 +183,7 @@ while($taglists = $DB->fetch($tagslists)) {
 ?></p>
     </div>
 <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
-<script src="<?php echo $cdnpublic ?>/template/5iux/js/sou.js"></script>
+<script src="<?php echo $templatepath;?>/js/sou.js"></script>
 
 <?php
 if(empty($t)) {echo '<script>var sou = "?t="+localStorage.getItem("sou");window.location.href=sou;</script>';}
