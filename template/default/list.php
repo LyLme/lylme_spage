@@ -18,7 +18,7 @@ while ($group = $DB->fetch($groups)) { //循环所有分组
     $sql = "SELECT * FROM `lylme_links` WHERE `group_id` = " . $group['group_id'];
     $group_links = $DB->query($sql);
     $link_num = $DB->num_rows($group_links); // 获取返回字段条目数量
-    echo '<ul class="mylist row"><li class="title">' . $group["group_icon"] . '<sapn>' . $group["group_name"] . '</sapn></li>'; //输出分组图标和标题
+    echo '<ul class="mylist row"><li id="group_' . $group["group_id"] . '" class="title">' . $group["group_icon"] . '<sapn>' . $group["group_name"] . '</sapn></li>'; //输出分组图标和标题
     if ($link_num == 0) {
         echo '</ul>' . "\n";
         $i = 0;

@@ -1,8 +1,8 @@
-a:hover{text-decoration:none !important;font-weight:bold !important}
+a:hover{text-decoration:none;font-weight:bold}
 a.icp{font-size:12px;color:#bbb;text-align:center}
 .navbar .navbar-expand-lg .navbar-light .fixed-top{position:absolute;z-index:10000}
 .bottom-cover{background-image:linear-gradient(rgba(255,255,255,0) 0%,rgb(244 248 251 / 0.6) 50%,rgb(244 248 251) 100%)}
-.navbar-light .navbar-toggler{color:#fff !important}
+.navbar-light .navbar-toggler{color:#fff}
 p.content{text-align:center;padding:5px 30px;border-radius:10px;font-size:12px;color:#fff;font-weight:500}
 ::-webkit-scrollbar{display:none}
 .back-to{bottom:55px;overflow:hidden;position:fixed;right:10px;width:110px;z-index:999}
@@ -14,7 +14,7 @@ body{font-size:14px;background:#f4f8fb;overflow-x:hidden}
 a{text-decoration:none}
 a:hover{text-decoration:none}
 svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:currentColor;overflow:hidden}
-.navbar-light .navbar-nav .nav-link{color:#fff !important;font-size:16px;font-weight:bold;text-shadow:0px 1px 0px #000}
+.navbar-light .navbar-nav .nav-link{color:#fff;font-size:16px;font-weight:bold;text-shadow:0px 1px 0px #000}
 #search{width:100%;margin:0;padding:0 0 10px;position:relative;z-index:2000;border-radius:5px}
 #search form{position:relative;margin-top:15px}
 #search-text{width:100%;height:50px;line-height:50px;text-indent:10px;font-size:16px;border-radius:10px;background-color:#fff;border:1px solid #c4c7ce;box-shadow:0 0.5rem 0.625rem #d4d4d44d;transition:0.3s all linear;padding-left:20px}
@@ -41,7 +41,7 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 .search-type{white-space:nowrap;margin:0}
 .search-type label{margin:0}
 .search-type img {width: 14px;height: 14px;margin: 0 5px 0 8px;vertical-align: -0.15em;fill: currentColor;overflow: hidden;}
-.search-type li{margin-bottom:10px;display:inline-block;background:#ffffffAD !important;background:rgba(255,255,255,70%);border-radius:10px}
+.search-type li{margin-bottom:10px;display:inline-block;background:#ffffffAD;background:rgba(255,255,255,70%);border-radius:10px}
 .search-type li label{display:inline-block;padding:0 11px;font-size:14px;border-radius:3px 3px 0 0;cursor:pointer}
 .search-type input:checked+label,.search-type input:hover+label{background-color:#fff;height:50px;border-radius:10px}
 #search-text::-webkit-input-placeholder{color:#bbb}
@@ -65,7 +65,7 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 .bottom-cover{width:100%;height:50%;position:absolute;bottom:-1px;z-index:10}
 @media screen and (min-width:1200px){.mylist li.col-3{min-width:132px}
 }@media screen and (min-width:992px) and (max-width:1200px){.mylist li.col-3{min-width:110px}
-}@media screen and (max-width:992px){#he-plugin-simple{display:none !important}
+}@media screen and (max-width:992px){#he-plugin-simple{display:none}
 .banner-video video{width:1200px}
 .banner-video img{object-fit:cover;width:100%;height:100vh}
 .search-group{padding-left:0px}
