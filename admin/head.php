@@ -5,7 +5,7 @@ if(isset($islogin)==1) {
 $update = update();
 ?>
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
@@ -39,6 +39,7 @@ $update = update();
                 
               </ul>
             </li>
+            <li class="nav-item active"> <a href="./theme.php"><i class="mdi mdi-invert-colors"></i>主题设置</a> </li>
             <li class="nav-item active"> <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理 </a>
 <?php $applyrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_apply` WHERE `apply_status` = 0"));
 if($applyrows>0) {
