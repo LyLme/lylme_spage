@@ -332,9 +332,6 @@ a {
 	*/
 }
 .search-main {
-	/*width:calc(100% - 500px);
-	*/
-	height:100%;
 	display:flex;
 	padding-top:25px;
 	/*justify-content:center;
