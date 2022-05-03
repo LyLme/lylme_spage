@@ -79,7 +79,7 @@ while ($group = $DB->fetch($groups)) {
 		<div class="index-main">
 			<!--搜索 S-->
 			<div class="search-main-w">
-				<div class="date-main" style="background-image: url('<?php echo 'https://cdn.lylme.com/api/acg/';?>')">
+				<div class="date-main" style="background-image: url('<?php echo $conf['background'];?>')">
 					<time class="times" id="nowTime">00:00:00</time>
 					<span class="dates" id="nowYmd">2022年01月01日</span>
 					<div class="list">
