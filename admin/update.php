@@ -1,6 +1,7 @@
 <?php 
 $title = '检查更新';
 include './head.php';
+$update = update();
 ?>
    <!--页面主要内容-->
     <main class="lyear-layout-content">
@@ -12,7 +13,7 @@ window.onload=function() {
 	var update=document.getElementById("update");
 	update.onclick=function() {if(confirm("注意：更新将会替换部分文件，是否继续？")) {window.location.href="./update.php?set=update";}
 		else {return false;}}}</script> ';
-	echo '<div class="alert alert-info" role="alert">当前版本：</b>'.$conf['version'].'，发现新版本：'.$update['version'].'&nbsp;&nbsp;<a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blant" class="alert-link">查看发行版</a></div>
+	echo '<div class="alert alert-info" role="alert">当前版本：</b>'.$conf['version'].'&nbsp;&nbsp;发现新版本：'.$update['version'].'&nbsp;&nbsp;<a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blant" class="alert-link">查看发行版</a></div>
         <div class="card"><div class="card-header"><h4>更新说明</h4></div><ul class="list-group">
             '.$update['update_log'].'
             <li class="list-group-item"><button id="update" class="btn btn-primary">更新</button></li>';
@@ -26,7 +27,7 @@ window.onload=function() {
   <div class="card"><div class="card-header"><h4>版本更新</h4></div><ul class="list-group">
   <li class="list-group-item"><b>当前版本：</b>'.$conf['version'].'</li>
   <li class="list-group-item"><b>最新版本：</b>Unknown</li>
-  <li class="list-group-item"><b>手动更新：</b>点击<a href="'.$update['file'].'" target="_blant">这里</a>或前往码云<a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blant" class="alert-link">下载<code>update.zip</code>后缀的更新包</a>解压到网站根目录后点击<a href="./update.php?set=updatesql" class="alert-link">更新数据库</a></li>';
+  <li class="list-group-item"><b>手动更新：</b>点击<a href="'.$update['file'].'" target="_blant">这里</a>或前往码云<a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blant" class="alert-link">下载<code>update.zip</code>后缀的更新包</a>解压到网站根目即可</a></li>';
 }
 ?>
 		</ul></div>
