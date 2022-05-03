@@ -2,7 +2,6 @@
 include_once("../include/common.php");
 if(isset($islogin)==1) {
 } else exit("<script language='javascript'>window.location.href='./login.php';</script>");
-$update = update();
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
