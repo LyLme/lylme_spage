@@ -1,5 +1,5 @@
 <?php
-if(empty(constant("VERSION")))exit;
+if(empty(constant("VERSION")))return 0;
 function get_vernum($version){
    $vn = explode('.',str_replace('v','',$version)); 
    $vernum =  $vn[0].sprintf("%02d",$vn[1]).sprintf("%02d",$vn[2]);
