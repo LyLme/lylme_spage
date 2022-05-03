@@ -1,6 +1,7 @@
 <?php 
 $title = '后台管理';
 include './head.php';
+$update = update();
 $mysqlversion=$DB->count("select VERSION()");
 function tjsj($tjname) {
 	if($tjname=='') {
