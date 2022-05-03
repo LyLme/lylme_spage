@@ -84,48 +84,9 @@ if($set=='update') {
 		unlink($ZipFile);
 	} else {
 		unlink($ZipFile);
-		echo('<script language="javascript">alert("无法解压文件！");window.location.href="./update.php";</script>');
+		echo('<script language="javascript">alert("无法解压文件！请手动下载更新包解压");window.location.href="./update.php";</script>');
 	}
 }
-if($set=='updatesql' || $upsql==true) {
-	$vn=explode('.',str_replace('v','',$conf['version']));
-	$vernum =  $vn[0].sprintf("%02d",$vn[1]).sprintf("%02d",$vn[2]);
-	if($vernum < 10100) {
-		exit("<script language='javascript'>alert(''网站程序版本太旧，不支持直接升级！');window.location.href='./';</script>");
-	}
-	if($vernum < 10101) {
-		$sql = file_get_contents(ROOT.'install/update.sql');
-		$version = 'v1.1.1';
-	}
-	if($vernum < 10103) {
-		@unlink(ROOT.'include/head.php');
-		@unlink(ROOT.'include/home.php');
-		@unlink(ROOT.'include/apply.php');
-		@unlink(ROOT.'include/footer.php');
-		$sql = $sql.file_get_contents(ROOT.'install/update1.sql');
-		$version = 'v1.1.3';
-	} 
-	if($vernum < 10104) {
-		$version = 'v1.1.4';
-	}else {
-		exit("<script language='javascript'>alert('你的网站已是最新版本！');window.location.href='./update.php';</script>");
-	}
-	saveSetting('version',$version);
-	$sql=explode(';',$sql);
-	$t=0;
-	$e=0;
-	$error='';
-	for ($i=0;$i<count($sql);$i++) {
-		if (trim($sql[$i])=='')continue;
-		if($DB->query($sql[$i])) {
-			++$t;
-		} else {
-			++$e;
-			$error.=$DB->error().'\n';
-		}
-	}
-	
-	echo('<script language="javascript">alert("网站升级完成！");window.location.href="./update.php";</script>');
-}
+
 include './footer.php';
 ?>
