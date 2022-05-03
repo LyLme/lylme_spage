@@ -81,9 +81,6 @@ if($set=='save') {
 		                      </div>
 		                    <small class="help-block">填写图片的URL，默认值：<code>./assets/img/logo.png</code>或<code><?php echo siteurl()?>/assets/img/logo.png</code>或从<code>本地上传</code></small>
 		                      </div>
-		                      
-		                      
-		                      
 		                     <div class="form-group">
 		                      <label for="web_site_background">网站背景</label>
 		                      <div class="input-group">
@@ -94,11 +91,6 @@ if($set=='save') {
 		                             </div></div>
 		                              <small class="help-block">填写图片的URL：如<code>./assets/img/background.jpg</code>或<code><?php echo siteurl()?>/assets/img/background.jpg</code>或从<code>本地上传</code><br>设置Bing每日壁纸：<a href="https://doc.lylme.com/spage/#/%E8%83%8C%E6%99%AF%E8%AE%BE%E7%BD%AE" target="_blank">查看教程</a></small>
 		                     </div>
-		                     
-		                     
-		                     
-		                     
-		                     
 		                      <div class="form-group">
 		                      <label for="wap_site_background">手机端背景图片</label>
 		                      <div class="input-group">
@@ -107,13 +99,8 @@ if($set=='save') {
 		                              <label  class="btn btn-default" id="checkwapbackground" for="wapbackgroundimg" type="button">选择图片</label > 
 		                               <input type="file" style="display:none" accept="image/png,image/jpeg" id="wapbackgroundimg" name="wapbackgroundimg" onclick = "updatetext('checkwapbackground');"/>
 		                             </div></div>
-		                              <small class="help-block">留空则使用PC端壁纸</small>
+		                              <small class="help-block">手机端独立背景，留空则使用PC端壁纸</small>
 		                     </div>
-		                     
-		                     
-		                     
-		                     
-		                     
 		                    <div class="form-group">
 		                      <label for="web_site_keywords">站点关键词</label>
 		                      <input class="form-control" type="text" id="web_site_keywords" name="keywords" value="<?php echo $conf['keywords']?>" placeholder="请输入站点关键词" >
@@ -124,20 +111,19 @@ if($set=='save') {
 		                      <textarea class="form-control" id="web_site_description" rows="5" name="description" placeholder="请输入站点描述" ><?php echo $conf['description']?></textarea>
 		                      <small class="help-block">网站描述，有利于搜索引擎抓取相关信息</small>
 		                    </div>
-
                    <div class="form-group">
                       <label for="web_site_home-title">首页提示语</label>
                       <textarea type="text" class="form-control" name="home-title" placeholder="请输入首页提示语，支持HTML代码"><?php echo $conf['home-title']?></textarea>
-               <small class="help-block">首页提示语：<code>支持HTML代码</code> 仅适用于部分主题</small>
+               <small class="help-block">首页提示语， 仅适用于部分主题<code>支持HTML代码</code></small>
                     </div>    
                     <div class="form-group">
                       <label for="web_site_copyright">版权信息</label>
-                      <textarea width="200px" type="text" class="form-control" name="copyright" placeholder="请输入版权信息，支持HTML代码"><?php echo $conf['copyright']?></textarea>
+                      <textarea width="200px" type="text" rows="5" class="form-control" name="copyright" placeholder="请输入版权信息，支持HTML代码"><?php echo $conf['copyright']?></textarea>
                <small class="help-block">显示在首页底部的版权提示，<code>支持HTML代码</code></small>
                     </div>
                  <div class="form-group">
                       <label for="web_site_wztj">自定义footer</label>
-                      <textarea type="text" class="form-control" name="wztj" placeholder="可填写网站统计、引用JS文件等"><?php echo $conf['wztj']?></textarea>
+                      <textarea type="text" rows="5" class="form-control" name="wztj" placeholder="可填写网站统计、引用JS文件等"><?php echo $conf['wztj']?></textarea>
                <small class="help-block">站点底部自定义，可填写网站统计、引用JS文件等<code>支持HTML代码</code> <a href="https://doc.lylme.com/spage/#/footer" target="_blank">查看教程</a></small>
                     </div>    
                     <div class="form-group">
@@ -150,6 +136,7 @@ if($set=='save') {
 	                        <input type="checkbox" <?php if($conf['yan']!='false')echo 'checked="checked"';?> name="yan" value="true">
 	                        <span></span>
 	                      </label>
+	                        <small class="help-block">显示在首页的随机一言，自定义一言文件路径，一行一条<code>/assets/date/date.dat</code> </small>
 	                    </div>
 	                    <div class="form-group">
 	                      <label class="btn-block" for="web_tq_status">天气显示开关</label>
@@ -157,6 +144,7 @@ if($set=='save') {
 	                        <input type="checkbox" <?php if($conf['tq']!='false')echo 'checked="checked"';?> name="tq" value="true">
 	                        <span></span>
 	                      </label>
+	                       <small class="help-block">和风天气插件，若不能使用请申请自己的密钥填入，<a href="https://doc.lylme.com/spage/#/%E5%A4%A9%E6%B0%94" target="_blank">查看教程</a><br><code>注：baisu模板关闭后同时关闭时间显示</code> </small>
 	                    </div>
 	                    <div class="form-group">
 	                      <button type="submit" class="btn btn-primary m-r-5">保 存</button>
