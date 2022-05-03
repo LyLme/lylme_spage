@@ -20,6 +20,8 @@ while($row = $DB->fetch($rs)) $conf[$row['k']]=$row['v'];
 include_once(SYSTEM_ROOT."function.php");
 include_once(SYSTEM_ROOT."member.php");
 include_once(SYSTEM_ROOT."tj.php");
+include_once(SYSTEM_ROOT."version.php");
+include_once(SYSTEM_ROOT."updbase.php");
 $linksrows=$DB->num_rows($DB->query("SELECT * FROM `lylme_links`"));
 $groupsrows=$DB->num_rows($DB->query("SELECT * FROM `lylme_groups`"));
 $cdnpublic = cdnpublic($conf['cdnpublic']);
