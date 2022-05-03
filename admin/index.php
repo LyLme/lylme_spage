@@ -48,7 +48,7 @@ if(!empty($update)) {
             <div class="card bg-danger">
               <div class="card-body clearfix">
                 <div class="pull-right">
-                  <p class="h6 text-white m-t-0">今日访客量</p>
+                  <p class="h6 text-white m-t-0">今日浏览量</p>
                   <p class="h3 text-white m-b-0 fa-1-5x"><?php tjsj($tjtoday);
 ?></p>
                 </div>
@@ -60,7 +60,7 @@ if(!empty($update)) {
             <div class="card bg-success">
               <div class="card-body clearfix">
                 <div class="pull-right">
-                  <p class="h6 text-white m-t-0">昨日访客量</p>
+                  <p class="h6 text-white m-t-0">昨日浏览量</p>
                   <p class="h3 text-white m-b-0 fa-1-5x"><?php tjsj($tjyesterday);
 ?></p>
                 </div>
@@ -72,7 +72,7 @@ if(!empty($update)) {
             <div class="card bg-purple">
               <div class="card-body clearfix">
                 <div class="pull-right">
-                  <p class="h6 text-white m-t-0">累计访客量</p>
+                  <p class="h6 text-white m-t-0">累计浏览量</p>
                   <p class="h3 text-white m-b-0 fa-1-5x"><?php tjsj($tjtotal);
 ?></p>
                 </div>
@@ -176,7 +176,7 @@ $(document).ready(function(e) {
 	var $dashChartBarsCnt  = jQuery( '.js-chartjs-bars' )[0].getContext( '2d' ),
 	        $dashChartLinesCnt = jQuery( '.js-chartjs-lines' )[0].getContext( '2d' );
 	var $dashChartBarsData = {
-		labels: ['今日访客', '昨日访客', '本月访客', '总访客', '链接数', '分组数'],
+		labels: ['今日浏览', '昨日浏览', '本月浏览', '总浏览', '链接数', '分组数'],
 				datasets: [ {
 			label: '数量',
 			                borderWidth: 1,
@@ -196,7 +196,7 @@ $(document).ready(function(e) {
 	}
 	;
 	var $dashChartLinesData = {
-		labels: ['今日访客', '昨日访客', '本月访客', '总访客', '链接数', '分组数'],
+		labels: ['今日浏览', '昨日浏览', '本月浏览', '总浏览', '链接数', '分组数'],
 				datasets: [ {
 			label: '数量',
 							data: [<?php echo $tjtoday;
