@@ -57,7 +57,43 @@ if ($set == 'edit') {
 <input type="submit" class="btn btn-primary btn-block" value="确定修改"></form>
 </div>
 <br/><a href="./apply.php"><<返回收录管理列表</a></div></div>';
-} elseif ($set == 'edit_submit') {
+} elseif ($set == 'conf') {
+	echo '<h4>修改收录设置</h4>
+<div class="panel-body">
+<form action="./apply.php?set=conf_submit" method="POST">
+<div class="form-group" id="apply">
+<label class="btn-block" for="web_yan_status">申请收录</label>
+<label class="lyear-switch switch-solid switch-cyan">
+<select class="form-control" name="apply">
+<option ';
+if($conf['apply'] == 0) echo 'selected="selected"';
+echo 'value="0">开启-需要审核</option><option ';
+if($conf['apply'] == 1) echo 'selected="selected"';
+echo 'value="1">开启-无需审核</option><option ';
+if($conf['apply'] == 2) echo 'selected="selected"'; 
+echo 'value="2">关闭-关闭申请</option>
+</select>  
+                      </label>
+                      <small class="help-block">申请收录开关，地址：<code>'. siteurl().'/apply</code><br>前往<a href="/apply" target="_blank">申请收录</a>提交页</small>
+                    </div>     
+<div class="form-group">
+     <label for="apply_gg">收录页公告</label>
+                      <textarea width="200px" type="text" rows="5" class="form-control" name="apply_gg" placeholder="显示在收录页的公告">'.$conf['apply_gg'].'</textarea>
+               <small class="help-block">显示在收录页的公告<code>使用HTML代码编写</code></small>
+                    </div>
+<div class="form-apply">
+<input type="submit" class="btn btn-primary btn-block" value="保存"></form>
+</div>
+<br/><a href="./apply.php"><<返回收录管理列表</a></div></div>';    
+    
+}elseif ($set == 'conf_submit') {
+    $apply= $_POST['apply'];
+    $apply_gg= $_POST['apply_gg'];
+    saveSetting('apply',$apply); 
+    saveSetting('apply_gg',$apply_gg); 
+    echo '<script>alert("修改成功！");window.location.href="./apply.php";</script>';
+}
+elseif ($set == 'edit_submit') {
 	$id = $_GET['id'];
 	$rows2 = $DB->query("select * from lylme_apply where apply_id='$id' limit 1");
 	$rows = $DB->fetch($rows2);
@@ -108,6 +144,7 @@ if ($set == 'edit') {
 	     echo '<script>alert("审核失败！未知参数");history.go(-1);</script>';
 	}
 } else {
+     echo '<pre>'.$conf['apply_gg'].'<br><a href="./apply.php?set=conf">修改</a></pre>';
 	echo '<div class="alert alert-info">
     收录申请统计： <b>' . $applyrows . '</b> 次<br/>
     收录申请开关： <b>';
@@ -123,7 +160,8 @@ if ($set == 'edit') {
             echo '关闭-关闭申请';
         break;
     }
-    echo '</b> &nbsp;<a href="./set.php#apply">修改设置</a></div>';
+    echo '</b> &nbsp;<a href="./apply.php?set=conf">修改设置</a></div>';
+   
 	?>
 		      <div class="table-responsive">
 		        <table class="table table-striped">
@@ -137,7 +175,11 @@ if ($set == 'edit') {
 		echo '<tr><td>';
 		if($res["apply_status"]==0) {echo '<font color="#48b0f7"><b>'.$i.'</b></font>';}
 		else{echo '<b>'.$i.'</b>';}
-		echo '</td><td><img src="' . $res["apply_icon"] . '" alt="' . $res["apply_name"] . '" /></td><td>' . $res['apply_name'] . '</td><td>' . $res['apply_url'] .'</td><td>'.$DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['apply_group'])) ["group_name"].'
+		echo '</td><td>';
+		if(empty($res["apply_icon"])){
+		    echo '未提交图标';
+		}else{ echo '<img src="' . $res["apply_icon"] . '" alt="' . $res["apply_name"] . '" />';}
+		echo '</td><td>' . $res['apply_name'] . '</td><td>' . $res['apply_url'] .'</td><td>'.$DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['apply_group'])) ["group_name"].'
 		</td><td>';
 		if($res["apply_status"]==2) {
 			echo '<font color="#f96868">已拒绝</font>';
