@@ -2,6 +2,7 @@
 error_reporting(0);
 session_start();
 @header('Content-Type: text/html; charset=UTF-8');
+include '../include/version.php';
 $do=isset($_GET['do'])?$_GET['do']:'0';
 if(file_exists('install.lock')){
 	exit('您已经安装过，如需重新安装请删除<font color=red> install/install.lock </font>文件后再安装！');
@@ -37,18 +38,7 @@ function checkconnect($connect){
 		echo '<font color="red">不支持</font>';
 	}
 }
-
-// function random($length, $numeric = 0) {
-// 	$seed = base_convert(md5(microtime().$_SERVER['DOCUMENT_ROOT']), 16, $numeric ? 10 : 35);
-// 	$seed = $numeric ? (str_replace('0', '', $seed).'012340567890') : ($seed.'zZ'.strtoupper($seed));
-// 	$hash = '';
-// 	$max = strlen($seed) - 1;
-// 	for($i = 0; $i < $length; $i++) {
-// 		$hash .= $seed[mt_rand(0, $max)];
-// 	}
-// 	return $hash;
-// }
-$ver = '1.1.5'
+$ver = constant("VERSION");
 ?>
 <html lang="zh-cn">
 <head>
