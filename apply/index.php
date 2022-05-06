@@ -203,15 +203,12 @@ if(isset($_REQUEST['authcode'])) {
 <div class="form-group has-feedback feedback-left row">
     <div class="col-xs-12">
     <label>* 选择分组:</label>
-    <select title="分组" class="form-control" name="group_id">
+    <select title="分组" class="form-control" name="group_id" required>
+    <option value="">请选择</option>
     <?php
     while($grouplist = $DB->fetch($grouplists)) {
-	if($grouplist["group_id"]==$row['group_id']) {
-		$select='selected="selected"';
-	} else {
-		$select='';
-	}
-	echo '<option  value="'.$grouplist["group_id"].'">'.$grouplist["group_name"].'</option>';
+	echo '
+	<option value="'.$grouplist["group_id"].'">'.$grouplist["group_name"].'</option>';
 }
 ?>
     </select>
@@ -249,7 +246,7 @@ if(isset($_REQUEST['authcode'])) {
     <span class="mdi mdi-check form-control-feedback" aria-hidden="true"></span>
     </div>
     <div class="col-xs-4">
-        <img id="captcha_img" title="验证码" src='../include/validatecode.php?r=echo rand(); ?>' class="pull-right code"
+        <img id="captcha_img" title="验证码" src='../include/validatecode.php' class="pull-right code"
         onclick="document.getElementById('captcha_img').src='../include/validatecode.php?r='+Math.random()"
         />
           </div>
@@ -257,6 +254,7 @@ if(isset($_REQUEST['authcode'])) {
 <div class="form-group">
 <input type="submit" id="submit"class="btn btn-primary btn-block" value="提交"></form>
     </div>
+    <center><?php echo $conf['copyright']?></center>
   </div>
 </div>
 </body>
