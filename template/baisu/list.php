@@ -9,14 +9,13 @@
 // | Authors: LyLme <admin@lylme.com>                         |
 // | date: 2022-05-01                                         |
 // +----------------------------------------------------------+
-$links = $DB->query("SELECT * FROM `lylme_links`");
 // 获取网站
 $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC");
 // 获取分类
 $i = 0;
 while ($group = $DB->fetch($groups)) {
 	//循环所有分组
-	$sql = "SELECT * FROM `lylme_links` WHERE `group_id` = " . $group['group_id'];
+	$sql = "SELECT * FROM `lylme_links` WHERE `group_id` = " . $group['group_id']." ORDER BY `link_order` ASC;";
 	$group_links = $DB->query($sql);
 	$link_num = $DB->num_rows($group_links);
 	// 获取返回字段条目数量
@@ -36,6 +35,7 @@ while ($group = $DB->fetch($groups)) {
 		// 返回指定分组下的所有字段
 		if ($link_num > $i) {
 			$i = $i + 1;
+			if($link["link_status"]!="0"){
 			echo "\n" . '
             <div class="list urllist" id="id_' . $link["id"] . '" data-id="' . $link["id"] . '" data-url="' . $link["url"] . '">
 			<a rel="nofollow" href="' . $link["url"] . '" target="_blank">';
@@ -47,6 +47,7 @@ while ($group = $DB->fetch($groups)) {
 				echo $link["icon"];
 			}
 			echo	'<p class="name">'. $link["name"] . '</p><p class="desc"></p></a></div>';
+			}
 		}
 		if ($link_num == $i) {
 			//判断当前分组链接循环完毕
