@@ -29,6 +29,10 @@ if($sqlvn < 10105) {
 	$version = 'v1.1.5';
 	$sql = $sql.file_get_contents(ROOT.'install/update2.sql');
 }
+if($sqlvn < 10106) {
+	$version = 'v1.1.6';
+	$sql = $sql.file_get_contents(ROOT.'install/update3.sql');
+}
 $sql=explode(';',$sql);
 for ($i=0;$i<count($sql);$i++) {
 	if (trim($sql[$i])=='')continue;
