@@ -18,16 +18,20 @@ if ($set == 'add') {
 <div class="panel-body">
 <form action="./link.php?set=add_submit" method="POST">
 <div class="form-group">
-<label>*名称:</label><br>
-<input type="text" class="form-control" name="name" value="" required>
-</div>
+<label>*URL链接地址:</label>
+<div class="input-group">
+<input type="text" class="form-control" name="url" placeholder="链接" value="" required>
+<span class="input-group-btn">
+  <button class="btn btn-default" onclick="geturl()" type="button">获取</button>
+</span>
+</div></div>
 <div class="form-group">
-<label>*URL链接地址:</label><br>
-<input type="text" class="form-control" name="url" value="" required>
+<label>*网站名称:</label><br>
+<input type="text" class="form-control" placeholder="网站名称" name="name" value="" required>
 </div>
 <div class="form-group">
 <label>链接图标:</label><br>
-<textarea type="text" class="form-control" name="icon"></textarea>
+<textarea type="text" class="form-control" name="icon" placeholder="网站图标"></textarea>
 <small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
 方式2：粘贴图标的<code>SVG</code>代码，<a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
@@ -56,12 +60,16 @@ if ($set == 'add') {
 <div class="panel-body">
 <form action="./link.php?set=edit_submit&id=' . $id . '" method="POST">
 <div class="form-group">
-<label>*名称:</label><br>
-<input type="text" class="form-control" name="name" value="' . $row['name'] . '" required>
-</div>
+<label>*URL链接地址:</label>
+<div class="input-group">
+<input type="text" class="form-control" name="url" placeholder="链接" value="' . $row['url'] . '" required>
+<span class="input-group-btn">
+  <button class="btn btn-default" onclick="geturl()" type="button">获取</button>
+</span>
+</div></div>
 <div class="form-group">
-<label>*链接URL地址:</label><br>
-<input type="text" class="form-control" name="url" value="' . $row['url'] . '" required>
+<label>*网站名称:</label><br>
+<input type="text" class="form-control" name="name" value="' . $row['name'] . '" required>
 </div>
 <div class="form-group">
 <label>链接图标:</label><br>
@@ -118,29 +126,13 @@ if ($set == 'add') {
         if ($DB->query($sql)) echo '<script>alert("修改链接 ' . $name . ' 成功！");window.location.href="./link.php";</script>';
         else echo '<script>alert("修改链接失败！");history.go(-1);</script>';
     }
-} elseif ($set == 'delete') {
-    $id = $_GET['id'];
-    $sql = "DELETE FROM lylme_links WHERE id='$id'";
-    if ($DB->query($sql)) echo '<script>alert("删除成功！");window.location.href="./link.php";</script>';
-    else echo '<script>alert("删除失败！");history.go(-1);</script>';
+// } elseif ($set == 'delete') {
+//     $id = $_GET['id'];
+//     $sql = "DELETE FROM lylme_links WHERE id='$id'";
+//     if ($DB->query($sql)) echo '<script>alert("删除成功！");window.location.href="./link.php";</script>';
+//     else echo '<script>alert("删除失败！");history.go(-1);</script>';
 } else {
-    echo '<div class="alert alert-info">系统共有 <b>' . $linksrows . '</b> 个链接<br/><a href="./link.php?set=add" class="btn btn-primary">新增链接</a></div>
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead><tr><th>序号</th><th>名称</th><th>链接</th><th>分组</th><th>操作</th></tr></thead>
-          <tbody>';
-    $i = 0;
-    $rs = $DB->query("SELECT * FROM `lylme_links` ORDER BY `lylme_links`.`id` ASC");
-    while ($res = $DB->fetch($rs)) {
-        $i = $i + 1;
-        echo '<tr><td><b>' . $i . '</b></td><td>' . $res['name'] . '</td><td>' . $res['url'] . '</td><td>';
-        echo $DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['group_id'])) ["group_name"];
-        echo '</td><td><a href="./link.php?set=edit&id=' . $res['id'] . '" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./link.php?set=delete&id=' . $res['id'] . '" class="btn btn-xs btn-danger" onclick="return confirm(\'删除 ' . $res['name'] . ' ？\');">删除</a></td></tr>';
-    }
-?>
-          </tbody>
-        </table>
-      </div>
+    echo '<div id="listTable"></div>
                     </div>
             </div>
           </div>
@@ -150,7 +142,21 @@ if ($set == 'add') {
       </div>
       
     </main>
-<?php
+';
+
 }
 include './footer.php';
 ?>
+<script type="text/javascript" src="js/jquery.dragsort-0.5.2.min.js"></script>
+<link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery-confirm/3.3.0/jquery-confirm.min.css" type="text/css" rel="stylesheet" />
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/layer/3.1.1/layer.min.js" type="application/javascript"></script>
+<script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery-confirm/3.3.0/jquery-confirm.min.js" type="application/javascript"></script>
+<!--消息提示-->
+<script src="js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="js/lightyear.js"></script>
+<script type="text/javascript" src="js/link.js"></script>
+<script type="text/javascript"> 
+var  mv_group ='<form action="" class="formName">' + '<select class="form-control group_id" required>'+'<?php  while ($grouplist = $DB->fetch($grouplists)) {
+    if ($grouplist["group_id"] == $row['group_id']) { $select = 'selected="selected"';} else {$select = '';}
+    echo '<option  value="' . $grouplist["group_id"] . '">' . $grouplist["group_id"] . ' - ' . $grouplist["group_name"] . '</option>';}?>'+ '</select>';
+</script>
