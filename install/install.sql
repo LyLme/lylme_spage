@@ -63,6 +63,7 @@ INSERT INTO `lylme_groups` (`group_id`, `group_name`, `group_icon`, `group_order
 (5, '开发', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-kongzhitai\"></use></svg>', 5),
 (6, '游戏娱乐', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-game00\"></use></svg>', 6),
 (7, '网站公告', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gg00\"></use></svg>', 7);
+ALTER TABLE `lylme_groups` ADD `group_status` INT(1) NOT NULL DEFAULT '1' COMMENT '分组状态' AFTER `group_order`;
 -- ----------------------------
 -- Table structure for lylme_links
 -- ----------------------------
@@ -164,9 +165,8 @@ INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`, `link_
 (78, '官方主页', 7, 'https://www.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-home00\"></use></svg>', NULL, 10),
 (79, '申请收录', 7, '/apply', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sq00\"></use></svg>', NULL, 10),
 (80, '建议&反馈', 7, 'https://support.qq.com/products/356339', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-fk00\"></use></svg>', NULL, 10);
-
 SET FOREIGN_KEY_CHECKS = 1;
-
+ALTER TABLE `lylme_links` ADD `link_status` INT(1) NOT NULL DEFAULT '1' COMMENT '链接状态' AFTER `link_order`;
 -- 表 `lylme_sou`
 CREATE TABLE `lylme_sou` (
   `sou_id` int(11) NOT NULL COMMENT '搜索引擎ID',
