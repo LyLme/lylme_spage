@@ -1,7 +1,14 @@
 <?php 
 $title = '后台管理';
 include './head.php';
+$last = date("Ymdh");
+if(@file_get_contents('log.txt') != $last || !file_exists('cache.php')){
 $update = update();
+file_put_contents('log.txt',$last);
+var_export($update,true);
+$content = "<?php\nreturn ".var_export($update,true)."\n?>";
+file_put_contents('cache.php', $content);
+}
 $mysqlversion=$DB->count("select VERSION()");
 function tjsj($tjname) {
 	if($tjname=='') {
@@ -15,6 +22,7 @@ function tjsj($tjname) {
     <main class="lyear-layout-content">
       <div class="container-fluid">
 <?php 
+$update  = require('cache.php');
 if(!empty($update)) {
 	if($update['switch'] == true) {
 		if($update['msg_switch'] == true || getver($update['version']) > getver($conf['version'])) {
