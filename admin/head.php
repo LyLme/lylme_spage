@@ -8,8 +8,7 @@ if(isset($islogin)==1) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title><?php echo $title.' - '.$conf['title'];
-?></title>
+<title><?php echo $title.' - '.$conf['title'];?></title>
 <link rel="icon" href="/assets/img/logo.png" type="image/ico">
 <meta name="author" content="yinqi">
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -42,23 +41,8 @@ if(isset($islogin)==1) {
             <li class="nav-item active"> <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理 </a>
 <?php $applyrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_apply` WHERE `apply_status` = 0"));
 if($applyrows>0) {
-	echo'<style>
-    .applyrow{
-    width: 18px;
-    height: 18px;
-    top: 15px;
-    right: 24px;
-    font-size: 10px;
-    font-weight: bold;
-    color: #fff;
-    background-color: red;
-    border-radius: 100%;
-    text-align: center;
-    vertical-align: middle;
-    position: absolute;
-    line-height: 1.5;
-    }
-    </style><div class="applyrow">'.$applyrows.'</div>';
+	echo'<style> .applyrow{width: 18px;height: 18px;top: 15px;right: 24px;font-size: 10px;font-weight: bold;color: #fff;background-color: red;border-radius: 100%;text-align: center;vertical-align: middle;position: absolute;line-height: 1.5;}</style>
+	<div class="applyrow">'.$applyrows.'</div>';
 }
 ?></li>
             <li class="nav-item nav-item-has-subnav">
@@ -68,23 +52,15 @@ if($applyrows>0) {
                 <li> <a href="./group.php">管理分组</a> </li>
               </ul>
             </li>
-            <li class="nav-item nav-item-has-subnav">
-              <a href="javascript:void(0)"><i class="mdi mdi-web"></i> <span>链接管理</span></a>
-              <ul class="nav nav-subnav">
-                <li> <a href="./link.php?set=add">添加链接</a> </li>
-                <li> <a href="./link.php">管理链接</a> </li>
-              </ul>
-            </li>
-             <li class="nav-item active"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
-             <li> <a href="javascript:loginout()"><i class="mdi mdi-logout"></i> 退出登录</a> </li>
-             
-             </ul>
+            <li class="nav-item active"> <a href="./link.php"><i class="mdi mdi-web"></i>链接管理</a></li>
+            <li class="nav-item active"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
+            <li> <a href="javascript:loginout()"><i class="mdi mdi-logout"></i> 退出登录</a> </li>
+            </ul>
         </nav>
         <div class="sidebar-footer">
           <p class="copyright">Copyright &copy;
 <?php echo(date('Y'));
-?> By LyLme.<br> <a href="https://gitee.com/LyLme/lylme_spage"><?php echo $conf['title'];
-?> </a></p>
+?> Powered by <br> <a href="https://gitee.com/LyLme/lylme_spage"><?php echo explode("-", $conf['title'])[0];?> </a></p>
         </div>
       </div>
     </aside>
