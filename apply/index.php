@@ -183,7 +183,7 @@ if(!empty($background = background())){
     <label>* 验证码:</label>
 <div class="form-group has-feedback feedback-left row">
     <div class="col-xs-8">
-    <input type="text" name="authcode" class="form-control" placeholder="验证码">
+    <input type="text" name="authcode" class="form-control" placeholder="验证码" required>
     <span class="mdi mdi-check form-control-feedback" aria-hidden="true"></span>
     </div>
     <div class="col-xs-4">
