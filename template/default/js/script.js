@@ -56,8 +56,13 @@ $(function() {
     })
 
 })
-
-
+//点击空白处关闭导航
+$(document).mouseup(function(e){
+  var _con = $('.type-left');
+  if(!_con.is(e.target) && _con.has(e.target).length === 0){ // Mark 1
+   _con.toggleClass('showListType',false)
+  }
+});
 
 //显示日期和时间
 function show() {
