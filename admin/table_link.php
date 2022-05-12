@@ -7,7 +7,8 @@ if(isset($islogin)==1) {
     $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC"); //获取分组
     $rs = $DB->query("SELECT * FROM `lylme_links` WHERE `group_id` = ".$page." ORDER BY `lylme_links`.`id` ASC");  //获取链接
     $grouprows=$DB->num_rows($rs);
-    echo '<div class="alert alert-info">系统收录： <b>' . $linksrows . '</b> 个链接 / 当前分组： <b>'.$grouprows.'</b>个链接
+    echo '<div class="alert alert-info">系统收录： <b>' . $linksrows . '</b> 个链接 / 当前分组： <b>'.$grouprows.'</b>个链接 
+    <i class="mdi mdi-help-circle tips"></i>
     </div>
 		<nav><ul class="pagination">';
 while ($group = $DB->fetch($groups)) {
@@ -50,7 +51,7 @@ while ($group = $DB->fetch($groups)) {
 	<a class="btn btn-primary btn-xs sort-up" data-toggle="tooltip" data-placement="top" title="移到上一行"><i class="mdi mdi-arrow-up"></i></a>
 	<a class="btn btn-cyan btn-xs sort-down" data-toggle="tooltip" data-placement="top" title="移到下一行"><i class="mdi mdi-arrow-down"></i></a></td>
 	 <!-- 链接排序 E -->
-        <td>' . $res['name'] . '</td><td>' . $res['url'] . '</td><td>';
+        <td class="lylme">' . $res['name'] . '</td><td>' . $res['url'] . '</td><td>';
         echo $DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['group_id'])) ["group_name"];
         echo '</td>
         <td>';
