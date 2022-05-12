@@ -15,7 +15,7 @@ function listTable(query){
 			$("#listTable").html(data);
 			$("#link").dragsort({
 			    dragBetween: true,
-				dragSelector: "tr", 
+				dragSelector: "td.lylme", 
 				dragEnd: showbutton, 
 				placeHolderTemplate: "<tr></tr>",
 			});
@@ -317,3 +317,9 @@ function edit_group(mv_group) {
 // 		}
 //     });
 // }
+$(document).on('click', '.tips', function(){
+    $.alert({
+    title: '提示',
+    content: '在电脑端可以拖拽链接的<b>名称</b>排序，拖拽完成后点击“保存排序”即可',
+});
+});
