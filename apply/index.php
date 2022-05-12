@@ -106,7 +106,7 @@ if(isset($_REQUEST['authcode'])) {
 <link href="https://cdn.lylme.com/admin/lyear/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.lylme.com/admin/lyear/css/style.min.css" rel="stylesheet">
 <style>
-#loading{position:absolute;left:0;top:0;height:100vh;width:100vw;z-index:100;display:none;align-items:center;justify-content:center;background-color:rgba(0,0,0,0.5);color:#bbb;font-size:16px}
+#loading{position:absolute;left:0;top:0;height:100vh;width:100vw;z-index:100;display:none;align-items:center;justify-content:center;color:#bbb;font-size:16px}
 #loading>img{height:18px;width:18px}
 .lylme-wrapper{position:relative}
 .lylme-form{display:flex !important;min-height:100vh;align-items:center !important;justify-content:center !important}
