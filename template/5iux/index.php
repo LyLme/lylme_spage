@@ -97,7 +97,7 @@ while ($group = $DB->fetch($groups)) {
         <div class="wea_hover">
             <div class="wea_in wea_top"></div>
             <div class="wea_in wea_con">
-                <ul>1</ul>
+                <ul></ul>
             </div>
             <div class="wea_in wea_foot">
                 <ul></ul>
