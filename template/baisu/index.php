@@ -14,7 +14,7 @@
 		<meta name="keywords" content="<?php echo $conf['keywords']?>" />
 		<meta name="description" content="<?php echo $conf['description']?>" />
 		<link rel="icon" href="<?php echo $conf['logo']?>" type="image/x-icon">
-		<link rel="stylesheet" type="text/css" href="<?php echo $templatepath;?>/css/style.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo $templatepath;?>/css/style.css?v=20220512" />
 		<link rel="stylesheet" href="<?php echo $cdnpublic ?>/assets/css/fontawesome-free5.13.0.css">
 		<meta name="lsvn" content="<?php echo base64_encode($conf['version'])?>">
 	</head>
