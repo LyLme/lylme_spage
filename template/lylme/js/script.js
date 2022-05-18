@@ -32,7 +32,6 @@ $(document).on('click', '.search-type li', function(){
     var icon=$(this).find('svg').html() //|| $(this).find('img')[0].outerHTML;
     $(".lylme").html(icon);
 });
-</sc
 
 //关键词sug
 $(function() {
