@@ -93,6 +93,21 @@ if ($set == 'add') {
     echo '</select>
 </div>
 <div class="form-group">
+<label>分组加密:</label><br>
+<select class="form-control" required name="link_pwd">';
+$pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
+while ($pwd_list = $DB->fetch($pwd_lists)) {
+    if($row['link_pwd']==$pwd_list["pwd_id"]){$sel = 'selected="selected"';}
+    echo '<option  value="' . $pwd_list["pwd_id"] . '" '.$sel.' >' . $pwd_list["pwd_id"] . ' - ' . $pwd_list["pwd_name"] . ' | 密码['. $pwd_list["pwd_key"].']</option>';
+}
+if(empty($row['link_pwd'])) $sele = 'selected="selected"';
+echo '
+<option value="0" '.$sele.'>0 - 不加密</option></select>
+<small class="help-block"><code>优先级：链接加密>分组加密</code><br>
+加密后只能通过输入密码访问，使用该功能先配置加密组
+<a href="./pwd.php" target="_blank">管理加密组</a></small>
+</div>
+<div class="form-group">
 <input type="submit" class="btn btn-primary btn-block" value="修改"></form>
 </div>
 <br/><a href="./link.php"><<返回</a>
@@ -119,11 +134,12 @@ if ($set == 'add') {
     $name = $_POST['name'];
     $url = $_POST['url'];
     $icon = $_POST['icon'];
+    $link_pwd = $_POST['link_pwd'];
     $group_id = $_POST['group_id'];
     if ($name == NULL or $url == NULL) {
         echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
     } else {
-        $sql = "UPDATE `lylme_links` SET `name` = '" . $name . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "' WHERE `lylme_links`.`id` = '" . $id . "';";
+        $sql = "UPDATE `lylme_links` SET `name` = '" . $name . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = '" . $link_pwd . "' WHERE `lylme_links`.`id` = '" . $id . "';";
         if ($DB->query($sql)) echo '<script>alert("修改链接 ' . $name . ' 成功！");window.location.href="./link.php";</script>';
         else echo '<script>alert("修改链接失败！");history.go(-1);</script>';
     }
