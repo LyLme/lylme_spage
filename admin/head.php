@@ -46,12 +46,7 @@ if($applyrows>0) {
 }
 ?></li>
             <li class="nav-item nav-item-has-subnav">
-              <a href="javascript:void(0)"><i class="mdi mdi-folder"></i> <span>分组管理</span></a>
-              <ul class="nav nav-subnav">
-                <li> <a href="./group.php?set=add">添加分组</a> </li>
-                <li> <a href="./group.php">管理分组</a> </li>
-              </ul>
-            </li>
+            <li class="nav-item active"> <a href="./group.php"><i class="mdi mdi-folder"></i>分组管理</a></li>
             <li class="nav-item active"> <a href="./link.php"><i class="mdi mdi-web"></i>链接管理</a></li>
             <li class="nav-item active"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
             <li> <a href="javascript:loginout()"><i class="mdi mdi-logout"></i> 退出登录</a> </li>

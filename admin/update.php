@@ -1,6 +1,7 @@
 <?php 
 $title = '检查更新';
 include './head.php';
+@unlink('log.txt');
 $update = update();
 ?>
    <!--页面主要内容-->
