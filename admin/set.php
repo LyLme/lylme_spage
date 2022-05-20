@@ -89,7 +89,7 @@ if($set=='save') {
 		                              <label  class="btn btn-default" id="checkbackground" for="backgroundimg" type="button">选择图片</label > 
 		                               <input type="file" style="display:none" accept="image/png,image/jpeg" id="backgroundimg" name="backgroundimg" onclick = "updatetext('checkbackground');"/>
 		                             </div></div>
-		                              <small class="help-block">填写图片的URL：如<code>./assets/img/background.jpg</code>或<code><?php echo siteurl()?>/assets/img/background.jpg</code>或从<code>本地上传</code><br>设置Bing每日壁纸：<a href="https://doc.lylme.com/spage/#/%E8%83%8C%E6%99%AF%E8%AE%BE%E7%BD%AE" target="_blank">查看教程</a></small>
+		                              <small class="help-block">填写图片的URL：如<code>./assets/img/background.jpg</code>或<code><?php echo siteurl()?>/assets/img/background.jpg</code>或从<code>本地上传</code><br>设置Bing每日壁纸：<a href="https://doc.lylme.com/spage/#/%E8%83%8C%E6%99%AF%E8%AE%BE%E7%BD%AE" target="_blank">查看教程</a><br>注：修改后需要清除浏览器缓存才会改变</small>
 		                     </div>
 		                      <div class="form-group">
 		                      <label for="wap_site_background">手机端背景图片</label>
@@ -99,7 +99,7 @@ if($set=='save') {
 		                              <label  class="btn btn-default" id="checkwapbackground" for="wapbackgroundimg" type="button">选择图片</label > 
 		                               <input type="file" style="display:none" accept="image/png,image/jpeg" id="wapbackgroundimg" name="wapbackgroundimg" onclick = "updatetext('checkwapbackground');"/>
 		                             </div></div>
-		                              <small class="help-block">手机端独立背景，留空则使用PC端壁纸</small>
+		                              <small class="help-block">手机端独立背景，留空则使用PC端壁纸<br>注:修改后需要清除浏览器缓存才会改变</small>
 		                     </div>
 		                    <div class="form-group">
 		                      <label for="web_site_keywords">站点关键词</label>
@@ -124,7 +124,7 @@ if($set=='save') {
                  <div class="form-group">
                       <label for="web_site_wztj">自定义footer</label>
                       <textarea type="text" rows="5" class="form-control" name="wztj" placeholder="可填写网站统计、引用JS文件等"><?php echo $conf['wztj']?></textarea>
-               <small class="help-block">站点底部自定义，可填写网站统计、引用JS文件等<code>支持HTML代码</code> <a href="https://doc.lylme.com/spage/#/footer" target="_blank">查看教程</a></small>
+               <small class="help-block">站点底部自定义，可填写网站统计、JS代码(需要script标签)、CSS代码(需要style标签)等<code>支持HTML代码</code> <a href="https://doc.lylme.com/spage/#/footer" target="_blank">查看教程</a></small>
                     </div>    
                     <div class="form-group">
                       <label for="web_site_icp">备案号</label>
