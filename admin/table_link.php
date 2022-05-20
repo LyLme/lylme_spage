@@ -30,6 +30,8 @@ while ($group = $DB->fetch($groups)) {
               <label><i class="mdi mdi-window-close" aria-hidden="true"></i></label>删除</button>
             <button id="edit_group" type="button" class="btn btn-info btn-label" onclick="edit_group(mv_group)">
              <label><i class="mdi mdi-account-edit" aria-hidden="true"></i></label>移动</button>
+             <button id="btn_delete" type="button" class="btn btn btn-pink btn-label" onclick="pwd_link(pwd_list)">
+              <label><i class="mdi mdi-key-variant" aria-hidden="true"></i></label>加密</button>
             <button class="btn btn-label btn btn-purple" id="save_order" style="display:none" onclick="save_order()">
             <label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label> 保存排序</button>
           </div> 
@@ -51,9 +53,10 @@ while ($group = $DB->fetch($groups)) {
 	<a class="btn btn-primary btn-xs sort-up" data-toggle="tooltip" data-placement="top" title="移到上一行"><i class="mdi mdi-arrow-up"></i></a>
 	<a class="btn btn-cyan btn-xs sort-down" data-toggle="tooltip" data-placement="top" title="移到下一行"><i class="mdi mdi-arrow-down"></i></a></td>
 	 <!-- 链接排序 E -->
-        <td class="lylme">' . $res['name'] . '</td><td>' . $res['url'] . '</td><td>';
-        echo $DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['group_id'])) ["group_name"];
-        echo '</td>
+        <td class="lylme">' . $res['name'] . '</td><td>';
+        if(empty($res['link_pwd'])){ echo $res['url'];}else{echo '<font color="#f96197">'. $res['url'] .'</font>';}
+        echo 
+        '</td><td>'. $DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['group_id'])) ["group_name"]. '</td>
         <td>';
         if($res['link_status']=="0"){ echo '<font color="red">禁用</font>';}else{echo '<font color="green">启用</font>';}
         $de_llink = "del_link('".$res['id']."')";

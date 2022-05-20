@@ -1,7 +1,8 @@
 <?php
-$title = '网站链接管理';
+$title = '链接管理';
 include './head.php';
 $grouplists = $DB->query("SELECT * FROM `lylme_groups`");
+$pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
 ?>
     <main class="lyear-layout-content">
       
@@ -133,14 +134,11 @@ if ($set == 'add') {
 //     else echo '<script>alert("删除失败！");history.go(-1);</script>';
 } else {
     echo '<div id="listTable"></div>
-                    </div>
+                </div>
             </div>
           </div>
-          
         </div>
-        
       </div>
-      
     </main>
 ';
 
@@ -156,7 +154,10 @@ include './footer.php';
 <script type="text/javascript" src="js/lightyear.js"></script>
 <script type="text/javascript" src="js/link.js"></script>
 <script type="text/javascript"> 
-var  mv_group ='<form action="" class="formName">' + '<select class="form-control group_id" required>'+'<?php  while ($grouplist = $DB->fetch($grouplists)) {
-    if ($grouplist["group_id"] == $row['group_id']) { $select = 'selected="selected"';} else {$select = '';}
+//分组移动
+var  mv_group ='<form action="" class="formName">' + '<select class="form-control group_id" required><option value="">请选择分组...</option>'+'<?php  while ($grouplist = $DB->fetch($grouplists)) {
     echo '<option  value="' . $grouplist["group_id"] . '">' . $grouplist["group_id"] . ' - ' . $grouplist["group_name"] . '</option>';}?>'+ '</select>';
+//链接加密    
+var pwd_list = '<form action="" class="formName">' + '<select class="form-control pwd_id" required>'+'<?php  while ($pwd_list = $DB->fetch($pwd_lists)) {
+    echo '<option  value="' . $pwd_list["pwd_id"] . '">' . $pwd_list["pwd_id"] . ' - ' . $pwd_list["pwd_name"] . '</option>';}?>'+ '<option value="0">0 - 取消加密</option></select><br><a href="./pwd.php" target="_blank">管理加密组</a>';
 </script>

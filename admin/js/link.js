@@ -269,7 +269,7 @@ function edit_group(mv_group) {
     		action: function () {
     			var group_id = this.$content.find('.group_id').val();
     			if(!group_id){
-    			     $.alert('未选择');
+    			     $.alert('请选择要移动到的分组');
     			    return false;
     			}
     			lightyear.loading('show');
@@ -277,6 +277,51 @@ function edit_group(mv_group) {
                     url:"ajax_link.php?submit=set_group",
                     method:"POST",
                     data:{links:get_check(),group_id:group_id},
+                    success:function(data){
+                        console.log(data);
+                        lightyear.loading('hide');
+                        lightyear.notify('操作成功！', 'success', 1000);
+                        listTable();
+                        return true;
+                    },
+            		error:function(data){
+            			layer.msg('服务器错误');
+            			return false;
+            		}
+                });
+    		}
+    	},
+    	cancel: {
+    		text: '取消'
+    	},
+    }
+        });
+    };
+    
+//链接加密
+function pwd_link(pwd_list) {
+	if(get_check().length == 0){
+	$.alert("未选择链接");
+	return false;
+	}
+    $.confirm({
+    title: '加密链接',
+    content: pwd_list,
+    buttons: {
+    	formSubmit: {
+    		text: '加密',
+    		btnClass: 'btn-blue',
+    		action: function () {
+    			var pwd_id = this.$content.find('.pwd_id').val();
+    			if(!pwd_id){
+    			     $.alert('请选择添加到的加密组');
+    			    return false;
+    			}
+    			lightyear.loading('show');
+                $.ajax({
+                    url:"ajax_link.php?submit=pwd_link",
+                    method:"POST",
+                    data:{links:get_check(),pwd_id:pwd_id},
                     success:function(data){
                         console.log(data);
                         lightyear.loading('hide');
@@ -320,6 +365,6 @@ function edit_group(mv_group) {
 $(document).on('click', '.tips', function(){
     $.alert({
     title: '提示',
-    content: '在电脑端可以拖拽链接的<b>名称</b>排序，拖拽完成后点击“保存排序”即可',
+    content: '<hr><h4>拖动排序</h4>在电脑端可以拖拽链接的<b>名称</b>排序，拖拽完成后点击“保存排序”即可<hr><h4>链接加密</h4>加密后的链接地址在本页面显示为<font color="#f96197">粉色</font>，以便标识，加密后链接只能在输入密码后查看',
 });
 });
