@@ -9,12 +9,17 @@
 // | Authors: LyLme <admin@lylme.com>                         |
 // | date: 2022-05-01                                         |
 // +----------------------------------------------------------+
+session_start(); //设置session
 // 获取网站
 $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC");
 // 获取分类
 $i = 0;
 while ($group = $DB->fetch($groups)) {
 	//循环所有分组
+	if(!in_array($group['group_pwd'],$_SESSION['list'])&&!empty($group['group_pwd'])){
+	    echo '<script>console.log("分组跳出")</script>';
+	    continue;
+	}
 	$sql = "SELECT * FROM `lylme_links` WHERE `group_id` = " . $group['group_id']." ORDER BY `link_order` ASC;";
 	$group_links = $DB->query($sql);
 	$link_num = $DB->num_rows($group_links);
@@ -33,8 +38,13 @@ while ($group = $DB->fetch($groups)) {
 	while ($link = $DB->fetch($group_links)) {
 		// 循环每个链接
 		// 返回指定分组下的所有字段
+
 		if ($link_num > $i) {
+		    
 			$i = $i + 1;
+			if(!in_array($link['link_pwd'],$_SESSION['list'])&&!empty($link['link_pwd'])){
+	            continue;
+	        }
 			if($link["link_status"]!="0"){
 			echo "\n" . '
             <div class="list urllist" id="id_' . $link["id"] . '" data-id="' . $link["id"] . '" data-url="' . $link["url"] . '">
