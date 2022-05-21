@@ -15,6 +15,7 @@ $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC");
 $i = 0; //设置起始
 while ($group = $DB->fetch($groups)) {
 	//循环所有分组
+	if($group["group_status"]=='0'){continue;}
 	if(!in_array($group['group_pwd'],$_SESSION['list'])&&!empty($group['group_pwd'])){
 	    //如果 分组加密未在认证列表 并且分组设置了密码(不显示分组)
 	    continue;
