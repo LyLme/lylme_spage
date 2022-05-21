@@ -20,7 +20,7 @@ echo '<div class="alert alert-info">系统共有 <b>' . $groupsrows . '</b> 个�
         <td>';
        if($pwd||$res['group_pwd']){
            if(empty($pwd)){
-                echo '<font color="red">失效</font>';
+                echo '<font color="red">失效[请重新设置加密组]</font>';
            }
            else{
            echo '<font color="f96197">'.$pwd.'</font>';
