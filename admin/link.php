@@ -93,7 +93,7 @@ if ($set == 'add') {
     echo '</select>
 </div>
 <div class="form-group">
-<label>分组加密:</label><br>
+<label>链接加密:</label><br>
 <select class="form-control" required name="link_pwd">';
 $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
 while ($pwd_list = $DB->fetch($pwd_lists)) {
@@ -103,7 +103,7 @@ while ($pwd_list = $DB->fetch($pwd_lists)) {
 if(empty($row['link_pwd'])) $sele = 'selected="selected"';
 echo '
 <option value="0" '.$sele.'>0 - 不加密</option></select>
-<small class="help-block"><code>优先级：分组加密>链接加密</code><br>
+<small class="help-block"><code>注意：对链接所在的分组加密后，单独设置的链接加密将会失效</code><br>
 加密后只能通过输入密码访问，使用该功能先配置加密组
 <a href="./pwd.php" target="_blank">管理加密组</a></small>
 </div>
@@ -139,7 +139,8 @@ echo '
     if ($name == NULL or $url == NULL) {
         echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
     } else {
-        $sql = "UPDATE `lylme_links` SET `name` = '" . $name . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = '" . $link_pwd . "' WHERE `lylme_links`.`id` = '" . $id . "';";
+        $sql = "UPDATE `lylme_links` SET `name` = '" . $name . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = " . $link_pwd . " WHERE `lylme_links`.`id` = '" . $id . "';";
+     //   exit($sql);
         if ($DB->query($sql)) echo '<script>alert("修改链接 ' . $name . ' 成功！");window.location.href="./link.php";</script>';
         else echo '<script>alert("修改链接失败！");history.go(-1);</script>';
     }
