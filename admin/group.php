@@ -34,7 +34,7 @@ while ($pwd_list = $DB->fetch($pwd_lists)) {
 }
 echo '
 <option value="0" selected="selected">0 - 不加密</option></select>
-<small class="help-block"><code>优先级：分组加密>链接加密</code><br>
+<small class="help-block"><code>注意：对链接所在的分组加密后，单独设置的链接加密将会失效</code><br>
 加密后只能通过输入密码访问，使用该功能先配置加密组
 <a href="./pwd.php" target="_blank">管理加密组</a></small>
 </div>
@@ -66,13 +66,13 @@ echo '
 <select class="form-control" required name="group_pwd">';
 $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
 while ($pwd_list = $DB->fetch($pwd_lists)) {
-    if($row['group_pwd']==$pwd_list["pwd_id"]){$sel = 'selected="selected"';}else{ $sel ='';}
+    if($row['group_pwd']==$pwd_list["pwd_id"]){$sel = 'selected="selected"';}
     echo '<option  value="' . $pwd_list["pwd_id"] . '" '.$sel.' >' . $pwd_list["pwd_id"] . ' - ' . $pwd_list["pwd_name"] . ' | 密码['. $pwd_list["pwd_key"].']</option>';
 }
 if(empty($row['group_pwd'])) $sele = 'selected="selected"';
 echo '
 <option value="0" '.$sele.'>0 - 不加密</option></select>
-<small class="help-block"><code>优先级：分组加密>链接加密</code><br>
+<small class="help-block"><code>优先级：链接加密>分组加密</code><br>
 加密后只能通过输入密码访问，使用该功能先配置加密组
 <a href="./pwd.php" target="_blank">管理加密组</a></small>
 </div>

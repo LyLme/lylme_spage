@@ -5,6 +5,7 @@ if(isset($islogin)==1) {
 
     $page = isset($_GET['page'])? $_GET['page'] : 1;
     $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC"); //获取分组
+    $gpwd = $DB->fetch($DB->query("SELECT `group_id`, `group_pwd` FROM `lylme_groups` WHERE `group_id` = ".$page))["group_pwd"]; //分组加密状态
     $rs = $DB->query("SELECT * FROM `lylme_links` WHERE `group_id` = ".$page." ORDER BY `lylme_links`.`id` ASC");  //获取链接
     $grouprows=$DB->num_rows($rs);
     echo '<div class="alert alert-info">系统收录： <b>' . $linksrows . '</b> 个链接 / 当前分组： <b>'.$grouprows.'</b>个链接 
@@ -30,8 +31,16 @@ while ($group = $DB->fetch($groups)) {
               <label><i class="mdi mdi-window-close" aria-hidden="true"></i></label>删除</button>
             <button id="edit_group" type="button" class="btn btn-info btn-label" onclick="edit_group(mv_group)">
              <label><i class="mdi mdi-account-edit" aria-hidden="true"></i></label>移动</button>
-             <button id="btn_delete" type="button" class="btn btn btn-pink btn-label" onclick="pwd_link(pwd_list)">
-              <label><i class="mdi mdi-key-variant" aria-hidden="true"></i></label>加密</button>
+             ';
+             if(empty($gpwd)){
+             echo '<button id="btn_delete" type="button" class="btn btn btn-pink btn-label" onclick="pwd_link(pwd_list)">
+              <label><i class="mdi mdi-key-variant" aria-hidden="true"></i></label>加密</button>';
+              }
+              else{
+                echo '<button id="btn_delete" type="button" class="btn btn btn-pink btn-label" onclick="pwd_links()">
+              <label><i class="mdi mdi-key-variant" aria-hidden="true"></i></label>分组已加密</button>';
+              }
+              echo '
             <button class="btn btn-label btn btn-purple" id="save_order" style="display:none" onclick="save_order()">
             <label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label> 保存排序</button>
           </div> 
@@ -54,7 +63,7 @@ while ($group = $DB->fetch($groups)) {
 	<a class="btn btn-cyan btn-xs sort-down" data-toggle="tooltip" data-placement="top" title="移到下一行"><i class="mdi mdi-arrow-down"></i></a></td>
 	 <!-- 链接排序 E -->
         <td class="lylme">' . $res['name'] . '</td><td>';
-        if(empty($res['link_pwd'])){ echo $res['url'];}else{echo '<font color="#f96197">'. $res['url'] .'</font>';}
+        if(!empty($res['link_pwd'])||!empty($gpwd)){ echo '<font color="#f96197">'. $res['url'] .'</font>';}else{echo $res['url'];}
         echo 
         '</td><td>'. $DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['group_id'])) ["group_name"]. '</td>
         <td>';
