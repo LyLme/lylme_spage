@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width">
-<title>请登录...</title>
+<title>访问管理</title>
 <style>
     *{margin:0;padding:0;box-sizing:border-box}
 body{text-align:center;background:#fff;color:#7b8993}
@@ -23,6 +23,7 @@ and (max-width:320px){.form-wrapper{padding-top:10%;border-radius:2px;margin:50p
 .nav{margin-bottom:30px}
 .nav li.current a{background-color:#009DFF;color:#fff;padding:10px}
 .nav a{margin:5px;color:#333;text-decoration:none}
+.home{text-decoration: none;color: #bbb;line-height: 4;}
 </style>
 </head>
 <body>
@@ -30,18 +31,19 @@ and (max-width:320px){.form-wrapper{padding-top:10%;border-radius:2px;margin:50p
 	<div class="top"><div class="colors"></div></div>
 	<div class="nav">
 		<ul>
-			<h1>Login</h1>
+			<h1>登录</h1>
 			
 		</ul>
-	</div><p>请输入密码显示加密链接</p>
+	</div>
 	<?php 
 	session_start(); //设置session
 	if($_SESSION['pass'] != 1){?>
+	<p>请输入密码登录</p>
 	<form name="form" action="../include/go.php" method="POST">
 		<div class="form">
 
 			<div class="form-item">
-				<input type="password" autocomplete="new-password"  name="pass" required="required" value="123" placeholder="密码" autocomplete="off">
+				<input type="password" autocomplete="new-password"  name="pass" required="required" value="" placeholder="密码" autocomplete="off">
 			</div>
 			<div class="button-panel">
 				<input type="submit" class="button" title="登录" value="登录">
@@ -51,15 +53,22 @@ and (max-width:320px){.form-wrapper{padding-top:10%;border-radius:2px;margin:50p
 	<form name="form" action="../include/go.php" method="POST">
 		<div class="form">
 			<div class="button-panel">
-			    <p> 您已登录</p>
+			    <p> 欢迎回来，您已登录！<br><br>用户组:
+			        <?php foreach($_SESSION['list'] as $list){
+			            echo(' ['.$list.'] ');
+			        }
+			    ?></p>
 			    <div class="form-item">
 				<input type="hidden" autocomplete="new-password"  name="exit" required="required" value="exit"  >
 			</div>
 				<input type="submit" class="button" title="注销登录" value="注销登录">
 			</div>
 		</div>
+		
 	</form>
 	<?php }?>
+	
+	<a href="../" class="home">返回首页</a>
 </div>
 
 </body>

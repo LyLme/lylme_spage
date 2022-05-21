@@ -2,9 +2,10 @@
 include("common.php");
 session_start(); //设置session
 if($_POST['exit']=='exit'){
+    //注销登录
     $_SESSION['pass'] = 0;
      $_SESSION['list'] = array();
-    header("Location: ../pwd");
+    header("Location: ".$_SERVER['HTTP_REFERER']);
     exit();
 }
 if($_SESSION['pass'] != 1){
@@ -18,7 +19,7 @@ if($_SESSION['pass'] != 1){
     	}
 	if(empty($show)){
 	    //无数据
-	   exit('<script>alert("密码错误！");window.location.href="../pwd";</script>');
+	   exit('<script>alert("密码错误！");window.location.href="'.$_SERVER['HTTP_REFERER'].'";</script>');
 	}
 	else{
 	    //有数据

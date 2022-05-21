@@ -27,7 +27,6 @@
 	else{ echo '<body onload="FocusOnInput()">';}?>
 	
 		<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="position: absolute; z-index: 10000;">
-		<!--<a class="navbar-brand" href="/"><img src="./assets/img/logo.png" height="25"  title="六零起始页"></a>-->
 		<button class="navbar-toggler collapsed" style="border: none; outline: none;"type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
 			    
 		<svg class="icon" width="200" height="200"><use xlink:href="#icon-menus"></use></svg>
