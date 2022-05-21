@@ -18,8 +18,13 @@ echo '<div class="alert alert-info">系统共有 <b>' . $groupsrows . '</b> 个�
         <td>'. $DB->num_rows($DB->query("SELECT `id` FROM `lylme_links` WHERE `group_id` =".$res['group_id'])).'</td>
         
         <td>';
-       if($pwd = $DB->get_row("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_id` = ".$res['group_pwd'])['pwd_key']){
+       if($pwd||$res['group_pwd']){
+           if(empty($pwd)){
+                echo '<font color="red">失效</font>';
+           }
+           else{
            echo '<font color="f96197">'.$pwd.'</font>';
+           }
        }
        else{echo '<font color="green">未加密</font>';}
        echo ' </td>
