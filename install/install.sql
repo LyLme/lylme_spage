@@ -246,3 +246,4 @@ ALTER TABLE `lylme_pwd`
   ADD PRIMARY KEY (`pwd_id`);
 ALTER TABLE `lylme_pwd`
   MODIFY `pwd_id` int(2) NOT NULL AUTO_INCREMENT COMMENT '加密组ID', AUTO_INCREMENT=1;
+INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`) VALUES (NULL, '登录', '/pwd', '0');
