@@ -9,8 +9,6 @@
 // | Authors: LyLme <admin@lylme.com>                         |
 // | date: 2022-3-12                                          |
 // +----------------------------------------------------------+
-
-session_start(); //设置session
 $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC"); // 获取分类
 $i = 0; //设置起始
 while ($group = $DB->fetch($groups)) { //循环所有分组

@@ -43,8 +43,7 @@ if (!empty($q)) {
 	else{ echo '<body>';}?>
     <div id="menu"><i></i></div>
     <div class="list closed">
-<?php        
-session_start(); //设置session
+<?php
 $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC");
 // 获取分类
 $i = 0;
