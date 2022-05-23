@@ -31,7 +31,7 @@ INSERT INTO `lylme_config` VALUES ('keywords', '六零导航页,百度搜索,哔
 INSERT INTO `lylme_config` VALUES ('logo', './assets/img/logo.png', '网站图标');
 INSERT INTO `lylme_config` VALUES ('background', './assets/img/background.jpg', '背景图片');
 INSERT INTO `lylme_config` VALUES ('wap_background', NULL,'手机端背景');
-INSERT INTO `lylme_config` VALUES ('version', 'v1.1.5', '程序版本');
+INSERT INTO `lylme_config` VALUES ('version', 'v1.2.0', '程序版本');
 INSERT INTO `lylme_config` VALUES ('yan', 'true', '随机一言开关');
 INSERT INTO `lylme_config` VALUES ('tq', 'true', '天气显示开关');
 INSERT INTO `lylme_config` VALUES ('wztj', '', '网站统计代码');
