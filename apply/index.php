@@ -100,9 +100,8 @@ if(isset($_REQUEST['authcode'])) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>申请收录 - <?php echo $conf['title']?></title>
+<title>申请收录 - <?php echo explode("-", $conf['title'])[0];?></title>
 <link rel="icon" href="<?php echo get_urlpath($conf['logo'],siteurl().'/apply');?>" type="image/ico">
-<link href="https://cdn.lylme.com/admin/lyear/css/materialdesignicons.min.css" rel="stylesheet">
 <link href="https://cdn.lylme.com/admin/lyear/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.lylme.com/admin/lyear/css/style.min.css" rel="stylesheet">
 <style>
@@ -113,11 +112,11 @@ if(isset($_REQUEST['authcode'])) {
 .lylme-form:after{content:'';min-height:inherit;font-size:0}
 .lylme-center{background:#fff;min-width:29.25rem;padding:30px;border-radius:20px;margin:2.85714em}
 .lylme-header{margin-bottom:1.5rem !important}
-.lylme-center .has-feedback.feedback-left .form-control{padding-left:38px;padding-right:12px}
 .lylme-center .has-feedback.feedback-left .form-control-feedback{left:0;right:auto;width:38px;height:38px;line-height:38px;z-index:4;color:#dcdcdc}
 .lylme-center .has-feedback.feedback-left.row .form-control-feedback{left:15px}
 .code{height:38px}
 .apply_gg{margin:20px 0;font-size:15px;line-height:2}
+.home{text-decoration: none;color: #bbb;line-height: 2;}
 </style>
 </head>
 <body>
@@ -195,7 +194,9 @@ if(!empty($background = background())){
 <div class="form-group">
 <input type="submit" id="submit"class="btn btn-primary btn-block" value="提交"></form>
     </div>
-    <center><?php echo $conf['copyright']?></center>
+    
+    <center><p><a href="../" class="home">返回首页</a></p><?php echo $conf['copyright']?></center>
+    
   </div>
 </div>
 </body>
