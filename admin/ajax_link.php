@@ -19,6 +19,13 @@ switch($submit) {
 		$DB->query($sql);
 	}
 	break;
+	case 'pwd_link':
+	    //链接加密
+	     foreach($_POST['links'] as $lk=> $lv) {
+    		$sql = "UPDATE `lylme_links` SET `link_pwd` = '".$_POST['pwd_id']."' WHERE `lylme_links`.`id` = ".$lv.";";
+    		$DB->query($sql);
+	    }
+	break;
 	case 'on':
 	    //链接启用
 	foreach($_POST['links'] as $lk=> $lv) {
