@@ -26,9 +26,7 @@ if(isset($_POST['user']) && isset($_POST['pass'])){
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>后台登录 - 六零(LyLme Spage)</title>
-<link rel="icon" href="favicon.ico" type="image/ico">
-<meta name="author" content="yinqi">
+<title>后台登录 - <?php echo explode("-", $conf['title'])[0];?></title>
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/materialdesignicons.min.css" rel="stylesheet">
 <link href="css/style.min.css" rel="stylesheet">
@@ -101,7 +99,7 @@ if(isset($_POST['user']) && isset($_POST['pass'])){
       </form>
       <hr>
       <footer class="col-sm-12 text-center">
-        <p class="m-b-0">Copyright ©2021 - <?php echo(date('Y'));  ?> <a href="/">LyLme Spage</a></p>
+        <p class="m-b-0">Copyright ©2021 - <?php echo(date('Y'));  ?> <a href="/"><?php echo explode("-", $conf['title'])[0];?></a></p>
       </footer>
     </div>
   </div>
