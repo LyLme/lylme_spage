@@ -10,10 +10,11 @@ if($_POST['exit']=='exit'){
 }
 if($_SESSION['pass'] != 1){
     //未登录
-    if(!empty($_POST['pass'])){
+	$pass = daddslashes($_POST['pass']);
+    if(!empty()){
         //用户提交登录
         $show = array();
-        $pwds = $DB->query("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '".$_POST['pass']."';"); 
+        $pwds = $DB->query("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '".$pass."';"); 
     	while ($pwd = $DB->fetch($pwds)) {
     	    array_push($show,$pwd[pwd_id]);
     	}
@@ -30,9 +31,9 @@ if($_SESSION['pass'] != 1){
 }
 else {
     //已登录
-    if(!empty($_POST['pass'])){
+    if(!empty($pass)){
         $show = array();
-        $pwds = $DB->query("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '".$_POST['pass']."';"); 
+        $pwds = $DB->query("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '".$pass."';"); 
     	while ($pwd = $DB->fetch($pwds)) {
     	    array_push($show,$pwd['pwd_id']);
     	}
