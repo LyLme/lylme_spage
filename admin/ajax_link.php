@@ -19,13 +19,6 @@ switch($submit) {
 		$DB->query($sql);
 	}
 	break;
-	case 'pwd_link':
-	    //链接加密
-	     foreach($_POST['links'] as $lk=> $lv) {
-    		$sql = "UPDATE `lylme_links` SET `link_pwd` = '".$_POST['pwd_id']."' WHERE `lylme_links`.`id` = ".$lv.";";
-    		$DB->query($sql);
-	    }
-	break;
 	case 'on':
 	    //链接启用
 	foreach($_POST['links'] as $lk=> $lv) {
@@ -78,6 +71,57 @@ switch($submit) {
 	header('Content-Type:application/json');
 	exit('{"title": "'.$head['title'].'", "icon": "'.$head['icon'].'","charset": "'.$head['charset'].'"}');
 	break;
+	//检测更新
+	case 'update':
+    	function zipExtract ($src, $dest) {
+    		$zip = new ZipArchive();
+    		if ($zip->open($src)===true) {
+    			$zip->extractTo($dest);
+    			$zip->close();
+    			return true;
+    		}
+    		return false;
+    	}
+    	function deldir($dir) {
+    		if(!is_dir($dir))return false;
+    		$dh=opendir($dir);
+    		while ($file=readdir($dh)) {
+    			if($file!="." && $file!="..") {
+    				$fullpath=$dir."/".$file;
+    				if(!is_dir($fullpath)) {
+    					unlink($fullpath);
+    				} else {
+    					deldir($fullpath);
+    				}
+    			}
+    		}
+    		closedir($dh);
+    		if(rmdir($dir)) {
+    			return true;
+    		} else {
+    			return false;
+    		}
+    	}
+    	$scriptpath=str_replace('\\','/',$_SERVER['SCRIPT_NAME']);
+    	$scriptpath = substr($scriptpath, 0, strrpos($scriptpath, '/'));
+    	$admin_path = substr($scriptpath, strrpos($scriptpath, '/')+1);
+    	$RemoteFile = $_POST['file'];
+    	$ZipFile = "lylme_spage-update.zip";
+    	copy($RemoteFile,$ZipFile) or die("无从更新服务器下载更新包文件！");
+    	if (zipExtract($ZipFile,ROOT)) {
+    		if($admin_path!='admin' && is_dir(ROOT.'admin')) {
+    			//修改后台地址
+    			deldir(ROOT.$admin_path);
+    			rename(ROOT.'admin',ROOT.$admin_path);
+    		}
+    		unlink($ZipFile);
+    		exit ('success');
+    	}
+    	else {
+    		unlink($ZipFile);
+    		exit('无法解压文件！请手动下载更新包解压');
+    	}
+    break;
 	default:
 	    	exit('error');
 	break;
