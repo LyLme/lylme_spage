@@ -11,7 +11,7 @@ if($_POST['exit']=='exit'){
 if($_SESSION['pass'] != 1){
     //未登录
 	$pass = daddslashes($_POST['pass']);
-    if(!empty()){
+    if(!empty($pass)){
         //用户提交登录
         $show = array();
         $pwds = $DB->query("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '".$pass."';"); 
