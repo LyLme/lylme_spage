@@ -163,7 +163,7 @@ if($applyrows>0) {
 			<b>最新版本：</b> <?php echo $update['version']?> <a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blant">查看更新说明</a>
 		</li>
 		<li class="list-group-item">
-			<b>项目作者：</b>六零
+			<b>项目作者：</b>六零  <a href="https://www.lylme.com/support/" target="_blant">捐赠作者</a>
 		</li>
 		<li class="list-group-item">
 			<b>项目地址：</b>https://github.com/LyLme/lylme_spage
