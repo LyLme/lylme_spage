@@ -24,18 +24,12 @@ function tjsj($tjname) {
 <?php 
 $update  = require('cache.php');
 if(!empty($update)) {
-	if($update['switch'] == true) {
-		if($update['msg_switch'] == true || getver($update['version']) > getver($conf['version'])) {
-			echo ' <div class="card"><div class="card-header"><h4>'.$update['title'].'</h4></div><ul class="list-group">';
-		}
-		if($update['msg']!='') {
-			echo $update['msg'];
+	if($update['switch']) {
+		if($update['msg_switch'] && !empty($update['msg'])) {
+			echo '<div class="card"><div class="card-header"><h4>'.$update['title'].'</h4></div><ul class="list-group">'.$update['msg'].'</ul></div>';
 		}
 		if(getver($update['version']) > getver($conf['version'])) {
-			echo $update['update_msg'];
-		}
-		if($update['msg_switch'] == true || getver($update['version']) > getver($conf['version'])) {
-			echo '</ul></div>';
+		    	echo '<div class="card"><div class="card-header"><h4>更新提示</h4></div><ul class="list-group">'.$update['update_msg'].'</ul></div>';
 		}
 	}
 }
