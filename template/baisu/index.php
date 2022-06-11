@@ -79,7 +79,10 @@ while ($group = $DB->fetch($groups)) {
 		<div class="index-main">
 			<!--搜索 S-->
 			<div class="search-main-w">
-				<div class="date-main" style="background-image: url('<?php echo $conf['background'];?>')">
+				<div class="date-main" 
+				<?php if(background()){
+				echo 'style="background-image: url('.background().')"';
+				}?>>
 					<time class="times" id="nowTime">00:00:00</time>
 					<span class="dates" id="nowYmd">2022年01月01日</span>
 					<div class="list">
@@ -142,19 +145,12 @@ while ($soulist = $DB->fetch($soulists)) {
 
 		<div class="site-main">
 		    <?php
-if ($conf['yan'] != 'false') {
-	$filename = ROOT.'assets/data/data.dat';
-	//随机一言文件路径
-	if (file_exists($filename)) {
-		$data = explode(PHP_EOL, file_get_contents($filename));
-		$result = str_replace(array(
-		            "\r",
-		            "\n",
-		            "\r\n"
-		        ) , '', $data[array_rand($data) ]);
-		echo '<p class="content">[ ' . $result.' ]</p>';
-	}
+			
+			if ($conf['yan']) {
+    echo '<p class="content">[' . yan().']</p>'; 
 }
+
+
 include'list.php';?>
         </div>
 
@@ -207,7 +203,7 @@ include'list.php';?>
 		<link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_3000268_oov6h4vru0h.css" />
 		<script src="//at.alicdn.com/t/font_3000268_oov6h4vru0h.js" type="text/javascript" charset="utf-8"></script>
 		<!--JS-->
-		<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+		<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
 		<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/layer/3.5.1/layer.js" type="application/javascript"></script>
 		<script src="<?php echo $templatepath;?>/js/holmes.js" type="text/javascript" charset="utf-8"></script>
 		<script src="<?php echo $templatepath;?>/js/lunar.js" type="text/javascript" charset="utf-8"></script>

@@ -1,7 +1,7 @@
 .box{margin:40px 0;position:fixed;z-index:1000}
 .change-type{min-width:40px;min-height:160px;position:absolute;z-index:99;left:0;top:0;display:flex}
 .change-type .type-left{width:0;background:#fff;height:100%;box-shadow:0 2px 12px 0 rgb(0 0 0 / 50%);border-bottom-right-radius:5px;border-top-right-radius:5px;margin-left:-40px;overflow:hidden;transition:width 0.4s;-moz-transition:width 0.4s;-webkit-transition:width 0.4s;-o-transition:width 0.4s}
-.change-type .showListType{width:130px;transition:width 0.4s;-moz-transition:width 0.4s;-webkit-transition:width 0.4s;-o-transition:width 0.4s}
+.change-type .showListType{width:150px;transition:width 0.4s;-moz-transition:width 0.4s;-webkit-transition:width 0.4s;-o-transition:width 0.4s}
 .change-type .type-left ul{margin-bottom:0px}
 .change-type .type-left ul li{line-height:40px;height:40px;text-align:left;width:100%;position:relative;cursor:pointer;list-style:none}
 .change-type .type-left ul li a{display:block;height:100%;position:absolute;left:0;top:0;z-index:9;padding-left:15px;overflow:hidden;width:calc(100% - 17px);color:#333;font-size:14px;border-left:2px solid #26778d}

@@ -17,7 +17,7 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 .navbar-light .navbar-nav .nav-link{color:#fff !important;font-size:16px;font-weight:bold;text-shadow:0px 1px 0px #000}
 #search{width:100%;margin:0;padding:0 0 10px;position:relative;z-index:2000;border-radius:5px}
 #search form{position:relative;margin-top:15px}
-#search-text{width:100%;height:50px;line-height:50px;text-indent:10px;font-size:16px;border-radius:10px;background-color:#fff;border:1px solid #c4c7ce;box-shadow:0 0.5rem 0.625rem #d4d4d44d;transition:0.3s all linear;padding-left:20px}
+#search-text{width:100%;height:50px;line-height:50px;text-indent:10px;font-size:16px;border-radius:10px;background-color:#fff;border:1px solid #fff;/*box-shadow:0 0.5rem 0.625rem #d4d4d44d;*/transition:0.3s all linear;padding-left:20px}
 #search-text:focus{border:1px solid #4e6ef2}
 #search-text:hover{border:1px solid #a7aab5}
 #search button{position:absolute;top:0;right:0;background:none;border:0;border-radius:20px;width:auto;height:50px;border-radius:0 10px 10px 0;outline:none;background-color:#4e6ef2}
@@ -52,13 +52,13 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 .set-check label{margin-left:3px}
 .set-check input,.set-check label{opacity:0;transition:all .3s ease}
 .search-type li{height:50px;line-height:50px;list-style:none;display:inline-block;border-radius:10px}
-.mylist{list-style:none;padding:10px 20px;position:relative;z-index:1000;margin:20px 0;border-radius:15px;background:#fff;box-shadow:0 0.5rem 0.625rem #d4d4d44d}
+.mylist{list-style:none;padding:10px 20px;position:relative;z-index:1000;margin:20px 0;border-radius:15px;background:#ffffffe6;/*backdrop-filter: blur(10px);*/box-shadow:0 0.5rem 0.625rem #d4d4d44d}
 .mylist li.col-3{width:100px;transition:0.3s all linear;font-size:14px;overflow:hidden;padding:10px 0;border-radius:10px}
 .mylist li.col-3 svg{display:block;width:45px;height:45px;padding:8px;background:#fff;border:1px solid #eee;border-radius:10px;margin:0 auto}
 .mylist li.col-3:hover{background:#eee}
 .mylist li.col-3 span{width:100%;height:26px;line-height:26px;text-align:center;font-size:13px;word-break:break-all;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
 .mylist li a{color:#555;display:block}
-.mylist li.title{width:100%;min-width:auto;margin:0;height:35px;font-size:16px;line-height:33px;padding:0 20px 0 10px;border-bottom:1px solid #eee;margin-bottom:10px}
+.mylist li.title{width:100%;min-width:auto;margin:0;height:35px;font-size:16px;line-height:33px;padding:0 20px 0 10px;/*border-bottom:1px solid #eee;*/margin-bottom:10px}
 .banner-video{position:absolute;width:100%;overflow:hidden;left:0;top:0;height:100vh}
 .banner-video video{width:2048px;float:left}
 .banner-video img{object-fit:cover;width:100%;height:100vh}
