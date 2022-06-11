@@ -31,7 +31,7 @@ INSERT INTO `lylme_config` VALUES ('keywords', '六零导航页,百度搜索,哔
 INSERT INTO `lylme_config` VALUES ('logo', './assets/img/logo.png', '网站图标');
 INSERT INTO `lylme_config` VALUES ('background', './assets/img/background.jpg', '背景图片');
 INSERT INTO `lylme_config` VALUES ('wap_background', NULL,'手机端背景');
-INSERT INTO `lylme_config` VALUES ('version', 'v1.2.0', '程序版本');
+INSERT INTO `lylme_config` VALUES ('version', 'v1.2.5', '程序版本');
 INSERT INTO `lylme_config` VALUES ('yan', 'true', '随机一言开关');
 INSERT INTO `lylme_config` VALUES ('tq', 'true', '天气显示开关');
 INSERT INTO `lylme_config` VALUES ('wztj', '', '网站统计代码');
@@ -104,10 +104,10 @@ INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`, `link_
 (17, '斗鱼直播', 1, 'https://www.douyu.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-douyu00\"></use></svg>', NULL, 10),
 (18, '企鹅电竞', 1, 'https://egame.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-qie00\"></use></svg>', NULL, 10),
 (19, '微信文件传输助手', 1, 'https://filehelper.weixin.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wechat00\"></use></svg>', NULL, 10),
-(20, '六零主页', 1, 'https://www.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-home00\"></use></svg>', NULL, 10),
+(20, '六零', 1, 'https://www.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-home00\"></use></svg>', NULL, 10),
 (21, 'Office模板', 2, 'https://www.officeplus.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-office00\"></use></svg>', NULL, 10),
 (22, '搞定设计', 2, 'https://www.gaoding.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gaoding00\"></use></svg>', NULL, 10),
-(23, '急切网设计', 2, 'http://jiqie.zhenbi.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-ji00\"></use></svg>', NULL, 10),
+(23, '素材天下', 2, 'http://www.sucaitianxia.net/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-video\"></use></svg>', NULL, 10),
 (24, '千库网', 2, 'https://588ku.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-qianku00\"></use></svg>', NULL, 10),
 (25, '图怪兽', 2, 'https://818ps.com', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-tu00\"></use></svg>', NULL, 10),
 (26, '站酷', 2, 'https://www.zcool.com.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-zhanku\"></use></svg>', NULL, 10),
@@ -136,7 +136,7 @@ INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`, `link_
 (49, '谷歌翻译', 4, 'https://translate.google.cn/?hl=zh-CN', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-fanyi\"></use></svg>', NULL, 10),
 (50, '有道翻译', 4, 'https://fanyi.youdao.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-youdao00\"></use></svg>', NULL, 10),
 (51, 'HTML在线运行', 4, 'https://c.runoob.com/front-end/61/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-html00\"></use></svg>', NULL, 10),
-(52, 'MD编辑器', 4, 'https://pandao.github.io/editor.md/index.html', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-md\"></use></svg>', NULL, 10),
+(52, 'MD编辑器', 4, 'https://www.lylme.com/html/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-md\"></use></svg>', NULL, 10),
 (53, '微PE工具', 4, 'http://www.wepe.com.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wepe00\"></use></svg>', NULL, 10),
 (54, '在线代码格式化', 4, 'https://tool.oschina.net/codeformat/html/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-base64\"></use></svg>', NULL, 10),
 (55, 'JS混淆器', 4, 'http://tool.chinaz.com/tools/jscodeconfusion.aspx', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-jshunxiao\"></use></svg>', NULL, 10),
