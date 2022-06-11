@@ -168,4 +168,34 @@ function get_real_ip() {
 	//客户端IP 或 (最后一个)代理服务器 IP
 	return ($ip ? $ip : $_SERVER['REMOTE_ADDR']);
 }
+function yan(){
+    $filename = ROOT.'/assets/data/data.dat'; //随机一言文件路径
+    if (file_exists($filename)) {
+        $data = explode(PHP_EOL, file_get_contents($filename));
+        $result = str_replace(array(
+            "\r",
+            "\n",
+            "\r\n"
+        ) , '', $data[array_rand($data) ]);
+       return $result;
+    }
+}
+function rearr($data,$arr){
+    $arr = str_replace('{group_id}', $data['group_id'],$arr);
+    $arr = str_replace('{group_name}', $data['group_name'],$arr);
+    $arr = str_replace('{group_icon}', $data['group_icon'],$arr);
+    $arr = str_replace('{link_id}', $data['id'],$arr);
+    $arr = str_replace('{link_name}', $data['name'],$arr);
+    $arr = str_replace('{link_url}', $data['url'],$arr);
+    if (empty($data["icon"])) {
+		$icon =  '<img src="/assets/img/default-icon.png" alt="' . $data["name"] . '" />';
+	} else if (!preg_match("/^<svg*/", $data["icon"])) {
+	    $icon = '<img src="' . $data["icon"] . '" alt="' . $data["name"] . '" />';
+	} else {
+	    $icon = $data["icon"];
+	}
+    $arr = str_replace('{link_icon}', $icon,$arr);
+    return $arr;
+}
+
 ?>
