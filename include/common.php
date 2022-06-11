@@ -17,6 +17,7 @@ include_once(SYSTEM_ROOT."db.class.php");
 $DB=new DB($dbconfig['host'],$dbconfig['user'],$dbconfig['pwd'],$dbconfig['dbname'],$dbconfig['port']);
 $rs= $DB->query("SELECT * FROM `lylme_config`");
 while($row = $DB->fetch($rs)) $conf[$row['k']]=$row['v'];
+include_once(SYSTEM_ROOT."lists.php");
 include_once(SYSTEM_ROOT."function.php");
 include_once(SYSTEM_ROOT."member.php");
 include_once(SYSTEM_ROOT."tj.php");

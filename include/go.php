@@ -1,4 +1,9 @@
 <?php
+if(!empty($_GET['url'])){
+    $url = $_GET['url'];
+    header("Location:$url");
+    exit();
+}
 include("common.php");
 session_start(); //设置session
 if($_POST['exit']=='exit'){
