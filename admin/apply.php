@@ -8,6 +8,10 @@ $grouplists = $DB->query("SELECT * FROM `lylme_groups`");
 <style>td img,td svg.icon {
 	width: 35px;
 	height: 35px;
+	max-width: 35px;
+}
+pre{
+        line-height: 1 !important;
 }
 </style>
  <main class="lyear-layout-content">
@@ -80,6 +84,7 @@ echo 'value="2">关闭-关闭申请</option>
      <label for="apply_gg">收录页公告</label>
                       <textarea width="200px" type="text" rows="5" class="form-control" name="apply_gg" placeholder="显示在收录页的公告">'.$conf['apply_gg'].'</textarea>
                <small class="help-block">显示在收录页的公告<code>使用HTML代码编写</code></small>
+               工具：<a href="https://www.lylme.com/html/" target="_blank">在线MD编辑器</a> 编辑后复制html代码粘贴
                     </div>
 <div class="form-apply">
 <input type="submit" class="btn btn-primary btn-block" value="保存"></form>
@@ -112,7 +117,8 @@ elseif ($set == 'edit_submit') {
 	$id = $_GET['id'];
 	$delsql = 'DELETE FROM `lylme_apply` WHERE apply_id =' . $id;
 	if ($DB->query($delsql)) echo '<script>alert("删除成功！");window.location.href="./apply.php";</script>'; else echo '<script>alert("删除失败！");history.go(-1);</script>';
-} elseif ($set == 'status') {
+} 
+elseif ($set == 'status') {
 	$id = $_GET['id'];
 	$sw = $_GET['sw'];
 	$sql = "UPDATE `lylme_apply` SET `apply_status` = '".$sw."' WHERE `lylme_apply`.`apply_id` = ".$id.";";
@@ -160,12 +166,13 @@ elseif ($set == 'edit_submit') {
             echo '关闭-关闭申请';
         break;
     }
-    echo '</b> &nbsp;<a href="./apply.php?set=conf">修改设置</a></div>';
+    echo '</b> &nbsp;<a href="./apply.php?set=conf">修改设置</a><br>
+     申请收录地址：<code>'. siteurl().'/apply</code> <a href="'. siteurl().'/apply" target="_blank">访问</a><br><br><sub>已审核的图标会被隐藏，点击图标可重新加载<br>部分网站图标一直处于加载或无法显示，可能原因：无法访问或跨域问题，建议建将图标本地化</sub></div>';
    
 	?>
 		      <div class="table-responsive">
 		        <table class="table table-striped">
-		          <thead><tr><th>序号</th><th>图标</th><th>名称</th><th>链接</th><th>分组</th><th>审核</th><th>操作</th><th>申请时间</th></tr></thead>
+		          <thead><tr><th>序号</th><th>图标</th><th>名称</th><th>链接</th><th>访问</th><th>分组</th><th>审核</th><th>操作</th><th>申请时间</th></tr></thead>
 		          <tbody>
 		<?php
 		    $rs = $DB->query("SELECT * FROM `lylme_apply` ORDER BY `lylme_apply`.`apply_time` DESC");
@@ -173,13 +180,25 @@ elseif ($set == 'edit_submit') {
 	while ($res = $DB->fetch($rs)) {
 		$i++;
 		echo '<tr><td>';
+	
 		if($res["apply_status"]==0) {echo '<font color="#48b0f7"><b>'.$i.'</b></font>';}
 		else{echo '<b>'.$i.'</b>';}
 		echo '</td><td>';
+		if($res["apply_status"]==0) {
 		if(empty($res["apply_icon"])){
 		    echo '未提交图标';
-		}else{ echo '<img src="' . $res["apply_icon"] . '" alt="' . $res["apply_name"] . '" />';}
-		echo '</td><td>' . $res['apply_name'] . '</td><td>' . $res['apply_url'] .'</td><td>'.$DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['apply_group'])) ["group_name"].'
+		}
+		else if (preg_match("/^<svg*/", $link["icon"])) {
+            echo $link["icon"];
+        }
+		else{ 
+		    echo '<img class="lazy" src="https://cdn.lylme.com/admin/lyear/img/loading.gif" data-original="' . $res["apply_icon"] . '" />';
+		}
+	}
+	else{
+	   echo '<img class="lazys" title="获取" src="https://cdn.lylme.com/admin/lyear/img/get.png" data-original="' . $res["apply_icon"] . '"';
+	}
+		echo '</td><td>' . $res['apply_name'] . '</td><td>' . $res['apply_url'] .'</td><td><a class="btn btn-purple btn-xs" href="../include/go.php?url='. $res['apply_url'].'" target="_blank">访问</a></td><td>'.$DB->fetch($DB->query("SELECT * FROM `lylme_groups` WHERE `group_id` = " . $res['apply_group'])) ["group_name"].'
 		</td><td>';
 		if($res["apply_status"]==2) {
 			echo '<font color="#f96868">已拒绝</font>';
@@ -210,3 +229,15 @@ elseif ($set == 'edit_submit') {
 }
 include './footer.php';
 ?>
+<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery.lazyload/1.9.1/jquery.lazyload.min.js" type="application/javascript"></script>
+<script>
+$("img.lazy").lazyload({
+    threshold : 100
+});
+$(document).ready(function(){
+    $(".lazys").click(function(){
+         $(this).attr('src','https://cdn.lylme.com/admin/lyear/img/loading.gif'); 
+        $(this).lazyload(); 
+    });
+});
+</script>
