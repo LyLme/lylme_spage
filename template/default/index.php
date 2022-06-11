@@ -17,12 +17,12 @@
 		<meta name="x5-fullscreen" content="true">
 		<meta name="x5-page-mode" content="app">
 		<meta name="lsvn" content="<?php echo base64_encode($conf['version'])?>">
-		<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js" type="application/javascript"></script>
-		<link href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.5.3/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+		<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js" type="application/javascript"></script>
+		<link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.5.3/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 		<link rel="stylesheet" href="<?php echo $cdnpublic ?>/assets/css/fontawesome-free5.13.0.css" type="text/css">	
-		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/style.css?v=20220512" type="text/css">
+		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/style.css?v=20220611" type="text/css">
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/font.css" type="text/css">
-		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/tag.css" type="text/css">
+		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/tag.css?v=20220611" type="text/css">
 	</head>
     <body onload="FocusOnInput()"><div class="banner-video">
 	<?php if(!empty(background())){ echo '<img src="'.background().'">';}?>
@@ -33,7 +33,7 @@
 		
 		<div class="box">
     <div class="change-type">
-        <div class="type-left" :class="showType == true ? 'showListType':''">
+        <div class="type-left"  id="type-left">
             <ul>
 <li  data-lylme="search"><a>搜索</a><span></span></li>
 <?php
@@ -48,29 +48,12 @@ while ($group = $DB->fetch($groups)) { //循环所有分组
         
     </div>
 </div>
-
-<script>
-    $(function(){
-        $('.type-right').click(function(){
-            $('.type-left').toggleClass('showListType')
-        });
-        $('.type-left ul li').click(function(){
-            $(this).addClass('active').siblings('li').removeClass('active');
-            $('.type-left').toggleClass('showListType');
-            var lylme_tag = '#'+$(this).attr("data-lylme");
-            $('html,body').animate({scrollTop:$(lylme_tag).offset().top},500);
-            
-        })
-    })
-</script>
 		
 		<!--topbar开始-->
 		<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="position: absolute; z-index: 10000;">
-		<!--<a class="navbar-brand" href="/"><img src="./assets/img/logo.png" height="25"  title="六零起始页"></a>-->
+		<!--<a class="navbar-brand" href="/"><img src="./assets/img/logo.png" height="25"  title="LyLme_Spage"></a>-->
 		<button class="navbar-toggler collapsed" style="border: none; outline: none;"type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
-			    
 		<svg class="icon" width="200" height="200"><use xlink:href="#icon-menus"></use></svg>
-		<span><svg class="bi bi-x" 	fill="currentColor" id="x"><use xlink:href="#icon-closes"></use></svg><span>
 			</button>
 			
 				    <div class="type-right" >
@@ -105,23 +88,11 @@ if ($conf['tq'] != 'false') {
 				<!--topbar结束-->
 		<div class="container" style="margin-top:10vh; position: relative; z-index: 100;">
 			<?php
-echo $conf['home-title'] ?>
-
-<?php
-if ($conf['yan'] != 'false') {
-    $filename = './assets/data/data.dat'; //随机一言文件路径
-    if (file_exists($filename)) {
-        $data = explode(PHP_EOL, file_get_contents($filename));
-        $result = str_replace(array(
-            "\r",
-            "\n",
-            "\r\n"
-        ) , '', $data[array_rand($data) ]);
-        echo '<p class="content">' . $result;
-    }
-}
-?>
-		</p>
+                echo $conf['home-title'];
+                if ($conf['yan']) {
+                    echo '<p class="content">' . yan().'</p>'; 
+                }
+            ?>
 			<!--搜索开始-->
 			<div id="search" class="s-search">
 				<div id="search-list" class="hide-type-list">
@@ -133,7 +104,7 @@ while ($soulist = $DB->fetch($soulists)) {
     if ($soulist["sou_st"] == 1) {
         echo '	<li>
 								<input hidden=""  checked="" type="radio" name="type" id="type-' . $soulist["sou_alias"] . '" value="';
-        if (checkmobile()&& $soulist["sou_waplink"] != NULL) {
+        if (checkmobile()&& !empty($soulist["sou_waplink"])) {
             echo $soulist["sou_waplink"];
         } else {
             echo $soulist["sou_link"];

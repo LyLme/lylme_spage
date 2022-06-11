@@ -1,6 +1,6 @@
 <?php if(basename($_SERVER['PHP_SELF']) == basename(__FILE__)) header("Location:/"); ?>
 <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.5.3/js/bootstrap.min.js" type="application/javascript"></script>
-<script src="<?php echo $templatepath;?>/js/script.js?v=20220512"></script>
+<script src="<?php echo $templatepath;?>/js/script.js?v=20220611"></script>
 <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
 <div style="display:none;" class="back-to" id="toolBackTop"> 
 <a title="返回顶部" onclick="window.scrollTo(0,0);return false;" href="#top" class="back-top"></a> 
