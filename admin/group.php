@@ -118,6 +118,16 @@ echo '
     $DB->query($delsql1);
     $DB->query($delsql2);
     exit();
+} elseif ($set == 'on') {
+    $id = $_POST['group_id'];
+    $sql = "UPDATE `lylme_groups` SET `group_status` = '1' WHERE `lylme_groups`.`group_id` =" . $id;
+    $DB->query($sql);
+    exit();
+} elseif ($set == 'off') {
+    $id = $_POST['group_id'];
+    $sql = "UPDATE `lylme_groups` SET `group_status` = '0' WHERE `lylme_groups`.`group_id` =" . $id;
+    $DB->query($sql);
+    exit();
 } 
 elseif ($set == 'sort') {
      for ($i=0; $i<count($_POST["groups"]); $i++) {

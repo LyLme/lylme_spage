@@ -69,6 +69,47 @@ function save_order(){
     });
 }
 
+//启用分组
+function on_group(id){
+     lightyear.loading('show');
+     $.ajax({
+        url:"group.php?set=on",
+        method:"POST",
+        data:{group_id:id},
+        success:function(data){
+            lightyear.loading('hide');
+            lightyear.notify('操作成功！', 'success', 1000);
+            listTable();
+            return true;
+        },
+		error:function(data){
+			layer.msg('服务器错误');
+			lightyear.loading('hide');
+			return false;
+		}
+    });
+}
+//禁用分组
+function off_group(id){
+     lightyear.loading('show');
+     $.ajax({
+        url:"group.php?set=off",
+        method:"POST",
+        data:{group_id:id},
+        success:function(data){
+            lightyear.loading('hide');
+            lightyear.notify('操作成功！', 'success', 1000);
+            listTable();
+            return true;
+        },
+		error:function(data){
+			layer.msg('服务器错误');
+			lightyear.loading('hide');
+			return false;
+		}
+    });
+}
+
 //删除分组
 function del_group(id) {
     $.confirm({
