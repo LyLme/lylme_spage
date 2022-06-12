@@ -20,8 +20,8 @@ if(file_exists($about)){
     echo file_get_contents($about);
 }
 else {
-    //文件不存在，从服务器获取后写入本地再输出文件
-    @file_put_contents($about,file_get_contents('https://cdn.lylme.com/lylme_spage/file/about.txt'));
+    //文件不存在
+    @file_put_contents($about,'<h1>404</h1>'));
     echo file_get_contents($about);
 }
 ?>
