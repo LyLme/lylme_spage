@@ -21,7 +21,7 @@ if(file_exists($about)){
 }
 else {
     //文件不存在
-    @file_put_contents($about,'<h1>404</h1>'));
+    @file_put_contents($about,'<h1>404</h1>');
     echo file_get_contents($about);
 }
 ?>
