@@ -2,8 +2,7 @@
 <html lang="zh-CN" element::-webkit-scrollbar {display:none}>
 	<head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title><?php echo $conf['title']?></title>
 		<meta name="keywords" content="<?php echo $conf['keywords']?>">
 		<meta name="description" content="<?php echo $conf['description']?>">
@@ -18,8 +17,7 @@
 		<meta name="x5-page-mode" content="app">
 		<meta name="lsvn" content="<?php echo base64_encode($conf['version'])?>">
 		<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js" type="application/javascript"></script>
-		<link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.5.3/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-		<link rel="stylesheet" href="<?php echo $cdnpublic ?>/assets/css/fontawesome-free5.13.0.css" type="text/css">	
+		<link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.5.3/css/bootstrap.min.css" type="text/css" rel="stylesheet">	
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/style.css?v=20220611" type="text/css">
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/font.css" type="text/css">
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/tag.css?v=20220611" type="text/css">
