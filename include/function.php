@@ -198,4 +198,101 @@ function rearr($data,$arr){
     return $arr;
 }
 
+//获取head
+function get_head($url) {
+        ini_set("user_agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36 Edg/101.0.1210.39 Lylme/11.24");
+		$opts = array(
+		    'http'=>array( 
+		    'method'=>"GET", 
+		    'timeout'=>4
+		    ) 
+		);
+		$contents = @file_get_contents("compress.zlib://".$url, false, stream_context_create($opts));
+		preg_match('/<title>(.*?)<\/title>/is',$contents,$title);  // 获取网站标题
+		preg_match('/<link rel=".*?icon" * href="(.*?)".*?>/is', $contents,$icon);  // 获取网站icon
+		preg_match('/<meta.+?charset=[^\w]?([-\w]+)/i', $contents,$charset);  //获取网站编码
+		$get_heads = array();
+		$get_heads['charset']=$charset[1];
+		$get_heads['title'] = str_replace("'","\"",preg_replace("/\s/","",$title[1]));
+		$get_heads['icon'] = get_urlpath(preg_replace("/\s/","",$icon[1]),$url);
+		
+		if(strtolower($get_heads['charset'])!="uft-8"){
+		    // 将非UTF-8编码转换
+		    $get_heads['title']  = iconv($get_heads['charset'], "UTF-8",$get_heads['title']);
+		    $get_heads['icon']  = iconv($get_heads['charset'], "UTF-8",$get_heads['icon']);
+		}
+		 return $get_heads;
+		if(empty($get_heads['title'])&&empty($get_heads['icon']))exit('Unable to access');
+	        
+		    return $get_heads;
+	}
+
+//长度判断	
+function strlens($str) {
+    if(strlen($str) > 255) {
+    	return true;
+    } else {
+    	return false;
+    }
+}
+//apply($name, $url, $icon, $group_id);		
+function apply($name, $url, $icon, $group_id, $status){
+    $name=strip_tags(daddslashes($name));
+	$url=strip_tags(daddslashes($url));
+	$icon=strip_tags(daddslashes($icon));
+	$group_id=strip_tags(daddslashes($group_id));
+    $userip = get_real_ip();
+    $date = date("Y-m-d H:i:s");
+	if(empty($name) || empty($url) || empty($group_id)) {
+    	//|| empty($icon)
+    	return('{"code": "-1", "msg": "必填项不能为空"}');
+    } 
+    else if(!preg_match('/^http*/i', $url)) {
+        return('{"code": "-2", "msg": "链接不符合要求"}');
+    }
+    else if(strlens($name)||strlens($url)||strlens($icon)||strlens($group_id)||strlens($userip)) {
+        return('{"code": "500", "msg": "非法参数"}');
+    }
+    else {
+        global $DB;
+	    if($DB->num_rows($DB->query("SELECT * FROM `lylme_apply` WHERE `apply_url` LIKE '".$url."';"))>0) {
+	        return('{"code": "-3", "msg": "链接已存在，请勿重复提交"}');
+	    }
+	    $sql = "INSERT INTO `lylme_apply` (`apply_id`, `apply_name`, `apply_url`, `apply_group`, `apply_icon`, `apply_mail`, `apply_time`, `apply_status`) VALUES (NULL, '".$name."', '".$url."', '".$group_id."', '".$icon."', '".$userip."', '".$date."', '".$status."');";
+	    if($DB->query($sql)) {
+		switch ($status) {
+			case 0:
+			    return('{"code": "200", "msg": "请等待管理员审核"}');
+			break;
+			case 1:
+			    if(ins_link($name, $url, $icon, $group_id, $status,$userip)){
+			        return('{"code": "200", "msg": "网站已收录"}');
+			    }
+			    else{
+			        return('{"code": "-5", "msg": "请联系网站管理员"}');
+			    }
+			break;
+		}
+    	}
+    	else {
+    	    return('{"code": "-4", "msg": "未知错误，请联系网站管理员"}');
+	    }
+    }
+}
+function ins_link($name, $url, $icon, $group_id, $status){
+    global $DB;
+    $name=strip_tags(daddslashes($name));
+	$url=strip_tags(daddslashes($url));
+	$icon=strip_tags(daddslashes($icon));
+	$group_id=strip_tags(daddslashes($group_id));
+    $userip = get_real_ip();
+    $date = date("Y-m-d H:i:s");
+    $link_order = $DB->count('select MAX(id) from `lylme_links`')+1;
+    $sql1 = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`link_order`) VALUES (NULL, '" . $name . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $userip . "的提交 ', '" . $link_order . "');";
+	if($DB->query($sql1)) {
+	     return true;
+	} else {
+		 return false;
+	}
+}
 ?>

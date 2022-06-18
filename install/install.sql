@@ -47,7 +47,7 @@ INSERT INTO `lylme_config` (`k`, `v`, `description`) VALUES
 	('template', 'default', '网站模板'),
 	('title', '上网导航 - LyLme Spage', '网站名称'),
 	('tq', 'true', '天气显示开关'),
-	('version', 'v1.2.5', '程序版本'),
+	('version', 'v1.3.0', '程序版本'),
 	('wap_background', NULL, '手机端背景'),
 	('wztj', '', '网站统计代码'),
 	('yan', 'true', '随机一言开关');
