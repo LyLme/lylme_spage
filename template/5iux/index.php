@@ -112,8 +112,8 @@ if(empty($sousw)||empty($soun)) {
         </div>
         <div class="foot">
 <?php
-if ($conf['yan']) {
-    echo '<p class="content">' . yan().'</p>'; 
+if ($conf['yan'] == 'true') {
+	echo '<p class="content">' . yan().'</p>'; 
 }
 $i= 0;
 $tagslists = $DB->query("SELECT * FROM `lylme_tags`");
