@@ -1,6 +1,16 @@
 <?php 
 $title = '主题设置';
 include './head.php';
+function theme($theme,$str){
+    $theme_ini = ROOT.'template/'.$theme.'/theme.ini';
+    $arr = json_decode(file_get_contents($theme_ini), true);
+    if(!empty($arr[$str])){
+        return strip_tags($arr[$str]);
+    }
+    else{
+        return 'unknown';
+    }
+}
 $set=isset($_GET['set'])?$_GET['set']:null;
 if(!empty($set)) {
 	if(saveSetting('template',$set)) {
@@ -15,36 +25,40 @@ if(!empty($set)) {
 		        <div class="row">
 		          <div class="col-lg-12">
   <div class="card">
-        <div class="card-header"><h4>主题设置</h4></div>
+        <div class="card-header"><h4>主题设置   <a href="https://spage.lylme.com" target="_blank">更多主题 >></a></h4></div>
         <div class="card-body">
                <div class="table-responsive">
                   <table class="table">
                     <thead>
                       <tr>
-                        <th width="35%">截图</th>
-                        <th>详情</th>
-                        <th>选择</th>
+                        <th>主题名称</th>
+                        <th>主题说明</th>
+                        <th>主题作者</th>
+                        <th>在线演示</th>
+                        <th>选择主题</th>
                       </tr>
                     </thead>
                     <tbody>
-                    <?php 
-                    $theme_path = ROOT.'template/';
-$themes = glob($theme_path."*", GLOB_ONLYDIR);
-foreach($themes as $theme) {
-	$theme =  str_replace($theme_path ,"" , $theme);
-	echo'<tr>
-                    	        <td><img src="https://cdn.lylme.com/lylme_spage/themes/'.$theme.'.jpg" alt="'.$theme.'" width="500px"></td>
-                    	        <td><h3>'.$theme.'</h3>
-                    	        <p>';
-	echo @file_get_contents( $theme_path.$theme.'/theme.ini');
-	echo '</p><a href="https://doc.lylme.com/spage/#/%E4%B8%BB%E9%A2%98?id='.$theme.'" target="_blank">查看主题说明</a></td>';
-	if($conf['template'] == $theme) {
-		echo '<td><p class="btn btn-default disabled">当前使用</p></td>';
-	} else {
-		echo '<td><a href="./theme.php?set='.$theme.'" class="btn btn-label btn-primary"><label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label>使用</a></td>';
-	}
-	echo '</tr>';
-}
+<?php 
+    $theme_path = ROOT.'template/';
+    $themes = glob($theme_path."*", GLOB_ONLYDIR);
+    foreach($themes as $theme) {
+    	$theme =  str_replace($theme_path ,"" , $theme);
+    	echo'<tr><td><h4>'.theme($theme,"theme_name").' </h4>版本：'.theme($theme,"theme_version").'</td>';
+    	echo '<td><p>'.theme($theme,"theme_explain").'</p></td>';
+    	echo '<td><p>'.theme($theme,"author_name").'</p>';
+    	if(!empty(theme($theme,"author_link"))){
+    	    echo ' <a href="'.theme($theme,"author_link").'" target="_blank">作者主页</a>';
+    	}
+        echo '</td>';
+        echo '<td><p><a  class="btn btn-default" href="'.theme($theme,"theme_demo").'" target="_blank">在线演示</a></p></td>';
+    	if($conf['template'] == $theme) {
+    		echo '<td><p class="btn btn-default disabled">当前使用</p></td>';
+    	} else {
+    		echo '<td><a href="./theme.php?set='.$theme.'" class="btn btn-label btn-primary"><label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label>使用</a></td>';
+    	}
+    	echo '</tr>'."\n";
+    }
 ?> 
                     </tbody>
                     </table>
