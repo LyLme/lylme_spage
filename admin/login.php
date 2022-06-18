@@ -75,7 +75,11 @@ if(isset($_POST['user']) && isset($_POST['pass'])){
 </head>
   
 <body>
-<!--<div class="row lyear-wrapper" style="background-image: url(images/login-bg.jpg); background-size: cover;">-->
+    <?php
+if(!empty($background = background())){
+    $background = str_replace('./','../',$background);
+	echo '<div class="row lylme-wrapper" style="background-image:  url('.$background.');background-size: cover;">';}
+?>
 <div class="row lyear-wrapper">
   <div class="lyear-login">
     <div class="login-center">
