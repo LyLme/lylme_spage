@@ -96,8 +96,8 @@ echo '<div id="he-plugin-simple"></div>
 			</div>
 <?php
 //调用随机一言
-if ($conf['yan']) {
-    echo '<p class="content">' . yan().'</p>'; 
+if ($conf['yan'] == 'true') {
+	echo '<p class="content">' . yan().'</p>'; 
 }
 ?>
 		<!--搜索开始-->

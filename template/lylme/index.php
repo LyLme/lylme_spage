@@ -59,17 +59,8 @@ echo '<div id="he-plugin-simple"></div>
 
 			</div>
 <?php
-if ($conf['yan'] != 'false') {
-    $filename = './assets/data/data.dat'; //随机一言文件路径
-    if (file_exists($filename)) {
-        $data = explode(PHP_EOL, file_get_contents($filename));
-        $result = str_replace(array(
-            "\r",
-            "\n",
-            "\r\n"
-        ) , '', $data[array_rand($data) ]);
-        echo '<p class="content">' . $result;
-    }
+if ($conf['yan'] == 'true') {
+	echo '<p class="content">' . yan().'</p>'; 
 }
 ?>
 		</p>

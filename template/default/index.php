@@ -87,9 +87,9 @@ if ($conf['tq'] != 'false') {
 		<div class="container" style="margin-top:10vh; position: relative; z-index: 100;">
 			<?php
                 echo $conf['home-title'];
-                if ($conf['yan']) {
-                    echo '<p class="content">' . yan().'</p>'; 
-                }
+				if ($conf['yan'] == 'true') {
+					echo '<p class="content">' . yan().'</p>'; 
+				}
             ?>
 			<!--搜索开始-->
 			<div id="search" class="s-search">

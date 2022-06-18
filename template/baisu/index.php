@@ -146,8 +146,8 @@ while ($soulist = $DB->fetch($soulists)) {
 		<div class="site-main">
 		    <?php
 			
-			if ($conf['yan']) {
-    echo '<p class="content">[' . yan().']</p>'; 
+if ($conf['yan'] == 'true') {
+	echo '<p class="content">' . yan().'</p>'; 
 }
 
 
