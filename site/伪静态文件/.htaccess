@@ -1,0 +1,4 @@
+RewriteEngine On
+#RewriteBase /
+RewriteRule ^site-(\d+)\.html$ /site/index.php?id=$1
+RewriteRule ^/sitemap.xml$ /site/sitemap.php

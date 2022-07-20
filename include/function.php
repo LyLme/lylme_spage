@@ -21,6 +21,29 @@ function checkmobile() {
 		return false;
 	}
 }
+//判断蜘蛛
+function is_spider(){ 
+    $userAgent = strtolower($_SERVER['HTTP_USER_AGENT']); 
+    $spiders = array( 
+        'Googlebot', 
+        'Baiduspider', 
+        'Yahoo! Slurp', 
+        'YodaoBot', 
+        'msnbot',
+        '360Spider',
+        'spider',
+        'Spider'
+        //这里可以加入更多的蜘蛛标示
+    ); 
+    foreach ($spiders as $spider) { 
+        $spider = strtolower($spider); 
+        if (strpos($userAgent, $spider) !== false) { 
+        return true; 
+        } 
+    } 
+    return false; 
+}
+
 function daddslashes($string) {
 	if(is_array($string)) {
 		foreach($string as $key => $val) {
@@ -294,5 +317,15 @@ function ins_link($name, $url, $icon, $group_id, $status){
 	} else {
 		 return false;
 	}
+}
+function theme_file($file){
+    global $conf;
+    $theme = ROOT.'template/'.$conf['template'].'/'.$file;
+    if(file_exists($theme)){
+        return $theme;
+    }
+    else{
+        return 'template/'.$file;
+    }
 }
 ?>
