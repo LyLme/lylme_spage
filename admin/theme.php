@@ -7,8 +7,14 @@ function theme($theme,$str){
     if(!empty($arr[$str])){
         return strip_tags($arr[$str]);
     }
+    else if($str =='theme_version'){
+        return '未知';
+    }
+    else if($str =='theme_name'){
+        return $theme;
+    }
     else{
-        return 'unknown';
+        return false;
     }
 }
 $set=isset($_GET['set'])?$_GET['set']:null;
@@ -25,7 +31,7 @@ if(!empty($set)) {
 		        <div class="row">
 		          <div class="col-lg-12">
   <div class="card">
-        <div class="card-header"><h4>主题设置   <a href="https://spage.lylme.com" target="_blank">更多主题 >></a></h4></div>
+        <div class="card-header"><h4>主题设置   <a href="https://spage.lylme.com/themes" target="_blank">更多主题 >></a></h4></div>
         <div class="card-body">
                <div class="table-responsive">
                   <table class="table">
@@ -45,13 +51,21 @@ if(!empty($set)) {
     foreach($themes as $theme) {
     	$theme =  str_replace($theme_path ,"" , $theme);
     	echo'<tr><td><h4>'.theme($theme,"theme_name").' </h4>版本：'.theme($theme,"theme_version").'</td>';
-    	echo '<td><p>'.theme($theme,"theme_explain").'</p></td>';
+    	
+    	echo '<td><p>'.theme($theme,"theme_explain").'</p>';
+    	if(theme($theme,"theme_course")){
+    	    echo ' <a href="'.theme($theme,"theme_course").'" target="_blank">主题教程</a>';
+    	}
+    	echo'</td>';
     	echo '<td><p>'.theme($theme,"author_name").'</p>';
-    	if(!empty(theme($theme,"author_link"))){
+    	if(theme($theme,"author_link")){
     	    echo ' <a href="'.theme($theme,"author_link").'" target="_blank">作者主页</a>';
     	}
+        echo '</td><td>';
+        if(theme($theme,"theme_demo")){
+        echo '<p><a  class="btn btn-default" href="'.theme($theme,"theme_demo").'" target="_blank">在线演示</a></p>';
+        }
         echo '</td>';
-        echo '<td><p><a  class="btn btn-default" href="'.theme($theme,"theme_demo").'" target="_blank">在线演示</a></p></td>';
     	if($conf['template'] == $theme) {
     		echo '<td><p class="btn btn-default disabled">当前使用</p></td>';
     	} else {
