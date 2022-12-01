@@ -50,33 +50,12 @@ switch($submit) {
 	
 	 //获取链接信息
     case 'geturl':
-    	function get_head($url) {
-        ini_set("user_agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36 Edg/101.0.1210.39 Lylme/11.24");
-		$opts = array(
-		    'http'=>array( 
-		    'method'=>"GET", 
-		    'timeout'=>4
-		    ) 
-		);
-		$contents = @file_get_contents("compress.zlib://".$url, false, stream_context_create($opts));
-		preg_match('/<title>(.*?)<\/title>/is',$contents,$title);  // 获取网站标题
-		preg_match('/<link rel=".*?icon" * href="(.*?)".*?>/is', $contents,$icon);  // 获取网站icon
-		preg_match('/<meta.+?charset=[^\w]?([-\w]+)/i', $contents,$charset);  //获取网站编码
-		$get_heads = array();
-		$get_heads['charset']=$charset[1];
-		$get_heads['title'] = str_replace("'","\"",preg_replace("/\s/","",$title[1]));
-		$get_heads['icon'] = get_urlpath(preg_replace("/\s/","",$icon[1]),$url);
-		if(strtolower($get_heads['charset'])!="uft-8"){
-		    // 将非UTF-8编码转换
-		    $get_heads['title']  = iconv($get_heads['charset'], "UTF-8",$get_heads['title']);
-		    $get_heads['icon']  = iconv($get_heads['charset'], "UTF-8",$get_heads['icon']);
-		}
-		return $get_heads;
-	}
-	$head = get_head($_POST['url']);
-	if(empty($head['title'])&&empty($head['icon']))exit('Unable to access');
-	header('Content-Type:application/json');
-	exit('{"title": "'.$head['title'].'", "icon": "'.$head['icon'].'","charset": "'.$head['charset'].'"}');
+        $url = $_GET['url'];
+    	$head = get_head($url);
+    	if(empty($head['title'])&&empty($head['icon']))exit('Unable to access');
+    	//download_img($url,head['icon']);
+    	header('Content-Type:application/json');
+    	exit(json_encode($head,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));  //输出json
 	break;
 	//检测更新
 	case 'update':
