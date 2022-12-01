@@ -100,34 +100,91 @@ function geturl(){
 		layer.msg('链接地址不能为空');
 		return false;
 	}
-    lightyear.loading("show");
+	$('#loading').css("display","flex");
     if (!/^http[s]?:\/\/+/.test(url)&&url!="") {
 		var url =  "http://"+url;
 		$("input[name=\'url\']").val(url);
 	}
+	
     $.ajax({
         url:"ajax_link.php?submit=geturl",
-        type:"post",
+        type:"GET",
         dataType:"json",
         data:{url:url},
         success:function(data){
-            lightyear.loading("hide");
-            var head = eval(data);
-            $("input[name=\'name\']").val(head.title);
-            if(!head.icon){
+            $("input[name=\'name\']").val(data.title);
+            if(!data.title && !data.icon){
+                layer.msg('获取失败，请手动填写');
+            }
+            else if(!data.icon){
                 layer.msg('未获取到网站图标');
             }
-            $("textarea[name=\'icon\']").val(head.icon);
+             layer.msg('正则抓取目标网站图标...');
+             downloadimg(data.icon,url);
+            $('#loading').css("display","none");
             return true;
         },
         error:function(data){
-            lightyear.loading('hide');
-        	layer.msg('获取失败，网站无法访问或防火墙限制！');
+        	layer.msg('获取失败，目标网站无法访问或防火墙限制！');
+        	$('#loading').css("display","none");
         	return false;
         }
     });
-}  
-
+}
+//抓取网站图标
+function downloadimg(url,referer){
+    $.ajax({
+        url:"/include/file.php",
+        type:"POST",
+        dataType:"json",
+        data:{url:url,referer:referer},
+         success:function(data){
+            if(data.code == '200'){
+                layer.msg(data.msg);
+                $("textarea[name=\'icon\']").val(data.url);
+                return true;
+            }
+            else{
+                 layer.msg(data.msg);
+                 return false;
+            }
+        },
+        error:function(data){
+            layer.msg('服务器错误');
+            return false;
+        }
+    });
+}
+//上传图标
+function uploadimg(e) {
+    var formData = new FormData();
+    formData.append("file", $("#file")[0].files[0]);
+    $.ajax({
+        method: 'POST',
+        url: '/include/file.php',
+        data: formData,
+        timeout: 20000,
+        cache: false,
+        processData: false,
+        contentType: false,
+        dataType:"JSON",
+        success:function(data){
+            if(data.code == '200'){
+                layer.msg(data.msg);
+                $("textarea[name=\'icon\']").val(data.url);
+                return true;
+            }
+            else{
+                 layer.msg(data.msg);
+                 return false;
+            }
+        },
+        error:function(data){
+            layer.msg('服务器错误');
+            return false;
+        }
+    });
+}
 //多选删除
 function del_link(id){
    var link_id = [];

@@ -113,43 +113,8 @@ elseif ($set == 'edit_submit') {
 		$sql = "UPDATE `lylme_apply` SET `apply_name` = '" . $name . "', `apply_group` = '" . $group . "',`apply_icon` = '" . $icon . "',`apply_url` = '" . $url . "' WHERE `lylme_apply`.`apply_id` = '" . $id . "';";
 		if ($DB->query($sql)) echo '<script>alert("修改 ' . $name . ' 成功！");window.location.href="./apply.php";</script>'; else echo '<script>alert("' . $sql . '修改失败！原因：\n'.$DB->error().'");history.go(-1);</script>';
 	}
-} elseif ($set == 'delete') {
-	$id = $_GET['id'];
-	$delsql = 'DELETE FROM `lylme_apply` WHERE apply_id =' . $id;
-	if ($DB->query($delsql)) echo '<script>alert("删除成功！");window.location.href="./apply.php";</script>'; else echo '<script>alert("删除失败！");history.go(-1);</script>';
 } 
-elseif ($set == 'status') {
-	$id = $_GET['id'];
-	$sw = $_GET['sw'];
-	$sql = "UPDATE `lylme_apply` SET `apply_status` = '".$sw."' WHERE `lylme_apply`.`apply_id` = ".$id.";";
-	if($sw==1) {
-		if ($DB->query($sql)) {
-			$applyres =  $DB->get_row("SELECT * FROM `lylme_apply` WHERE `apply_id` = ".$id);
-			$name=strip_tags(daddslashes($applyres['apply_name']));
-			$url=strip_tags(daddslashes($applyres['apply_url']));
-			$icon=daddslashes($applyres['apply_icon']);
-			$group_id=strip_tags(daddslashes($applyres['apply_group']));
-			$mail=strip_tags(daddslashes($applyres['apply_mail']));
-			$link_order = $DB->count('select MAX(id) from `lylme_links`')+1;
-			$sql1 = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`link_order`) VALUES (NULL, '" . $name . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $mail . "的提交 ', '" . $link_order . "');";
-			if($DB->query($sql1)) {
-				echo '<script>alert("成功！网站已成功收录！");window.location.href="./apply.php";</script>';
-			} else {
-				echo '<script>alert("收录失败！错误原因：\n'.$DB->error().'");history.go(-1);</script>';
-			}
-		}
-	} else if($sw==2){
-		if ($DB->query($sql)) {
-			echo '<script>window.location.href="./apply.php";</script>';
-		}
-		else{
-		    echo '<script>alert("审核失败！原因：\n'.$DB->error().'");history.go(-1);</script>';
-		}
-	}
-	else{
-	     echo '<script>alert("审核失败！未知参数");history.go(-1);</script>';
-	}
-} else {
+ else {
      echo '<pre>'.$conf['apply_gg'].'<br><a href="./apply.php?set=conf">修改</a></pre>';
 	echo '<div class="alert alert-info">
     收录申请统计： <b>' . $applyrows . '</b> 次<br/>
@@ -170,7 +135,7 @@ elseif ($set == 'status') {
      申请收录地址：<code>'. siteurl().'/apply</code> <a href="'. siteurl().'/apply" target="_blank">访问</a><br><br><sub>已审核的图标会被隐藏，点击图标可重新加载<br>部分网站图标一直处于加载或无法显示，可能原因：无法访问或跨域问题，建议建将图标本地化</sub></div>';
    
 	?>
-		      <div class="table-responsive">
+		      <div class="table-responsive" id="applylist">
 		        <table class="table table-striped">
 		          <thead><tr><th>序号</th><th>图标</th><th>名称</th><th>链接</th><th>访问</th><th>分组</th><th>审核</th><th>操作</th><th>申请时间</th></tr></thead>
 		          <tbody>
@@ -206,12 +171,12 @@ elseif ($set == 'status') {
 			echo '<font color="#3c763d">已通过</font>';
 		} else {
 			echo '
-    <a href="./apply.php?set=status&id=' . $res['apply_id'] . '&sw=1" class="btn btn-primary btn-xs" onclick="return confirm(\'是否通过该条申请？\');">通过</a>&nbsp; 
-    <a href="./apply.php?set=status&id=' . $res['apply_id'] . '&sw=2" class="btn btn-cyan btn-xs" onclick="return confirm(\'是否拒绝该条申请 ？\');">拒绝</a>';
+    <button class="btn btn-primary btn-xs" onclick="status(' . $res['apply_id'] . ',1)">通过</button>&nbsp; 
+    <button class="btn btn-cyan btn-xs" onclick="status(' . $res['apply_id'] . ',2)">拒绝</a>';
 		}
 		echo '</td><td>';
 		if($res["apply_status"]==0) {echo '<a href="./apply.php?set=edit&id=' . $res['apply_id'] . '" class="btn btn-info btn-xs">编辑</a>&nbsp;';}
-		echo '<a href="./apply.php?set=delete&id=' . $res['apply_id'] . '" class="btn btn-xs btn-danger" onclick="return confirm(\'确定删除 ' . $res['apply_name'] . ' 的记录吗？\');">删除</a> </td>
+		echo ' <button  class="btn btn-xs btn-danger" onclick="deletes(' . $res['apply_id'] . ')">删除</button> </td>
         <td>'.$res['apply_time'].'</td>
         </tr>';
 	}
@@ -230,7 +195,59 @@ elseif ($set == 'status') {
 include './footer.php';
 ?>
 <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery.lazyload/1.9.1/jquery.lazyload.min.js" type="application/javascript"></script>
+<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/layer/3.1.1/layer.min.js" type="application/javascript"></script>
 <script>
+function status(id,status){
+    $.ajax({
+        url:"ajax_apply.php?set=status",
+        type:"POST",
+        dataType:"json",
+        data:{id:id,status:status},
+        success:function(data){
+            if(data.code == '200'){
+                layer.msg(data.msg);
+                $("#applylist").load(location.href+" #applylist>*","");
+                return true;
+            }
+            else{
+                layer.msg(data.msg);
+                return false;
+            }
+        },
+        error:function(data){
+        	layer.msg('服务器错误');
+        	return false;
+        }
+    });
+
+}
+function deletes(id){
+    if(!confirm("确定删除？")){
+        return false;
+    }
+    $.ajax({
+        url:"ajax_apply.php?set=delete",
+        type:"POST",
+        dataType:"json",
+        data:{id:id},
+        success:function(data){
+            if(data.code == '200'){
+                layer.msg(data.msg);
+                $("#applylist").load(location.href+" #applylist>*","");
+                return true;
+            }
+            else{
+                layer.msg(data.msg);
+                return false;
+            }
+        },
+        error:function(data){
+        	layer.msg('服务器错误');
+        	return false;
+        }
+    });
+
+}
 $("img.lazy").lazyload({
     threshold : 100
 });
