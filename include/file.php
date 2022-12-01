@@ -43,6 +43,8 @@ function download_img($url,$referer="") {
 	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 	curl_setopt($ch, CURLOPT_ENCODING,'gzip');
 	curl_setopt($ch, CURLOPT_POST, 0);
+	curl_setopt($ch, CURLOPT_MAXREDIRS,5);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION,1);
 	if(!empty($referer)){curl_setopt($ch, CURLOPT_REFERER,$referer);}
 	curl_setopt($ch, CURLOPT_URL,$url);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 10);
