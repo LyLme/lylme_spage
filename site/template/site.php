@@ -25,9 +25,18 @@
 
 <div class="markdown-section" id="main">
 <?php 
-echo $site["icon"].'<span class="site_name">'. $site["name"].'</span>
-<p><b>分类：'.$group['group_name'].'</b></p>
-<p>浏览量：'.$pv.'</p>
+echo $site["icon"].'<span class="site_name">'. $site["name"].'</span>';
+if(!empty($info['title'])){
+    echo '<p><b>网站标题：</b>'.$info['title'].'</p>';
+}
+if(!empty($info['description'])){
+    echo '<p><b>网站描述：</b>'.$info['description'].'</p>';
+}
+if(!empty($info['keywords'])){
+    echo '<p><b>网站关键词：</b>'.$info['keywords'].'</p>';
+}
+
+echo '<p><b>所在分组：</b>'.$group['group_name'].'</p>
 ';
 echo "<p><a  class='btn btn-pink' href='/'>返回</a> <a rel='nofollow' class='btn btn-success' href='". $site["url"]."'>访问</a></p>";
 ?>
