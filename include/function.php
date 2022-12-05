@@ -114,9 +114,8 @@ function background() {
 }
 //程序更新
 function update() {
-	$update_host = 'cdn.lylme.com';
-	//程序更新服务器,请勿删除和修改，否则将导致无法接收版本更新和程序报错
-	@$update = json_decode(file_get_contents('https://' . $update_host . '/lylmes_page/update.json') , true);
+	$update_host = 'https://cdn.lylme.com/api/update';	//程序更新服务器,请勿删除和修改，否则将导致无法接收版本更新和程序报错
+	@$update = json_decode(get_curl($update_host.'?ver='.VERSION.'&domain='.$_SERVER['HTTP_HOST']),true);
 	return $update;
 }
 function getver($ver) {
