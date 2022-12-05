@@ -1,7 +1,7 @@
 <?php 
 $title = '后台管理';
 include './head.php';
-$last = date("Ymdh");
+$last = date("Ym");
 if(@file_get_contents('log.txt') != $last || !file_exists('cache.php')){
 $update = update();
 file_put_contents('log.txt',$last);
