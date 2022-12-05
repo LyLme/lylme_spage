@@ -50,6 +50,9 @@ if($sqlvn < 10300) {
 if($sqlvn < 10304) {
 	$version = 'v1.3.4';
 }
+if($sqlvn < 10500) {
+	$version = 'v1.5.0';
+}
 $sql=explode(';',$sql);
 for ($i=0;$i<count($sql);$i++) {
 	if (trim($sql[$i])=='')continue;
