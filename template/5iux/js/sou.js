@@ -1,4 +1,41 @@
 /*
+* 六零
+* 2022年12月10日
+*/ 
+$(document).ready(function(){
+    //设置为上次使用的搜索引擎
+    var index_id = localStorage.getItem("index_id")?localStorage.getItem("index_id"):0;
+    sethint(index_id);
+    $(".lylme").children().eq(index_id).show();
+});
+$(".lg").click(function () {
+    //切换搜索引擎
+    var count = $(".lylme").children(".ss").length;
+    var index = $(".lg").index(this);
+    if(count <= index+1){var index = -1;}
+    $(".lylme").children(".ss").hide();
+    $(".lylme").children().eq(index+1).show();
+    sethint(index+1);
+    localStorage.setItem("index_id",index+1); 
+});
+function sethint(id){
+    //设置搜索框提示
+     $(".soinput").attr("placeholder",solist()[id][1]);
+}
+function go(input_text){
+    // 跳转搜索结果
+    var index_id = localStorage.getItem("index_id");
+    var sourl = solist()[index_id][2];
+    if(input_text==""){var input_text = $(".soinput").val();}
+        var url = sourl+input_text;
+    if(navigator.userAgent.match(/mobile/i)){
+        window.location.href=url;
+    }else{
+        window.open(url, "_blank");
+    }
+}
+
+/*
 作者:D.Young
 主页：https://yyv.me/
 github：https://github.com/5iux/sou
@@ -71,8 +108,13 @@ $(function() {
         var word = $(this).text();
         $('.wd').val(word);
         $('#word').hide();
-        $("form").submit();
+       go(word);
         // $('#texe').trigger('click');触发搜索事件
     })
-
+$(".wd").keypress(function(event){
+  if(event.which === 13) { 
+      var word = $(".soinput").val();
+       go(word);
+   }
+})
 })
