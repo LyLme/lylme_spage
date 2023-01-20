@@ -1,18 +1,3 @@
-<?php
-$t=strtolower(urlencode($_GET["t"])); //搜索引擎
-$q=urlencode($_POST["q"]); //搜索词
-if (!empty($q)) {
-	if($soulist = $DB->fetch($DB->query("SELECT * FROM `lylme_sou` WHERE `sou_alias` LIKE '".$t."'"))) {
-		if (checkmobile()&& !empty($soulist["sou_waplink"])) {
-			echo'<script>window.location.href="'.$soulist["sou_waplink"].$q.'";</script>';
-		} else {
-			echo'<script>window.location.href="'.$soulist["sou_link"].$q.'";</script>';
-		}
-	} else {
-		echo'<script>window.location.href="https://www.baidu.com/s?word='.$q.'";</script>';
-	}
-}
-?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -34,7 +19,7 @@ if (!empty($q)) {
   <meta name="x5-fullscreen" content="true"><!--QQ强制全屏-->
   <meta name="x5-page-mode" content="app"><!--QQ应用模式-->
   <meta name="lsvn" content="<?php echo base64_encode($conf['version'])?>">
-  <link href="<?php echo $templatepath;?>/css/style.css?v=20220611" rel="stylesheet">
+  <link href="<?php echo $templatepath;?>/css/style.css?v=20221210" rel="stylesheet">
   <link href="<?php echo $templatepath;?>/css/wea.css" rel="stylesheet">
   <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js"></script>
 </head>
@@ -79,34 +64,26 @@ if ($conf['tq']) {
         <div class="con">
             <div class="shlogo"><?php echo $conf['home-title'] ?></div>
             <div class="sou">
-                <form action="" method="post"  target="_blank">
+               <div class="lylme">
                     <?php 
-$soulists = $DB->query("SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` DESC");
-$i = 0;
+$soulists = $DB->query("SELECT * FROM `lylme_sou` WHERE `sou_st` = 1 ORDER BY `lylme_sou`.`sou_order` ASC");
+$json = array();
 while ($soulist = $DB->fetch($soulists)) {
-	if ($soulist["sou_st"] == 1 && $soulist["sou_alias"] == $t) {
-		if(empty($soun)) {
-			$alias = $DB->fetch($DB->query("SELECT * FROM `lylme_sou` WHERE `sou_alias` NOT LIKE '".$soulist["sou_alias"]."' ORDER BY `sou_order` ASC LIMIT 1"));
-			$soun = $alias["sou_alias"];
-		}
-		echo '<div class="lg" onclick="window.location.href=\'?t='.$soun.'\';">' . $soulist["sou_icon"] . '</div>
-        <input class="wd" type="text" placeholder="' . $soulist["sou_hint"] . '" name="q" x-webkit-speech lang="zh-CN" autocomplete="off">';
-		$sousw = 1;
-	}
-	if ($soulist["sou_st"] == 1) {
-		$soun = $soulist["sou_alias"];
-	}
-	if(empty($soun))break;
+		echo '<div class="ss hide"><div class="lg">' . $soulist["sou_icon"] . '</div>
+        </div>';
+        if (checkmobile()&& !empty($soulist["sou_waplink"])) {
+        $so = $soulist["sou_waplink"];
+        } else {
+           $so = $soulist["sou_link"];
+        }
+         array_push($json,array($soulist['sou_name'],$soulist['sou_hint'],$so));
 }
-if(empty($sousw)||empty($soun)) {
-	$alias = $DB->fetch($DB->query("SELECT * FROM `lylme_sou` WHERE `sou_alias` NOT LIKE 'baidu' ORDER BY `sou_id` DESC LIMIT 1"));
-	echo '<div class="lg" onclick="window.location.href=\'?t='.$alias["sou_alias"].'\';"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-icon_baidulogo"></use></svg></div>
-     <input class="wd" type="text" placeholder="百度一下，你就知道" name="q" x-webkit-speech lang="zh-CN" autocomplete="off">
-    ';
-}
+$json = json_encode($json,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES)
 ?>
-                    <button><svg class="icon" style=" width: 21px; height: 21px; opacity: 0.5;" aria-hidden="true"><use xlink:href="#icon-sousuo"></use></svg></button>
-                </form>
+
+<input class="wd soinput" type="text" placeholder="" name="q" x-webkit-speech lang="zh-CN" autocomplete="off">
+<button onclick="go('');"><svg class="icon" style=" width: 21px; height: 21px; opacity: 0.5;" aria-hidden="true"><use xlink:href="#icon-sousuo"></use></svg></button>
+          
                 <div id="word"></div>
             </div>
         </div>
@@ -138,16 +115,17 @@ while($taglists = $DB->fetch($tagslists)) {
 }
 ?> 
   <!--版权信息-->
-  <p> Theme by <a href="https://github.com/5iux/sou/" target="_blank">5iux</a> .<?php echo $conf['copyright'];
-?></p>
+  <!-- <p> Theme by <a href="https://github.com/5iux/sou/" target="_blank">5iux</a> .<?php echo $conf['copyright'];
+?></p>  -->
     </div>
 <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
-<script src="<?php echo $templatepath;?>/js/sou.js"></script>
+<script src="<?php echo $templatepath;?>/js/sou.js?v=20221210"></script>
 
-<?php
-if(empty($t)) {echo '<script>var sou = "?t="+localStorage.getItem("sou");window.location.href=sou;</script>';}
-echo '<script>localStorage.setItem("sou", "'.$t.'");</script>';
-?>
+<script>
+function solist(){
+    return  <?php echo $json?>;
+}
+</script>
 <!--
 作者:D.Young
 主页：https://blog.5iux.cn/
