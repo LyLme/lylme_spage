@@ -170,27 +170,20 @@ function get_urlpath($srcurl,$baseurl) {
 }
 //获取客户端IP
 function get_real_ip() {
-	$ip=FALSE;
-	//客户端IP 或 NONE
-	if(!empty($_SERVER["HTTP_CLIENT_IP"])) {
-		$ip = $_SERVER["HTTP_CLIENT_IP"];
-	}
-	//多重代理服务器下的客户端真实IP地址（可能伪造）,如果没有使用代理，此字段为空
-	if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-		$ips = explode (", ", $_SERVER['HTTP_X_FORWARDED_FOR']);
-		if ($ip) {
-			array_unshift($ips, $ip);
-			$ip = FALSE;
-		}
-		for ($i = 0; $i < count($ips); $i++) {
-			if (!eregi ("^(10│172.16│192.168).", $ips[$i])) {
-				$ip = $ips[$i];
-				break;
-			}
-		}
-	}
-	//客户端IP 或 (最后一个)代理服务器 IP
-	return ($ip ? $ip : $_SERVER['REMOTE_ADDR']);
+    $real_ip = '';
+    if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+        $pos = array_search('unknown', $arr);
+        if (false !== $pos) {
+            unset($arr[$pos]);
+        }
+        $real_ip = trim($arr[0]);
+    } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
+        $real_ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (isset($_SERVER['REMOTE_ADDR'])) {
+        $real_ip = $_SERVER['REMOTE_ADDR'];
+    }
+    return $real_ip;
 }
 function yan() {
 	$filename = ROOT.'/assets/data/data.dat';
@@ -351,5 +344,18 @@ function theme_file($file) {
 	} else {
 		return 'template/'.$file;
 	}
+}
+function wxPlus($data){
+    //申请收录后推送到微信公众号
+	$curl = curl_init();
+	curl_setopt($curl, CURLOPT_URL, "https://wx.lylme.com/api/apply/");
+	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+	curl_setopt($curl, CURLOPT_POST, 1);
+	curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+	$output = curl_exec($curl);
+	curl_close($curl);
+	return $output;
 }
 ?>

@@ -124,5 +124,5 @@ if(!empty($background = background())) {
 <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js" type="application/javascript"></script>
 <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/layer/3.1.1/layer.min.js" type="application/javascript"></script>
 <script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/sweetalert/2.1.2/sweetalert.min.js" type="application/javascript"></script>
-<script src="https://cdn.lylme.com/lylme_spage/js/apply.js" type="application/javascript"></script>
+<script src="./apply.js" type="application/javascript"></script>
 </html>
