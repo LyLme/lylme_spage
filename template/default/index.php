@@ -35,7 +35,7 @@
             <ul>
 <li  data-lylme="search"><a>搜索</a><span></span></li>
 <?php
-$groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC"); // 获取分类
+$groups = $DB->query("SELECT * FROM `lylme_groups` WHERE `group_pwd` = 0 ORDER BY `group_order` ASC"); // 获取分类
 while ($group = $DB->fetch($groups)) { //循环所有分组
    
          echo '<li data-lylme="group_'. $group["group_id"] . '"><a>'. $group["group_name"] . '</a><span></span></li>'."\n"; 
