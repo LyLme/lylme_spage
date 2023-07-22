@@ -96,7 +96,7 @@ $i= 0;
 $tagslists = $DB->query("SELECT * FROM `lylme_tags`");
 while($taglists = $DB->fetch($tagslists)) {
 	echo '<a class="nav-link" href="' . $taglists["tag_link"] . '"';
-	if ($taglists["tag_target"] == 1) echo ' target="_blant"';
+	if ($taglists["tag_target"] == 1) echo ' target="_blank"';
 	echo '>' . $taglists["tag_name"] . '</a>';
 	if($i<$DB->num_rows($tagslists)-1) {
 		$i++;

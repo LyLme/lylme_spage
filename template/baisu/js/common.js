@@ -90,7 +90,7 @@ function keyClick() {
 	});
 
 }
-keyClick();
+//keyClick();
 
 //锚点、返回顶部
 $("a.catlist").click(function() {

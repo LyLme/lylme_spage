@@ -74,7 +74,7 @@ echo '<li><a href="#category-' . $group["group_id"] . '">' . $group["group_icon"
 $tagslists = $DB->query("SELECT * FROM `lylme_tags`");
 while ($taglists = $DB->fetch($tagslists)) {
     echo '<li class="nav-item"><a class="nav-link" href="' . $taglists["tag_link"] . '"';
-    if ($taglists["tag_target"] == 1) echo ' target="_blant"';
+    if ($taglists["tag_target"] == 1) echo ' target="_blank"';
     echo '>' . $taglists["tag_name"] . '</a></li>
 				    ';
 }
@@ -171,7 +171,6 @@ if ($conf['yan'] == 'true') {
 </style>
 
 <?php
-echo file_get_contents(ROOT."/template/quality/gg.html");
 $html= array(
     'g1' => '<ul class="mylist row">', //分组开始标签
     'g2' => '<li id="category-{group_id}" class="title">{group_icon}<sapn>{group_name}</sapn></li>',  //分组内容

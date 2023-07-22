@@ -38,7 +38,7 @@
 $tagslists = $DB->query("SELECT * FROM `lylme_tags`");
 while ($taglists = $DB->fetch($tagslists)) {
     echo '<li class="nav-item"><a class="nav-link" href="' . $taglists["tag_link"] . '"';
-    if ($taglists["tag_target"] == 1) echo ' target="_blant"';
+    if ($taglists["tag_target"] == 1) echo ' target="_blank"';
     echo '>' . $taglists["tag_name"] . '</a></li>
 				    ';
 }

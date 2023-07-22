@@ -35,7 +35,7 @@
 $tagslists = $DB->query("SELECT * FROM `lylme_tags`");
 while ($taglists = $DB->fetch($tagslists)) {
 	echo '<a href="' . $taglists["tag_link"] . '" class="list catlist"';
-	if ($taglists["tag_target"] == 1) echo ' target="_blant"';
+	if ($taglists["tag_target"] == 1) echo ' target="_blank"';
 	echo '><b>' . $taglists["tag_name"] . '</b></a>';
 }
 ?>
@@ -58,7 +58,7 @@ while ($taglists = $DB->fetch($tagslists)) {
 	echo '
 <div class="list">
 	<a href="' . $taglists["tag_link"] . '" class="list catlist"';
-	if ($taglists["tag_target"] == 1) echo ' target="_blant"';
+	if ($taglists["tag_target"] == 1) echo ' target="_blank"';
 	echo '>' . $taglists["tag_name"] . '</a>	</div> ';
 }
 ?>				
