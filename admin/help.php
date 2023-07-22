@@ -19,7 +19,7 @@ if($set=='icon'){
               <div class="card-header"><h4>SVG代码获取教程</h4></div>
               <div class="card-body">
                 
-               <p>1. 以阿里图标库为例，访问<a href="https://www.iconfont.cn/" target="_blant">https://www.iconfont.cn/</a>注册登录</p>
+               <p>1. 以阿里图标库为例，访问<a href="https://www.iconfont.cn/" target="_blank">https://www.iconfont.cn/</a>注册登录</p>
               <p>2. 点击网站顶部的搜索，输入需要的图标名称，在出现的结果中选择适合的图标</p>  
               <p>3. 鼠标悬停在图标上，会出现三个选项，选择最下面的下载按钮</p>
               <p>4. 可以按个人喜好选择适合的颜色及大小（一般默认即可）</p>

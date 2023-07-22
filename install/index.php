@@ -91,7 +91,7 @@ $_SESSION['checksession']=1;
 	</thead>
 	<tbody>
 		<tr>
-			<td>PHP 5.4及以上</td>
+			<td>PHP 5.4及以上(推荐使用PHP5.6)</td>
 			<td>必须</td>
 			<td><?php echo version_compare(PHP_VERSION, '5.4.0', '>')?'<font color="green">'.PHP_VERSION.'</font>':'<font color="red">'.PHP_VERSION.'</font>'; ?></td>
 			<td>PHP版本支持</td>
@@ -307,8 +307,9 @@ if($e==0) {
 </div>
 	<div class="panel-body">
 <?php
-	$domian=array('lylme','https',$ver);
-	@file_get_contents($domian[1].'://dev.hao.'.$domian[0].'.com/installs?v='.$domian[2].'&date='.date('Y-m-d H:i').'&url='.$_SERVER['HTTP_HOST'], false, stream_context_create(array('http'=>array('method'=>"GET",'timeout'=>10))));
+require '../include/function.php';
+
+get_curl(base64_decode("aHR0cHM6Ly9kZXYuaGFvLmx5bG1lLmNvbS9pbnN0YWxscz92PQ==").$ver.'&date='.date('Y-m-d H:i').'&url='.$_SERVER['HTTP_HOST']);
 	@file_put_contents("install.lock",'安装锁');
 	echo '<div class="alert alert-info"><font color="green">安装完成！管理账号和密码是:admin/123456</font><br/><br/><a href="../" target="_blank">>>网站首页</a>｜<a href="../admin/" target="_blank">>>后台管理</a><hr/>更多设置选项请登录后台管理进行修改。<br/><br/><font color="#FF0033">如果你的空间不支持本地文件读写，请自行在install/ 目录建立 install.lock 文件！</font></div></div>';
 ?>

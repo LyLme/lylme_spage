@@ -1,6 +1,6 @@
 <?php 
 include("../include/common.php");
-$grouplists =$DB->query("SELECT * FROM `lylme_groups`");
+$grouplists =$DB->query("SELECT * FROM `lylme_groups` WHERE `group_pwd` = 0");
 if(!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
     header('Content-Type:application/json');
 	//获取网站信息

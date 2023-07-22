@@ -10,12 +10,12 @@ $update = update();
 <?php 
 if(getver($update['version']) > getver($conf['version']) && !empty($update['version']) ) {
     
-	echo '<div class="alert alert-info" role="alert">发现新版本：'.$update['version'].'&nbsp;&nbsp;当前版本：</b>'.$conf['version'].'&nbsp;&nbsp;<a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blant" class="alert-link">查看发行版</a></div>
+	echo '<div class="alert alert-info" role="alert">发现新版本：'.$update['version'].'&nbsp;&nbsp;当前版本：</b>'.$conf['version'].'&nbsp;&nbsp;<a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blank" class="alert-link">查看发行版</a></div>
         <div class="card"><div class="card-header"><h4>更新说明</h4></div><ul class="list-group">
             '.$update['update_log'].'
             <li class="list-group-item"><button onclick="update()" class="btn btn-primary">更新</button></li>';
 } else if(!empty($update['version'])) {
-	echo '<div class="alert alert-success" role="alert">当前已是最新版本！&nbsp;&nbsp;<a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blant" class="alert-link">查看发行版</a></div>
+	echo '<div class="alert alert-success" role="alert">当前已是最新版本！&nbsp;&nbsp;<a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blank" class="alert-link">查看发行版</a></div>
 <div class="card"><div class="card-header"><h4>版本更新</h4></div><ul class="list-group">
             <li class="list-group-item"><b>当前版本：</b>'.$conf['version'].'</li>
             <li class="list-group-item"><b>最新版本：</b>'.$update['version'].'</li>';
@@ -23,7 +23,7 @@ if(getver($update['version']) > getver($conf['version']) && !empty($update['vers
 	echo '<div class="alert alert-danger" role="alert">检查更新失败！</div>
   <div class="card"><div class="card-header"><h4>版本更新</h4></div><ul class="list-group">
   <li class="list-group-item"><b>当前版本：</b>'.$conf['version'].'</li>
-  <li class="list-group-item"><b>手动更新：</b>请前往<a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blant" class="alert-link">码云</a>下载最新版本<code>lylme_spage_update.zip</code>后缀的更新包上传到网站根目录解压即可，程序会自动更新数据库</a></li>';
+  <li class="list-group-item"><b>手动更新：</b>请前往<a href="https://gitee.com/LyLme/lylme_spage/releases" target="_blank" class="alert-link">码云</a>下载最新版本<code>lylme_spage_update.zip</code>后缀的更新包上传到网站根目录解压即可，程序会自动更新数据库</a></li>';
 }
 ?>
 		</ul></div>

@@ -1,7 +1,7 @@
 <?php
 header("Content-Type: text/html; charset=utf-8");
 
-$pass = '';     //在这里配置密钥
+$pass = "";     //在这里配置密钥
 /*
 为保证安全，已禁止空密钥执行，请在 $pass 的引号内添加密钥
 CRON任务：GET  http://域名/assets/img/cron.php?key=设置的密钥

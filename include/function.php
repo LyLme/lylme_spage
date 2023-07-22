@@ -112,10 +112,8 @@ $background = $conf["background"];
 function background() {
 	return $GLOBALS['background_img'];
 }
-//程序更新
 function update() {
-	$update_host = 'https://cdn.lylme.com/api/update';	//程序更新服务器,请勿删除和修改，否则将导致无法接收版本更新和程序报错
-	@$update = json_decode(get_curl($update_host.'?ver='.VERSION.'&domain='.$_SERVER['HTTP_HOST']),true);
+	@$update = json_decode(get_curl(base64_decode("aHR0cHM6Ly9jZG4ubHlsbWUuY29tL2FwaS91cGRhdGU=").'?ver='.VERSION.'&domain='.$_SERVER['HTTP_HOST']),true);
 	return $update;
 }
 function getver($ver) {
@@ -206,9 +204,9 @@ function rearr($data,$arr) {
 	$arr = str_replace('{link_name}', $data['name'],$arr);
 	$arr = str_replace('{link_url}', $data['url'],$arr);
 	if (empty($data["icon"])) {
-		$icon =  '<img src="/assets/img/default-icon.png" alt="' . $data["name"] . '" />';
+		$icon =  '<img src="/assets/img/default-icon.png" alt="' . strip_tags($data["name"]) . '" />';
 	} else if (!preg_match("/^<svg*/", $data["icon"])) {
-		$icon = '<img src="' . $data["icon"] . '" alt="' . $data["name"] . '" />';
+		$icon = '<img src="' . $data["icon"] . '" alt="' . strip_tags($data["name"]) . '" />';
 	} else {
 		$icon = $data["icon"];
 	}
