@@ -5,6 +5,7 @@
 $(document).ready(function(){
     //设置为上次使用的搜索引擎
     var index_id = localStorage.getItem("index_id")?localStorage.getItem("index_id"):0;
+    localStorage.setItem("index_id",index_id); 
     sethint(index_id);
     $(".lylme").children().eq(index_id).show();
 });
