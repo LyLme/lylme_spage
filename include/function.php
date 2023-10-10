@@ -181,7 +181,12 @@ function get_real_ip() {
     } elseif (isset($_SERVER['REMOTE_ADDR'])) {
         $real_ip = $_SERVER['REMOTE_ADDR'];
     }
-    return $real_ip;
+    if (filter_var($real_ip, FILTER_VALIDATE_IP)) {
+        return $real_ip;
+    } else {
+        return "";
+    }
+//    return $real_ip;
 }
 function yan() {
 	$filename = ROOT.'/assets/data/data.dat';
