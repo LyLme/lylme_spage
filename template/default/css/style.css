@@ -16,8 +16,8 @@ a:hover{text-decoration:none}
 svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:currentColor;overflow:hidden}
 .navbar-light .navbar-nav .nav-link{color:#fff !important;font-size:16px;font-weight:bold;text-shadow:0px 1px 0px #000}
 #search{width:100%;margin:0;padding:0 0 10px;position:relative;z-index:2000;border-radius:5px}
-#search form{position:relative;margin-top:15px}
-#search-text{width:100%;height:50px;line-height:50px;text-indent:10px;font-size:16px;border-radius:10px;background-color:#fff;border:1px solid #fff;/*box-shadow:0 0.5rem 0.625rem #d4d4d44d;*/transition:0.3s all linear;padding-left:20px}
+#search form{position:relative;margin-top:15px;max-width:700px;margin:auto;}
+#search-text{width:100%;height:50px;line-height:50px;text-indent:10px;font-size:16px;border-radius:10px;background-color:#fff;border:1px solid #fff;/*box-shadow:0 0.5rem 0.625rem #d4d4d44d;*/transition:0.3s all linear;padding-left:20px;padding-right:90px}
 #search-text:focus{border:1px solid #4e6ef2}
 #search-text:hover{border:1px solid #a7aab5}
 #search button{position:absolute;top:0;right:0;background:none;border:0;border-radius:20px;width:auto;height:50px;border-radius:0 10px 10px 0;outline:none;background-color:#4e6ef2}
@@ -61,17 +61,17 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 .mylist li.title{width:100%;min-width:auto;margin:0;height:35px;font-size:16px;line-height:33px;padding:0 20px 0 10px;/*border-bottom:1px solid #eee;*/margin-bottom:10px}
 .banner-video{position:absolute;width:100%;overflow:hidden;left:0;top:0;height:100vh}
 .banner-video video{width:2048px;float:left}
-.banner-video img{object-fit:cover;width:100%;height:100vh}
+.banner-video img{object-fit:cover;width:100%;height:100vh;pointer-events:none}
 .bottom-cover{width:100%;height:50%;position:absolute;bottom:-1px;z-index:10}
 @media screen and (min-width:1200px){.mylist li.col-3{min-width:132px}
 }@media screen and (min-width:992px) and (max-width:1200px){.mylist li.col-3{min-width:110px}
 }@media screen and (max-width:992px){#he-plugin-simple{display:none}
 .banner-video video{width:1200px}
-.banner-video img{object-fit:cover;width:100%;height:100vh}
+.banner-video img{object-fit:cover;width:100%;height:100vh;pointer-events:none}
 .search-group{padding-left:0px}
 div#navbarsExample05{background:rgba(0,0,0,0.8);padding:10px 30px;border-radius:20px}
 }@media screen and (max-width:767px){.banner-video video{width:960px}
-.banner-video img{object-fit:cover;width:100%;height:100vh}
+.banner-video img{object-fit:cover;width:100%;height:100vh;pointer-events:none}
 .s-type-list label{padding:5px 0}
 .search-list{height:30px;overflow-y:hidden;white-space:nowrap}
 .search-group{padding-left:0px}
