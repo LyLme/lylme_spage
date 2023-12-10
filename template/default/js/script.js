@@ -143,7 +143,8 @@ function() {
 		m("newWindow", a.target.checked ? 1 : -1), x(a.target.checked)
 	}
 	function r(a) {
-		return a.preventDefault(), "" == c.value ? (c.focus(), !1) : (w(t() + c.value), x(s()), s() ? window.open(b.action, +new Date) : location.href = b.action, void 0)
+		// return a.preventDefault(), "" == c.value ? (c.focus(), !1) : (w(t() + c.value), x(s()), s() ? window.open(b.action, +new Date) : location.href = b.action, void 0)
+		return a.preventDefault(), "" == c.value ? (c.focus(), !1) : (w(t() + c.value), x(s()), s() ? window.open(b.action, b.target) : location.href = b.action, void 0)
 	}
 	function s() {
 		var a = n("newWindow");
@@ -162,7 +163,8 @@ function() {
 		b.action = a
 	}
 	function x(a) {
-		a ? b.target = "_blank" : b.removeAttribute("target")
+		a ? b.target = "_self" : b.removeAttribute("target")
+		// a ? b.target = "_blank" : b.removeAttribute("target")
 	}
 	var y, a = document.querySelectorAll('input[name="type"]'),
 		b = document.querySelector("#super-search-fm"),
