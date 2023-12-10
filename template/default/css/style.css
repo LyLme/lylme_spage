@@ -38,7 +38,7 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 .s-type-list .tile-lg{color:#fff;width:3pc;height:3pc;font-size:1.25rem;line-height:3rem;border-radius:.3rem;display:block;margin:auto}
 .s-type:hover .s-type-list{display:block}
 .type-text{position:absolute;left:0;width:75px;padding-left:9pt;font-size:1pc;line-height:31px}
-.search-type{white-space:nowrap;margin:0}
+.search-type{white-space:normal;margin:auto;max-width: 700px;}
 .search-type label{margin:0}
 .search-type img {width: 14px;height: 14px;margin: 0 5px 0 8px;vertical-align: -0.15em;fill: currentColor;overflow: hidden;}
 .search-type li{margin-bottom:10px;display:inline-block;background:#ffffffAD;background:rgba(255,255,255,70%);border-radius:10px}
