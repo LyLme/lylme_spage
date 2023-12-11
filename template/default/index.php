@@ -122,7 +122,7 @@ while ($soulist = $DB->fetch($soulists)) {
 						</ul>
 					</div>
 				</div>
-				<form action="https://www.baidu.com/s?wd=" method="get" target="_self"
+				<form action="https://www.baidu.com/s?wd=" method="get" target="_blank"
 				id="super-search-fm">
 					<input type="text" id="search-text" placeholder="百度一下，你就知道" style="outline:0"
 					autocomplete="off">

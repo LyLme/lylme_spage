@@ -6,8 +6,7 @@ $html= array(
     'g3' => '</ul>',  //分组结束标签
     
     'l1' => '<li class="col-3 col-sm-3 col-md-3 col-lg-1">',  //链接开始标签
-    'l2' => '<a rel="nofollow" href="{link_url}" target="_self">{link_icon}<span>{link_name}</span></a>',  //链接内容
-    // 'l2' => '<a rel="nofollow" href="{link_url}" target="_blank">{link_icon}<span>{link_name}</span></a>',  //链接内容
+    'l2' => '<a rel="nofollow" href="{link_url}" target="_blank">{link_icon}<span>{link_name}</span></a>',  //链接内容
     'l3' => '</li>',  //链接结束标签
 );
 lists($html);
