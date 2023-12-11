@@ -1,4 +1,3 @@
 include/log.txt
 nginx.htaccess
 install/install.lock
-config.php
