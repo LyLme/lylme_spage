@@ -38,7 +38,7 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 .s-type-list .tile-lg{color:#fff;width:3pc;height:3pc;font-size:1.25rem;line-height:3rem;border-radius:.3rem;display:block;margin:auto}
 .s-type:hover .s-type-list{display:block}
 .type-text{position:absolute;left:0;width:75px;padding-left:9pt;font-size:1pc;line-height:31px}
-.search-type{white-space:normal;margin:auto;max-width: 700px;}
+.search-type{white-space:normal;margin:auto;max-width:700px;}
 .search-type label{margin:0}
 .search-type img {width: 14px;height: 14px;margin: 0 5px 0 8px;vertical-align: -0.15em;fill: currentColor;overflow: hidden;}
 .search-type li{margin-bottom:10px;display:inline-block;background:#ffffffAD;background:rgba(255,255,255,70%);border-radius:10px}
@@ -80,6 +80,7 @@ div#navbarsExample05{background:rgba(0,0,0,0.8);padding:10px 30px;border-radius:
 .mylist li.col-3 svg{width:30px;height:30px;padding:5px;border-radius:5px}
 .mylist li.col-3 span{font-size:12px}
 .mylist li.col-3 img {display: block; width: 30px; height: 30px; padding: 5px; background: #fff; border: 1px solid #eee; border-radius: 10px; margin: 0 auto;}
+.search-type{white-space:nowrap;margin:0}
 }.navbar-toggler svg{width:24px;height:24px}
 .navbar-toggler .bi-list-nested{display:none}
 .navbar-toggler.collapsed .bi-list-nested{display:block}
