@@ -34,21 +34,23 @@ and (max-width:320px){.form-wrapper{padding-top:10%;border-radius:2px;margin:50p
 <body>
 <?php
 
-if(!empty($background = background())){
-    $background = str_replace('./','../',$background);
-	echo '<div class="body" style="background-image:  url('.$background.');">';}
+if(!empty($background = background())) {
+    $background = str_replace('./', '../', $background);
+    echo '<div class="body" style="background-image:  url(' . $background . ');">';
+}
 ?>
 <div class="form-wrapper">
 
 	<div class="nav">
 
-		    <?php 
-		        if($DB->num_rows($DB->query("SELECT * FROM `lylme_pwd`"))!=0){echo '<h1>访问管理</h1>';?>
+		    <?php
+                if($DB->num_rows($DB->query("SELECT * FROM `lylme_pwd`")) != 0) {
+                    echo '<h1>访问管理</h1>';?>
 
 	</div>
-	<?php 
-	session_start(); //设置session
-	if($_SESSION['pass'] != 1){?>
+	<?php
+    session_start(); //设置session
+                    if(isset($_SESSION['pass']) != 1) {?>
 	<p>请输入密码登录</p>
 	<form name="form" action="../include/go.php" method="POST">
 		<div class="form">
@@ -60,15 +62,15 @@ if(!empty($background = background())){
 				<input type="submit" class="button" title="登录" value="登录">
 			</div>
 		</div>
-	</form><?php }else{ ?>
+	</form><?php } else { ?>
 	<form name="form" action="../include/go.php" method="POST">
 		<div class="form">
 			<div class="button-panel">
 			    <p> 欢迎回来，您已登录！<br><br>用户组:
-			        <?php foreach($_SESSION['list'] as $list){
-			            echo(' ['.$list.'] ');
+			        <?php foreach($_SESSION['list'] as $list) {
+			            echo(' [' . $list . '] ');
 			        }
-			    ?></p>
+	    ?></p>
 			    <div class="form-item">
 				<input type="hidden" autocomplete="new-password"  name="exit" required="required" value="exit"  >
 			</div>
@@ -78,9 +80,11 @@ if(!empty($background = background())){
 		
 	</form>
 	<?php
-	        }
-	    }else{echo '<h2>当前站点未启用链接加密</h2>';}
-    ?>
+	}
+                } else {
+                    echo '<h2>当前站点未启用链接加密</h2>';
+                }
+?>
 	<a href="../" class="home">返回首页</a>
 </div>
 </div>
