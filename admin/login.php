@@ -1,24 +1,24 @@
 <?php
 include("../include/common.php");
-if(isset($_POST['user']) && isset($_POST['pass'])){
-	$user=daddslashes($_POST['user']);
-	$pass=daddslashes($_POST['pass']);
-	if($user==$conf['admin_user'] && $pass==$conf['admin_pwd']) {
-		$session=md5($user.$pass);
-		$token=authcode("{$user}\t{$session}", 'ENCODE', SYS_KEY);
-		setcookie("admin_token", $token, time() + 604800);
-		@header('Content-Type: text/html; charset=UTF-8');
-		exit("<script language='javascript'>alert('登陆管理中心成功！');window.location.href='./';</script>");
-	}elseif ($pass != $conf['admin_pwd']) {
-		@header('Content-Type: text/html; charset=UTF-8');
-		exit("<script language='javascript'>alert('用户名或密码不正确！');history.go(-1);</script>");
-	}
-}elseif(isset($_GET['logout'])){
-	setcookie("admin_token", "", time() - 604800);
-	@header('Content-Type: text/html; charset=UTF-8');
-	exit("<script language='javascript'>alert('您已成功注销本次登陆！');window.location.href='./login.php';</script>");
-}elseif(isset($islogin)==1){
-	exit("<script language='javascript'>alert('您已登陆！');window.location.href='./';</script>");
+if(isset($_POST['user']) && isset($_POST['pass'])) {
+    $user = daddslashes($_POST['user']);
+    $pass = md5('lylme' . daddslashes($_POST['pass']));
+    if($user == $conf['admin_user'] && $pass == $conf['admin_pwd']) {
+        $session = md5($user . $pass);
+        $token = authcode("{$user}\t{$session}", 'ENCODE', SYS_KEY);
+        setcookie("admin_token", $token, time() + 604800);
+        @header('Content-Type: text/html; charset=UTF-8');
+        exit("<script language='javascript'>alert('登陆管理中心成功！');window.location.href='./';</script>");
+    } elseif ($pass != $conf['admin_pwd']) {
+        @header('Content-Type: text/html; charset=UTF-8');
+        exit("<script language='javascript'>alert('用户名或密码不正确！');history.go(-1);</script>");
+    }
+} elseif(isset($_GET['logout'])) {
+    setcookie("admin_token", "", time() - 604800);
+    @header('Content-Type: text/html; charset=UTF-8');
+    exit("<script language='javascript'>alert('您已成功注销本次登陆！');window.location.href='./login.php';</script>");
+} elseif(isset($islogin) == 1) {
+    exit("<script language='javascript'>alert('您已登陆！');window.location.href='./';</script>");
 }
 ?>
 <!DOCTYPE html>
@@ -76,9 +76,10 @@ if(isset($_POST['user']) && isset($_POST['pass'])){
   
 <body>
     <?php
-if(!empty($background = background())){
-    $background = str_replace('./','../',$background);
-	echo '<div class="row lylme-wrapper" style="background-image:  url('.$background.');background-size: cover;">';}
+if(!empty($background = background())) {
+    $background = str_replace('./', '../', $background);
+    echo '<div class="row lylme-wrapper" style="background-image:  url(' . $background . ');background-size: cover;">';
+}
 ?>
 <div class="row lyear-wrapper">
   <div class="lyear-login">
@@ -103,7 +104,7 @@ if(!empty($background = background())){
       </form>
       <hr>
       <footer class="col-sm-12 text-center">
-        <p class="m-b-0">Copyright ©2021 - <?php echo(date('Y'));  ?> <a href="/"><?php echo explode("-", $conf['title'])[0];?></a></p>
+        <p class="m-b-0">Copyright <?php echo(date('Y'));  ?> <a href="/"><?php echo explode("-", $conf['title'])[0];?></a></p>
       </footer>
     </div>
   </div>
