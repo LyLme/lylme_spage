@@ -1,3 +1,7 @@
 include/log.txt
 nginx.htaccess
 install/install.lock
+admin/cache.php
+admin/log.txt
+.htaccess
+.gitignore
