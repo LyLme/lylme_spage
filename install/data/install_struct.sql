@@ -16,7 +16,7 @@ CREATE TABLE `lylme_apply` (
   `apply_url` varchar(255) NOT NULL,
   `apply_group` int(2) NOT NULL,
   `apply_icon` text NOT NULL,
-  `apply_mail` varchar(30) NOT NULL,
+  `apply_desc` varchar(30) NOT NULL,
   `apply_time` datetime NOT NULL,
   `apply_status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收录申请';
@@ -78,7 +78,7 @@ CREATE TABLE `lylme_links` (
   `group_id` int(2) NOT NULL DEFAULT '1' COMMENT '分组名称',
   `url` varchar(255) NOT NULL COMMENT '链接地址',
   `icon` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '链接图标',
-  `PS` varchar(255) DEFAULT NULL COMMENT '备注',
+  `link_desc` varchar(255) DEFAULT NULL COMMENT '链接描述',
   `link_order` int(4) DEFAULT '10' COMMENT '链接排序',
   `link_status` int(1) NOT NULL DEFAULT '1' COMMENT '链接状态',
   `link_pwd` int(2) DEFAULT '0' COMMENT '加密组ID'
@@ -111,7 +111,8 @@ CREATE TABLE `lylme_tags` (
   `tag_id` int(11) NOT NULL,
   `tag_name` varchar(30) NOT NULL,
   `tag_link` varchar(60) NOT NULL,
-  `tag_target` int(1) NOT NULL DEFAULT '1'
+  `tag_target` int(1) NOT NULL DEFAULT '1',
+  `sort` int(11) NOT NULL DEFAULT '10' COMMENT '权重'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
