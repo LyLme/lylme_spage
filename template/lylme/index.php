@@ -22,9 +22,11 @@
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/style.css?v=20220510" type="text/css">
 		<link rel="stylesheet" href="<?php echo $cdnpublic ?>/assets/css/fontawesome-free5.13.0.css" type="text/css">
 	</head>
-	<?php if(!empty(background())){
-	echo '<body onload="FocusOnInput()" style="background-image: url('.background().');background-size: cover;">';}
-	else{ echo '<body onload="FocusOnInput()">';}?>
+	<?php if(!empty(background())) {
+	    echo '<body onload="FocusOnInput()" style="background-image: url(' . background() . ');background-size: cover;">';
+	} else {
+	    echo '<body onload="FocusOnInput()">';
+	}?>
 	
 		<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="position: absolute; z-index: 10000;">
 		<button class="navbar-toggler collapsed" style="border: none; outline: none;"type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,17 +37,20 @@
 			<div class="collapse navbar-collapse" id="navbarsExample05">
 				<ul class="navbar-nav mr-auto">
 			<?php
-$tagslists = $DB->query("SELECT * FROM `lylme_tags`");
-while ($taglists = $DB->fetch($tagslists)) {
-    echo '<li class="nav-item"><a class="nav-link" href="' . $taglists["tag_link"] . '"';
-    if ($taglists["tag_target"] == 1) echo ' target="_blank"';
-    echo '>' . $taglists["tag_name"] . '</a></li>
+$tagslists = $site->getTags();
+		while ($taglists = $DB->fetch($tagslists)) {
+		    echo '<li class="nav-item"><a class="nav-link" href="' . $taglists["tag_link"] . '"';
+		    if ($taglists["tag_target"] == 1) {
+		        echo ' target="_blank"';
+		    }
+		    echo '>' . $taglists["tag_name"] . '</a></li>
 				    ';
-}
-?>
+		}
+		?>
 <?php if ($conf['tq'] != 'false') {
-echo '<div id="he-plugin-simple"></div>
-<script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>';}?>
+		    echo '<div id="he-plugin-simple"></div>
+<script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>';
+		}?>
 				</ul>
 
  </div>				
@@ -60,9 +65,9 @@ echo '<div id="he-plugin-simple"></div>
 			</div>
 <?php
 if ($conf['yan'] == 'true') {
-	echo '<p class="content">' . yan().'</p>'; 
+    echo '<p class="content">' . yan() . '</p>';
 }
-?>
+		?>
 		</p>
 		<!--搜索开始-->
 			<div id="search" class="s-search">
@@ -103,25 +108,29 @@ if ($conf['yan'] == 'true') {
 				
 				</div>
 					<ul class="search-type" id="chso">
-						<?php 
-						    $soulists = $DB->query("SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` ASC");
-                            while ($soulist = $DB->fetch($soulists)) {
-							    if($soulist["sou_st"]==1){
-							        echo '	<li>
-								<input hidden=""  checked="" type="radio" name="type" id="type-'.$soulist["sou_alias"].'" value="';
-								if(checkmobile()&&$soulist["sou_waplink"]!=NULL){echo $soulist["sou_waplink"];}else{echo $soulist["sou_link"];}
-								echo '"data-placeholder="'.$soulist["sou_hint"].'">
-								<label for="type-'.$soulist["sou_alias"].'" style="font-weight:600">
-								'.$soulist["sou_icon"].'
-									<span style="color:'.$soulist["sou_color"].'">
-										'.$soulist["sou_name"].'
+						<?php
+		                            $soulists = $site->getSou();
+		while ($soulist = $DB->fetch($soulists)) {
+		    if($soulist["sou_st"] == 1) {
+		        echo '	<li>
+								<input hidden=""  checked="" type="radio" name="type" id="type-' . $soulist["sou_alias"] . '" value="';
+		        if(checkmobile() && $soulist["sou_waplink"] != null) {
+		            echo $soulist["sou_waplink"];
+		        } else {
+		            echo $soulist["sou_link"];
+		        }
+		        echo '"data-placeholder="' . $soulist["sou_hint"] . '">
+								<label for="type-' . $soulist["sou_alias"] . '" style="font-weight:600">
+								' . $soulist["sou_icon"] . '
+									<span style="color:' . $soulist["sou_color"] . '">
+										' . $soulist["sou_name"] . '
 									</span>
 								</label>
 							</li>
 							';
-							} 
-							    }
-							    ?>						  
+		    }
+		}
+		?>						  
 						</ul>
 				<div class="set-check hidden-xs">
 					<input type="checkbox" id="set-search-blank" class="bubble-3" autocomplete="off">
@@ -133,5 +142,5 @@ if ($conf['yan'] == 'true') {
 
 <?php
 include "list.php";
-include "footer.php";
-?>
+		include "footer.php";
+		?>

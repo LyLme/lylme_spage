@@ -23,7 +23,7 @@
 		<div class="m-header">
 			<div class="logo">
 				<a href="/"><?php echo explode("-", $conf['title'])[0];
-?></a>
+		?></a>
 			</div>
 			<div class="navbar">
 				<i class="iconfont icon-caidan"></i>
@@ -31,14 +31,16 @@
 			<div class="m-navlist-w">
 				<div class="m-navlist">
 <?php
-//输出导航菜单
-$tagslists = $DB->query("SELECT * FROM `lylme_tags`");
-while ($taglists = $DB->fetch($tagslists)) {
-	echo '<a href="' . $taglists["tag_link"] . '" class="list catlist"';
-	if ($taglists["tag_target"] == 1) echo ' target="_blank"';
-	echo '><b>' . $taglists["tag_name"] . '</b></a>';
-}
-?>
+		//输出导航菜单
+		$tagslists = $DB->query("SELECT * FROM `lylme_tags`");
+		while ($taglists = $DB->fetch($tagslists)) {
+		    echo '<a href="' . $taglists["tag_link"] . '" class="list catlist"';
+		    if ($taglists["tag_target"] == 1) {
+		        echo ' target="_blank"';
+		    }
+		    echo '><b>' . $taglists["tag_name"] . '</b></a>';
+		}
+		?>
 				</div>
 			</div>
 		</div>
@@ -47,31 +49,34 @@ while ($taglists = $DB->fetch($tagslists)) {
 		<div class="index-nav">
 			<div class="logo">
 				<a href="/"><?php echo explode("-", $conf['title'])[0];
-?></a>
+		?></a>
 			</div>
 				
 
 			<div class="type-list">
 		<?php
-$tagslists = $DB->query("SELECT * FROM `lylme_tags`");
-while ($taglists = $DB->fetch($tagslists)) {
-	echo '
+		$tagslists = $site->getTags();
+		while ($taglists = $DB->fetch($tagslists)) {
+		    echo '
 <div class="list">
 	<a href="' . $taglists["tag_link"] . '" class="list catlist"';
-	if ($taglists["tag_target"] == 1) echo ' target="_blank"';
-	echo '>' . $taglists["tag_name"] . '</a>	</div> ';
-}
-?>				
+		    if ($taglists["tag_target"] == 1) {
+		        echo ' target="_blank"';
+		    }
+		    echo '>' . $taglists["tag_name"] . '</a>	</div> ';
+		}
+		?>				
 			<hr><p style="margin: 10px;color: #000;font-weight: bold;font-size:18px">分组</p>				
 <?php
-$groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC");
-while ($group = $DB->fetch($groups)) {
-	echo '<div class="list">
+
+		$groups = $site->getGroups();
+		while ($group = $DB->fetch($groups)) {
+		    echo '<div class="list">
 	<a href="#category-' . $group["group_id"] . '" class="list catlist">
-							' . $group["group_icon"]  . $group["group_name"] . '</a>
+							' . $group["group_icon"] . $group["group_name"] . '</a>
 							</div>';
-}
-?>
+		}
+		?>
 			</div>	
 		</div>
 		<!--左侧分类栏 E-->
@@ -80,8 +85,8 @@ while ($group = $DB->fetch($groups)) {
 			<!--搜索 S-->
 			<div class="search-main-w">
 				<div class="date-main" 
-				<?php if(background()){
-				echo 'style="background-image: url('.background().')"';
+				<?php if(background()) {
+				    echo 'style="background-image: url(' . background() . ')"';
 				}?>>
 					<time class="times" id="nowTime">00:00:00</time>
 					<span class="dates" id="nowYmd">2022年01月01日</span>
@@ -101,32 +106,32 @@ while ($group = $DB->fetch($groups)) {
 					</div>
 					<div class="search-btnlist">
 <?php
-$soulists = $DB->query("SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` ASC");
-while ($soulist = $DB->fetch($soulists)) {
-	if ($soulist["sou_st"] == 1) {
-		if(!$fso) {
-			echo '<button class="search-btn" data-url="';
-			if (checkmobile()&& $soulist["sou_waplink"] != NULL) {
-				echo $soulist["sou_waplink"];
-			} else {
-				echo $soulist["sou_link"];
-			}
-			echo '">'. $soulist["sou_icon"] . $soulist["sou_name"] . '</button>
+$soulists = $site->getSou();
+		while ($soulist = $DB->fetch($soulists)) {
+		    if ($soulist["sou_st"] == 1) {
+		        if(!$fso) {
+		            echo '<button class="search-btn" data-url="';
+		            if (checkmobile() && $soulist["sou_waplink"] != null) {
+		                echo $soulist["sou_waplink"];
+		            } else {
+		                echo $soulist["sou_link"];
+		            }
+		            echo '">' . $soulist["sou_icon"] . $soulist["sou_name"] . '</button>
 						<button class="search-change"><i class="iconfont icon-xiangxia"></i></button>
 						<div class="search-lists hide">   ';
-			$fso = true;
-		}
-		echo '	<div class="list" data-url="';
-		if (checkmobile()&& $soulist["sou_waplink"] != NULL) {
-			echo $soulist["sou_waplink"];
-		} else {
-			echo $soulist["sou_link"];
-		}
-		echo '">'. $soulist["sou_icon"] . $soulist["sou_name"] . '
+		            $fso = true;
+		        }
+		        echo '	<div class="list" data-url="';
+		        if (checkmobile() && $soulist["sou_waplink"] != null) {
+		            echo $soulist["sou_waplink"];
+		        } else {
+		            echo $soulist["sou_link"];
+		        }
+		        echo '">' . $soulist["sou_icon"] . $soulist["sou_name"] . '
 							</div>';
-	}
-}
-?>	
+		    }
+		}
+		?>	
 
 							<div class="list kongs"></div>
 						</div>
@@ -145,13 +150,13 @@ while ($soulist = $DB->fetch($soulists)) {
 
 		<div class="site-main">
 		    <?php
-			
-if ($conf['yan'] == 'true') {
-	echo '<p class="content">' . yan().'</p>'; 
-}
+
+		if ($conf['yan'] == 'true') {
+		    echo '<p class="content">' . yan() . '</p>';
+		}
 
 
-include'list.php';?>
+		include'list.php';?>
         </div>
 
 			</div>
@@ -161,14 +166,14 @@ include'list.php';?>
 		<footer>
 		      <!--网站统计-->
  <?php if(!empty($conf['wztj'])) {
-	echo '<p>'.$conf["wztj"].'</p>';
-}
-?>
+     echo '<p>' . $conf["wztj"] . '</p>';
+ }
+		?>
  <!--备案信息-->
    <?php if(!empty($conf['icp'])) {
-	echo '<p><img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" rel="nofollow" class="icp nav-link" target="_blank" _mstmutation="1" _istranslated="1">'.$conf['icp'].'</a></p>';
-}
-?>
+       echo '<p><img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" rel="nofollow" class="icp nav-link" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a></p>';
+   }
+		?>
 		 <p>Theme By <a href="https://gitee.com/baisucode/baisu-two" target="_blank">BaiSu</a>. <?php echo $conf['copyright']?></p>
 		</footer>
 		<!--底部版权 E-->
@@ -179,7 +184,7 @@ include'list.php';?>
 				</div>
 		</div>
 		<!--返回顶部 E-->
-		<?php if ($conf['tq']=='true'){?>
+		<?php if ($conf['tq'] == 'true') {?>
 		<!--天气代码替换处 S-->
 		<script type="text/javascript">
 			WIDGET = {
@@ -198,7 +203,9 @@ include'list.php';?>
         </script>
 		<script src="https://widget.qweather.net/standard/static/js/he-standard-common.js?v=2.0"></script>
 		<!--天气代码替换处 E-->
-		<?php }else{echo '<style>.search-main-w {display: none;} @media only screen and (max-width: 1200px){.search-main {padding-top:70px !important;}}</style>';}?>
+		<?php } else {
+		    echo '<style>.search-main-w {display: none;} @media only screen and (max-width: 1200px){.search-main {padding-top:70px !important;}}</style>';
+		}?>
 		<!--iconfont-->
 		<link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_3000268_oov6h4vru0h.css" />
 		<script src="//at.alicdn.com/t/font_3000268_oov6h4vru0h.js" type="text/javascript" charset="utf-8"></script>
@@ -214,5 +221,5 @@ include'list.php';?>
 <!--二开说明：-->
 <!--1. 当前主题使用基于baisuTwo主题开发，作者：baisu-->
 <!--2. 原项目地址https://gitee.com/baisucode/baisu-two-->
-<!--3. 二开作者：六零
+<!--3. 二开作者：六零-->
 <!--4. 修改了适配LyLme Spage，修改了部分CSS，删除不适用与本项目的代码-->

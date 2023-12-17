@@ -23,7 +23,9 @@
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/tag.css?v=20220611" type="text/css">
 	</head>
     <body onload="FocusOnInput()"><div class="banner-video">
-	<?php if(!empty(background())){ echo '<img src="'.background().'">';}?>
+	<?php if(!empty(background())) {
+	    echo '<img src="' . background() . '">';
+	}?>
 
 			<div class="bottom-cover" style="background-image: linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(244 248 251 / 0.6) 50%, rgb(244 248 251) 100%);">
 			</div>
@@ -35,12 +37,12 @@
             <ul>
 <li  data-lylme="search"><a>搜索</a><span></span></li>
 <?php
-$groups = $DB->query("SELECT * FROM `lylme_groups` WHERE `group_pwd` = 0 ORDER BY `group_order` ASC"); // 获取分类
-while ($group = $DB->fetch($groups)) { //循环所有分组
-   
-         echo '<li data-lylme="group_'. $group["group_id"] . '"><a>'. $group["group_name"] . '</a><span></span></li>'."\n"; 
-    }
-    ?>
+$groups = $site->getGroups(); // 获取分类
+		while ($group = $DB->fetch($groups)) { //循环所有分组
+
+		    echo '<li data-lylme="group_' . $group["group_id"] . '"><a>' . $group["group_name"] . '</a><span></span></li>' . "\n";
+		}
+		?>
             </ul>
         </div>
         
@@ -61,19 +63,21 @@ while ($group = $DB->fetch($groups)) { //循环所有分组
 				<ul class="navbar-nav mr-auto">
 	
 			<?php
-$tagslists = $DB->query("SELECT * FROM `lylme_tags`");
-while ($taglists = $DB->fetch($tagslists)) {
-    echo '<li class="nav-item"><a class="nav-link" href="' . $taglists["tag_link"] . '"';
-    if ($taglists["tag_target"] == 1) echo ' target="_blank"';
-    echo '>' . $taglists["tag_name"] . '</a></li>
+$tagslists = $site->getTags();
+		while ($taglists = $DB->fetch($tagslists)) {
+		    echo '<li class="nav-item"><a class="nav-link" href="' . $taglists["tag_link"] . '"';
+		    if ($taglists["tag_target"] == 1) {
+		        echo ' target="_blank"';
+		    }
+		    echo '>' . $taglists["tag_name"] . '</a></li>
 				    ';
-}
+		}
 
-if ($conf['tq'] != 'false') {
-    echo '<div id="he-plugin-simple"></div>
+		if ($conf['tq'] != 'false') {
+		    echo '<div id="he-plugin-simple"></div>
 		<script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>';
-}
-?>
+		}
+		?>
 
 				</ul>
 				<div id="main">  
@@ -86,28 +90,28 @@ if ($conf['tq'] != 'false') {
 				<!--topbar结束-->
 		<div class="container" style="margin-top:10vh; position: relative; z-index: 100;">
 			<?php
-                echo $conf['home-title'];
-				if ($conf['yan'] == 'true') {
-					echo '<p class="content">' . yan().'</p>'; 
-				}
-            ?>
+		                echo $conf['home-title'];
+		if ($conf['yan'] == 'true') {
+		    echo '<p class="content">' . yan() . '</p>';
+		}
+		?>
 			<!--搜索开始-->
 			<div id="search" class="s-search">
 				<div id="search-list" class="hide-type-list">
 					<div class="search-group group-a s-current" style=" margin-top: 50px;">
 						<ul class="search-type">
 						<?php
-$soulists = $DB->query("SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` ASC");
-while ($soulist = $DB->fetch($soulists)) {
-    if ($soulist["sou_st"] == 1) {
-        echo '	<li>
+$soulists = $site->getSou();
+		while ($soulist = $DB->fetch($soulists)) {
+		    if ($soulist["sou_st"] == 1) {
+		        echo '	<li>
 								<input hidden=""  checked="" type="radio" name="type" id="type-' . $soulist["sou_alias"] . '" value="';
-        if (checkmobile()&& !empty($soulist["sou_waplink"])) {
-            echo $soulist["sou_waplink"];
-        } else {
-            echo $soulist["sou_link"];
-        }
-        echo '"data-placeholder="' . $soulist["sou_hint"] . '">
+		        if (checkmobile() && !empty($soulist["sou_waplink"])) {
+		            echo $soulist["sou_waplink"];
+		        } else {
+		            echo $soulist["sou_link"];
+		        }
+		        echo '"data-placeholder="' . $soulist["sou_hint"] . '">
 								<label for="type-' . $soulist["sou_alias"] . '" style="font-weight:600">
 								' . $soulist["sou_icon"] . '
 									<span style="color:' . $soulist["sou_color"] . '">
@@ -116,9 +120,9 @@ while ($soulist = $DB->fetch($soulists)) {
 								</label>
 							</li>
 							';
-    }
-}
-?>						  
+		    }
+		}
+		?>						  
 						</ul>
 					</div>
 				</div>
@@ -144,6 +148,6 @@ while ($soulist = $DB->fetch($soulists)) {
 			</div>
 
 <?php
-include "list.php";
-include "footer.php";
-?>
+		include "list.php";
+		include "footer.php";
+		?>

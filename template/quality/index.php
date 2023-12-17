@@ -31,9 +31,11 @@
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/daohang.css" type="text/css">
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/style.css?v=20220510" type="text/css">
 	</head>
-	<?php if(!empty(background())){
-	echo '<body onload="FocusOnInput()" style="background-image: url('.background().');background-size: cover;/**/margin: 0;padding: 0;background: linear-gradient(#3c65e1, #195bc1, #6011d5, #5d21a8, #53097d);min-height: 100vh;display: flex;justify-content: center;align-items: center;background-attachment: fixed;">';}
-	else{ echo '<body onload="FocusOnInput()">';}?>
+	<?php if(!empty(background())) {
+	    echo '<body onload="FocusOnInput()" style="background-image: url(' . background() . ');background-size: cover;/**/margin: 0;padding: 0;background: linear-gradient(#3c65e1, #195bc1, #6011d5, #5d21a8, #53097d);min-height: 100vh;display: flex;justify-content: center;align-items: center;background-attachment: fixed;">';
+	} else {
+	    echo '<body onload="FocusOnInput()">';
+	}?>
 <!---左侧导航开始-->
 <script>
     $(function(){
@@ -50,11 +52,11 @@
   <li><a href="#main"><svg class="icon" aria-hidden="true"  width="200" height="200"><use xlink:href="#icon-sousuo"></use></svg><span>搜索</span></a></li>  
     
 <?php
-$groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC");
-while ($group = $DB->fetch($groups)) {
-echo '<li><a href="#category-' . $group["group_id"] . '">' . $group["group_icon"]  .'<span>'. $group["group_name"] . '</span></a></li>';
-}
-?>
+$groups = $site->getGroups();
+		while ($group = $DB->fetch($groups)) {
+		    echo '<li><a href="#category-' . $group["group_id"] . '">' . $group["group_icon"] . '<span>' . $group["group_name"] . '</span></a></li>';
+		}
+		?>
 <hr>
 <li><a target="_blank" href="/apply"><svg t="1655349272190" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6087" width="200" height="200"><path d="M511.984 64C264.976 64 64 264.96 64 512.016 64 759.024 264.976 960 511.984 960 759.056 960 960 759.024 960 512.016 960 264.944 759.024 64 511.984 64z" fill="#FFBD27" p-id="6088"></path><path d="M695.76 552.16h-143.616v143.536A40.224 40.224 0 0 1 512 735.936a40.256 40.256 0 0 1-40.128-40.24v-143.52h-143.632a40.208 40.208 0 1 1 0-80.4h143.632v-143.584a40.16 40.16 0 1 1 80.288 0v143.568h143.616a40.208 40.208 0 1 1 0 80.416z" fill="#333333" p-id="6089"></path></svg><span>申请收录</span></a></li>
 <li><a target="_blank" href="/about"><svg t="1655350264547" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="12046" width="200" height="200"><path d="M512 162c47.3 0 93.1 9.2 136.2 27.5 41.7 17.6 79.1 42.9 111.3 75 32.2 32.2 57.4 69.6 75 111.3C852.8 418.9 862 464.7 862 512s-9.2 93.1-27.5 136.2c-17.6 41.7-42.9 79.1-75 111.3-32.2 32.2-69.6 57.4-111.3 75C605.1 852.8 559.3 862 512 862s-93.1-9.2-136.2-27.5c-41.7-17.6-79.1-42.9-111.3-75-32.2-32.2-57.4-69.6-75-111.3C171.2 605.1 162 559.3 162 512s9.2-93.1 27.5-136.2c17.6-41.7 42.9-79.1 75-111.3 32.2-32.2 69.6-57.4 111.3-75C418.9 171.2 464.7 162 512 162m0-80C274.5 82 82 274.5 82 512s192.5 430 430 430 430-192.5 430-430S749.5 82 512 82z" fill="#4a5fe2" p-id="12047"></path><path d="M612 687.6h-60V405.4c0-20.7-17-37.7-37.7-37.7H508.6c-6.8-0.2-13.7 1.4-20 5L415.4 415c-18 10.4-24.2 33.6-13.8 51.5l2.3 4c10.4 18 33.6 24.2 51.5 13.8l16.6-9.6v213h-60c-22 0-40 18-40 40s18 40 40 40h200c22 0 40-18 40-40 0-22.1-18-40.1-40-40.1z" fill="#7c44e2" p-id="12048"></path><path d="M512 306.4m-50 0a50 50 0 1 0 100 0 50 50 0 1 0-100 0Z" fill="#7c44e2" p-id="12049"></path></svg><span>关于本站</span></a></li>
@@ -71,17 +73,20 @@ echo '<li><a href="#category-' . $group["group_id"] . '">' . $group["group_icon"
 			<div class="collapse navbar-collapse" id="navbarsExample05">
 				<ul class="navbar-nav mr-auto">
 			<?php
-$tagslists = $DB->query("SELECT * FROM `lylme_tags`");
-while ($taglists = $DB->fetch($tagslists)) {
-    echo '<li class="nav-item"><a class="nav-link" href="' . $taglists["tag_link"] . '"';
-    if ($taglists["tag_target"] == 1) echo ' target="_blank"';
-    echo '>' . $taglists["tag_name"] . '</a></li>
+		$tagslists = $site->getTags();
+		while ($taglists = $DB->fetch($tagslists)) {
+		    echo '<li class="nav-item"><a class="nav-link" href="' . $taglists["tag_link"] . '"';
+		    if ($taglists["tag_target"] == 1) {
+		        echo ' target="_blank"';
+		    }
+		    echo '>' . $taglists["tag_name"] . '</a></li>
 				    ';
-}
-?>
+		}
+		?>
 <?php if ($conf['tq'] != 'false') {
-echo '<div id="he-plugin-simple"></div>
-<script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>';}?>
+		    echo '<div id="he-plugin-simple"></div>
+<script src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"></script>';
+		}?>
 				</ul>
 
  </div>				
@@ -95,11 +100,11 @@ echo '<div id="he-plugin-simple"></div>
 
 			</div>
 <?php
-//调用随机一言
-if ($conf['yan'] == 'true') {
-	echo '<p class="content">' . yan().'</p>'; 
-}
-?>
+		//调用随机一言
+		if ($conf['yan'] == 'true') {
+		    echo '<p class="content">' . yan() . '</p>';
+		}
+		?>
 		<!--搜索开始-->
 			<div id="search" class="s-search">
 				<div id="search-list" class="hide-type-list">
@@ -139,25 +144,29 @@ if ($conf['yan'] == 'true') {
 				
 				</div>
 					<ul class="search-type" id="chso">
-						<?php 
-						    $soulists = $DB->query("SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` ASC");
-                            while ($soulist = $DB->fetch($soulists)) {
-							    if($soulist["sou_st"]==1){
-							        echo '	<li>
-								<input hidden=""  checked="" type="radio" name="type" id="type-'.$soulist["sou_alias"].'" value="';
-								if(checkmobile()&&$soulist["sou_waplink"]!=NULL){echo $soulist["sou_waplink"];}else{echo $soulist["sou_link"];}
-								echo '"data-placeholder="'.$soulist["sou_hint"].'">
-								<label for="type-'.$soulist["sou_alias"].'" style="font-weight:600">
-								'.$soulist["sou_icon"].'
-									<span style="color:'.$soulist["sou_color"].'">
-										'.$soulist["sou_name"].'
+						<?php
+		                            $soulists = $site->getSou();
+		while ($soulist = $DB->fetch($soulists)) {
+		    if($soulist["sou_st"] == 1) {
+		        echo '	<li>
+								<input hidden=""  checked="" type="radio" name="type" id="type-' . $soulist["sou_alias"] . '" value="';
+		        if(checkmobile() && $soulist["sou_waplink"] != null) {
+		            echo $soulist["sou_waplink"];
+		        } else {
+		            echo $soulist["sou_link"];
+		        }
+		        echo '"data-placeholder="' . $soulist["sou_hint"] . '">
+								<label for="type-' . $soulist["sou_alias"] . '" style="font-weight:600">
+								' . $soulist["sou_icon"] . '
+									<span style="color:' . $soulist["sou_color"] . '">
+										' . $soulist["sou_name"] . '
 									</span>
 								</label>
 							</li>
 							';
-							} 
-							    }
-							    ?>						  
+		    }
+		}
+		?>						  
 						</ul>
 				<div class="set-check hidden-xs">
 					<input type="checkbox" id="set-search-blank" class="bubble-3" autocomplete="off">
@@ -171,17 +180,17 @@ if ($conf['yan'] == 'true') {
 </style>
 
 <?php
-$html= array(
+$html = array(
     'g1' => '<ul class="mylist row">', //分组开始标签
     'g2' => '<li id="category-{group_id}" class="title">{group_icon}<sapn>{group_name}</sapn></li>',  //分组内容
     'g3' => '</ul>',  //分组结束标签
-    
+
     'l1' => '<li class="lylme-3">',  //链接开始标签
     'l2' => '<a rel="nofollow" href="{link_url}" target="_blank">{link_icon}<span>{link_name}</span></a>',  //链接内容
     'l3' => '</li>',  //链接结束标签
 );
-lists($html);
- ?>
+		lists($html);
+		?>
 <script src="<?php echo  $templatepath;?>/js/script.js?v=20220518"></script>
 <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
 <div style="display:none;" class="back-to" id="toolBackTop"> 
@@ -189,12 +198,15 @@ lists($html);
 </div> 
 <div class="mt-5 mb-3 footer text-muted text-center"> 
   <!--备案信息-->
-  <?php if($conf['icp'] != NULL){
-  echo '<img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" class="icp" target="_blank" _mstmutation="1" _istranslated="1">'.$conf['icp'].'</a>'; } ?> 
+  <?php if($conf['icp'] != null) {
+      echo '<img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" class="icp" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a>';
+  } ?> 
   <!--版权信息-->
   <p> <?php echo $conf['copyright']; ?></p>
   <!--网站统计-->
- <?php if($conf['wztj'] != NULL){echo $conf["wztj"];}?>
+ <?php if($conf['wztj'] != null) {
+     echo $conf["wztj"];
+ }?>
   </div>  
     <script>
 

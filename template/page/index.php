@@ -24,15 +24,17 @@
 	    <nav>
 	        <ul>
 <?php
-$tagslists = $DB->query("SELECT * FROM `lylme_tags`");
-while ($taglists = $DB->fetch($tagslists)) {
-    echo '
+$tagslists = $site->getTags();
+    while ($taglists = $DB->fetch($tagslists)) {
+        echo '
         <li><a href="' . $taglists["tag_link"] . '"';
-    if ($taglists["tag_target"] == 1) echo ' target="_blank"';
-    echo '>' . $taglists["tag_name"] . '</a></li>
+        if ($taglists["tag_target"] == 1) {
+            echo ' target="_blank"';
+        }
+        echo '>' . $taglists["tag_name"] . '</a></li>
  ';
-}
-?>
+    }
+    ?>
 	        </ul>
 	    </nav>
 	</header>
