@@ -215,12 +215,12 @@ function yan()
     //随机一言文件路径
     if (file_exists($filename)) {
         $data = explode(PHP_EOL, file_get_contents($filename));
-        $result = str_replace(array(
-                    "\r",
-                    "\n",
-                    "\r\n"
-                ), '', $data[array_rand($data) ]);
-        return $result;
+        // $result = str_replace(array(
+        //             "\r",
+        //             "\n",
+        //             "\r\n"
+        //         ), '', $data[array_rand($data)]);
+        return $data[array_rand($data)];
     }
 }
 function rearr($data, $arr)
