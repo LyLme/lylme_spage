@@ -18,7 +18,7 @@ INSERT INTO `lylme_groups` (`group_id`, `group_name`, `group_icon`, `group_order
 (6, '游戏娱乐', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-game00\"></use></svg>', 6, 1, 0),
 (7, '网站公告', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gg00\"></use></svg>', 7, 1, 0);
 
-INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`, `link_order`, `link_status`, `link_pwd`) VALUES
+INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`, `link_order`, `link_status`, `link_pwd`) VALUES
 (1, '百度', 1, 'https://www.baidu.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-icon_baidulogo\"></use></svg>', NULL, 10, 1, 0),
 (2, '腾讯视频', 1, 'https://v.qq.com', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-tengxunshipin\"></use></svg>', NULL, 10, 1, 0),
 (3, '优酷', 1, 'https://www.youku.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-youku\"></use></svg>', NULL, 10, 1, 0),
@@ -110,15 +110,15 @@ INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `sou_col
 (7, 'google', '谷歌搜索', '值得信任的搜索引擎', '#3B83FA', 'https://www.google.com/search?q=', '', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-google00\"></use></svg>', 1, 7),
 (8, 'fanyi', '在线翻译', '输入翻译内容（自动检测语言）', '#0084fe', 'https://fanyi.baidu.com/#auto/zh/', NULL, '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-fanyi\"></use></svg>', 1, 8);
 
-INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`) VALUES
-(1, '主页', 'https://www.lylme.com/', 0),
-(2, '博客', 'https://blog.lylme.com/', 1),
-(3, 'Github', 'https://github.com/lylme', 1),
-(4, '关于本站', '/about', 1),
-(5, '申请收录', '/apply', 1),
-(6, '查看', '/pwd', 0);
-COMMIT;
 
+INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`, `sort`) VALUES
+(1, '主页', 'https://www.lylme.com/', 0, 10),
+(2, '博客', 'https://blog.lylme.com/', 1, 10),
+(3, 'Github', 'https://github.com/lylme', 1, 10),
+(4, '关于本站', '/about', 1, 10),
+(5, '申请收录', '/apply', 1, 10),
+(6, '查看', '/pwd', 0, 10);
+COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
