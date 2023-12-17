@@ -1,27 +1,27 @@
-<?php 
+<?php
 include("../include/common.php");
-$grouplists =$DB->query("SELECT * FROM `lylme_groups` WHERE `group_pwd` = 0");
+$grouplists = $DB->query("SELECT * FROM `lylme_groups` WHERE `group_pwd` = 0");
 if(!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
     header('Content-Type:application/json');
-	//获取网站信息
-	$head = get_head($_GET['url']);
-	$head = json_encode($head,JSON_UNESCAPED_UNICODE);  //将合并后的数组转换为json
+    //获取网站信息
+    $head = get_head($_GET['url']);
+    $head = json_encode($head, JSON_UNESCAPED_UNICODE);  //将合并后的数组转换为json
     exit($head);  //输出json
 
-} else if(isset($_GET['submit']) == 'post') {
-	if(isset($_REQUEST['authcode'])) {
-		session_start();
-		if(strtolower($_REQUEST['authcode'])== $_SESSION['authcode']) {
-			$status = isset($conf["apply"]) ?  $conf["apply"] :0;
-			if($status==2) {
-				exit('{"code": "400", "msg": "网站已关闭收录"}');
-			}
-			exit(apply($_POST['name'], $_POST['url'], $_POST['icon'], $_POST['group_id'], $status));
-		} else {
-			exit('{"code": "-6", "msg": "验证码错误"}');
-		}
-	}
-	exit();
+} elseif(isset($_GET['submit']) == 'post') {
+    if(isset($_REQUEST['authcode'])) {
+        session_start();
+        if(strtolower($_REQUEST['authcode']) == $_SESSION['authcode']) {
+            $status = isset($conf["apply"]) ? $conf["apply"] : 0;
+            if($status == 2) {
+                exit('{"code": "400", "msg": "网站已关闭收录"}');
+            }
+            exit(apply($_POST['name'], $_POST['url'], $_POST['icon'], $_POST['group_id'], $status));
+        } else {
+            exit('{"code": "-6", "msg": "验证码错误"}');
+        }
+    }
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -31,7 +31,7 @@ if(!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>申请收录 - <?php echo explode("-", $conf['title'])[0];
 ?></title>
-<link rel="icon" href="<?php echo get_urlpath($conf['logo'],siteurl().'/apply');?>" type="image/ico">
+<link rel="icon" href="<?php echo get_urlpath($conf['logo'], siteurl() . '/apply');?>" type="image/ico">
 <link href="https://cdn.lylme.com/admin/lyear/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.lylme.com/admin/lyear/css/style.min.css" rel="stylesheet">
 <style>#loading{position:absolute;left:0;top:0;height:100vh;width:100vw;z-index:100;display:none;align-items:center;justify-content:center;color:#bbb;font-size:16px}#loading>img{height:18px;width:18px}.lylme-wrapper{position:relative}.lylme-form{display:flex !important;min-height:100vh;align-items:center !important;justify-content:center !important}.lylme-form:after{content:'';min-height:inherit;font-size:0}.lylme-center{background:#fff;min-width:29.25rem;padding:30px;border-radius:20px;margin:2.85714em}.lylme-header{margin-bottom:1.5rem !important}.lylme-center .has-feedback.feedback-left .form-control-feedback{left:0;right:auto;width:38px;height:38px;line-height:38px;z-index:4;color:#dcdcdc}.lylme-center .has-feedback.feedback-left.row .form-control-feedback{left:15px}.code{height:38px}.apply_gg{margin:20px 0;font-size:15px;line-height:2}.home{text-decoration:none;color:#bbb;line-height:2}li{list-style-type:none}ol,ul{padding-left:10px}</style>
@@ -41,17 +41,17 @@ if(!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
 正在获取....</div>
 <?php
 if(!empty($background = background())) {
-	$background = str_replace('./','../',$background);
-	echo '<div class="row lylme-wrapper" style="background-image:  url('.$background.');background-size: cover;">';
+    $background = str_replace('./', '../', $background);
+    echo '<div class="row lylme-wrapper" style="background-image:  url(' . $background . ');background-size: cover;">';
 } else {
-	echo '<div class="row lylme-wrapper">';
+    echo '<div class="row lylme-wrapper">';
 }
 ?>
 <div class="lylme-form">
     <div class="lylme-center">
-        <?php if($conf["apply"]==2) {
-	exit('<div class="lylme-header text-center"><h2>网站已关闭收录</h2></div>'. $conf['apply_gg']. '</div>');
-}
+        <?php if($conf["apply"] == 2) {
+            exit('<div class="lylme-header text-center"><h2>网站已关闭收录</h2></div>' . $conf['apply_gg'] . '</div>');
+        }
 ?>
     <div class="lylme-header text-center"><h2>申请收录</h2></div>
     <div class="apply_gg">
@@ -71,9 +71,10 @@ if(!empty($background = background())) {
     <select title="分组" class="form-control" name="group_id" required>
     <option value="">请选择</option>
     <?php
-    while($grouplist = $DB->fetch($grouplists)) {
-	echo '
-	<option value="'.$grouplist["group_id"].'">'.$grouplist["group_name"].'</option>';
+    $applygroup = $site->getGroups();
+while($grouplist = $DB->fetch($applygroup)) {
+    echo '
+	<option value="' . $grouplist["group_id"] . '">' . $grouplist["group_name"] . '</option>';
 }
 ?>
     </select>
