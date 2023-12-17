@@ -32,7 +32,7 @@
 				<div class="m-navlist">
 <?php
 		//输出导航菜单
-		$tagslists = $DB->query("SELECT * FROM `lylme_tags`");
+		$tagslists = $site->getTags();
 		while ($taglists = $DB->fetch($tagslists)) {
 		    echo '<a href="' . $taglists["tag_link"] . '" class="list catlist"';
 		    if ($taglists["tag_target"] == 1) {
