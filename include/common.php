@@ -14,6 +14,7 @@ if(!defined('SQLITE') && (!$dbconfig['user'] || !$dbconfig['pwd'] || !$dbconfig[
 }
 require SYSTEM_ROOT . "db.class.php";
 $DB = new DB($dbconfig['host'], $dbconfig['user'], $dbconfig['pwd'], $dbconfig['dbname'], $dbconfig['port']);
+
 $web_config = $DB->query("SELECT * FROM `lylme_config`");
 while($row = $DB->fetch($web_config)) {
     $conf[$row['k']] = $row['v'];
@@ -25,7 +26,6 @@ require SYSTEM_ROOT . "tj.php";
 require SYSTEM_ROOT . "version.php";
 require SYSTEM_ROOT . "updbase.php";
 require SYSTEM_ROOT . "site.php";
-
 $cdnpublic = cdnpublic($conf['cdnpublic']);
 $templatepath = './template/' . $conf["template"];
 $template =  $templatepath . '/index.php';
