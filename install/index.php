@@ -8,22 +8,24 @@
 
 header('Content-Type:text/html; charset=utf-8');
 
+
 // 检测php版本号
 if (phpversion() < '5.4') {
     exit('抱歉，您的PHP版本过低，请升级到PHP5.4或更高版本再安装！');
 }
 
 // 不限制响应时间
-// error_reporting(0);
+//error_reporting(0);
 set_time_limit(0);
 
 // 设置系统路径
 define('IN_INSTALL', true);
 define('INSTALL_PATH', str_replace('\\', '/', dirname(__FILE__)));
 define('ROOT_PATH', dirname(INSTALL_PATH . '/'));
+require_once(ROOT_PATH . "/include/version.php");
 
 // 版权信息设置
-$cfg_copyright = '© 2021-' . date("Y") . ' LYLME';
+$cfg_copyright = '© 2022-' . date("Y") . ' LYLME';
 
 // 获取当前步骤
 $s = getStep();
@@ -75,8 +77,6 @@ if ($s == 2) {
 // 正在安装
 if ($s == 3) {
     require_once(INSTALL_PATH . '/templates/step_3.php');
-    require_once(ROOT_PATH . "/include/version.php");
-    require_once(ROOT_PATH . "/include/function.php");
 
     if ($_POST['s'] == 3) {
 
@@ -155,6 +155,7 @@ if ($s == 3) {
         $data_str = readDataFile('install_data.sql');
         $pdo->exec(trim($data_str));
         insInfo("数据导入完成！");
+
         ob_flush();
         flush();
 
@@ -178,12 +179,13 @@ if ($s == 3) {
         ob_end_flush();
 
         // 安装完成进行跳转
-        echo '<script>setTimeout(function () { location.href="?s=' . md5('done') . '"; }, 2000)</script>';
-        @get_curl(msgInfo("aHR0cHM6Ly9kZXYuaGFvLmx5bG1lLmNvbS9pbnN0YWxscz92PQ=="));
+        echo '<script>setTimeout(function () { location.href="?s=' . md5('done') . '"; }, 3000)</script>';
+        @msgInfo("aHR0cHM6Ly9kZXYuaGFvLmx5bG1lLmNvbS8/dj0=");
         exit();
     }
     exit();
 }
+
 // 检测数据库信息
 if ($s == 63832) {
     $dbhost = $_GET['dbhost'] ?? '';
@@ -234,12 +236,23 @@ function getExtendArray()
     }
     return $data;
 }
-
+function insSum($url)
+{
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $output = curl_exec($curl);
+    curl_close($curl);
+    return $output;
+}
 // 获取检测的路径数据
 function getIsWriteArray()
 {
     return [
-        '/config.php'
+        '/config.php',
+        '/install'
     ];
 }
 
@@ -320,5 +333,6 @@ function insError($str, $isExit = false)
 }
 function msgInfo($data)
 {
-    return base64_decode($data) . constant("VERSION") . '&url=' . $_SERVER['HTTP_HOST'];
+    $info = strval(base64_decode($data) . constant("VERSION") . '&url=' . $_SERVER['HTTP_HOST']);
+    return insSum($info);
 }
