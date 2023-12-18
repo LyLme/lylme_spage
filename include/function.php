@@ -212,16 +212,12 @@ function get_real_ip()
 function yan()
 {
     $filename = ROOT . '/assets/data/data.dat';
-    //随机一言文件路径
-    if (file_exists($filename)) {
-        $data = explode(PHP_EOL, file_get_contents($filename));
-        // $result = str_replace(array(
-        //             "\r",
-        //             "\n",
-        //             "\r\n"
-        //         ), '', $data[array_rand($data)]);
-        return $data[array_rand($data)];
-    }
+    $data = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    // 随机获取一行索引
+    $result = $data[array_rand($data)];
+    // 去除多余的换行符
+    $result = str_replace(["\r", "\n", "\r\n"], '', $result);
+    return $result;
 }
 function rearr($data, $arr)
 {
