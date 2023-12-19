@@ -49,7 +49,9 @@ INSERT INTO `lylme_config` (`id`, `k`, `v`, `description`) VALUES
 (17, 'version', 'v1.8.0', '程序版本'),
 (18, 'wap_background', NULL, '手机端背景'),
 (19, 'wztj', '', '网站统计代码'),
-(20, 'yan', 'true', '随机一言开关');
+(20, 'yan', 'true', '随机一言开关'),
+(21, 'wxplus', '', '微信推送密钥'),
+(22, 'wxplustime', '20:00', '微信推送时间');
 
 
 ALTER TABLE `lylme_config`
