@@ -212,6 +212,9 @@ function get_real_ip()
 function yan()
 {
     $filename = ROOT . '/assets/data/data.dat';
+    if (!file_exists($filename) || !is_readable($filename)) {
+        die(' 一言数据文件不存在或不可读');
+    }
     $data = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     // 随机获取一行索引
     $result = $data[array_rand($data)];
