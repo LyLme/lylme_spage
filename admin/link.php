@@ -13,7 +13,7 @@ $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
 <?php
 $set = isset($_GET['set']) ? $_GET['set'] : null;
 if ($set == 'add') {
-	echo '<h4>新增链接</h4>
+    echo '<h4>新增链接</h4>
 <div class="panel-body">
 <form action="./link.php?set=add_submit" method="POST">
 <div class="form-group">
@@ -28,7 +28,7 @@ if ($set == 'add') {
 <div class="form-group">
 <label>*网站名称:</label><br>
 <input type="text" class="form-control" placeholder="网站名称" name="name" value="" required>
-<input type="text" class="coloris form-control" onchange="select_color()" placeholder="链接颜色" name="color" value="" /> 
+<input type="text" class="coloris form-control" onchange="select_color()" placeholder="链接颜色(留空默认)" name="color" value="" /> 
 </div>
 <div class="input-group">
 <label>链接图标:</label><br>
@@ -44,26 +44,26 @@ if ($set == 'add') {
 <div class="form-group">
 <label>*分组:</label><br>
 <select class="form-control" name="group_id">';
-	while ($grouplist = $DB->fetch($grouplists)) {
-		if ($grouplist["group_id"] == $row['group_id']) {
-			$select = 'selected="selected"';
-		} else {
-			$select = '';
-		}
-		echo '<option  value="' . $grouplist["group_id"] . '">' . $grouplist["group_id"] . ' - ' . $grouplist["group_name"] . '</option>';
-	}
-	echo '</select></div>
+    while ($grouplist = $DB->fetch($grouplists)) {
+        if ($grouplist["group_id"] == $row['group_id']) {
+            $select = 'selected="selected"';
+        } else {
+            $select = '';
+        }
+        echo '<option  value="' . $grouplist["group_id"] . '">' . $grouplist["group_id"] . ' - ' . $grouplist["group_name"] . '</option>';
+    }
+    echo '</select></div>
 <div class="form-group">
 <input type="submit" class="btn btn-primary btn-block" value="添加"></form>
 </div>
 <br/><a href="./link.php"><<返回</a>
 </div></div>';
 } elseif ($set == 'edit') {
-	$id = $_GET['id'];
-	$row2 = $DB->query("select * from lylme_links where id='$id' limit 1");
-	$row = $DB->fetch($row2);
-	preg_match_all('/<font color=[\"|\']+(.*?)[\"|\']>/i',$row['name'],$color);
-	echo '<h4>修改链接信息</h4>
+    $id = $_GET['id'];
+    $row2 = $DB->query("select * from lylme_links where id='$id' limit 1");
+    $row = $DB->fetch($row2);
+    preg_match_all('/<font color=[\"|\']+(.*?)[\"|\']>/i', $row['name'], $color);
+    echo '<h4>修改链接信息</h4>
 <div class="panel-body">
 <form action="./link.php?set=edit_submit&id=' . $id . '" method="POST">
 <div class="form-group">
@@ -77,7 +77,7 @@ if ($set == 'add') {
 <div class="form-group">
 <label>*网站名称:</label><br>
 <input type="text" class="form-control" name="name"  id="urlname" value="' . strip_tags($row['name']) . '" required>
-<input type="text" class="coloris form-control" onchange="select_color()"  placeholder="留空默认"  name="color" value="'.$color[1][0].'" />
+<input type="text" class="coloris form-control" onchange="select_color()"  placeholder="链接颜色(留空默认)"  name="color" value="' . $color[1][0] . '" />
 </div>
 <div class="input-group">
 <label>链接图标:</label><br>
@@ -93,31 +93,33 @@ if ($set == 'add') {
 <div class="form-group">
 <label>*分组:</label><br>
 <select class="form-control" name="group_id">';
-	while ($grouplist = $DB->fetch($grouplists)) {
-		if ($grouplist["group_id"] == $row['group_id']) {
-			$select = 'selected="selected"';
-		} else {
-			$select = '';
-		}
-		echo '<option  value="' . $grouplist["group_id"] . '" ' . $select . '>' . $grouplist["group_id"] . ' - ' . $grouplist["group_name"] . '</option>';
-	}
-	echo '</select>
+    while ($grouplist = $DB->fetch($grouplists)) {
+        if ($grouplist["group_id"] == $row['group_id']) {
+            $select = 'selected="selected"';
+        } else {
+            $select = '';
+        }
+        echo '<option  value="' . $grouplist["group_id"] . '" ' . $select . '>' . $grouplist["group_id"] . ' - ' . $grouplist["group_name"] . '</option>';
+    }
+    echo '</select>
 </div>
 <div class="form-group">
 <label>链接加密:</label><br>
 <select class="form-control" required name="link_pwd">';
-	$pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
-	while ($pwd_list = $DB->fetch($pwd_lists)) {
-		if($row['link_pwd']==$pwd_list["pwd_id"]) {
-			$sel = 'selected="selected"';
-		} else {
-			$sel ='';
-		}
-		echo '<option  value="' . $pwd_list["pwd_id"] . '" '.$sel.' >' . $pwd_list["pwd_id"] . ' - ' . $pwd_list["pwd_name"] . ' | 密码['. $pwd_list["pwd_key"].']</option>';
-	}
-	if(empty($row['link_pwd'])) $sele = 'selected="selected"';
-	echo '
-<option value="0" '.$sele.'>0 - 不加密</option></select>
+    $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
+    while ($pwd_list = $DB->fetch($pwd_lists)) {
+        if($row['link_pwd'] == $pwd_list["pwd_id"]) {
+            $sel = 'selected="selected"';
+        } else {
+            $sel = '';
+        }
+        echo '<option  value="' . $pwd_list["pwd_id"] . '" ' . $sel . ' >' . $pwd_list["pwd_id"] . ' - ' . $pwd_list["pwd_name"] . ' | 密码[' . $pwd_list["pwd_key"] . ']</option>';
+    }
+    if(empty($row['link_pwd'])) {
+        $sele = 'selected="selected"';
+    }
+    echo '
+<option value="0" ' . $sele . '>0 - 不加密</option></select>
 <small class="help-block"><code>注意：对链接所在的分组加密后，单独设置的链接加密将会失效</code><br>
 加密后只能通过输入密码访问，使用该功能先配置加密组
 <a href="./pwd.php" target="_blank">管理加密组</a></small>
@@ -129,55 +131,63 @@ if ($set == 'add') {
 </div></div>
 ';
 } elseif ($set == 'add_submit') {
-	$color = $_POST['color'];
-	$name = $_POST['name'];
-	if(empty($color)) {
-		$name1 = $name;
-	} else {
-		$name1 = '<font color="'.$color.'">'.$name.'</font>';
-	}
-	$url = $_POST['url'];
-	$icon = $_POST['icon'];
-	$group_id = $_POST['group_id'];
-	$link_order = $linksrows + 1;
-	if ($name == NULL or $url == NULL) {
-		echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
-	} else {
-		$sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $name . "', '" . $link_order . "');";
-		if ($DB->query($sql)) {
-			echo '<script>alert("添加链接 ' . $name . ' 成功！");window.location.href="./link.php";</script>';
-		} else echo '<script>alert("添加链接失败！");history.go(-1);</script>';
-	}
+    $color = $_POST['color'];
+    $name = $_POST['name'];
+    if(empty($color)) {
+        $name1 = $name;
+    } else {
+        $name1 = '<font color="' . $color . '">' . $name . '</font>';
+    }
+    $url = $_POST['url'];
+    $icon = $_POST['icon'];
+    $group_id = $_POST['group_id'];
+    $link_order = $linksrows + 1;
+    if ($name == null or $url == null) {
+        echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
+    } else {
+        $sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $name . "', '" . $link_order . "');";
+        if ($DB->query($sql)) {
+            echo '<script>alert("添加链接 ' . $name . ' 成功！");window.location.href="./link.php";</script>';
+        } else {
+            echo '<script>alert("添加链接失败！");history.go(-1);</script>';
+        }
+    }
 } elseif ($set == 'edit_submit') {
-	$id = $_GET['id'];
-	$rows2 = $DB->query("select * from lylme_links where id='$id' limit 1");
-	$rows = $DB->fetch($rows2);
-	if (!$rows) exit('<script>alert("当前记录不存在！");history.go(-1);</script>');
-	$color = $_POST['color'];
-	$name = $_POST['name'];
-	if(empty($color)) {
-		$name1 = $name;
-	} else {
-		$name1 = '<font color="'.$color.'">'.$name.'</font>';
-	}
-	$url = $_POST['url'];
-	$icon = $_POST['icon'];
-	$link_pwd = $_POST['link_pwd'];
-	$group_id = $_POST['group_id'];
-	if ($name == NULL or $url == NULL) {
-		echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
-	} else {
-		$sql = "UPDATE `lylme_links` SET `name` = '" . $name1 . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = " . $link_pwd . " WHERE `lylme_links`.`id` = '" . $id . "';";
-		//   exit($sql);
-		if ($DB->query($sql)) echo '<script>alert("修改链接 ' . $name . ' 成功！");window.location.href="./link.php";</script>'; else echo '<script>alert("修改链接失败！");history.go(-1);</script>';
-	}
-	// } elseif ($set == 'delete') {
-	//     $id = $_GET['id'];
-	//     $sql = "DELETE FROM lylme_links WHERE id='$id'";
-	//     if ($DB->query($sql)) echo '<script>alert("删除成功！");window.location.href="./link.php";</script>';
-	//     else echo '<script>alert("删除失败！");history.go(-1);</script>';
+    $id = $_GET['id'];
+    $rows2 = $DB->query("select * from lylme_links where id='$id' limit 1");
+    $rows = $DB->fetch($rows2);
+    if (!$rows) {
+        exit('<script>alert("当前记录不存在！");history.go(-1);</script>');
+    }
+    $color = $_POST['color'];
+    $name = $_POST['name'];
+    if(empty($color)) {
+        $name1 = $name;
+    } else {
+        $name1 = '<font color="' . $color . '">' . $name . '</font>';
+    }
+    $url = $_POST['url'];
+    $icon = $_POST['icon'];
+    $link_pwd = $_POST['link_pwd'];
+    $group_id = $_POST['group_id'];
+    if ($name == null or $url == null) {
+        echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
+    } else {
+        $sql = "UPDATE `lylme_links` SET `name` = '" . $name1 . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = " . $link_pwd . " WHERE `lylme_links`.`id` = '" . $id . "';";
+        //   exit($sql);
+        if ($DB->query($sql)) {
+            echo '<script>alert("修改链接 ' . $name . ' 成功！");window.location.href="./link.php";</script>';
+        } else {
+            echo '<script>alert("修改链接失败！");history.go(-1);</script>';
+        }
+    }
+// } elseif ($set == 'delete') {
+//     $id = $_GET['id'];
+//     $sql = "DELETE FROM lylme_links WHERE id='$id'";
+//     if ($DB->query($sql)) echo '<script>alert("删除成功！");window.location.href="./link.php";</script>';
+//     else echo '<script>alert("删除失败！");history.go(-1);</script>';
 } else {
-	echo '<div id="listTable"></div>
+    echo '<div id="listTable"></div>
                 </div>
             </div>
           </div>
@@ -215,8 +225,10 @@ function select_color() {
 <script type="text/javascript"> 
 //分组移动
 var  mv_group ='<form action="" class="formName">' + '<select class="form-control group_id" required><option value="">请选择分组...</option>'+'<?php  while ($grouplist = $DB->fetch($grouplists)) {
-    echo '<option  value="' . $grouplist["group_id"] . '">' . $grouplist["group_id"] . ' - ' . $grouplist["group_name"] . '</option>';}?>'+ '</select>';
+    echo '<option  value="' . $grouplist["group_id"] . '">' . $grouplist["group_id"] . ' - ' . $grouplist["group_name"] . '</option>';
+}?>'+ '</select>';
 //链接加密    
 var pwd_list = '<form action="" class="formName">' + '<select class="form-control pwd_id" required>'+'<?php  while ($pwd_list = $DB->fetch($pwd_lists)) {
-    echo '<option  value="' . $pwd_list["pwd_id"] . '">' . $pwd_list["pwd_id"] . ' - ' . $pwd_list["pwd_name"] . '</option>';}?>'+ '<option value="0">0 - 取消加密</option></select><br><a href="./pwd.php" target="_blank">管理加密组</a>';
+    echo '<option  value="' . $pwd_list["pwd_id"] . '">' . $pwd_list["pwd_id"] . ' - ' . $pwd_list["pwd_name"] . '</option>';
+}?>'+ '<option value="0">0 - 取消加密</option></select><br><a href="./pwd.php" target="_blank">管理加密组</a>';
 </script>

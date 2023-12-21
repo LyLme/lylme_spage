@@ -76,7 +76,7 @@ CREATE TABLE `lylme_groups` (
 DROP TABLE IF EXISTS `lylme_links`;
 CREATE TABLE `lylme_links` (
   `id` int(4) NOT NULL COMMENT '网站ID',
-  `name` varchar(20) NOT NULL COMMENT '链接标题',
+  `name` varchar(255) NOT NULL COMMENT '链接标题',
   `group_id` int(2) NOT NULL DEFAULT '1' COMMENT '分组名称',
   `url` varchar(255) NOT NULL COMMENT '链接地址',
   `icon` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '链接图标',
