@@ -42,9 +42,9 @@ $GLOBALS['isNext'] = true;
 // 获取当前步骤
 function getStep()
 {
-    $s1 = $_GET['s'] ?? 0;
+    $s1 = $_GET['s'] ?: 0;
     // 初始化参数
-    $s2 = $_POST['s'] ?? 0;
+    $s2 = $_POST['s'] ?: 0;
     // 如果有GET值则覆盖POST值
     if ($s1 > 0 && in_array($s1, [1, 63832, md5('done')])) {
         $s2 = $s1;
@@ -81,13 +81,13 @@ if ($s == 3) {
     if ($_POST['s'] == 3) {
 
         // 初始化信息
-        $dbhost = $_POST['dbhost'] ?? '';
-        $dbname = $_POST['dbname'] ?? '';
-        $dbuser = $_POST['dbuser'] ?? '';
-        $dbpwd = $_POST['dbpwd'] ?? '';
-        $dbport = $_POST['dbport'] ?? 3306;
+        $dbhost = $_POST['dbhost'] ?: '';
+        $dbname = $_POST['dbname'] ?: '';
+        $dbuser = $_POST['dbuser'] ?: '';
+        $dbpwd = $_POST['dbpwd'] ?: '';
+        $dbport = $_POST['dbport'] ?: 3306;
 
-        $testdata = $_POST['testdata'] ?? '';
+        $testdata = $_POST['testdata'] ?: '';
 
         // 连接证数据库
         try {
@@ -188,10 +188,10 @@ if ($s == 3) {
 
 // 检测数据库信息
 if ($s == 63832) {
-    $dbhost = $_GET['dbhost'] ?? '';
-    $dbuser = $_GET['dbuser'] ?? '';
-    $dbpwd = $_GET['dbpwd'] ?? '';
-    $dbport = $_GET['dbport'] ?? '';
+    $dbhost = $_GET['dbhost'] ?: '';
+    $dbuser = $_GET['dbuser'] ?: '';
+    $dbpwd = $_GET['dbpwd'] ?: '';
+    $dbport = $_GET['dbport'] ?: '';
     try {
         $dsn = "mysql:host=$dbhost;port={$dbport};charset=utf8";
         $pdo = new PDO($dsn, $dbuser, $dbpwd);
@@ -316,7 +316,7 @@ function setIsNext(bool $bool)
 }
 
 // 获取data文件夹中的文件内容
-function readDataFile(string $file)
+function readDataFile($file)
 {
     return file_get_contents(INSTALL_PATH . '/data/' . $file);
 }
