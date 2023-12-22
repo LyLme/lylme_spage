@@ -16,18 +16,19 @@
 4.  后台地址：`http://域名/admin`
 5.  账号密码：`admin`/`123456`
 
-
 #### 通过Docker安装
 
-如果你是在 `x86_64 Linux` 架构的机器上安装，已经安装了 [Docker](https://docs.docker.com/engine/install/) 和 [`docker-compose`](https://docs.docker.com/compose/install/) 并且有 Docker 权限，你可以通过脚本快速部署：
+[查看docker分支](https://github.com/LyLme/lylme_spage/tree/docker)
+
+~~如果你是在 `x86_64 Linux` 架构的机器上安装，已经安装了 [Docker](https://docs.docker.com/engine/install/) 和 [`docker-compose`](https://docs.docker.com/compose/install/) 并且有 Docker 权限，你可以通过脚本快速部署：~~
 
 ```bash
 curl -L 'https://aka.caomingjun.com/lylme/install.sh' | bash
 ```
 
-其他架构未进行测试，可能无法通过脚本部署。
+~~其他架构未进行测试，可能无法通过脚本部署。~~
 
-如果要安装到其他架构，或者如果你想使用一些进阶玩法，你也可以手动进行 Docker 部署，[这里是教程](https://aka.caomingjun.com/lylme/)。
+~~如果要安装到其他架构，或者如果你想使用一些进阶玩法，你也可以手动进行 Docker 部署，[这里是教程](https://aka.caomingjun.com/lylme/)。~~
 
 
 
@@ -49,7 +50,17 @@ curl -L 'https://aka.caomingjun.com/lylme/install.sh' | bash
 
     解决方案：修改`/assets/img/cron.php`文件配置秘钥，然后添加一个每天执行的CRON任务：`GET http://域名/assets/img/cron.php` ，执行后会将Bing每日一图保存到`assets/img/background.jpg`，然后在后台修改背景地址为：`./assets/img/background.jpg`即可
 
--  **其他背景：** 前往后台设置
+- **其他背景：** 前往后台设置
+
+    
+
+#### 捐赠
+
+- 捐赠名单
+  -  [[查看名单]](https://www.lylme.com/support/)
+- 捐赠方式
+  -  [微信支付](https://www.lylme.com/support/)
+  -  [支付宝](https://www.lylme.com/support/)
 
 #### 演示截图
 ![截图1](https://cdn.lylme.com/img/lylme_spage/lylme_spage1.png)
@@ -82,3 +93,5 @@ curl -L 'https://aka.caomingjun.com/lylme/install.sh' | bash
 -   前端：baisu模板
 -   原项目地址：[baisuTwo: onenav主题 (gitee.com)](https://gitee.com/baisucode/baisu-two)
 -   Fork仓库：[六零导航页(LyLme Spage)baisu主题，基于baisuTwo开发 (gitee.com)](https://gitee.com/LyLme/baisu)
+
+**...**
