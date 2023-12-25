@@ -1,0 +1,44 @@
+    server {
+        listen <port> default_server;
+        server_name <domain>;
+        absolute_redirect off;
+        root   /var/www/html;
+        location / {
+            index  index.html index.htm index.php;
+        }
+        location ~ \.php$ {
+            fastcgi_pass   spage-php74:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+ 		location ~ ^/(\.user.ini|\.htaccess|\.git) {
+ 			return 404;
+ 		}
+ 		location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$ {
+ 			expires      12h;
+ 			error_log off;
+ 			access_log off;
+ 		}
+ 		location ~ .*\.(js|css)?$ {
+ 			expires      12h;
+ 			error_log off;
+ 			access_log off; 
+ 		}
+    }
+  
+    server {
+        #内网访问
+        listen 80;
+        server_name _;
+        root   /var/www/html;
+        location / {
+            index  index.html index.htm index.php;
+        }
+        location ~ \.php$ {
+            fastcgi_pass   spage-php74:9000;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+        }
+    }
