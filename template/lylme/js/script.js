@@ -6,6 +6,7 @@ WIDGET={"CONFIG":{"modules":"12043","background":"5","tmpColor":"FFFFFF","tmpSiz
 window.onload= function () {
     var text=document.getElementById('search-text');
 	text.focus();
+	$(".lylme").html($('input[name="type"]:checked').parent().find('svg').html());
 
 } 
 function lylme(){
