@@ -1,1 +1,0 @@
-docker exec -it spage-php74 chown -R www-data:www-data /var/www/html

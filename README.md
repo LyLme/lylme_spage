@@ -5,7 +5,6 @@
 ### 一、文件说明
 
 ```bash
-
 ├─mysql			# MySQL
 │  └─data 				#数据库文件目录
 ├─nginx			#Nginx
@@ -21,14 +20,13 @@
     └─  index.php
 ├─docker-compose.yaml	#Dockercompose文件
 ├─install.sh			#Linux下Docker部署脚本
-├─php_file_write.sh		#PHP容器修复写入权限
 ```
 
 ### 二、Docker部署
 
 1. 首先克隆本项目到网站要部署的目录
 
-```shell
+```bash
 git clone -b docker https://github.com/LyLme/lylme_spage.git docker
 cd docker && ls
 ```
@@ -39,9 +37,24 @@ cd docker && ls
 
 1. 安装Docker和Docker-compose ([查看教程](https://www.runoob.com/docker/centos-docker-install.html))
 
-2. 编辑`docker-compose.yaml`文件52行`- MYSQL_ROOT_PASSWORD=123456 #MySQL root密码`修改123456为新的root密码。
+2. 修改数据库密码，编辑`docker-compose.yaml`文件
 
-3. 执行`docker-compose up -d`等待拉取镜像和构建容器完成。
+   ```yaml
+   # 修改数据库密码(docker-compose.yaml文件，第52行)
+   - MYSQL_ROOT_PASSWORD=123456  #root密码。
+   ```
+
+3. 自定义外网端口，无需修改可跳过(默认:8080)，编辑`docker-compose.yaml`文件
+
+ ```yaml
+   #  自定义端口(docker-compose.yaml文件，第27行)
+   ports:
+       - "8080:80"
+   # 修改8080为新的端口号
+   # 注意：需确保端口策略已放行
+ ```
+
+5. 执行`docker-compose up -d`等待拉取镜像和构建容器完成。
 
 #### 2. 通过shell脚本
 
@@ -49,7 +62,7 @@ cd docker && ls
 
 2. 执行以下命令
 
-   ```shell
+   ```bash
    chmod +x install.sh
    ./install.sh
 
@@ -82,6 +95,27 @@ cd docker && ls
    - 后台账号：`admin`
    - 后台密码：`123456`
 
-### 四、其他
+### 四、常见问题
 
-若在使用Docker方式部署六零导航页遇到问题请附上截图和日志联系我
+#### 1. 安装提示PHP环境缺少扩展
+
+重启容器再次尝试安装
+
+```bash
+#Docker-compose部署方式
+docker-compose restart
+
+#shell脚本部署方式
+docker-compose -f docker-compose-sh.yml restart
+```
+
+#### 2. 安装提示目录不可写
+
+```bash
+# 执行以下命令
+docker exec -it spage-php74 chown -R www-data:www-data /var/www/html
+```
+
+#### 3. 其他
+
+若在使用Docker方式部署六零导航页遇到其他问题请附上截图和日志联系我
