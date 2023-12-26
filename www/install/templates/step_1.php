@@ -83,7 +83,7 @@ echo @$env_items[$key]['current'];
             <?php foreach ($extendArray as $item): ?>
                 <tr>
                     <td height="26" class="firstCol"><?= $item['name'] ?></td>
-                    <td><?= $item['status'] ? '支持' : '不支持' ?></td>
+                    <td><?= $item['status'] ? '<font color="green">支持</font>' : '<font color="red">不支持</font>' ?></td>
                     <td class="endCol">
                         <span class="<?= $item['status'] ? '' : 'col-red' ?>"><?= $item['status'] ? '无' : '需安装' ?></span>
                     </td>
@@ -103,7 +103,7 @@ echo @$env_items[$key]['current'];
             <?php foreach ($exists_array as $v): ?>
                 <tr>
                     <td height="26" class="firstCol"><?php echo $v; ?>()</td>
-                    <td><?= isFunExists($v) ? '支持' : '不支持' ?></td>
+                    <td><?= isFunExists($v) ? '<font color="green">支持</font>' : '<font color="red">不支持</font>' ?></td>
                     <td class="endCol"><?= isFunExistsTxt($v) ?></td>
                 </tr>
             <?php endforeach ?>
