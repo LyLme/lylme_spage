@@ -16,6 +16,9 @@ require SYSTEM_ROOT . "db.class.php";
 $DB = new DB($dbconfig['host'], $dbconfig['user'], $dbconfig['pwd'], $dbconfig['dbname'], $dbconfig['port']);
 
 $web_config = $DB->query("SELECT * FROM `lylme_config`");
+if(empty($web_config)) {
+    exit("<h3>LyLme Spage Error: MySQL config table is empty(code:404)<h3>");
+}
 while($row = $DB->fetch($web_config)) {
     $conf[$row['k']] = $row['v'];
 }
