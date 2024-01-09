@@ -3,13 +3,13 @@ $title = '关于页面设置';
 include './head.php';
 if ($_GET['set'] == 'conf_submit') {
     $about = $_POST['about'];
-    saveSetting('about', $about);
+    saveSetting('about_content', $about);
     echo '<script>alert("修改成功！");window.location.href="./about.php";</script>';
     exit();
 }
 if ($_GET['set'] == 'default') {
 
-    saveSetting('about', "<h3>关于本站</h3>\r\n<p>感谢来访，本站致力于简洁高效的上网导航和搜索入口，安全快捷。</p>\r\n<p>如果您喜欢我们的网站，请将本站添加到收藏夹（快捷键<code>Ctrl+D</code>），并<a href=\"https://jingyan.baidu.com/article/4dc40848868eba89d946f1c0.html\" target=\"_blank\">设为浏览器主页</a>，方便您的下次访问，感谢支持。<p>\r\n<hr>\r\n<h3>本站承诺</h3>\r\n<p><strong>绝对不会收集用户的隐私信息</strong><p>\r\n<p>区别于部分导航网站，本站链接直接跳转目标，不会对链接处理再后跳转，不会收集用户的隐藏信息，包括但不限于点击记录，访问记录和搜索记录，请放心使用</p>\r\n<hr>\r\n<h3>申请收录</h3>\r\n<p>请点<a href=\"../apply\" target=\"_blank\">这里</a></p>\r\n<hr>\r\n<h3>联系我们</h3>\r\n<p>若您在使用本站时遇到了包括但不限于以下问题：</p>\r\n<li>图标缺失</li>\r\n<li>目标网站无法打开</li>\r\n<li>描述错误</li>\r\n<li>网站违规</li>\r\n<li>收录加急处理</li>\r\n<li>链接删除</li>\r\n<p><strong>请发邮件与我们联系</strong></p>\r\n<h5>联系邮箱</h5>\r\n<p><a href=\"mailto:无\">无</a></p>\r\n<h5>联系说明</h5>\r\n<p>为了您的问题能快速被处理，建议在邮件主题添加【反馈】【投诉】【推荐】【友链】</p>");
+    saveSetting('about_content', "<h3>关于本站</h3>\r\n<p>感谢来访，本站致力于简洁高效的上网导航和搜索入口，安全快捷。</p>\r\n<p>如果您喜欢我们的网站，请将本站添加到收藏夹（快捷键<code>Ctrl+D</code>），并<a href=\"https://jingyan.baidu.com/article/4dc40848868eba89d946f1c0.html\" target=\"_blank\">设为浏览器主页</a>，方便您的下次访问，感谢支持。<p>\r\n<hr>\r\n<h3>本站承诺</h3>\r\n<p><strong>绝对不会收集用户的隐私信息</strong><p>\r\n<p>区别于部分导航网站，本站链接直接跳转目标，不会对链接处理再后跳转，不会收集用户的隐藏信息，包括但不限于点击记录，访问记录和搜索记录，请放心使用</p>\r\n<hr>\r\n<h3>申请收录</h3>\r\n<p>请点<a href=\"../apply\" target=\"_blank\">这里</a></p>\r\n<hr>\r\n<h3>联系我们</h3>\r\n<p>若您在使用本站时遇到了包括但不限于以下问题：</p>\r\n<li>图标缺失</li>\r\n<li>目标网站无法打开</li>\r\n<li>描述错误</li>\r\n<li>网站违规</li>\r\n<li>收录加急处理</li>\r\n<li>链接删除</li>\r\n<p><strong>请发邮件与我们联系</strong></p>\r\n<h5>联系邮箱</h5>\r\n<p><a href=\"mailto:无\">无</a></p>\r\n<h5>联系说明</h5>\r\n<p>为了您的问题能快速被处理，建议在邮件主题添加【反馈】【投诉】【推荐】【友链】</p>");
     echo '<script>alert("恢复默认成功！");window.location.href="./about.php";</script>';
     exit();
 }
@@ -31,7 +31,7 @@ if ($_GET['set'] == 'default') {
                                 </div>
                                 <div class="form-group">
                                     <label for="about">关于页内容</label>
-                                    <textarea width="200px" type="text" rows="20" class="form-control" name="about" placeholder="显示在关于页面的内容"><?php echo($conf['about']); ?></textarea>
+                                    <textarea width="200px" type="text" rows="20" class="form-control" name="about" placeholder="显示在关于页面的内容"><?php echo($conf['about_content']); ?></textarea>
                                     <small class="help-block">显示在关于页面的内容<code>使用HTML代码编写</code></small>
                                     工具：<a href="https://www.lylme.com/html/" target="_blank">在线MD编辑器</a> 编辑后复制html代码粘贴
                                 </div>

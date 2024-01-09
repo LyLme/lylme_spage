@@ -1,6 +1,6 @@
 <?php
 
-if(empty(constant("VERSION"))) {
+if (empty(constant("VERSION"))) {
     return 0;
 }
 function get_vernum($version)
@@ -11,14 +11,14 @@ function get_vernum($version)
 }
 $sqlvn = get_vernum($conf['version']);  //数据库版本
 $filevn = get_vernum(constant("VERSION"));  // 文件版本
-if($sqlvn < $filevn) {
+if ($sqlvn < $filevn) {
     //文件版本大于数据库版本执行更新
     $sql = '';
-    if($sqlvn < 10101) {
+    if ($sqlvn < 10101) {
         $version = 'v1.1.1';
         $sql = $sql . file_get_contents(ROOT . 'install/data/update.sql');
     }
-    if($sqlvn < 10103) {
+    if ($sqlvn < 10103) {
         $version = 'v1.1.3';
         @unlink(ROOT . 'include/head.php');
         @unlink(ROOT . 'include/home.php');
@@ -26,49 +26,49 @@ if($sqlvn < $filevn) {
         @unlink(ROOT . 'include/footer.php');
         $sql = $sql . file_get_contents(ROOT . 'install/data/update1.sql');
     }
-    if($sqlvn < 10104) {
+    if ($sqlvn < 10104) {
         $version = 'v1.1.4';
     }
-    if($sqlvn < 10105) {
+    if ($sqlvn < 10105) {
         $version = 'v1.1.5';
         $sql = $sql . file_get_contents(ROOT . 'install/data/update2.sql');
     }
-    if($sqlvn < 10106) {
+    if ($sqlvn < 10106) {
         $version = 'v1.1.6';
         $sql = $sql . file_get_contents(ROOT . 'install/data/update3.sql');
     }
-    if($sqlvn < 10109) {
+    if ($sqlvn < 10109) {
         $version = 'v1.1.9';
         $sql = $sql . file_get_contents(ROOT . 'install/data/update4.sql');
     }
-    if($sqlvn < 10200) {
+    if ($sqlvn < 10200) {
         $version = 'v1.2.0';
         $sql = $sql . file_get_contents(ROOT . 'install/data/update5.sql');
     }
-    if($sqlvn < 10205) {
+    if ($sqlvn < 10205) {
         $version = 'v1.2.5';
     }
-    if($sqlvn < 10300) {
+    if ($sqlvn < 10300) {
         $version = 'v1.3.0';
     }
-    if($sqlvn < 10304) {
+    if ($sqlvn < 10304) {
         $version = 'v1.3.4';
     }
-    if($sqlvn < 10500) {
+    if ($sqlvn < 10500) {
         $version = 'v1.5.0';
     }
-    if($sqlvn < 10501) {
+    if ($sqlvn < 10501) {
         $version = 'v1.5.1';
         $sql = $sql . file_get_contents(ROOT . 'install/data/update6.sql');
     }
-    if($sqlvn < 10600) {
+    if ($sqlvn < 10600) {
         $version = 'v1.6.0';
         $sql = $sql . file_get_contents(ROOT . 'install/data/update7.sql');
     }
-    if($sqlvn < 10700) {
+    if ($sqlvn < 10700) {
         $version = 'v1.7.0';
     }
-    if($sqlvn < 10800) {
+    if ($sqlvn < 10800) {
         $version = 'v1.8.0';
         $sql = $sql . file_get_contents(ROOT . 'install/data/update8.sql');
         if (!isset($conf['md5pass'])) {
@@ -77,29 +77,27 @@ if($sqlvn < $filevn) {
             $DB->query("INSERT INTO `lylme_config` (`k`, `v`, `description`) VALUES ('md5pass', '1', '启用md5加密密码');");
             saveSetting('admin_pwd', $admin_pwd);
         }
-
     }
-    if($sqlvn < 10805) {
+    if ($sqlvn < 10805) {
         $version = 'v1.8.5';
         if (!isset($conf['about'])) {
+
+            $DB->query("INSERT INTO `lylme_config` (`k`, `v`, `description`) VALUES ('about', '1', '新版关于页面');");
             $about_file = ROOT . 'about/about.txt';
-            if(file_exists($about_file)) {
-                $about_content = daddslashes(file_get_contents($about_file));
-                $about_content = str_replace(PHP_EOL, '\r\n', $about_content);
-                $about =  "INSERT INTO `lylme_config` (`id`, `k`, `v`, `description`) VALUES (NULL, 'about', '$about_content', '关于页面');";
+            if (file_exists($about_file)) {
+                $about_content = str_replace(PHP_EOL, '\r\n', daddslashes(file_get_contents($about_file)));
+                $about =  " INSERT INTO `lylme_config` (`k`, `v`, `description`) VALUES ('about_content', '$about_content', '关于页面');";
+                $DB->query($about);
+                @unlink(ROOT . 'about/说明.txt');
             }
-            $DB->query($about);
-            @unlink(ROOT . 'about/说明.txt');
         }
-
-
     }
     $sql = explode(';', $sql);
-    for ($i = 0;$i < count($sql);$i++) {
+    for ($i = 0; $i < count($sql); $i++) {
         if (trim($sql[$i]) == '') {
             continue;
         }
-        if($DB->query($sql[$i])) {
+        if ($DB->query($sql[$i])) {
         }
     }
     saveSetting('version', $version);
