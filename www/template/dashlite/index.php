@@ -45,22 +45,22 @@
                 <?php
                 //输出导航菜单
                     $tagslists = $site->getTags();
-                    while ($taglists = $DB->fetch($tagslists)) {
+    while ($taglists = $DB->fetch($tagslists)) {
 
-                        echo '
+        echo '
                         <li class="nk-menu-item">
                             <a href="' . $taglists["tag_link"] . '" class="nk-menu-link nk-ibx-action-item" data-original-title="" title=""';
-                            if ($taglists["tag_target"] == 1) {
-                                echo ' target="_blank"';
-                            }
-                            echo '>
+        if ($taglists["tag_target"] == 1) {
+            echo ' target="_blank"';
+        }
+        echo '>
                                 <!-- <em class="icon ni ni-home"></em>-->
                                 <span class="nk-menu-text">' . $taglists["tag_name"] . '</span>
                             </a>
                         </li>';
-                        
-                    }
-                ?>
+
+    }
+    ?>
                 </ul>
             </div>
             <!-- .nk-header-menu -->
@@ -110,12 +110,12 @@
                         <ul class="breadcrumb breadcrumb-pipe">
                         <li class="breadcrumb-item fs-16px category-all active"><a href="javascript:show_tool_list(0)">全部</a></li>
                         <?php
-                        $groups = $site->getGroups(); // 获取分类
-                        while ($group = $DB->fetch($groups)) { //循环所有分组
-                            echo ' <li class="breadcrumb-item fs-16px category-item" data-id="' . $group["group_id"] . '"><a href="javascript:show_tool_list(' . $group["group_id"] . ')">' . $group["group_name"] . '</a></li>
+            $groups = $site->getGroups(); // 获取分类
+    while ($group = $DB->fetch($groups)) { //循环所有分组
+        echo ' <li class="breadcrumb-item fs-16px category-item" data-id="' . $group["group_id"] . '"><a href="javascript:show_tool_list(' . $group["group_id"] . ')">' . $group["group_name"] . '</a></li>
                             ' . "\n";
-                        }
-		                ?>
+    }
+    ?>
                         </ul>
                     </nav>
                 </div>
@@ -143,14 +143,14 @@
     <div class="container-xl">
         <div class="nk-footer-wrap">
         <?php if(!empty($conf['wztj'])) {
-     echo '<p>' . $conf["wztj"] . '</p>';
- }
-		?>
+            echo '<p>' . $conf["wztj"] . '</p>';
+        }
+    ?>
             <div class="nk-footer-copyright">
             <?php if(!empty($conf['icp'])) {
-       echo '<p><img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" rel="nofollow" class="icp nav-link" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a></p>';
-   }
-		?>
+                echo '<p><img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" rel="nofollow" class="icp nav-link" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a></p>';
+            }
+    ?>
             <?php echo $conf['copyright']?>
         </div>
         </div>
@@ -159,9 +159,9 @@
 <!-- footer @e -->
     </div>
     <!-- wrap @e -->
-<script src="http://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
-<script src="http://cdn.staticfile.org/bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
-<script src="http://cdn.staticfile.org/layer/3.5.1/layer.js"></script>
+<script src="//cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
+<script src="//cdn.staticfile.org/bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+<script src="//cdn.staticfile.org/layer/3.5.1/layer.js"></script>
 <script src="<?php echo $templatepath;?>/js/nioapp.min.js"></script>
 <script src="<?php echo $templatepath;?>/js/script.js?v=1001"></script>
 <script src="<?php echo $templatepath;?>/js/common.js?v=1002"></script>

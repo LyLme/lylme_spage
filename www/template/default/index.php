@@ -16,8 +16,8 @@
 		<meta name="x5-fullscreen" content="true">
 		<meta name="x5-page-mode" content="app">
 		<meta name="lsvn" content="<?php echo base64_encode($conf['version'])?>">
-		<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js" type="application/javascript"></script>
-		<link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.5.3/css/bootstrap.min.css" type="text/css" rel="stylesheet">	
+		<script src="<?php echo $cdnpublic ?>/assets/js/jquery.min.js" type="application/javascript"></script>
+		<link href="<?php echo $cdnpublic ?>/assets/css/bootstrap.min.css" type="text/css" rel="stylesheet">	
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/style.css?v=20220611" type="text/css">
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/font.css" type="text/css">
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/tag.css?v=20220611" type="text/css">
