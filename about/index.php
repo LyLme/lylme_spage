@@ -11,19 +11,8 @@
  <body> 
 
 <div class="markdown-section" id="main">
-<?php 
-$about = 'about.txt';
-//本页内容请修改about.txt文件防止更新后index.php文件被覆盖
-
-if(file_exists($about)){
-    //文件存在，直接输出文件内容
-    echo file_get_contents($about);
-}
-else {
-    //文件不存在
-    @file_put_contents($about,'<h1>404</h1>');
-    echo file_get_contents($about);
-}
+<?php
+echo($conf['about']);
 ?>
 
 <center><p class="footer"><?php echo $conf['copyright']?></p></center>
