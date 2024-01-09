@@ -88,7 +88,7 @@ if($sqlvn < $filevn) {
                 $about_content = str_replace(PHP_EOL, '\r\n', $about_content);
                 $about =  "INSERT INTO `lylme_config` (`id`, `k`, `v`, `description`) VALUES (NULL, 'about', '" . $about_content . "', NULL)";
             }
-            $DB->query(daddslashes($about));
+            $DB->query($about);
             @unlink(ROOT . 'about/说明.txt');
         }
 
