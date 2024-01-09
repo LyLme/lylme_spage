@@ -1,3 +1,4 @@
+<<<<<<< HEAD:www/install/data/install_struct.sql
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
@@ -272,3 +273,6 @@ INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`, `sort`
 (4, '关于本站', '/about', 1, 10),
 (5, '申请收录', '/apply', 1, 10),
 (6, '查看', '/pwd', 0, 10);
+=======
+SELECT `k`, `v` FROM `lylme_config`;
+>>>>>>> master:install/data/install_data.sql

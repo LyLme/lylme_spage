@@ -50,9 +50,9 @@ function keyClick() {
 				if(kw !== "") {
 					window.open(url + kw);
 				} else {
-					layer.msg('未输入搜索框关键词！', {
-						time: 1000,
-					});
+					// layer.msg('未输入搜索框关键词！', {
+					// 	time: 1000,
+					// });
 				}
 			}
 		}
