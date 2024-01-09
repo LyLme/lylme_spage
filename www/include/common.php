@@ -5,7 +5,7 @@ define('IN_CRONLITE', true);
 define('SYS_KEY', 'lylme_key');
 define('SYSTEM_ROOT', dirname(__FILE__) . '/');
 define('ROOT', dirname(SYSTEM_ROOT) . '/');
-//error_reporting(0);
+error_reporting(0);
 require ROOT . 'config.php';
 if(!defined('SQLITE') && (!$dbconfig['user'] || !$dbconfig['pwd'] || !$dbconfig['dbname'])) {
     @unlink(ROOT . 'install/install.lock');

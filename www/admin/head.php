@@ -1,14 +1,16 @@
 <?php
 include_once("../include/common.php");
-if(isset($islogin)==1) {
-} else exit("<script language='javascript'>window.location.href='./login.php';</script>");
+if(isset($islogin) == 1) {
+} else {
+    exit("<script language='javascript'>window.location.href='./login.php';</script>");
+}
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title><?php echo $title.' - '.$conf['title'];?></title>
+<title><?php echo $title . ' - ' . $conf['title'];?></title>
 <link rel="icon" href="/assets/img/logo.png" type="image/ico">
 <meta name="author" content="yinqi">
 <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -31,23 +33,24 @@ if(isset($islogin)==1) {
               <a href="javascript:void(0)"><i class="mdi mdi-palette"></i>网站配置</a>
               <ul class="nav nav-subnav">
                 <li> <a href="./set.php">网站基本设置</a> </li>
-                <li> <a href="./tag.php">导航菜单设置</a> </li>
-                <li> <a href="./sou.php">搜索引擎设置</a> </li>
+                <li> <a href="./theme.php">网站主题设置</a> </li>
+                <li> <a href="./about.php">关于页面设置</a> </li>
                 <li> <a href="./user.php">修改账号密码</a> </li>
                 
               </ul>
             </li>
-            <li class="nav-item active"> <a href="./theme.php"><i class="mdi mdi-invert-colors"></i>主题设置</a> </li>
             <li class="nav-item active"> <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理 </a>
 <?php $applyrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_apply` WHERE `apply_status` = 0"));
-if($applyrows>0) {
-	echo'<style> .applyrow{width: 18px;height: 18px;top: 15px;right: 24px;font-size: 10px;font-weight: bold;color: #fff;background-color: red;border-radius: 100%;text-align: center;vertical-align: middle;position: absolute;line-height: 1.5;}</style>
-	<div class="applyrow">'.$applyrows.'</div>';
+if($applyrows > 0) {
+    echo'<style> .applyrow{width: 18px;height: 18px;top: 15px;right: 24px;font-size: 10px;font-weight: bold;color: #fff;background-color: red;border-radius: 100%;text-align: center;vertical-align: middle;position: absolute;line-height: 1.5;}</style>
+	<div class="applyrow">' . $applyrows . '</div>';
 }
 ?></li>
             <li class="nav-item nav-item-has-subnav">
             <li class="nav-item active"> <a href="./group.php"><i class="mdi mdi-folder"></i>分组管理</a></li>
             <li class="nav-item active"> <a href="./link.php"><i class="mdi mdi-web"></i>链接管理</a></li>
+            <li class="nav-item active"> <a href="./tag.php"><i class="mdi mdi-cube"></i>导航菜单</a></li>
+            <li class="nav-item active"> <a href="./sou.php"><i class="mdi mdi-magnify"></i>搜索引擎</a></li>
             <li class="nav-item active"> <a href="./pwd.php"><i class="mdi mdi-key-variant"></i>加密管理</a></li>
             <li class="nav-item active"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
             <li class="nav-item active"> <a href="./wxplus.php"><i class="mdi mdi-wechat"></i>微信推送</a> </li>
