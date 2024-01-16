@@ -9,7 +9,7 @@ function dstrpos($string, $arr)
     if(empty($string)) {
         return false;
     }
-    foreach((array)$arr as $v) {
+    foreach((array) $arr as $v) {
         if(strpos($string, $v) !== false) {
             return true;
         }
@@ -359,7 +359,7 @@ function ins_link($name, $url, $icon, $group_id, $status)
     $userip = get_real_ip();
     $date = date("Y-m-d H:i:s");
     $link_order = $DB->count('select MAX(id) from `lylme_links`') + 1;
-    $sql1 = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `PS`,`link_order`) VALUES (NULL, '" . $name . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $userip . "的提交 ', '" . $link_order . "');";
+    $sql1 = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`,`link_order`) VALUES (NULL, '" . $name . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $userip . "的提交 ', '" . $link_order . "');";
     if($DB->query($sql1)) {
         return true;
     } else {
