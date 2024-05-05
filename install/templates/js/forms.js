@@ -80,7 +80,7 @@ function CheckForm() {
         $.ajax({
             url: 'index.php',
             data: {
-                s: 63832,
+                s: 6766,
                 dbhost: $("#dbhost").val(),
                 dbuser: $("#dbuser").val(),
                 dbpwd: $("#dbpwd").val(),
@@ -96,7 +96,7 @@ function CheckForm() {
                     document.form.submit();
                     return;
                 } else {
-                    $('#cpwdTxt').html('<span class="error">不可用</span>');
+                    $('#cpwdTxt').html('<span class="error">'+data+'</span>');
                     $("#dbpwd").focus();
                     $('#cpwd').val("false");
                     return false;
@@ -119,7 +119,7 @@ function CheckPwd() {
     $.ajax({
         url: 'index.php',
         data: {
-            s: 63832,
+            s: 6766,
             dbhost: $("#dbhost").val(),
             dbport: $("#dbport").val(),
             dbuser: $("#dbuser").val(),
@@ -132,7 +132,7 @@ function CheckPwd() {
                 $('#cpwdTxt').html('<span class="correct">可用</span>');
                 $('#cpwd').val("true");
             } else {
-                $('#cpwdTxt').html('<span class="error">不可用</span>');
+                $('#cpwdTxt').html('<span class="error">'+data+'</span>');
                 $('#cpwd').val("false");
             }
         }
