@@ -6,3 +6,4 @@ admin/log.txt
 files/*
 include/webscan.log
 cache
+include/qrcode.png
