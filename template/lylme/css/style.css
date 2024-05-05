@@ -34,7 +34,10 @@ li.nav-item a {
     padding-left: 10px;
     box-shadow: 0px 2px 12px 0px rgb(34 34 38 / 10%);
 }
-
+p{
+    color: #fff ;
+    text-shadow: 0px 1px 0px #252525;
+}
 #search-text::-webkit-input-placeholder
 {
     color: #555666;
@@ -102,8 +105,9 @@ a:hover
 a.icp
 {
     font-size: 12px;
-    color: #bbb;
-    text-align: center
+    text-align: center;
+    color: #fff !important;
+    text-shadow: 0px 1px 0px #000;
 }
 
 .navbar .navbar-expand-lg .navbar-light .fixed-top
@@ -164,17 +168,7 @@ p.content
     background-position: -50px 0
 }
 
-.mylist li.lylme-3 img
-{
-    display: block;
-    width: 45px;
-    height: 45px;
-    padding: 8px;
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 10px;
-    margin: 25px auto
-}
+
 
 h2.title
 {
@@ -496,23 +490,29 @@ ul#chso
     transition: 0.3s all linear;
     font-size: 14px;
     overflow: hidden;
-    /* padding: 10px; */
+    padding: 10px 2px;
     box-shadow: 2px 2px 10px 0px rgb(0 0 0 / 40%);
     backdrop-filter: saturate(100%) blur(30px);
     margin: 10px;
-    /* display: flex; */
+    display: flex;
     flex-direction: row;
     border-radius: 15px;
+    justify-content: center;
+    align-items: center;
 }
 
-.mylist li.lylme-3 svg
+.mylist li.lylme-3 svg,.mylist li.lylme-3 img
 {
     display: block;
     width: 45px;
     height: 45px;
-    margin: 25px auto;
+    padding: 4px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    
+    margin: 0 auto 0.3rem;
 }
-
 .mylist li.lylme-3:hover
 {
     backdrop-filter: blur(0px);
@@ -521,22 +521,19 @@ ul#chso
 
 .mylist li.lylme-3 span
 {
-    text-shadow: 0px 0px 3px rgb(0 0 0 / 70%);
-    margin-bottom: 10px;
+    /* text-shadow: 0px 0px 3px rgb(0 0 0 / 70%); */
     width: 100%;
-    height: 26px;
-    line-height: 26px;
     text-align: center;
-    font-size: 15px;
-    word-break: break-all;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
 }
 
 .mylist li a
 {
+    width: 100%;
     color: #fff;
     display: block
 }
@@ -567,21 +564,7 @@ ul#chso
     z-index: 10
 }
 
-@media screen and (min-width:1200px)
-{
-    .mylist li.lylme-3
-    {
-        min-width: 132px
-    }
-}
 
-@media screen and (min-width:992px) and (max-width:1200px)
-{
-    .mylist li.lylme-3
-    {
-        min-width: 110px
-    }
-}
 
 @media screen and (max-width:992px)
 {
@@ -597,7 +580,7 @@ ul#chso
 
     .mylist li.lylme-3
     {
-        width: 65px;
+        width: 17%;
     }
 
     .search-group
@@ -620,6 +603,10 @@ ul#chso
         width: 60%;
     }
 
+    .mylist li.lylme-3
+    {
+        width: 25%;
+    }
     .s-type-list label
     {
         padding: 5px 0
@@ -641,8 +628,7 @@ ul#chso
     {
         border-radius: 8px
     }
-/*.mylist li.lylme-3{margin:5px 0 5px}*/
-    .mylist li.lylme-3 svg
+    .mylist li.lylme-3 svg,.mylist li.lylme-3 img
     {
         width: 40px;
         height: 40px;
@@ -650,7 +636,7 @@ ul#chso
 
     .mylist li.lylme-3 span
     {
-        font-size: 12px
+        font-size: 14px
     }
 }
 
@@ -675,9 +661,9 @@ ul#chso
     display: none
 }
 
-.navbar-toggler .bi-x
-{
-    display: block
+.navbar-toggler .bi-x {
+    position: absolute;
+    right: 3%;
 }
 
 #he-plugin-simple
@@ -712,4 +698,7 @@ ul#chso
 ::-webkit-scrollbar-corner
 {
     background: #ddd
+}
+li.selected{
+    background: #fff;
 }
