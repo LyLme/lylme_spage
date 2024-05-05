@@ -1,4 +1,13 @@
 <?php
+/* 
+ * @Description: 后台首页
+ * @Author: LyLme admin@lylme.com
+ * @Date: 2024-01-23 12:25:35
+ * @LastEditors: LyLme admin@lylme.com
+ * @LastEditTime: 2024-04-09 02:09:02
+ * @FilePath: /lylme_spage/admin/index.php
+ * @Copyright (c) 2024 by LyLme, All Rights Reserved. 
+ */
 $title = '后台管理';
 include './head.php';
 $last = date("Ym");
@@ -177,7 +186,7 @@ if (!empty($update)) {
 include './footer.php';
 ?>
 <!--图表插件-->
-<script type="text/javascript" src="js/Chart.js"></script>
+<script type="text/javascript" src="/assets/admin/js/Chart.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(e) {
 		var $dashChartBarsCnt = jQuery('.js-chartjs-bars')[0].getContext('2d'),
