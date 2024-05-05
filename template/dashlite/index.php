@@ -8,7 +8,7 @@
     <meta name="description" content="<?php echo $conf['description'] ?>" />
     <link rel="stylesheet" href="<?php echo $templatepath; ?>/css/dashlite.css">
     <link rel="stylesheet" href="<?php echo $templatepath; ?>/css/style.css?v=1002">
-    <link rel="stylesheet" href="https://cdn.staticfile.org/layer/3.5.1/theme/default/layer.css?v=3.5.1" id="layuicss-layer">
+    <link rel="stylesheet" href="/assets/js/layer.css" id="layuicss-layer">
 </head>
 
 <body class="nk-body npc-invest bg-lighter no-touch nk-nio-theme">
@@ -47,21 +47,21 @@
                             <?php
                             //输出导航菜单
                             $tagslists = $site->getTags();
-    while ($taglists = $DB->fetch($tagslists)) {
+                            while ($taglists = $DB->fetch($tagslists)) {
 
-        echo '
+                                echo '
                         <li class="nk-menu-item">
                             <a href="' . $taglists["tag_link"] . '" class="nk-menu-link nk-ibx-action-item" data-original-title="" title=""';
-        if ($taglists["tag_target"] == 1) {
-            echo ' target="_blank"';
-        }
-        echo '>
+                                if ($taglists["tag_target"] == 1) {
+                                    echo ' target="_blank"';
+                                }
+                                echo '>
                                 <!-- <em class="icon ni ni-home"></em>-->
                                 <span class="nk-menu-text">' . $taglists["tag_name"] . '</span>
                             </a>
                         </li>';
-    }
-    ?>
+                            }
+                            ?>
                             <li class="nk-menu-item">
                                 <a href="/apply" class="nk-menu-link nk-ibx-action-item" data-original-title="" title="" target="_blank">
                                     <!-- <em class="icon ni ni-home"></em>-->
@@ -70,15 +70,15 @@
                             </li>
 
                             <?php
-    $groups = $site->getGroups(); // 获取分类
-    if (checkmobile()) {
-        echo(' <hr>');
-        while ($group = $DB->fetch($groups)) { //循环所有分组
-            echo ' <li class="nk-menu-item" data-id="' . $group["group_id"] . '"><a class="nk-menu-link nk-ibx-action-item" href="javascript:show_tool_list(' . $group["group_id"] . ')">' . $group["group_name"] . '</a></li>
+                            $groups = $site->getGroups(); // 获取分类
+                            if (checkmobile()) {
+                                echo (' <hr>');
+                                while ($group = $DB->fetch($groups)) { //循环所有分组
+                                    echo ' <li class="nk-menu-item" data-id="' . $group["group_id"] . '"><a class="nk-menu-link nk-ibx-action-item" href="javascript:show_tool_list(' . $group["group_id"] . ')">' . $group["group_name"] . '</a></li>
                                         ' . "\n";
-        }
-    }
-    ?>
+                                }
+                            }
+                            ?>
 
                         </ul>
                     </div>
@@ -110,10 +110,10 @@
         <div class="nk-content nk-content-lg nk-content-fluid pt-5 pb-5 bannerbg">
             <div class="container-xl">
                 <div class="form-control-wrap circle">
-                    <div class="form-text-hint-lx">
+                    <div class="form-text-hint-lx" onclick="search()">
                         <span class="overline-title"><em class="icon ni ni-search"></em></span>
                     </div>
-                    <form action="https://www.baidu.com/s?wd=" method="get" target="_blank">
+                    <form id="searchForm" action="#" method="get" target="_blank">
                         <input type="text" class="form-control form-control-lx btn-round" name="word" id="searchkw" placeholder="搜索" autocomplete="off">
                     </form>
                 </div>
@@ -144,7 +144,7 @@
                 </div>
                 <!-- content @s -->';
         }
-    ?>
+        ?>
 
         <div class="nk-content nk-content-lg nk-content-fluid">
             <div class="container-xl">
@@ -167,12 +167,12 @@
                 <?php if (!empty($conf['wztj'])) {
                     echo '<p>' . $conf["wztj"] . '</p>';
                 }
-    ?>
+                ?>
                 <div class="nk-footer-copyright">
                     <?php if (!empty($conf['icp'])) {
                         echo '<p><img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" rel="nofollow" class="icp nav-link" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a></p>';
                     }
-    ?>
+                    ?>
                     <?php echo $conf['copyright'] ?>
                 </div>
             </div>
@@ -181,14 +181,37 @@
     <!-- footer @e -->
     </div>
     <!-- wrap @e -->
-    <script src="//cdn.staticfile.org/jquery/3.6.0/jquery.min.js"></script>
-    <script src="//cdn.staticfile.org/bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
-    <script src="//cdn.staticfile.org/layer/3.5.1/layer.js"></script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/js/layer.js"></script>
     <script src="<?php echo $templatepath; ?>/js/nioapp.min.js"></script>
     <script src="<?php echo $templatepath; ?>/js/script.js?v=1001"></script>
     <script src="<?php echo $templatepath; ?>/js/common.js?v=1002"></script>
     <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
-
+    <?php
+    ?>
+    <script>
+        $(document).ready(function() {
+            $('#searchForm').submit(function(e) {
+                e.preventDefault();
+            });
+        });
+        function search() {
+            var searchWord = $('#searchkw').val();
+            if(!searchWord){
+                return false;
+            }
+            var searchindex = '<?php echo theme_config('search', "https://cn.bing.com/search?q=")?>';
+            if (searchindex.includes('%s')) {
+                // 替换 %s  
+                var searchUrl = searchindex.replace('%s', searchWord);
+            } else {
+                // 如果不包含 %s，则将搜索词添加到 URL 末尾  
+                var searchUrl = searchindex + searchWord;
+            }
+            window.open(searchUrl);
+        }
+    </script>
     <script>
         var tool_list = <?php echo (json_encode(listjson())) ?>;
         var tools = [];

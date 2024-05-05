@@ -1,5 +1,5 @@
 a:hover{text-decoration:none;font-weight:bold}
-a.icp{font-size:12px;color:#bbb;text-align:center}
+a.icp{font-size:12px;color:#888;text-align:center;margin: 0 5px;}
 .navbar .navbar-expand-lg .navbar-light .fixed-top{position:absolute;z-index:10000}
 .bottom-cover{background-image:linear-gradient(rgba(255,255,255,0) 0%,rgb(244 248 251 / 0.6) 50%,rgb(244 248 251) 100%)}
 .navbar-light .navbar-toggler{color:#fff}
@@ -91,3 +91,37 @@ div#navbarsExample05{background:rgba(0,0,0,0.8);padding:10px 30px;border-radius:
 ::-webkit-scrollbar-thumb{background:#ddd;border-radius:0px}
 ::-webkit-scrollbar-thumb:hover{background:#ccc}
 ::-webkit-scrollbar-corner{background:#ddd}
+::-webkit-scrollbar-corner{background:#ddd}
+li.selected{background:#f1f1f1}
+#word li:hover {background-color: #f1f1f1;}
+@font-face{font-family:"Micro";src:url('MicroExtendFLF.ttf')}
+#show_time{font-family:"Micro";text-align:center;font-weight:bold;font-size:30px;color:#fff;text-shadow:1px 1px 2px #000}
+#show_date{text-align:center;font-size:16px;color:#fff;font-weight:bold;margin:10px}
+
+.box{margin:40px 0;position:fixed;z-index:1000}
+.change-type{min-width:40px;min-height:160px;position:absolute;z-index:99;left:0;top:0;display:flex}
+.change-type .type-left{width:0;background:#fff;height:100%;box-shadow:0 2px 12px 0 rgb(0 0 0 / 50%);border-bottom-right-radius:5px;border-top-right-radius:5px;margin-left:-40px;overflow:hidden;transition:width 0.4s;-moz-transition:width 0.4s;-webkit-transition:width 0.4s;-o-transition:width 0.4s}
+.change-type .showListType{width:150px;transition:width 0.4s;-moz-transition:width 0.4s;-webkit-transition:width 0.4s;-o-transition:width 0.4s}
+.change-type .type-left ul{margin-bottom:0px}
+.change-type .type-left ul li{line-height:40px;height:40px;text-align:left;width:100%;position:relative;cursor:pointer;list-style:none}
+.change-type .type-left ul li a{display:block;height:100%;position:absolute;left:0;top:0;z-index:9;padding-left:15px;overflow:hidden;width:calc(100% - 17px);color:#333;font-size:14px;border-left:2px solid #26778d}
+.change-type .type-left ul li span{display:block;position:absolute;width:0;height:100%;left:0;top:0;z-index:8;overflow:hidden;transition:width 0.5s;-moz-transition:width 0.5s;-webkit-transition:width 0.5s;-o-transition:width 0.5s}
+.change-type .type-left ul li:hover span{transition:width 0.5s;-moz-transition:width 0.5s;-webkit-transition:width 0.5s;-o-transition:width 0.5s}
+.type-left ul li:nth-child(1):hover span,.type-left ul li:nth-child(1).active span,.type-left ul li:nth-child(8):hover span,.type-left ul li:nth-child(8).active span{background:#2C73D2;width:100%;box-shadow:0px 2px 5px 0 rgba(0,0,0,0.5)}
+.type-left ul li:nth-child(1):hover a,.type-left ul li:nth-child(1).active a,.type-left ul li:nth-child(8):hover a,.type-left ul li:nth-child(8).active a{border-left:2px solid #2C73D2;color:#fff}
+.type-left ul li:nth-child(2):hover span,.type-left ul li:nth-child(2).active span,.type-left ul li:nth-child(9):hover span,.type-left ul li:nth-child(9).active span{background:#D65DB1;width:100%;box-shadow:0px 2px 5px 0 rgba(0,0,0,0.5)}
+.type-left ul li:nth-child(2):hover a,.type-left ul li:nth-child(2).active a,.type-left ul li:nth-child(9):hover a,.type-left ul li:nth-child(9).active a{border-left:2px solid #D65DB1;color:#fff}
+.type-left ul li:nth-child(3):hover span,.type-left ul li:nth-child(3).active span,.type-left ul li:nth-child(10):hover span,.type-left ul li:nth-child(10).active span{background:#00C9A7;width:100%;box-shadow:0px 2px 5px 0 rgba(0,0,0,0.5)}
+.type-left ul li:nth-child(3):hover a,.type-left ul li:nth-child(3).active a,.type-left ul li:nth-child(10):hover a,.type-left ul li:nth-child(10).active a{border-left:2px solid #00C9A7;color:#fff}
+.type-left ul li:nth-child(4):hover span,.type-left ul li:nth-child(4).active span,.type-left ul li:nth-child(11):hover span,.type-left ul li:nth-child(11).active span{background:#009EFA;width:100%;box-shadow:0px 2px 5px 0 rgba(0,0,0,0.5)}
+.type-left ul li:nth-child(4):hover a,.type-left ul li:nth-child(4).active a,.type-left ul li:nth-child(11):hover a,.type-left ul li:nth-child(11).active a{border-left:2px solid #009EFA;color:#fff}
+.type-left ul li:nth-child(5):hover span,.type-left ul li:nth-child(5).active span,.type-left ul li:nth-child(12):hover span,.type-left ul li:nth-child(12).active span{background:#FF8066;width:100%;box-shadow:0px 2px 5px 0 rgba(0,0,0,0.5)}
+.type-left ul li:nth-child(5):hover a,.type-left ul li:nth-child(5).active a,.type-left ul li:nth-child(12):hover a,.type-left ul li:nth-child(12).active a{border-left:2px solid #FF8066;color:#fff}
+.type-left ul li:nth-child(6):hover span,.type-left ul li:nth-child(6).active span,.type-left ul li:nth-child(13):hover span,.type-left ul li:nth-child(13).active span{background:#64b5f6;width:100%;box-shadow:0px 2px 5px 0 rgba(0,0,0,0.5)}
+.type-left ul li:nth-child(6):hover a,.type-left ul li:nth-child(6).active a,.type-left ul li:nth-child(13):hover a,.type-left ul li:nth-child(13).active a{border-left:2px solid #64b5f6;color:#fff}
+.type-left ul li:nth-child(7):hover span,.type-left ul li:nth-child(7).active span,.type-left ul li:nth-child(14):hover span,.type-left ul li:nth-child(14).active span{background:#388e3c;width:100%;box-shadow:0px 2px 5px 0 rgba(0,0,0,0.5)}
+.type-left ul li:nth-child(7):hover a,.type-left ul li:nth-child(7).active a,.type-left ul li:nth-child(14):hover a,.type-left ul li:nth-child(14).active a{border-left:2px solid #388e3c;color:#fff}
+ul.navbar-nav.mr-auto{margin-left:60px}
+.type-right{position:fixed;top:38px}
+.type-right svg{width:28px;height:28px}
+@media screen and (max-width:992px){.type-right{position:fixed;top:10px;right:10px}}

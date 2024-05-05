@@ -8,7 +8,7 @@ github：https://github.com/5iux/sou
 */
 
 *{padding:0;margin:0;outline:none;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;position:relative;overflow:hidden;background:#fff}
+html,body{width:100%;height:100%;position:relative;overflow-x:hidden;background:#fff}
 html{font-family:'Noto Sans SC Sliced',PingFangSC-Light,Microsoft YaHei UI,Microsoft YaHei,helvetica,sans-serif;font-weight:500;color:#000}
 form,input,button{padding:0;margin:0;border:none;outline:none;background:none}
 input::-webkit-input-placeholder{color:#ccc;letter-spacing:2px;font-size:16px}
@@ -16,8 +16,8 @@ ul,li{display:block;list-style:none}
 a{text-decoration:none;color:#000}
 #content{width:100%;height:100%}
 li img{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:currentColor;overflow:hidden}
-.con{width:100%;transition:1s all;margin:auto;min-width:320px;height:380px;position:absolute;left:0;top:-100px;right:0;bottom:0}
-.con .shlogo{position:relative;width:auto;height:auto;margin:20px auto}
+.con{width:100%;transition:1s all;margin:auto;min-width:320px;}
+.con .shlogo{position:relative;width:auto;height:auto;margin:10vh auto 5vh}
 h2.title{text-align:center;color:#fff;font-size:26px;font-weight:600;text-shadow:1px 1px 8px #504b4b}
 .con .shlogo a{width:100%;display:block;width:100%;height:100%}
 .con .sou{max-width:680px;position:relative;width:calc(100% - 60px);min-width:320px;margin:0 auto}
@@ -29,17 +29,18 @@ h2.title{text-align:center;color:#fff;font-size:26px;font-weight:600;text-shadow
 .con .sou .lylme .lg img{display:block;width:25px;height:25px;position:absolute;left:25px;top:12px;overflow:hidden;cursor:pointer}
 .con .sou .lylme .wd:focus{color:#000;background:#fff;box-shadow:0 0px 15px 0 rgba(32,33,36,0.2);border-color:#fff}
 .con .sou .lylme button{width:40px;height:40px;display:block;position:absolute;z-index:10;right:6px;top:6px;cursor:pointer;font-size:22px;line-height:40px;border-radius:50%;color:#ddd}
-.con .sou #word{backdrop-filter: blur(10px);width:calc(100% - 70px);padding: 15px;border-radius:10px;left:20px;position:absolute;z-index:500;top:65px;background:#ffffffb0;;line-height:30px;font-size:16px;overflow:hidden;display:none}
-.con .sou #word li{cursor:pointer;color:#555;margin: 5px;}
-#word li:hover{background-color:#ddd}
-.foot{text-shadow: 0px 0px 5px black;position:fixed;bottom:20px;text-align:center;width:100%;color:#fff;line-height:20px;font-size:12px;height:auto}
+.con .sou #word{backdrop-filter: blur(10px);width:calc(100% - 70px);padding: 15px;border-radius:10px;left:20px;position:absolute;z-index:500;top:65px;background:#ffffffb0;;line-height:30px;font-size:16px;overflow:hidden;display:none; box-shadow: 0 0.5rem 0.625rem #d4d4d4f2}
+.con .sou #word li{cursor:pointer;color:#555;margin: 5px;padding: 2px 5px;}
+li.selected{background:#ffffffd1;}
+#word li:hover {background-color: #ffffffd1;}
+.foot{text-shadow: 0px 0px 5px black;position:relative;bottom:20px;text-align:center;width:100%;color:#fff;line-height:20px;font-size:12px;height:auto}
 .foot a{color:#fff}
 .home{width:50px;height:50px;position:absolute;right:70px;top:10px;z-index:200;cursor:pointer}
 .home a{font-size:20px;color:#999;line-height:50px;display:block;text-align:center}
 #menu{width:50px;height:50px;background: #f4f6f900;border-radius: 50%;transform:scale(0.8);position:absolute;right:10px;top:5px;z-index:2000000;cursor:pointer;transition:0.5s}
 #menu i{position:absolute;left:0;right:0;margin:24px auto;width:30px;height:2px;background:#fff}
-#menu i:before{content:'';width:20px;height:2px;top:-8px;background:#fff;position:absolute;right:0}
-#menu i:after{content:'';width:20px;height:2px;bottom:-8px;background:#fff;position:absolute;left:0}
+#menu i:before{content:'';width:30px;height:3px;top:-8px;background:#fff;position:absolute;right:0}
+#menu i:after{content:'';width:30px;height:3px;bottom:-8px;background:#fff;position:absolute;left:0}
 #menu.on{right:380px;background:#f4f6f900;border-radius:25px}
 #menu.on i{width:20px;background:#fff}
 #menu.on i:before{top:-5px;transform:rotate(45deg);width:14px;right:-1px;left:auto;background:#fff}
@@ -53,11 +54,11 @@ h2.title{text-align:center;color:#fff;font-size:26px;font-weight:600;text-shadow
 .list ul li.title{width:100%;height:40px;line-height:40px;margin:20px 0 0;text-align:center;text-indent:10px;color:#fff;font-size:18px;font-weight:bold}
 svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:currentColor;overflow:hidden}
 .list ul li.title svg.icon{width:20px;height:20px}
-@media (max-width:640px){.con{top:0px}
+@media (max-width:640px){.con{top:80px}
 .con .shlogo{width:auto;height:auto}
 .con .sou .lylme .wd:focus{background:#f1f1f1;box-shadow:none;border-color:#ccc}
 .con .sou .lylme button{border-radius:25px}
-.con .sou #word{max-height:150px}
+.con .sou #word{max-height:50vh}
 #menu.on{right:270px}
 .list{width:227px}
 .list ul{width:220px}
@@ -71,12 +72,38 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 }@media (prefers-color-scheme:dark){body{background-color:#162035}
 .mywth{color:#bbb}
 .con .sou .lylme .wd:focus{background:#293550;border:1px solid #162035}
-.con .sou .lylme .wd{border:1px solid #293550;color:#bbb}
+.con .sou .lylme .wd{border:1px solid #293550;color:#ffffff}
 .con .sou #word{border:15px solid #293550;background:#293550}
 .con .sou #word .click_work{color:#89b}
 }::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:#222d46;border-radius:0px}
-::-webkit-scrollbar-thumb{background:#293550;border-radius:0px}
-::-webkit-scrollbar-thumb:hover{background:#293550}
-::-webkit-scrollbar-corner{background:#222d46}
+::-webkit-scrollbar-thumb{background:none;border-radius:0px}
+::-webkit-scrollbar-thumb:hover{background:none}
+::-webkit-scrollbar-corner{background:none}
 .hide {display:none}
+#content {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+a.icp {
+    margin: 0 5px;
+}
+p.yan {
+    text-shadow: 0px 0px 5px black;
+    text-align: center;
+    width: 100%;
+    color: #fff;
+    font-size: 12px;
+    margin: 40px auto;
+}
+.con .sou .lylme .wd::-webkit-input-placeholder {
+    color: #fff;
+}
+.con .sou .lylme .wd:focus::-webkit-input-placeholder {
+    color: #555;
+}
+.htmlcode {
+    width: 90%;
+    margin: 50px auto 30px;
+}

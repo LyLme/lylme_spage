@@ -1,6 +1,3 @@
-//天气插件
-WIDGET={"CONFIG":{"modules":"12043","background":"5","tmpColor":"FFFFFF","tmpSize":"16","cityColor":"FFFFFF","citySize":"18","aqiColor":"FFFFFF","aqiSize":"16","weatherIconSize":"24","alertIconSize":"18","padding":"0px 0px 0px 0px","shadow":"0","language":"auto","fixed":"false","vertical":"center","horizontal":"center","right":"0","top":"0","key":"9d714f8dd6b94c7696f9cea8dc3ed1c5"}}
-
 
 //输入框获取焦点
 window.onload= function () {
@@ -9,52 +6,106 @@ window.onload= function () {
 
 } 
 
+const searchInput = document.getElementById('search-text');
+const wordList = document.getElementById('word').getElementsByTagName('li');
+let selectedWordIndex = -1;
+let ignoreKeyEvents = false; // 新增标志用于判断是否忽略键盘事件
+
+// 监听键盘事件
+searchInput.addEventListener('keydown', function(event) {
+    switch(event.key) {
+        case 'ArrowUp':
+            event.preventDefault();
+            selectPreviousWord();
+            fillInputWithSelectedWord();
+            break;
+        case 'ArrowDown':
+            event.preventDefault();
+            selectNextWord();
+            fillInputWithSelectedWord();
+            break;
+        default:
+            ignoreKeyEvents = false; // 其他键盘事件恢复正常
+            break;
+    }
+});
+
+// 选中上一个选项
+function selectPreviousWord() {
+    if (selectedWordIndex > 0) {
+        wordList[selectedWordIndex].classList.remove('selected');
+        selectedWordIndex--;
+        wordList[selectedWordIndex].classList.add('selected');
+    }
+}
+
+// 选中下一个选项
+function selectNextWord() {
+    if (selectedWordIndex < wordList.length - 1) {
+        if (selectedWordIndex >= 0) {
+            wordList[selectedWordIndex].classList.remove('selected');
+        }
+        selectedWordIndex++;
+        wordList[selectedWordIndex].classList.add('selected');
+    }
+}
+
+// 将选中的选项填入输入框
+function fillInputWithSelectedWord() {
+    if (selectedWordIndex !== -1) {
+        searchInput.value = wordList[selectedWordIndex].innerText;
+        ignoreKeyEvents = true; // 标记忽略键盘事件
+    }
+}
+
 //关键词sug
 $(function() {
     //当键盘键被松开时发送Ajax获取数据
-    $('#search-text').keyup(function() {
-        var keywords = $(this).val();
-        if (keywords == '') { $('#word').hide(); return };
-        $.ajax({
-            url: 'https://suggestion.baidu.com/su?wd=' + keywords,
-            dataType: 'jsonp',
-            jsonp: 'cb', //回调函数的参数名(键值)key
-            // jsonpCallback: 'fun', //回调函数名(值) value
-            beforeSend: function() {
-                // $('#word').append('<li>正在加载。。。</li>');
-            },
-            success: function(data) {
-                $('#word').empty().show();
-                if (data.s == '') {
-                    // $('#word').append('<div class="error">暂无  ' + keywords + ' 相关索引</div>');
-                    $('#word').empty();
+    $('#search-text').on('keyup', function() {
+        if (!ignoreKeyEvents) { // 只有在标志为false时才执行
+            var keywords = $(this).val();
+            if (keywords == '') { $('#word').hide(); return };
+            $.ajax({
+                url: 'https://suggestion.baidu.com/su?wd=' + keywords,
+                dataType: 'jsonp',
+                jsonp: 'cb',
+                beforeSend: function() {
+                    // $('#word').append('<li>正在加载。。。</li>');
+                },
+                success: function(data) {
+                    $('#word').empty().show();
+                    if (data.s == '') {
+                        $('#word').empty();
+                        $('#word').hide();
+                    }
+                    $.each(data.s, function() {
+                        $('#word').append('<li>' + this + '</li>');
+                    })
+                    // 重新设置选中词汇的索引
+                    selectedWordIndex = -1;
+                },
+                error: function() {
+                    $('#word').empty().show();
                     $('#word').hide();
                 }
-                $.each(data.s, function() {
-                    $('#word').append('<li>' + this + '</li>');
-                })
-            },
-            error: function() {
-                $('#word').empty().show();
-                //$('#word').append('<div class="click_work">Fail "' + keywords + '"</div>');
-                $('#word').hide();
-            }
-        })
-    })
+            })
+        }
+    });
     //点击搜索数据复制给搜索框
     $(document).on('click', '#word li', function() {
         var word = $(this).text();
         $('#search-text').val(word);
         $('#word').empty();
         $('#word').hide();
-        //$("form").submit();
-         $('.submit').trigger('click');//触发搜索事件
+		$('.submit').trigger('click');//触发搜索事件
     })
     $(document).on('click', '.container,.banner-video,nav', function() {
         $('#word').empty();
         $('#word').hide();
     })
 })
+
+
 
 $(function(){
     $('.type-right').click(function(e){
@@ -101,7 +152,7 @@ function show() {
 	document.getElementById("show_time").innerHTML = format;
 	return show;
 }
-setInterval(show(), 500);
+setInterval(show(), 1000);
  
 
 !
@@ -175,6 +226,7 @@ function() {
 	d.addEventListener("change", q), b.addEventListener("submit", r)
 	 
 }();
+
 
 //返回顶部
 (function(a){a.fn.scrollToTop=function(c){var d={speed:800};c&&a.extend(d,{speed:c});return this.each(function(){var b=a(this);a(window).scroll(function(){100<a(this).scrollTop()?b.fadeIn():b.fadeOut()});b.click(function(b){b.preventDefault();a("body, html").animate({scrollTop:0},d.speed)})})}})(jQuery);$(function(){ahtml='<a href="javascript:void(0)" id="toTop" style="display:none;position:fixed;bottom:66px;right:10px;width:48px;height:48px;background-image:url(\'data:image/svg+xml;base64,PHN2ZyB0PSIxNjU0OTM5MTkxNTY0IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjEyMTgiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCI+PHBhdGggZD0iTTUxMyAxMDMuN2MtMjI2LjEgMC00MDkuNCAxODMuMy00MDkuNCA0MDkuNFMyODYuOSA5MjIuNiA1MTMgOTIyLjZzNDA5LjQtMTgzLjMgNDA5LjQtNDA5LjRTNzM5LjEgMTAzLjcgNTEzIDEwMy43eiBtMTUzLjUgMzY0LjdjLTUuMiA1LjMtMTIuMSA3LjktMTkgNy45cy0xMy44LTIuNi0xOS03LjlMNTQ1LjEgMzg1YzAgMC40IDAuMSAwLjcgMC4xIDEuMVY3MDVjMCAxMS4xLTUuNyAyMC45LTE0LjQgMjYuNi00LjcgNC4yLTEwLjkgNi43LTE3LjcgNi43LTYuOCAwLTEzLTIuNS0xNy43LTYuNy04LjctNS43LTE0LjQtMTUuNS0xNC40LTI2LjZWMzg2LjFjMC0wLjQgMC0wLjcgMC4xLTEuMWwtODMuNCA4My40Yy0xMC41IDEwLjUtMjcuNSAxMC41LTM4IDBzLTEwLjUtMjcuNSAwLTM4TDQ5NCAyOTUuOWMxMC41LTEwLjUgMjcuNS0xMC41IDM4IDBsMTM0LjUgMTM0LjVjMTAuNSAxMC40IDEwLjUgMjcuNSAwIDM4eiIgZmlsbD0iIzE1NzJlZiIgcC1pZD0iMTIxOSI+PC9wYXRoPjwvc3ZnPg==\');z-index:999;opacity:0.9;"></a>';$("body").append(ahtml);$("#toTop").scrollToTop(300);});
