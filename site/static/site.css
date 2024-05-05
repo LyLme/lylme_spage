@@ -708,6 +708,7 @@ html.night-mode .tip-text::after {
 }
 
 .site-left-column {
+    width: 100%;
     background: #ffffffb3;
     border-radius: 10px;
     padding: 10px;
@@ -751,7 +752,7 @@ p#site_keyword span {
     padding: 2px;
     border-radius: 10px;
     background: #f9f9f9;
-    box-shadow: 0 0 8px 2px #b9b9b9;
+    box-shadow: 0 0 8px 2px #ededed;
 }
 
 .site-right-logo img,
