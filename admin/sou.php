@@ -3,20 +3,20 @@ $title = '搜索引擎设置';
 include './head.php';
 $sousrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_sou`"));
 ?>
-    <main class="lyear-layout-content">
-      
-      <div class="container-fluid">
-        
+<main class="lyear-layout-content">
+
+    <div class="container-fluid">
+
         <div class="row">
-          <div class="col-lg-12">
-            <div class="card">
-              <div class="card-body">
-<?php
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <?php
 
-$set = isset($_GET['set']) ? $_GET['set'] : null;
+                        $set = isset($_GET['set']) ? $_GET['set'] : null;
 
-if($set == 'add') {
-    echo '<h4>新增搜索接</h4>
+                        if ($set == 'add') {
+                            echo '<h4>新增搜索接</h4>
 <div class="panel-body">
 <form action="./sou.php?set=add_submit" method="POST">
 <div class="form-group">
@@ -67,12 +67,12 @@ if($set == 'add') {
 </div>
 <br/><a href="./sou.php"><<返回</a>
 </div></div>';
-} elseif($set == 'edit') {
-    $id = $_GET['id'];
+                        } elseif ($set == 'edit') {
+                            $id = $_GET['id'];
 
-    $row2 = $DB->query("select * from lylme_sou where sou_id='$id' limit 1");
-    $row = $DB->fetch($row2);
-    echo '<h4>修改搜索引擎</h4>
+                            $row2 = $DB->query("select * from lylme_sou where sou_id='$id' limit 1");
+                            $row = $DB->fetch($row2);
+                            echo '<h4>修改搜索引擎</h4>
 <div class="panel-body">
 <form action="./sou.php?set=edit_submit&id=' . $id . '" method="POST">
 <div class="form-group">
@@ -119,10 +119,10 @@ if($set == 'add') {
                       <label class="btn-block" for="web_tq_status">启用开关</label>
                       <label class="lyear-switch switch-solid switch-primary">
                         <input type="checkbox"';
-    if($row['sou_st'] == 1) {
-        echo 'checked="checked"';
-    }
-    echo 'name="st" value="true">
+                            if ($row['sou_st'] == 1) {
+                                echo 'checked="checked"';
+                            }
+                            echo 'name="st" value="true">
                         <span></span>
                       </label>
                       <small class="help-block">说明：是否启用该搜索引擎(默认启用) </small>
@@ -132,112 +132,112 @@ if($set == 'add') {
 </div>
 <br/><a href="./sou.php"><<返回</a>
 </div></div>';
-} elseif($set == 'add_submit') {
-    $name = $_POST['name'];
-    $alias = $_POST['alias'];
-    $hint = $_POST['hint'];
-    $link = $_POST['link'];
-    $waplink = $_POST['waplink'];
-    $color = $_POST['color'];
-    $icon = $_POST['icon'];
-    if($_POST['st'] == true) {
-        $st = 1;
-    } else {
-        $st = 0;
-    }
-    $sou_order = $sousrows + 1;
+                        } elseif ($set == 'add_submit') {
+                            $name = $_POST['name'];
+                            $alias = $_POST['alias'];
+                            $hint = $_POST['hint'];
+                            $link = $_POST['link'];
+                            $waplink = $_POST['waplink'];
+                            $color = $_POST['color'];
+                            $icon = $_POST['icon'];
+                            if ($_POST['st'] == true) {
+                                $st = 1;
+                            } else {
+                                $st = 0;
+                            }
+                            $sou_order = $sousrows + 1;
 
-    if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon)) {
-        echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
-    } else {
+                            if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon)) {
+                                echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
+                            } else {
 
-        $sql = "INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `sou_color`, `sou_link`, `sou_waplink`, `sou_icon`, `sou_st`, `sou_order`) VALUES
+                                $sql = "INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `sou_color`, `sou_link`, `sou_waplink`, `sou_icon`, `sou_st`, `sou_order`) VALUES
 (NULL, '" . $alias . "', '" . $name . "', '" . $hint . "', '" . $color . "', '" . $link . "', '" . $waplink . "', '" . $icon . "', '" . $st . "', '" . $sou_order . "');
 ";
 
-        if($DB->query($sql)) {
-            echo '<script>alert("添加搜索引擎 ' . $name . ' 成功！");window.location.href="./sou.php";</script>';
-        } else {
-            echo '<script>alert("添加搜索引擎失败！");history.go(-1);</script>';
-        }
-    }
-} elseif($set == 'edit_submit') {
-    $id = $_GET['id'];
-    $rows2 = $DB->query("select * from lylme_sou where sou_id='$id' limit 1");
-    $rows = $DB->fetch($rows2);
-    if(!$rows) {
-        echo '<script>alert("当前记录不存在！");history.go(-1);</script>';
-    }
-    $name = $_POST['name'];
-    $alias = $_POST['alias'];
-    $hint = $_POST['hint'];
-    $link = $_POST['link'];
-    $waplink = $_POST['waplink'];
-    $color = $_POST['color'];
-    $icon = $_POST['icon'];
-    $order = $_POST['order'];
-    if($_POST['st'] == true) {
-        $st = 1;
-    } else {
-        $st = 0;
-    }
+                                if ($DB->query($sql)) {
+                                    echo '<script>alert("添加搜索引擎 ' . $name . ' 成功！");window.location.href="./sou.php";</script>';
+                                } else {
+                                    echo '<script>alert("添加搜索引擎失败！");history.go(-1);</script>';
+                                }
+                            }
+                        } elseif ($set == 'edit_submit') {
+                            $id = $_GET['id'];
+                            $rows2 = $DB->query("select * from lylme_sou where sou_id='$id' limit 1");
+                            $rows = $DB->fetch($rows2);
+                            if (!$rows) {
+                                echo '<script>alert("当前记录不存在！");history.go(-1);</script>';
+                            }
+                            $name = $_POST['name'];
+                            $alias = $_POST['alias'];
+                            $hint = $_POST['hint'];
+                            $link = $_POST['link'];
+                            $waplink = $_POST['waplink'];
+                            $color = $_POST['color'];
+                            $icon = $_POST['icon'];
+                            $order = $_POST['order'];
+                            if ($_POST['st'] == true) {
+                                $st = 1;
+                            } else {
+                                $st = 0;
+                            }
 
-    if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon) && empty($order)) {
-        echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
-    } else {
+                            if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon) && empty($order)) {
+                                echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
+                            } else {
 
-        $sql = "UPDATE `lylme_sou` SET `sou_alias` = '" . $alias . "', `sou_name` = '" . $name . "', `sou_hint` = '" . $hint . "', `sou_color` = '" . $color . "', `sou_link` = '" . $link . "', `sou_waplink` = '" . $waplink . "', `sou_icon` = '" . $icon . "', `sou_st` = '" . $st . "', `sou_order` = '" . $order . "' WHERE `lylme_sou`.`sou_id` = " . $id . ";";
+                                $sql = "UPDATE `lylme_sou` SET `sou_alias` = '" . $alias . "', `sou_name` = '" . $name . "', `sou_hint` = '" . $hint . "', `sou_color` = '" . $color . "', `sou_link` = '" . $link . "', `sou_waplink` = '" . $waplink . "', `sou_icon` = '" . $icon . "', `sou_st` = '" . $st . "', `sou_order` = '" . $order . "' WHERE `lylme_sou`.`sou_id` = " . $id . ";";
 
 
-        if($DB->query($sql)) {
-            echo '<script>alert("修改搜索引擎 ' . $name . ' 成功！");window.location.href="./sou.php";</script>';
-        } else {
-            echo '<script>alert("修改失败！");history.go(-1);</script>';
-        }
-    }
-} elseif($set == 'delete') {
-    $id = $_GET['id'];
-    $sql = "DELETE FROM lylme_sou WHERE sou_id='$id'";
-    if($DB->query($sql)) {
-        echo '<script>alert("删除成功！");window.location.href="./sou.php";</script>';
-    } else {
-        echo '<script>alert("删除失败！");history.go(-1);</script>';
-    }
-} else {
-    echo '<div class="alert alert-info">系统共有 <b>' . $sousrows . '</b> 个搜索引擎<br/><a href="./sou.php?set=add" class="btn btn-primary">新增搜索引擎</a></div> <div class="table-responsive">
+                                if ($DB->query($sql)) {
+                                    echo '<script>alert("修改搜索引擎 ' . $name . ' 成功！");window.location.href="./sou.php";</script>';
+                                } else {
+                                    echo '<script>alert("修改失败！");history.go(-1);</script>';
+                                }
+                            }
+                        } elseif ($set == 'delete') {
+                            $id = $_GET['id'];
+                            $sql = "DELETE FROM lylme_sou WHERE sou_id='$id'";
+                            if ($DB->query($sql)) {
+                                echo '<script>alert("删除成功！");window.location.href="./sou.php";</script>';
+                            } else {
+                                echo '<script>alert("删除失败！");history.go(-1);</script>';
+                            }
+                        } else {
+                            echo '<div class="alert alert-info">系统共有 <b>' . $sousrows . '</b> 个搜索引擎<br/><a href="./sou.php?set=add" class="btn btn-primary">新增搜索引擎</a></div> <div class="table-responsive">
         <table class="table table-striped">
           <thead><tr><th>排序权重</th><th>名称</th><th>别名</th><th>地址</th><th>状态</th><th>操作</th></tr></thead>
           <tbody>';
 
 
-    $rs = $DB->query("SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` ASC");
-    while($res = $DB->fetch($rs)) {
-        echo '<tr><td><b>' . $res['sou_order'] . '</b></td><td><b><font color="' . $res['sou_color'] . '">' . $res['sou_name'] . '</font></b></td><td>' . $res['sou_alias'] . '</td><td>' . $res['sou_link'] . '</td><td>';
+                            $rs = $DB->query("SELECT * FROM `lylme_sou` ORDER BY `lylme_sou`.`sou_order` ASC");
+                            while ($res = $DB->fetch($rs)) {
+                                echo '<tr><td><b>' . $res['sou_order'] . '</b></td><td><b><font color="' . $res['sou_color'] . '">' . $res['sou_name'] . '</font></b></td><td>' . $res['sou_alias'] . '</td><td>' . $res['sou_link'] . '</td><td>';
 
-        if($res['sou_st'] == 1) {
-            echo '<span class="label label-success">开启</span>';
-        } else {
-            echo '<span class="label label-danger">关闭</span>';
-        }
+                                if ($res['sou_st'] == 1) {
+                                    echo '<span class="label label-success">开启</span>';
+                                } else {
+                                    echo '<span class="label label-danger">关闭</span>';
+                                }
 
-        echo '</td><td><a href="./sou.php?set=edit&id=' . $res['sou_id'] . '" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./sou.php?set=delete&id=' . $res['sou_id'] . '" class="btn btn-xs btn-danger" onclick="return confirm(\'确定删除 ' . $res['sou_name'] . '\');">删除</a></td></tr>';
-    }
-    ?>
-          </tbody>
-        </table>
-      </div>
+                                echo '</td><td><a href="./sou.php?set=edit&id=' . $res['sou_id'] . '" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./sou.php?set=delete&id=' . $res['sou_id'] . '" class="btn btn-xs btn-danger" onclick="return confirm(\'确定删除 ' . $res['sou_name'] . '\');">删除</a></td></tr>';
+                            }
+                        ?>
+                            </tbody>
+                            </table>
                     </div>
+                </div>
             </div>
-          </div>
-          
         </div>
-        
-      </div>
-      
-    </main>
+
+    </div>
+
+    </div>
+
+</main>
 <?php
 
-}
+                        }
 
-include './footer.php';
+                        include './footer.php';
 ?>
