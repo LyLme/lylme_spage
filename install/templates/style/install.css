@@ -349,3 +349,18 @@ input[type="text"]:focus, input[type="password"]:focus {
     border: 1px solid #666;
     text-decoration: none;
 }
+.installed {
+    margin: 0.8rem 0 2rem;
+}
+
+.installed a {
+    background: #46a6ff;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    color: #fff;
+    text-decoration: none !important;
+}
+.installed .admin {
+    background: #49739a;
+}
