@@ -74,7 +74,7 @@ if($set == 'save') {
                     <label for="confirm-password">确认新密码</label>
                     <input type="password" class="form-control" name="confirmpwd" id="confirm-password" placeholder="重复输入新的密码">
                   </div>
-                  <button type="submit" class="btn btn-primary">修改</button>
+                  <button type="submit" class="btn btn-primary btn-block">修改</button>
                 </form>
        
               </div>

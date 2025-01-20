@@ -1,13 +1,4 @@
 <?php
-/* 
- * @Description: 后台首页
- * @Author: LyLme admin@lylme.com
- * @Date: 2024-01-23 12:25:35
- * @LastEditors: LyLme admin@lylme.com
- * @LastEditTime: 2024-04-09 02:09:02
- * @FilePath: /lylme_spage/admin/index.php
- * @Copyright (c) 2024 by LyLme, All Rights Reserved. 
- */
 $title = '后台管理';
 include './head.php';
 $last = date("Ym");
@@ -157,9 +148,10 @@ if (!empty($update)) {
 					<b>程序名称：</b>六零导航页(LyLme Spage)
 				</li>
 				<li class="list-group-item">
-					<b>授权状态：</b>
-					<a href="https://www.lylme.com/spage/" target="_blank">查询</a>
+					<b>授权状态：<?php echo  siteurl(2, 2) ?></b>
+					<a href="https://www.lylme.com/spage/?url=<?php echo  siteurl(2, 2) ?>" target="_blank">查询</a>
 				</li>
+
 				<li class="list-group-item">
 					<b>建站日期：</b><?php echo $conf['build'] ?>
 				</li>
@@ -167,7 +159,7 @@ if (!empty($update)) {
 					<b>当前版本：</b><?php echo $conf['version'] ?> <a href="./update.php" target="_blank">检查更新</a>
 				</li>
 				<li class="list-group-item">
-					<b>最新版本：</b> <?php echo $update['version'] ?> <a href="https://doc.lylme.com/spage/#/logs target=" _blank">更新日志</a>
+					<b>最新版本：</b> <?php echo $update['version'] ?> <a href="https://doc.lylme.com/spage/#/logs" target="_blank">更新日志</a>
 				</li>
 				<li class="list-group-item">
 					<b>项目作者：</b>六零 <a href="https://www.lylme.com/support/" target="_blank">捐赠作者</a>

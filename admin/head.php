@@ -1,13 +1,4 @@
 <?php
-/* 
- * @Description: 
- * @Author: LyLme admin@lylme.com
- * @Date: 2024-01-23 12:25:35
- * @LastEditors: LyLme admin@lylme.com
- * @LastEditTime: 2024-04-14 14:16:13
- * @FilePath: /lylme_spage/admin/head.php
- * @Copyright (c) 2024 by LyLme, All Rights Reserved. 
- */
 include_once("../include/common.php");
 if (isset($islogin) == 1) {
 } else {
@@ -63,6 +54,8 @@ if (isset($islogin) == 1) {
             <li class="nav-item active"> <a href="./pwd.php"><i class="mdi mdi-key-variant"></i>加密管理</a></li>
             <li class="nav-item active"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
             <li class="nav-item active"> <a href="./wxplus.php"><i class="mdi mdi-wechat"></i>微信推送</a> </li>
+            <li class="nav-item active"> <a href="./license.php"><i class="mdi mdi-checkbox-marked-circle"></i>网站授权</a> </li>
+         
             <li> <a href="javascript:loginout()"><i class="mdi mdi-logout"></i> 退出登录</a> </li>
           </ul>
         </nav>
