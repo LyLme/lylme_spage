@@ -1,13 +1,4 @@
 <?php
-/* 
- * @Description: 后台登录页
- * @Author: LyLme admin@lylme.com
- * @Date: 2024-01-23 12:25:35
- * @LastEditors: LyLme admin@lylme.com
- * @LastEditTime: 2024-04-14 02:19:49
- * @FilePath: /lylme_spage/admin/login.php
- * @Copyright (c) 2024 by LyLme, All Rights Reserved. 
- */
 include("../include/common.php");
 header('Content-Type: text/html; charset=UTF-8');
 if (isset($_POST['user']) && isset($_POST['pass'])) {
@@ -21,19 +12,25 @@ if (isset($_POST['user']) && isset($_POST['pass'])) {
         $session = md5($user . $pass);
         $token = authcode("{$user}\t{$session}", 'ENCODE', SYS_KEY);
         setcookie("admin_token", $token, time() + 604800, "/");
+        unset($_SESSION['authcode']);
         exit("<script language='javascript'>alert('登陆管理中心成功！');window.location.href='./';</script>");
       } elseif ($pass != $conf['admin_pwd']) {
+        setcookie("login_failed", 1);
+        unset($_SESSION['authcode']);
         exit("<script language='javascript'>alert('用户名或密码不正确！');history.go(-1);</script>");
       }
     } else {
+      unset($_SESSION['authcode']);
       exit("<script language='javascript'>alert('验证码错误');history.go(-1);</script>");
     }
   }
 } elseif (isset($_GET['logout'])) {
   setcookie("admin_token", "", time() - 604800, "/");
   exit("<script language='javascript'>alert('您已成功注销本次登陆！');window.location.href='./login.php';</script>");
-} elseif (isset($islogin) == 1) {
-  exit("<script language='javascript'>alert('您已登陆！');window.location.href='./';</script>");
+} elseif (isset($islogin)) {
+  if ($islogin == 1) {
+    exit("<script language='javascript'>alert('您已登陆！');window.location.href='./';</script>");
+  }
 }
 ?>
 <!DOCTYPE html>
@@ -112,7 +109,7 @@ if (isset($_POST['user']) && isset($_POST['pass'])) {
         </div>
         <form action="" method="post">
           <div class="form-group has-feedback feedback-left">
-            <input type="text" placeholder="用户名" class="form-control" name="user" id="username" value="<?php echo $_POST['user'] ?>" />
+            <input type="text" placeholder="用户名" class="form-control" name="user" id="username" value="<?php echo isset($_POST['user']) ? $_POST['user'] : "" ?>" />
             <span class="mdi mdi-account form-control-feedback" aria-hidden="true"></span>
           </div>
           <div class="form-group has-feedback feedback-left">
@@ -122,7 +119,7 @@ if (isset($_POST['user']) && isset($_POST['pass'])) {
 
           <div class="form-group has-feedback feedback-left row">
             <div class="col-xs-8">
-              <input type="text" name="authcode" class="form-control" placeholder="验证码" required>
+              <input type="text" name="authcode" autocomplete="off" class="form-control" placeholder="验证码" required>
               <span class="mdi mdi-check form-control-feedback" aria-hidden="true"></span>
             </div>
             <div class="col-xs-4">
@@ -132,6 +129,10 @@ if (isset($_POST['user']) && isset($_POST['pass'])) {
           <div class="form-group">
             <button class="btn btn-block btn-primary" type="submit" id="login">登录</button>
           </div>
+          <?php
+          if (isset($_COOKIE['login_failed'])) {
+            echo '  <p class="m-b-0 text-right"><a target="_blank" title="忘记后台密码" href="https://doc.lylme.com/spage/#/reset">忘记密码</a></p>';
+          } ?>
         </form>
         <hr>
         <footer class="col-sm-12 text-center">
@@ -143,6 +144,10 @@ if (isset($_POST['user']) && isset($_POST['pass'])) {
   <script type="text/javascript" src="../assets/admin/js/jquery.min.js"></script>
   <script type="text/javascript" src="../assets/admin/js/bootstrap.min.js"></script>
   <script>
+    $(document).ready(function() {
+      recode()
+    });
+
     function recode() {
       $('#captcha_img').attr('src', '../include/validatecode.php?r=' + Math.random());
       $("input[name=\'authcode\']").val('');
