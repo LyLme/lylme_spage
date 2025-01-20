@@ -133,7 +133,7 @@
 				</div>
 			</div>
 			<form action="https://www.bing.com/search?q=" method="get" target="_blank" id="super-search-fm">
-				<input type="text" id="search-text" placeholder="搜索一下" style="outline:0" autocomplete="off">
+				<input type="text" id="search-text" placeholder="搜索一下" name="q" style="outline:0" autocomplete="off">
 				<button class="submit" type="submit">
 					<svg style="width: 22px; height: 22px; margin: 0 20px 0 20px; color: #fff;" class="icon" aria-hidden="true" viewBox="0 0 1024 1024">
 						<use xlink:href="#icon-sousuo">

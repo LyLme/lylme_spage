@@ -13,11 +13,13 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
         session_start();
         if (strtolower($_REQUEST['authcode']) == $_SESSION['authcode']) {
             $status = isset($conf["apply"]) ? $conf["apply"] : 0;
+            unset($_SESSION['authcode']);
             if ($status == 2) {
                 exit('{"code": "400", "msg": "网站已关闭收录"}');
             }
             exit(apply($_POST['name'], $_POST['url'], $_POST['icon'], $_POST['group_id'], $status));
         } else {
+            unset($_SESSION['authcode']);
             exit('{"code": "-6", "msg": "验证码错误"}');
         }
     }

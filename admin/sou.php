@@ -36,8 +36,8 @@ $sousrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_sou`"));
 <div class="form-group">
 <label>*搜索引擎地址: (*必填)</label><br>
 <input type="text" class="form-control" name="link" value="" required placeholder="如：https://www.baidu.com/s?word=">
-<small class="help-block">例：百度搜索 <code>https://www.baidu.com/s?word=</code>，<a href="https://blog.lylme.com/archives/lylme_spage.html#sou">查看获取接口教程</a>
-<br>注意：当前仅支持搜索词作为末尾，例如：<code>https://www.baidu.com/s?word=搜索内容</code><br>如果使用GET请求搜索，搜索词不处于末尾，如<code>https://www.baidu.com/s?wd=搜索词&ie=UTF-8</code>可将搜索词参数调换到末尾，如<code>https://www.baidu.com/s?ie=UTF-8&wd=搜索词</code>多个GET参数用以<code>&</code>分隔<br>如果搜索词不在末尾且非GET请求，如<code>https://xxx.com/s/搜索词.html</code>类似情况，可用PHP页面定制搜索接口<a href="https://blog.lylme.com/archives/lylme_spage.html#souphp">查看教程</a></small>
+<small class="help-block">例：百度搜索 <code>https://www.baidu.com/s?word=</code>，<a href="https://doc.lylme.com/spage/#/search-help">查看获取接口教程</a>
+<br>注意：当前仅支持搜索词作为末尾，例如：<code>https://www.baidu.com/s?word=搜索内容</code><br>如果使用GET请求搜索，搜索词不处于末尾，如<code>https://www.baidu.com/s?wd=搜索词&ie=UTF-8</code>可将搜索词参数调换到末尾，如<code>https://www.baidu.com/s?ie=UTF-8&wd=搜索词</code>多个GET参数用以<code>&</code>分隔<br>如果搜索词不在末尾且非GET请求，如<code>https://xxx.com/s/搜索词.html</code>类似情况，可用PHP页面定制搜索接口<a href="https://doc.lylme.com/spage/#/search-help">查看教程</a></small>
 </div>
 <div class="form-group">
 <label>搜索引擎手机端地址: (选填) </label><br>
@@ -92,7 +92,7 @@ $sousrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_sou`"));
 <div class="form-group">
 <label>*搜索引擎地址: (*必填)</label><br>
 <input type="text" class="form-control" name="link" value="' . $row['sou_link'] . '" required placeholder="如：https://www.baidu.com/s?word=">
-<small class="help-block">例：百度搜索 <code>https://www.baidu.com/s?word=</code>，<a href="https://blog.lylme.com/archives/lylme_spage.html#sou">查看获取接口教程</a>
+<small class="help-block">例：百度搜索 <code>https://www.baidu.com/s?word=</code>，<a href="https://doc.lylme.com/spage/#/search-help">查看获取接口教程</a>
 <br>注意：当前仅支持搜索词作为末尾，例如：<code>https://www.baidu.com/s?word=搜索内容</code><br>如果使用GET请求搜索，搜索词不处于末尾，如<code>https://www.baidu.com/s?wd=搜索词&ie=UTF-8</code>可将搜索词参数调换到末尾，如<code>https://www.baidu.com/s?ie=UTF-8&wd=搜索词</code>多个GET参数用以<code>&</code>分隔<br>如果搜索词不在末尾的，如<code>https://xxx.com/s/搜索词.html</code>类似情况，可用PHP定制搜索接口<a href="https://doc.lylme.com/spage/#/search-help">查看教程</a></small>
 </div>
 <div class="form-group">
