@@ -151,98 +151,104 @@
                 <div class="nk-content-body">
                     <div id="toollist">
                         <?php require_once("list.php"); ?>
-
                     </div>
                 </div>
             </div>
 
         </div>
-    </div>
-    </div>
+        <div class="nk-content-fluid">
+            <?php
+            if (theme_config('lytoday', 0) == 1) {
 
-    <!-- content @d -->
-    <div class="nk-footer nk-footer-fluid bg-lighter">
-        <div class="container-xl">
-            <div class="nk-footer-wrap">
-                <?php if (!empty($conf['wztj'])) {
-                    echo '<p>' . $conf["wztj"] . '</p>';
-                }
-                ?>
-                <div class="nk-footer-copyright">
-                    <?php if (!empty($conf['icp'])) {
-                        echo '<p><img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" rel="nofollow" class="icp nav-link" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a></p>';
+                echo theme_config('lytodaycode');
+            }
+            ?> </div>
+        </div>
+        </div>
+
+        <!-- content @d -->
+        <div class="nk-footer nk-footer-fluid bg-lighter">
+            <div class="container-xl">
+                <div class="nk-footer-wrap">
+                    <?php if (!empty($conf['wztj'])) {
+                        echo '<p>' . $conf["wztj"] . '</p>';
                     }
                     ?>
-                    <?php echo $conf['copyright'] ?>
+                    <div class="nk-footer-copyright">
+                        <?php if (!empty($conf['icp'])) {
+                            echo '<p><img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" rel="nofollow" class="icp nav-link" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a></p>';
+                        }
+                        ?>
+                        <?php echo $conf['copyright'] ?>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- footer @e -->
-    </div>
-    <!-- wrap @e -->
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/layer.js"></script>
-    <script src="<?php echo $templatepath; ?>/js/nioapp.min.js"></script>
-    <script src="<?php echo $templatepath; ?>/js/script.js?v=1001"></script>
-    <script src="<?php echo $templatepath; ?>/js/common.js?v=1002"></script>
-    <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
-    <?php
-    ?>
-    <script>
-        $(document).ready(function() {
-            $('#searchForm').submit(function(e) {
-                e.preventDefault();
+        <!-- footer @e -->
+        </div>
+        <!-- wrap @e -->
+        <script src="/assets/js/jquery.min.js"></script>
+        <script src="/assets/js/bootstrap.bundle.min.js"></script>
+        <script src="/assets/js/layer.js"></script>
+        <script src="<?php echo $templatepath; ?>/js/nioapp.min.js"></script>
+        <script src="<?php echo $templatepath; ?>/js/script.js?v=1001"></script>
+        <script src="<?php echo $templatepath; ?>/js/common.js?v=1002"></script>
+        <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
+        <?php
+        ?>
+        <script>
+            $(document).ready(function() {
+                $('#searchForm').submit(function(e) {
+                    e.preventDefault();
+                });
             });
-        });
-        function search() {
-            var searchWord = $('#searchkw').val();
-            if(!searchWord){
-                return false;
+            function search() {
+                var searchWord = $('#searchkw').val();
+                if (!searchWord) {
+                    return false;
+                }
+                var searchindex = '<?php echo theme_config('search', "https://cn.bing.com/search?q=") ?>';
+                if (searchindex.includes('%s')) {
+                    // 替换 %s  
+                    var searchUrl = searchindex.replace('%s', searchWord);
+                } else {
+                    // 如果不包含 %s，则将搜索词添加到 URL 末尾  
+                    var searchUrl = searchindex + searchWord;
+                }
+                window.open(searchUrl);
             }
-            var searchindex = '<?php echo theme_config('search', "https://cn.bing.com/search?q=")?>';
-            if (searchindex.includes('%s')) {
-                // 替换 %s  
-                var searchUrl = searchindex.replace('%s', searchWord);
-            } else {
-                // 如果不包含 %s，则将搜索词添加到 URL 末尾  
-                var searchUrl = searchindex + searchWord;
-            }
-            window.open(searchUrl);
-        }
-    </script>
-    <script>
-        var tool_list = <?php echo (json_encode(listjson())) ?>;
-        var tools = [];
-        var searchkw = '';
+        </script>
+        <script>
+            var tool_list = <?php echo (json_encode(listjson())) ?>;
+            var tools = [];
+            var searchkw = '';
 
-        function show_category_btn(catid) {
-            if (catid == 0) {
-                $("#link_content").show();
-                $(".category-all").addClass("active");
-                $(".category-item").removeClass("active");
-            } else {
-                $("#link_content").hide();
-                $(".category-all").removeClass("active");
-                $(".category-item").removeClass("active");
-                $.each($(".category-item"), function(index, value) {
-                    if ($(value).attr('data-id') == catid) {
-                        $(value).addClass("active");
-                    }
-                })
+            function show_category_btn(catid) {
+                if (catid == 0) {
+                    $("#link_content").show();
+                    $(".category-all").addClass("active");
+                    $(".category-item").removeClass("active");
+                } else {
+                    $("#link_content").hide();
+                    $(".category-all").removeClass("active");
+                    $(".category-item").removeClass("active");
+                    $.each($(".category-item"), function(index, value) {
+                        if ($(value).attr('data-id') == catid) {
+                            $(value).addClass("active");
+                        }
+                    })
+                }
             }
-        }
 
-        function show_tool_list(catid) {
-            searchkw = '';
-            $("#searchkw").val('');
-            show_category_btn(catid);
-            tools = [];
-            var html = '';
-            $.each(tool_list, function(index, value) {
-                if (catid != 0 && value.id != catid) return;
-                html += `
+            function show_tool_list(catid) {
+                searchkw = '';
+                $("#searchkw").val('');
+                show_category_btn(catid);
+                tools = [];
+                var html = '';
+                $.each(tool_list, function(index, value) {
+                    if (catid != 0 && value.id != catid) return;
+                    html += `
 <div class="card card-preview category-card" data-category-id="${value.id}">
     <div class="card-inner mt-3">
         <div class="nya-title nk-ibx-action-item progress-rating">
@@ -250,28 +256,28 @@
             <span class="nk-menu-text font-weight-bold">${value.title}</span>
         </div>
     <div class="row g-2">`;
-                $.each(value.items, function(index, value) {
-                    tools.push(value);
-                    html += `
+                    $.each(value.items, function(index, value) {
+                        tools.push(value);
+                        html += `
             <div class="col-lg-3 col-md-4 col-6">
                 <a href="${value.url}" data-id="${value.id}" class="btn btn-wider btn-block btn-xl btn-outline-light tool-link" ${value.out?'target="_blank"':''}>${value.title}</a>
             </div>`
-                })
-                html += `
+                    })
+                    html += `
         </div>
     </div>
 </div>`;
-            });
-            $("#toollist").html(html);
-            bind_statistics();
-        }
+                });
+                $("#toollist").html(html);
+                bind_statistics();
+            }
 
-        function show_search_list() {
-            var list = tools.filter(v => {
-                return v.title.indexOf(searchkw) !== -1 || v.keyword != null && v.keyword.indexOf(searchkw) !== -1
-            })
-            var html = '';
-            html += `
+            function show_search_list() {
+                var list = tools.filter(v => {
+                    return v.title.indexOf(searchkw) !== -1 || v.keyword != null && v.keyword.indexOf(searchkw) !== -1
+                })
+                var html = '';
+                html += `
 <div class="card card-preview category-card">
     <div class="card-inner mt-3">
         <div class="nya-title nk-ibx-action-item progress-rating">
@@ -279,71 +285,71 @@
             <span class="nk-menu-text font-weight-bold">搜索结果</span>
         </div>
     <div class="row g-2">`;
-            if (list.length > 0) {
-                $.each(list, function(index, value) {
-                    html += `
+                if (list.length > 0) {
+                    $.each(list, function(index, value) {
+                        html += `
             <div class="col-lg-3 col-md-4 col-6">
                 <a href="${value.url}" data-id="${value.id}" class="btn btn-wider btn-block btn-xl btn-outline-light tool-link" ${value.out?'target="_blank"':''}>${value.title}</a>
             </div>`
-                })
-            } else {
-                html += `<p class="search-placeholder">暂无搜索结果</p>`
-            }
-            html += `
+                    })
+                } else {
+                    html += `<p class="search-placeholder">暂无搜索结果</p>`
+                }
+                html += `
         </div>
     </div>
 </div>`;
-            $("#toollist").html(html);
-            bind_statistics();
-            $("#link_content").hide();
-            $(".category-all").removeClass("active");
-            $(".category-item").removeClass("active");
-        }
+                $("#toollist").html(html);
+                bind_statistics();
+                $("#link_content").hide();
+                $(".category-all").removeClass("active");
+                $(".category-item").removeClass("active");
+            }
 
-        function watch_searchkw(kw) {
-            if (kw != searchkw) {
-                searchkw = kw;
-                if (searchkw == '') {
-                    show_tool_list(0)
-                } else {
-                    show_search_list()
+            function watch_searchkw(kw) {
+                if (kw != searchkw) {
+                    searchkw = kw;
+                    if (searchkw == '') {
+                        show_tool_list(0)
+                    } else {
+                        show_search_list()
+                    }
                 }
             }
-        }
 
-        function bind_statistics() {
-            $(".tool-link").click(function() {
-                var id = $(this).attr('data-id');
-                $.ajax({
-                    type: "POST",
-                    url: "/clitool",
-                    data: {
-                        id: id
-                    },
-                    dataType: 'json',
-                    async: true,
-                    success: function(data) {
-                        console.log('statistics ok ' + id)
+            function bind_statistics() {
+                $(".tool-link").click(function() {
+                    var id = $(this).attr('data-id');
+                    $.ajax({
+                        type: "POST",
+                        url: "/clitool",
+                        data: {
+                            id: id
+                        },
+                        dataType: 'json',
+                        async: true,
+                        success: function(data) {
+                            console.log('statistics ok ' + id)
+                        }
+                    });
+                });
+            }
+            $(document).ready(function() {
+                show_tool_list(0);
+                $("#searchkw").on('input', function() {
+                    watch_searchkw($(this).val().trim().toLowerCase())
+                });
+                $("#searchkw").change(function() {
+                    watch_searchkw($(this).val().trim().toLowerCase())
+                });
+                $(document).keydown(function(event) {
+                    if (event.ctrlKey && event.keyCode == 70) {
+                        $("#searchkw").focus();
+                        return false;
                     }
                 });
-            });
-        }
-        $(document).ready(function() {
-            show_tool_list(0);
-            $("#searchkw").on('input', function() {
-                watch_searchkw($(this).val().trim().toLowerCase())
-            });
-            $("#searchkw").change(function() {
-                watch_searchkw($(this).val().trim().toLowerCase())
-            });
-            $(document).keydown(function(event) {
-                if (event.ctrlKey && event.keyCode == 70) {
-                    $("#searchkw").focus();
-                    return false;
-                }
-            });
-        })
-    </script>
+            })
+        </script>
 
 
 </body>
