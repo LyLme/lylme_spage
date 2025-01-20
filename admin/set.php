@@ -1,13 +1,5 @@
 <?php
-/* 
- * @Description: 后台网站配置
- * @Author: LyLme admin@lylme.com
- * @Date: 2024-01-23 12:25:35
- * @LastEditors: LyLme admin@lylme.com
- * @LastEditTime: 2024-04-14 14:08:30
- * @FilePath: /lylme_spage/admin/set.php
- * @Copyright (c) 2024 by LyLme, All Rights Reserved. 
- */
+
 $title = '网站设置';
 include './head.php';
 $last = date("Ym");
@@ -20,55 +12,53 @@ if (@file_get_contents('log.txt') != $last || !file_exists('cache.php')) {
 }
 function uploadimg($arr, $uppath, $uptype)
 {
-	if ((($arr["type"] == "image/jpeg") || ($arr["type"] == "image/jpg") || ($arr["type"] == "image/png")) && $arr["size"] < 10485760) {
-		copy($arr["tmp_name"], ROOT . $uppath);
-		saveSetting($uptype, '/' . $uppath);
-	} elseif ($arr["size"] == 0) {
-	} else {
-		echo '<script>alert("上传的图片大小超过10MB或类型不符！");history.go(-1);</script>';
-	}
+    if ((($arr["type"] == "image/jpeg") || ($arr["type"] == "image/jpg") || ($arr["type"] == "image/png")) && $arr["size"] < 10485760) {
+        copy($arr["tmp_name"], ROOT . $uppath);
+        saveSetting($uptype, '/' . $uppath);
+    } elseif ($arr["size"] == 0) {
+    } else {
+        echo '<script>alert("上传的图片大小超过10MB或类型不符！");history.go(-1);</script>';
+    }
 }
 $set = isset($_GET['set']) ? $_GET['set'] : null;
 if ($set == 'save') {
-	$title = $_POST['title'];
-	$logo = $_POST['logo'];
-	$background = $_POST['background'];
-	$wapbackground = $_POST['wapbackground'];
-	$keywords = $_POST['keywords'];
-	$description = $_POST['description'];
-	$mode = $_POST['mode'];
-	$snapshot = $_POST['snapshot'];
-	$licensecode = $_POST['licensecode'];
-	$copyright = $_POST['copyright'];
-	$icp = $_POST['icp'];
-	$yan = $_POST['yan'];
-	$wztj = $_POST['wztj'];
-	$cdnpublic = $_POST['cdnpublic'];
-	if ($yan == 'true') {
-		saveSetting('yan', 'true');
-	} else {
-		saveSetting('yan', 'false');
-	}
-	saveSetting('tq', 'false');
-	saveSetting('title', $title, "网站名称");
-	saveSetting('logo', $logo, "网站LOGO");
-	saveSetting('background', $background, "背景图片");
-	saveSetting('wap_background', $wapbackground, "手机背景图片");
-	saveSetting('keywords', $keywords, "网站关键词");
-	saveSetting('description', $description, "网站描述");
-	saveSetting('mode', $mode, "网站运行模式");
-	saveSetting('snapshot', $snapshot, "详情页快照API");
-	saveSetting('copyright', $copyright, "底部版权");
-	saveSetting('icp', $icp, "ICP备案号");
-	saveSetting('wztj', $wztj, "自定义footer");
-	saveSetting('cdnpublic', $cdnpublic, "CDN地址");
-	saveSetting('c', $licensecode, "程序授权码");
-	uploadimg($_FILES["logoimg"], 'assets/img/web-logo.png', 'logo');
-	uploadimg($_FILES["wapbackgroundimg"], 'assets/img/web-wapbackground.jpg', 'wap_background');
-	uploadimg($_FILES["backgroundimg"], 'assets/img/web-background.jpg', 'background');
-	echo '<script>alert("修改成功！");window.location.href="./set.php";</script>';
+    $title = $_POST['title'];
+    $logo = $_POST['logo'];
+    $background = $_POST['background'];
+    $wapbackground = $_POST['wapbackground'];
+    $keywords = $_POST['keywords'];
+    $description = $_POST['description'];
+    $mode = $_POST['mode'];
+    $snapshot = $_POST['snapshot'];
+    $copyright = $_POST['copyright'];
+    $icp = $_POST['icp'];
+    $yan = $_POST['yan'];
+    $wztj = $_POST['wztj'];
+    $cdnpublic = $_POST['cdnpublic'];
+    if ($yan == 'true') {
+        saveSetting('yan', 'true');
+    } else {
+        saveSetting('yan', 'false');
+    }
+    saveSetting('tq', 'false');
+    saveSetting('title', $title, "网站名称");
+    saveSetting('logo', $logo, "网站LOGO");
+    saveSetting('background', $background, "背景图片");
+    saveSetting('wap_background', $wapbackground, "手机背景图片");
+    saveSetting('keywords', $keywords, "网站关键词");
+    saveSetting('description', $description, "网站描述");
+    saveSetting('mode', $mode, "网站运行模式");
+    saveSetting('snapshot', $snapshot, "详情页快照API");
+    saveSetting('copyright', $copyright, "底部版权");
+    saveSetting('icp', $icp, "ICP备案号");
+    saveSetting('wztj', $wztj, "自定义footer");
+    saveSetting('cdnpublic', $cdnpublic, "CDN地址");
+    uploadimg($_FILES["logoimg"], 'assets/img/web-logo.png', 'logo');
+    uploadimg($_FILES["wapbackgroundimg"], 'assets/img/web-wapbackground.jpg', 'wap_background');
+    uploadimg($_FILES["backgroundimg"], 'assets/img/web-background.jpg', 'background');
+    echo '<script>alert("修改成功！");window.location.href="./set.php";</script>';
 } else {
-?>
+    ?>
 	<script>
 		function updatetext(check) {
 			document.getElementById(check).innerHTML = "重新选择";
@@ -135,11 +125,15 @@ if ($set == 'save') {
 									<div class="form-group">
 										<label for="web_site_home-title">运行模式</label>
 										<label class="lyear-radio radio-primary m-t-10">
-											<input type="radio" <?php if (!$mode = $conf['mode'] == 2) echo 'checked="checked"'; ?> value="1" name="mode">
+											<input type="radio" <?php if (!$mode = $conf['mode'] == 2) {
+											    echo 'checked="checked"';
+											} ?> value="1" name="mode">
 											<span>直接访问(默认)</span>
 										</label>
 										<label class="lyear-radio radio-primary m-t-10">
-											<input type="radio" <?php if ($mode) echo 'checked="checked"'; ?> value="2" name="mode">
+											<input type="radio" <?php if ($mode) {
+											    echo 'checked="checked"';
+											} ?> value="2" name="mode">
 											<span>详情页模式</span>
 										</label>
 
@@ -164,25 +158,22 @@ if ($set == 'save') {
 										<label class="btn-block" for="web_yan_status">随机一言开关</label>
 										<label class="lyear-switch switch-solid switch-cyan">
 											<input type="checkbox" <?php if ($conf['yan'] != 'false') {
-																		echo 'checked="checked"';
-																	} ?> name="yan" value="true">
+											    echo 'checked="checked"';
+											} ?> name="yan" value="true">
 											<span></span>
 										</label>
 										<small class="help-block">显示在首页的随机一言，自定义一言文件路径，一行一条<code>/assets/date/date.dat</code> </small>
 									</div>
-					
+
 									<div class="form-group">
 										<label for="web_site_snapshot">详情页快照生成API</label>
-										<input class="form-control" type="text" id="web_site_snapshot" name="snapshot" value="<?php echo $conf['snapshot'] ?>" placeholder="请输入API接口地址">
+										<input class="form-control" type="text" id="web_site_snapshot" name="snapshot" value="<?php echo isset($conf['snapshot']) ? $conf['snapshot'] : "" ?>" placeholder="请输入API接口地址">
 										<small class="help-block">用于详情页生成网站缩略图，不填不启用，若不了解请留空 <a href="https://doc.lylme.com/spage/#/snapshot" target="_blank">查看教程</a></small>
 									</div>
+
+						
 									<div class="form-group">
-										<label for="web_site_licensecode">六零导航页授权密钥</label>
-										<input class="form-control" type="text" id="web_site_licensecode" name="licensecode" value="<?php echo $conf['c'] ?>" placeholder="请输入授权密钥">
-										<small class="help-block">微信关注【上云六零】公众号免费获取授权，授权后点击<a href="./update.php">检查更新</a>会自动下发授权密钥。<a href="https://doc.lylme.com/spage/#/license" target="_blank">查看说明</a> <br>内网用户需手动填入，当前域名：<code><?php echo $_SERVER['HTTP_HOST'] ?></code><br>授权正常请勿修改密钥</small>
-									</div>
-									<div class="form-group">
-										<button type="submit" class="btn btn-primary m-r-5">保 存</button>
+										<button type="submit" class="btn btn-primary btn-block">保 存</button>
 									</div>
 								</form>
 							</div>
