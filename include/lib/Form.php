@@ -635,6 +635,7 @@ str;
                     $name_placeholder = "{$init_data['placeholder']}[{$ke}]";
                 } else {
                     $name_str = $init_data['name'];
+                    $name_verify = "";
                     $name_placeholder = $init_data['placeholder'];
                 }
                 $html = <<<str
@@ -792,7 +793,7 @@ STR;
             <input type="checkbox" {$name_str} lay-skin="switch" {$checked}/>
 STR;
         } elseif ($init_data['type'] == 'textarea') {
-            $name_placeholder =  $init_data['placeholder'] ?: "请输入内容";
+            $name_placeholder =  isset($init_data['placeholder']) ? $init_data['placeholder'] : "请输入内容";
             $name_str = $init_data['name'] ?? '' ? "name=\"{$init_data['name']}\"" : '';
             $id_str = $init_data['name'] ?? '' ? "id=\"{$init_data['name']}\"" : '';
             $html = <<<STR
