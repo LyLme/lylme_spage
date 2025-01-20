@@ -30,17 +30,17 @@
     <div class="list closed">
         <?php
         $rel = $conf["mode"] == 2 ? '' : 'rel="nofollow"';
-        $html = array(
-            'g1' => '<ul class="mylist row">', //分组开始标签
-            'g2' => '<li class="title">{group_icon}<sapn>{group_name}</sapn></li>',  //分组内容
-            'g3' => '</ul>',  //分组结束标签
+    $html = array(
+        'g1' => '<ul class="mylist row">', //分组开始标签
+        'g2' => '<li class="title">{group_icon}<sapn>{group_name}</sapn></li>',  //分组内容
+        'g3' => '</ul>',  //分组结束标签
 
-            'l1' => '<li class="col-3 col-sm-3 col-md-3 col-lg-1">',  //链接开始标签
-            'l2' => '<a ' . $rel . ' href="{link_url}" target="_blank">{link_icon}<span>{link_name}</span></a>',  //链接内容
-            'l3' => '</li>',  //链接结束标签
-        );
-        lists($html);
-        ?>
+        'l1' => '<li class="col-3 col-sm-3 col-md-3 col-lg-1">',  //链接开始标签
+        'l2' => '<a ' . $rel . ' href="{link_url}" title="{link_name}"  target="_blank">{link_icon}<span>{link_name}</span></a>',  //链接内容
+        'l3' => '</li>',  //链接结束标签
+    );
+    lists($html);
+    ?>
     </div>
     <div id="content">
         <div class="con">
@@ -48,29 +48,29 @@
             <div class="shlogo">
                 
                 <?php
-                echo theme_config('home_title');
-                if ($conf['yan'] == 'true') {
-                    echo '<p class="yan">' . yan() . '</p>';
-                }
-                ?>
+            echo theme_config('home_title');
+    if ($conf['yan'] == 'true') {
+        echo '<p class="yan">' . yan() . '</p>';
+    }
+    ?>
             </div>
             <div class="sou">
                 <div class="lylme">
                     <?php
-                    $soulists = $site->getSou();
-                    $json = array();
-                    while ($soulist = $DB->fetch($soulists)) {
-                        echo '<div class="ss hide"><div class="lg">' . $soulist["sou_icon"] . '</div>
+        $soulists = $site->getSou();
+    $json = array();
+    while ($soulist = $DB->fetch($soulists)) {
+        echo '<div class="ss hide"><div class="lg">' . $soulist["sou_icon"] . '</div>
         </div>';
-                        if (checkmobile() && !empty($soulist["sou_waplink"])) {
-                            $so = $soulist["sou_waplink"];
-                        } else {
-                            $so = $soulist["sou_link"];
-                        }
-                        array_push($json, array($soulist['sou_name'], $soulist['sou_hint'], $so));
-                    }
-                    $json = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
-                    ?>
+        if (checkmobile() && !empty($soulist["sou_waplink"])) {
+            $so = $soulist["sou_waplink"];
+        } else {
+            $so = $soulist["sou_link"];
+        }
+        array_push($json, array($soulist['sou_name'], $soulist['sou_hint'], $so));
+    }
+    $json = json_encode($json, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+    ?>
 
                     <input class="wd soinput" id="search-text" type="text" placeholder="" name="q" x-webkit-speech lang="zh-CN" autocomplete="off">
                     <button onclick="go('');"><svg class="icon" style=" width: 21px; height: 21px; opacity: 0.5;" aria-hidden="true">
@@ -85,8 +85,8 @@
             <div class="htmlcode">
          <?php
          if (theme_config('lytoday', 0) == 1) {
-			echo theme_config('lytodaycode');
-		}?>
+             echo theme_config('lytodaycode');
+         }?>
             
             </div>
         </div>
@@ -95,31 +95,31 @@
 
 
                 <?php
-                $i = 0;
-                $tagslists = $site->getTags();
-                while ($taglists = $DB->fetch($tagslists)) {
-                    echo '<a class="nav-link" href="' . $taglists["tag_link"] . '"';
-                    if ($taglists["tag_target"] == 1) {
-                        echo ' target="_blank"';
-                    }
-                    echo '>' . $taglists["tag_name"] . '</a>';
-                    if ($i < $DB->num_rows($tagslists) - 1) {
-                        $i++;
-                        echo ' | ';
-                    }
-                }
-                ?>
+                 $i = 0;
+    $tagslists = $site->getTags();
+    while ($taglists = $DB->fetch($tagslists)) {
+        echo '<a class="nav-link" href="' . $taglists["tag_link"] . '"';
+        if ($taglists["tag_target"] == 1) {
+            echo ' target="_blank"';
+        }
+        echo '>' . $taglists["tag_name"] . '</a>';
+        if ($i < $DB->num_rows($tagslists) - 1) {
+            $i++;
+            echo ' | ';
+        }
+    }
+    ?>
                 <!--备案信息-->
                 <p>
                     <?php
-                    if (!empty($conf['icp'])) {
-                        echo '<a href="http://beian.miit.gov.cn/"  class="icp nav-link" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a>';
-                    }
-                    if (!empty(theme_config('gonganbei', ""))) {
-                        preg_match_all('/\d+/', theme_config('gonganbei'), $gab);
-                        echo '<a class="icp" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=' . $gab[0][0] . '" target="_blank" rel="nofollow noopener"><img src="/assets/img/icp.png" alt="公安网备" width="16" height="16">' . theme_config('gonganbei') . ' </a>';
-                    }
-                    ?>
+        if (!empty($conf['icp'])) {
+            echo '<a href="http://beian.miit.gov.cn/"  class="icp nav-link" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a>';
+        }
+    if (!empty(theme_config('gonganbei', ""))) {
+        preg_match_all('/\d+/', theme_config('gonganbei'), $gab);
+        echo '<a class="icp" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=' . $gab[0][0] . '" target="_blank" rel="nofollow noopener"><img src="/assets/img/icp.png" alt="公安网备" width="16" height="16">' . theme_config('gonganbei') . ' </a>';
+    }
+    ?>
                 </p>
                 <!--版权信息-->
                 <p><?php echo $conf['copyright']; ?></p>
@@ -128,7 +128,7 @@
                     echo  $conf["wztj"];
                 }
 
-                ?>
+    ?>
 
             </div>
         </footer>
