@@ -198,7 +198,11 @@ if ($s == 6766) {
         $pdo = new PDO($dsn, $dbuser, $dbpwd);
         echo 'true';
     } catch (Exception $e) {
-        echo $e->getMessage();
+        if (strpos($e->getMessage(), '[1045]') !== false) {
+            echo '数据库用户名不存在或数据库密码错误！请核对后再试';
+        } else {
+            echo $e->getMessage();
+        }
     }
     exit();
 }
