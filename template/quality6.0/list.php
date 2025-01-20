@@ -20,7 +20,7 @@
                             'g2' => '<div class="card-inner mt-3"><div class="nya-title nk-ibx-action-item progress-rating"><em class="icon ni ni-setting"></em><span class="nk-menu-text font-weight-bold"><span class="tool-icon">{group_icon}</span>{group_name}</span></div><div class="row g-2">',
                             'g3' => '</div></div></div>',
                             'l1' => '<div class="col-lg-3 col-md-4 col-6">',
-                            'l2' => '<a href="{link_url}" data-id="{link_id}" target="_blank" class="btn btn-wider btn-block btn-xl btn-outline-light tool-link"><span class="link-icon">{link_icon}</span>{link_name}</a>',
+                            'l2' => '<a href="{link_url}"  title="{link_name}"  data-id="{link_id}" target="_blank" class="btn btn-wider btn-block btn-xl btn-outline-light tool-link"><span class="link-icon">{link_icon}</span>{link_name}</a>',
                             'l3' => '</div>',
                         );
                         lists($html);
