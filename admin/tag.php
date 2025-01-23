@@ -16,7 +16,7 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
 if ($set == 'add') {
     echo '<h4>新增导航菜单链接</h4>
 <div class="panel-body">
-<form action="./tag.php?set=add_submit" method="POST">
+<form id="addNavLinkForm" action="./ajax_link.php?submit=add_tag" method="POST">
 <div class="form-group">
 <label>*名称:</label><br>
 <input type="text" class="form-control" name="name" value="" required>
@@ -37,17 +37,34 @@ if ($set == 'add') {
 <small class="help-block">(*必填) 数字越小越靠前</small>
 </div>
 <div class="form-group">
-<input type="submit" class="btn btn-primary btn-block" value="添加"></form>
+<input type="submit" class="btn btn-primary btn-block" value="添加">
+</form>
 </div>
 <br/><a href="./tag.php"><<返回</a>
 </div></div>';
-} elseif ($set == 'edit') {
+
+    echo '<script>
+        document.getElementById("addNavLinkForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+            var form = this;
+            var formData = new FormData(form); // 创建 FormData 对象来收集表单数据
+            var xhr = new XMLHttpRequest(); // 创建 XMLHttpRequest 对象
+            xhr.open("POST", form.action, true); // 打开一个 POST 请求
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert(xhr.responseText); // 显示服务器响应信息
+                }
+            };
+            xhr.send(formData); // 发送表单数据
+        });
+    </script>';
+}elseif ($set == 'edit') {
     $id = $_GET['id'];
     $row2 = $DB->query("select * from lylme_tags where tag_id='$id' limit 1");
     $row = $DB->fetch($row2);
     echo '<h4>修改导航菜单链接</h4>
 <div class="panel-body">
-<form action="./tag.php?set=edit_submit&id=' . $id . '" method="POST">
+<form id="editNavLinkForm" action="./ajax_link.php?submit=edit_tag&id=' . $id . '" method="POST">
 <div class="form-group">
 <label>*名称:</label><br>
 <input type="text" class="form-control" name="name" value="' . $row['tag_name'] . '" required>
@@ -72,54 +89,26 @@ if ($set == 'add') {
 <small class="help-block">(*必填) 数字越小越靠前</small>
 </div>
 <div class="form-group">
-<input type="submit" class="btn btn-primary btn-block" value="修改"></form>
+<input type="submit" class="btn btn-primary btn-block" value="修改">
+</form>
 </div>
 <br/><a href="./tag.php"><<返回</a>
 </div></div>';
-} elseif ($set == 'add_submit') {
-    $name = $_POST['name'];
-    $link = $_POST['link'];
-    $sort = $_POST['sort'] ?: 10;
-    if ($_POST['target'] == true) {
-        $target = 1;
-    } else {
-        $target = 0;
-    }
-    if ($name == null or $link == null) {
-        echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
-    } else {
-        $sql = "INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`,`sort`) VALUES (NULL, '" . $name . "', '" . $link . "', '" . $target . "','" . $sort . "');";
-        if ($DB->query($sql)) {
-            echo '<script>alert("添加导航菜单 ' . $name . ' 成功！");window.location.href="./tag.php";</script>';
-        } else {
-            echo '<script>alert("添加导航菜单失败");history.go(-1);</script>';
-        }
-    }
-} elseif ($set == 'edit_submit') {
-    $id = $_GET['id'];
-    $sort = $_POST['sort'] ?: 10;
-    $rows2 = $DB->query("select * from lylme_tags where tag_id='$id' limit 1");
-    $rows = $DB->fetch($rows2);
-    if (!$rows) {
-        echo '<script>alert("当前记录不存在！");history.go(-1);</script>';
-    }
-    $name = $_POST['name'];
-    $link = $_POST['link'];
-    if ($_POST['target'] == true) {
-        $target = 1;
-    } else {
-        $target = 0;
-    }
-    if ($name == null or $link == null) {
-        echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
-    } else {
-        $sql = "UPDATE `lylme_tags` SET `tag_name` = '" . $name . "', `tag_link` = '" . $link . "', `tag_target` = '" . $target . "', `sort` = '" . $sort . "'  WHERE `lylme_tags`.`tag_id` = " . $id . ";";
-        if ($DB->query($sql)) {
-            echo '<script>alert("修改导航菜单 ' . $name . ' 成功！");window.location.href="./tag.php";</script>';
-        } else {
-            echo '<script>alert("修改导航菜单失败！");history.go(-1);</script>';
-        }
-    }
+    echo '<script>
+        document.getElementById("editNavLinkForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // 阻止表单默认提交行为
+            var form = this;
+            var formData = new FormData(form); // 创建FormData对象来收集表单数据
+            var xhr = new XMLHttpRequest(); // 创建XMLHttpRequest对象
+            xhr.open("POST", form.action, true); // 打开一个POST请求
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    alert(xhr.responseText); // 显示服务器响应信息
+                }
+            };
+            xhr.send(formData); // 发送表单数据
+        });
+    </script>';
 } elseif ($set == 'delete') {
     $id = $_GET['id'];
     $sql = "DELETE FROM lylme_tags WHERE tag_id='$id'";

@@ -1,13 +1,4 @@
 <?php
-/* 
- * @Description: 
- * @Author: LyLme admin@lylme.com
- * @Date: 2024-01-23 12:25:35
- * @LastEditors: LyLme admin@lylme.com
- * @LastEditTime: 2024-04-13 17:25:21
- * @FilePath: /lylme_spage/admin/ajax_link.php
- * @Copyright (c) 2024 by LyLme, All Rights Reserved. 
- */
 header('Content-Type:application/json');
 include_once("../include/common.php");
 
@@ -17,6 +8,172 @@ if (isset($islogin) == 1) {
 $submit = isset($_GET['submit']) ? $_GET['submit'] : null;
 $e = 0;
 switch ($submit) {
+
+
+
+	case 'add_tag':
+		$name = $_POST['name'];
+		$link = $_POST['link'];
+		$sort = $_POST['sort'] ?: 10;
+		if ($_POST['target'] == true) {
+			$target = 1;
+		} else {
+			$target = 0;
+		}
+		if ($name == null or $link == null) {
+			echo '保存错误,请确保带星号的都不为空！';
+		} else {
+			$sql = "INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`,`sort`) VALUES (NULL, '" . $name . "', '" . $link . "', '" . $target . "','" . $sort . "');";
+			if ($DB->query($sql)) {
+				echo '添加导航菜单 ' . $name . ' 成功！';
+			} else {
+				echo '添加导航菜单失败';
+			}
+		}
+		break;
+
+	case 'edit_tag':
+		$id = $_GET['id'];
+		$sort = $_POST['sort'] ?: 10;
+		$rows2 = $DB->query("select * from lylme_tags where tag_id='$id' limit 1");
+		$rows = $DB->fetch($rows2);
+		if (!$rows) {
+			exit('该条记录不存在！');
+		}
+		$name = $_POST['name'];
+		$link = $_POST['link'];
+		if ($_POST['target'] == true) {
+			$target = 1;
+		} else {
+			$target = 0;
+		}
+		if ($name == null or $link == null) {
+			echo '保存错误,请确保带星号的都不为空！';
+		} else {
+			$sql = "UPDATE `lylme_tags` SET `tag_name` = '" . $name . "', `tag_link` = '" . $link . "', `tag_target` = '" . $target . "', `sort` = '" . $sort . "'  WHERE `lylme_tags`.`tag_id` = " . $id . ";";
+			if ($DB->query($sql)) {
+				echo '修改导航菜单 ' . $name . ' 成功！';
+			} else {
+				echo '修改导航菜单失败！';
+			}
+		}
+		break;
+
+	case 'add_link':
+		$color = $_POST['color'];
+		$name = $_POST['name'];
+		if (empty($color)) {
+			$name1 = $name;
+		} else {
+			$name1 = '<font color="' . $color . '">' . $name . '</font>';
+		}
+		$url = $_POST['url'];
+		$icon = $_POST['icon'];
+		$group_id = $_POST['group_id'];
+		$link_order = $linksrows + 1;
+		if ($name == null or $url == null) {
+			exit('保存错误,请确保带星号的都不为空！');
+		} else {
+			$sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`,`link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $name . "', '" . $link_order . "');";
+			if ($DB->query($sql)) {
+				exit('添加链接 ' . $name . ' 成功！');
+			} else {
+				exit('添加链接失败！');
+			}
+		}
+		break;
+
+	case 'edit_link':
+		$id = $_GET['id'];
+		$rows2 = $DB->query("select * from lylme_links where id='$id' limit 1");
+		$rows = $DB->fetch($rows2);
+		if (!$rows) {
+			exit('该条记录不存在！');
+		}
+		$color = $_POST['color'];
+		$name = $_POST['name'];
+		if (empty($color)) {
+			$name1 = $name;
+		} else {
+			$name1 = '<font color="' . $color . '">' . $name . '</font>';
+		}
+		$url = $_POST['url'];
+		$icon = $_POST['icon'];
+		$link_pwd = $_POST['link_pwd'];
+		$group_id = $_POST['group_id'];
+		if ($name == null or $url == null) {
+			echo '保存错误,请确保带星号的都不为空！';
+		} else {
+			$sql = "UPDATE `lylme_links` SET `name` = '" . $name1 . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = " . $link_pwd . " WHERE `lylme_links`.`id` = '" . $id . "';";
+			//   exit($sql);
+			if ($DB->query($sql)) {
+				echo '修改链接 ' . $name . ' 成功！';
+			} else {
+				echo '修改链接失败！';
+			}
+		}
+		break;
+
+	case 'add_sou':
+		$name = $_POST['name'];
+		$alias = $_POST['alias'];
+		$hint = $_POST['hint'];
+		$link = $_POST['link'];
+		$waplink = $_POST['waplink'];
+		$color = $_POST['color'];
+		$icon = $_POST['icon'];
+		if ($_POST['st'] == true) {
+			$st = 1;
+		} else {
+			$st = 0;
+		}
+		$sou_order = $sousrows + 1;
+		if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon)) {
+			echo '保存错误,请确保带星号的都不为空！';
+		} else {
+			$sql = "INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `sou_color`, `sou_link`, `sou_waplink`, `sou_icon`, `sou_st`, `sou_order`) VALUES
+(NULL, '" . $alias . "', '" . $name . "', '" . $hint . "', '" . $color . "', '" . $link . "', '" . $waplink . "', '" . $icon . "', '" . $st . "', '" . $sou_order . "');
+";
+			if ($DB->query($sql)) {
+				echo '添加搜索引擎 ' . $name . ' 成功！';
+			} else {
+				echo '添加搜索引擎失败！';
+			}
+		}
+		break;
+
+	case 'edit_sou':
+		$id = $_GET['id'];
+		$rows2 = $DB->query("select * from lylme_sou where sou_id='$id' limit 1");
+		$rows = $DB->fetch($rows2);
+		if (!$rows) {
+			exit('该条记录不存在！');
+		}
+		$name = $_POST['name'];
+		$alias = $_POST['alias'];
+		$hint = $_POST['hint'];
+		$link = $_POST['link'];
+		$waplink = $_POST['waplink'];
+		$color = $_POST['color'];
+		$icon = $_POST['icon'];
+		$order = $_POST['order'];
+		if ($_POST['st'] == true) {
+			$st = 1;
+		} else {
+			$st = 0;
+		}
+
+		if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon) && empty($order)) {
+			echo '保存错误,请确保带星号的都不为空！';
+		} else {
+			$sql = "UPDATE `lylme_sou` SET `sou_alias` = '" . $alias . "', `sou_name` = '" . $name . "', `sou_hint` = '" . $hint . "', `sou_color` = '" . $color . "', `sou_link` = '" . $link . "', `sou_waplink` = '" . $waplink . "', `sou_icon` = '" . $icon . "', `sou_st` = '" . $st . "', `sou_order` = '" . $order . "' WHERE `lylme_sou`.`sou_id` = " . $id . ";";
+			if ($DB->query($sql)) {
+				echo '修改搜索引擎 ' . $name . ' 成功！';
+			} else {
+				echo '修改失败！';
+			}
+		}
+		break;
 
 		//修改分组
 	case 'set_group':
