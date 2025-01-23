@@ -12,7 +12,14 @@ class SITE extends DB
      */
     public function getGroups()
     {
-        return $this->query("SELECT * FROM `lylme_groups` WHERE `group_status` = 1 AND `group_pwd` = 0 ORDER BY `group_order` ASC");
+
+        $condition_str = 'AND `group_pwd` = 0 ';
+        foreach ($_SESSION['list'] as $condition) {
+            $condition_str =  $condition_str.' OR `group_pwd` = '.$condition;
+
+        }
+
+        return $this->query("SELECT * FROM `lylme_groups` WHERE `group_status` = 1 ".$condition_str." ORDER BY `group_order` ASC");
     }
     /**
      * 获取指定分组
@@ -21,6 +28,7 @@ class SITE extends DB
      */
     public function getCategorys($group_id)
     {
+        $group_id = intval($group_id);
         //获取分组信息
         return $this->query("SELECT * FROM `lylme_groups` WHERE `group_status` = 1  AND `group_id` = $group_id  LIMIT 1");
     }
@@ -31,6 +39,7 @@ class SITE extends DB
      */
     public function getCategoryLinks($group_id)
     {
+        $group_id = intval($group_id);
         return $this->query("SELECT * FROM `lylme_links` WHERE `group_id` = $group_id  ORDER BY `link_order` ASC;");
     }
     /**
@@ -40,6 +49,7 @@ class SITE extends DB
     */
     public function getLink($link_id)
     {
+        $link_id = intval($link_id);
         return $this->get_row("SELECT * FROM `lylme_links` WHERE `id` = $link_id  ADN  `link_pwd` = 0 ");
     }
     /**

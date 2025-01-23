@@ -30,11 +30,11 @@ while ($row = $DB->fetch($web_config)) {
     $conf[$row['k']] = $row['v'];
 }
 
-require SYSTEM_ROOT . "include.php";
+require SYSTEM_ROOT . "version.php";
 require SYSTEM_ROOT . "function.php";
+require SYSTEM_ROOT . "include.php";
 require SYSTEM_ROOT . "lists.php";
 require SYSTEM_ROOT . "member.php";
 require SYSTEM_ROOT . "tj.php";
-require SYSTEM_ROOT . "version.php";
 require SYSTEM_ROOT . "updbase.php";
 require SYSTEM_ROOT . 'lib/Form.php';
