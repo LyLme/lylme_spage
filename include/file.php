@@ -8,6 +8,16 @@ header('Content-Type:application/json');
 require_once("common.php");
 define('SAVE_PATH', 'files/'); //保存路径
 
+// 验证文件后缀是否合法
+function validate_filename($filename) {
+    // 定义允许的文件后缀
+    $allowed_extensions = ['jpeg', 'jpg', 'png', 'gif', 'ico'];
+    // 提取文件后缀
+    $file_extension = pathinfo($filename, PATHINFO_EXTENSION);
+    // 检查后缀是否在允许的列表中
+    return in_array(strtolower($file_extension), $allowed_extensions);
+}
+
 /**
  * 通过curl下载
  * @param string $url网上资源图片的url
@@ -22,12 +32,16 @@ function download_img($url)
         exit('{"code": "-1","msg":"抓取的图片超过' . $maxsize / pow(1024, 2) . 'M，当前为：' . round($size / pow(1024, 2), 2) . 'M"}');
     }
 
-    $img_ext = pathinfo($url, PATHINFO_EXTENSION);
+    $img_ext ='.'. pathinfo($url, PATHINFO_EXTENSION);
     //文件后缀名
     if (!validate_file_type($img_ext)) {
-        exit('{"code": "-4","msg":"抓取的图片类型不支持"}');
+        exit('{"code": "-4","msg":"抓取的图片类型'.$img_ext.'不支持"}');
     }
     $img_name = $IMG_NAME . '.' . $img_ext;
+    // 验证文件名合法性
+    if (!validate_filename($img_name)) {
+        exit('{"code": "-5","msg":"文件后缀不合法"}');
+    }
     //文件名
     $dir = ROOT . SAVE_PATH . 'download/';
     $save_to = $dir . $img_name;
@@ -58,6 +72,10 @@ function download_img($url)
     $fileSize = strlen($data);
     if ($fileSize < 1024) {
         exit('{"code": "-1","msg":"抓取图片失败"}');
+    }
+    // 验证文件内容是否为图片
+    if (!is_valid_image($data)) {
+        exit('{"code": "-4","msg":"抓取的文件不是有效的图片"}');
     }
     $downloaded_file = fopen($save_to, 'w');
     fwrite($downloaded_file, $data);
@@ -99,18 +117,26 @@ function upload_img($upfile)
     $type = $upfile["type"];
     $size = $upfile["size"];
     $tmp_name = $upfile["tmp_name"];
-    if (!validate_file_type($type)) {
-        exit('{"code": "-4","msg":"上传的图片类型不支持"}');
-    }
     $parts = explode('.', $upfile["name"]);
     $img_ext = "." . end($parts);
+    if (!validate_file_type($img_ext)) {
+        exit('{"code": "-4","msg":"上传的图片类型'.$img_ext.'不支持"}');
+    }
     if ($size > $maxsize) {
         exit('{"code": "-1","msg":"图片不能超过' . $maxsize / pow(1024, 2) . 'M"}');
     }
     $img_name = $IMG_NAME . $img_ext;
+    // 验证文件名合法性
+    if (!validate_filename($img_name)) {
+        exit('{"code": "-5","msg":"文件后缀不合法"}');
+    }
     //文件名
     $save_to = $dir . $img_name;
     $url =  '/' . SAVE_PATH . 'upload/' . $img_name;
+    // 验证文件内容是否为图片
+    if (!is_valid_image(file_get_contents($tmp_name))) {
+        exit('{"code": "-4","msg":"上传的文件不是有效的图片"}');
+    }
     if (move_uploaded_file($tmp_name, $dir . $img_name)) {
         echo('{"code": "200","msg":"上传成功","url":"' . $url . '"}');
         return  $dir . $img_name;
@@ -120,19 +146,17 @@ function upload_img($upfile)
 function validate_file_type($type)
 {
     switch ($type) {
-        case 'jpeg':
+        case '.jpeg':
+        case '.jpg':
             $type = 'image/jpeg';
             break;
-        case 'jpg':
-            $type = 'image/jpeg';
-            break;
-        case 'png':
+        case '.png':
             $type = 'image/png';
             break;
-        case 'gif':
+        case '.gif':
             $type = 'image/gif';
             break;
-        case 'ico':
+        case '.ico':
             $type = 'image/x-icon';
             break;
     }
@@ -140,6 +164,14 @@ function validate_file_type($type)
     $allowed_types = array("image/jpeg", "image/png", "image/gif", "image/x-icon");
     return in_array($type, $allowed_types);
 }
+
+// 验证文件内容是否为图片
+function is_valid_image($data)
+{
+    $image_info = @getimagesizefromstring($data);
+    return $image_info!== false;
+}
+
 /**
  * 图像裁剪
  * @param $title string 原图路径
@@ -224,7 +256,7 @@ if (empty($_POST["url"]) && !empty($_FILES["file"])) {
     }
     //上传图片
 } elseif (!empty($_POST["url"])) {
-    $filename = download_img($_POST["url"], $_POST["referer"]);
+    $filename = download_img($_POST["url"]);
     //下载图片
 } else {
     exit('{"code": "0","msg":"error"}');

@@ -20,7 +20,7 @@ imagefill($image, 0, 0, $bgcolor);
 
 $captcha_code = "";
 //9>增加干扰元素，设置横线
-for ($i = 0; $i < 15; $i++) {
+for ($i = 0; $i < 10; $i++) {
     //设置线的颜色
     $linecolor = imagecolorallocate($image, rand(70, 90),rand(70, 90), rand(70, 90));
     //设置线，两点一线
@@ -28,7 +28,7 @@ for ($i = 0; $i < 15; $i++) {
 
 }
 //7>生成随机数字
-for ($i = 0; $i < 5; $i++) {
+for ($i = 0; $i < 4; $i++) {
     //设置字体大小
     $fontsize = 8;
     //设置字体颜色，随机颜色
@@ -46,7 +46,7 @@ for ($i = 0; $i < 5; $i++) {
 //10>存到session
 $_SESSION['authcode'] = $captcha_code;
 //8>增加干扰元素，设置雪花点
-for ($i = 0; $i < 30; $i++) {
+for ($i = 0; $i < 10; $i++) {
     //设置点的颜色，50-200颜色比数字浅，不干扰阅读
     $pointcolor = imagecolorallocate($image, rand(80, 90) , rand(80, 90) , rand(80, 90) );
     //imagesetpixel — 画一个单一像素
