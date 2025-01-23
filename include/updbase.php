@@ -98,6 +98,9 @@ if ($sqlvn < $filevn) {
     if ($sqlvn < 10905) {
         $version = 'v1.9.5';
     }
+    if ($sqlvn < 20000) {
+        $version = 'v2.0.0';
+    }
     $sql = explode(';', $sql);
     for ($i = 0; $i < count($sql); $i++) {
         if (trim($sql[$i]) == '') {
