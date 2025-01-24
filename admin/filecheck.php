@@ -72,7 +72,9 @@ function compareMd5s($originalMd5s, $currentMd5s, $whitelist = [])
 }
 $whitelist = [
     '/config.php',
-    '/admin/cache.php'
+    '/admin/cache.php',
+    '/assets/img/cron.php'
+
 ];
 
 $currentMd5s = generateFileMd5s($targetDirectory, $whitelist);
