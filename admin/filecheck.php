@@ -71,7 +71,6 @@ $whitelist = [
 ];
 
 $currentMd5s = generateFileMd5s($targetDirectory, $whitelist);
-file_put_contents("file.json", json_encode($currentMd5s, 320));
 $comparisonResult = compareMd5s(json_decode(get_curl('https://cdn.lylme.com/lylme_spage/file_check/v2.0.0/file.json'), true), $currentMd5s, $whitelist);
 
 ?>
