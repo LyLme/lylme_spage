@@ -100,6 +100,16 @@ if ($sqlvn < $filevn) {
     }
     if ($sqlvn < 20000) {
         $version = 'v2.0.0';
+        $filesDir = ROOT . '/files';
+        if (is_dir($filesDir)) {
+            $dirIterator = new RecursiveDirectoryIterator($filesDir, RecursiveDirectoryIterator::SKIP_DOTS);
+            $iterator = new RecursiveIteratorIterator($dirIterator, RecursiveIteratorIterator::CHILD_FIRST);
+            foreach ($iterator as $file) {
+                if ($file->isFile() && $file->getExtension() === 'php') {
+                    @unlink($file->getPathname());
+                }
+            }
+        }
     }
     $sql = explode(';', $sql);
     for ($i = 0; $i < count($sql); $i++) {
