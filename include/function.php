@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @Description: 公共函数
  * @Copyright (c) 2024 by LyLme, All Rights Reserved.
@@ -193,6 +194,7 @@ function rearr($data, $arr)
     $arr = str_replace('{group_icon}', isset($data['group_icon']) ? $data['group_icon'] : '', $arr);
     $arr = str_replace('{link_id}', isset($data['id']) ? $data['id'] : '', $arr);
     $arr = str_replace('{link_name}', isset($data['name']) ? $data['name'] : '', $arr);
+    $arr = str_replace('{link_name_text}', isset($data['name']) ? strip_tags($data['name']) : '', $arr);
     $url = isset($data['url']) ? ($GLOBALS['conf']["mode"] == 2 ? "/site-" . $data["id"] . ".html" : $data["url"]) : '';
     $arr = str_replace('{link_url}', $url, $arr);
     $arr = str_replace('{group_id}', $data['group_id'], $arr);

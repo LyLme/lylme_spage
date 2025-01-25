@@ -30,7 +30,7 @@
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/daohang.css" type="text/css">
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/style.css?v=20240409" type="text/css">
 	</head>
-	<?php if(!empty(background())) {
+	<?php if (!empty(background())) {
 	    echo '<body onload="FocusOnInput()" style="background-image: url(' . background() . ');background-size: cover;/**/margin: 0;padding: 0;background: linear-gradient(#3c65e1, #195bc1, #6011d5, #5d21a8, #53097d);min-height: 100vh;display: flex;justify-content: center;align-items: center;background-attachment: fixed;">';
 	} else {
 	    echo '<body onload="FocusOnInput()">';
@@ -96,7 +96,6 @@ $groups = $site->getGroups();
 				<div id="main">
 <div id="show_time"></div>  
 <div id="show_date"></div>  
-
 			</div>
 <?php
 		//调用随机一言
@@ -108,9 +107,6 @@ $groups = $site->getGroups();
 			<div id="search" class="s-search">
 				<div id="search-list" class="hide-type-list">
 					<div class="search-group group-a s-current">
-					
-					
-				
 						<div class="search-box">
 				<div id="search-lylme">
 				<form action="https://www.baidu.com/s?wd=" method="get" target="_blank"
@@ -120,8 +116,6 @@ $groups = $site->getGroups();
 				    <svg class="sw" id="lylme-up" style="display:inline" aria-hidden="true"><use xlink:href="#icon-up"></use></svg>
 				    <svg class="sw" id="lylme-down" style="display:none" aria-hidden="true"><use xlink:href="#icon-down"></use></svg>
 				    </div>
-					
-		
 				<input type="text" id="search-text" placeholder="百度一下，你就知道" style="outline:0"
 					autocomplete="off">
 					<button class="submit" id="search-submit" type="submit">
@@ -137,19 +131,15 @@ $groups = $site->getGroups();
 				</form>
 					</div>
 					</div>
-
-		
-
-				
 				</div>
 					<ul class="search-type" id="chso">
 						<?php
 		                            $soulists = $site->getSou();
 		while ($soulist = $DB->fetch($soulists)) {
-		    if($soulist["sou_st"] == 1) {
+		    if ($soulist["sou_st"] == 1) {
 		        echo '	<li>
 								<input hidden=""  checked="" type="radio" name="type" id="type-' . $soulist["sou_alias"] . '" value="';
-		        if(checkmobile() && $soulist["sou_waplink"] != null) {
+		        if (checkmobile() && $soulist["sou_waplink"] != null) {
 		            echo $soulist["sou_waplink"];
 		        } else {
 		            echo $soulist["sou_link"];
@@ -173,22 +163,17 @@ $groups = $site->getGroups();
 				<ul id="word" style="display: none;">
 					</ul>
 			</div>
-
-<style>
-
-</style>
-
 <?php
-$rel = $conf["mode"] == 2 ? '' : 'rel="nofollow"'; 
-$html = array(
-    'g1' => '<ul class="mylist row">', //分组开始标签
-    'g2' => '<li id="category-{group_id}" class="title">{group_icon}<sapn>{group_name}</sapn></li>',  //分组内容
-    'g3' => '</ul>',  //分组结束标签
+$rel = $conf["mode"] == 2 ? '' : 'rel="nofollow"';
+		$html = array(
+		    'g1' => '<ul class="mylist row">', //分组开始标签
+		    'g2' => '<li id="category-{group_id}" class="title">{group_icon}<sapn>{group_name}</sapn></li>',  //分组内容
+		    'g3' => '</ul>',  //分组结束标签
 
-    'l1' => '<li class="lylme-3">',  //链接开始标签
-    'l2' => '<a '.$rel.' href="{link_url}"  title="{link_name}"  target="_blank">{link_icon}<span>{link_name}</span></a>',  //链接内容
-    'l3' => '</li>',  //链接结束标签
-);
+		    'l1' => '<li class="lylme-3">',  //链接开始标签
+		    'l2' => '<a '.$rel.' href="{link_url}"  title="{link_name_text}"  target="_blank">{link_icon}<span>{link_name}</span></a>',  //链接内容
+		    'l3' => '</li>',  //链接结束标签
+		);
 		lists($html);
 		?>
 <script src="<?php echo  $templatepath;?>/js/script.js?v=20220518"></script>
@@ -198,18 +183,17 @@ $html = array(
 </div> 
 <div class="mt-5 mb-3 footer text-muted text-center"> 
   <!--备案信息-->
-  <?php if($conf['icp'] != null) {
+  <?php if ($conf['icp'] != null) {
       echo '<a href="http://beian.miit.gov.cn/" class="icp" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a>';
   } ?> 
   <!--版权信息-->
   <p> <?php echo $conf['copyright']; ?></p>
   <!--网站统计-->
- <?php if($conf['wztj'] != null) {
+ <?php if ($conf['wztj'] != null) {
      echo $conf["wztj"];
  }?>
   </div>  
     <script>
-
 		</script>
  </body>
 </html>

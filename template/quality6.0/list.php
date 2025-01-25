@@ -3,10 +3,10 @@
                 <li class="breadcrumb-item fs-16px category-all active"><a href="javascript:show_tool_list(0)">全部</a></li>
                 <?php
                     $groups = $site->getGroups();
-                    while ($group = $DB->fetch($groups)) {
-                        echo ' <li class="breadcrumb-item fs-16px category-item" data-id="' . $group["group_id"] . '"><a href="javascript:show_tool_list(' . $group["group_id"] . ')">' . $group["group_name"] . '</a></li>
+                while ($group = $DB->fetch($groups)) {
+                    echo ' <li class="breadcrumb-item fs-16px category-item" data-id="' . $group["group_id"] . '"><a href="javascript:show_tool_list(' . $group["group_id"] . ')">' . $group["group_name"] . '</a></li>
                         ' . "\n";
-                    }
+                }
                 ?>
             </ul>
         </nav>
@@ -20,11 +20,11 @@
                             'g2' => '<div class="card-inner mt-3"><div class="nya-title nk-ibx-action-item progress-rating"><em class="icon ni ni-setting"></em><span class="nk-menu-text font-weight-bold"><span class="tool-icon">{group_icon}</span>{group_name}</span></div><div class="row g-2">',
                             'g3' => '</div></div></div>',
                             'l1' => '<div class="col-lg-3 col-md-4 col-6">',
-                            'l2' => '<a href="{link_url}"  title="{link_name}"  data-id="{link_id}" target="_blank" class="btn btn-wider btn-block btn-xl btn-outline-light tool-link"><span class="link-icon">{link_icon}</span>{link_name}</a>',
+                            'l2' => '<a href="{link_url}"  title="{link_name_text}"  data-id="{link_id}" target="_blank" class="btn btn-wider btn-block btn-xl btn-outline-light tool-link"><span class="link-icon">{link_icon}</span>{link_name}</a>',
                             'l3' => '</div>',
                         );
-                        lists($html);
-                        ?>
+                lists($html);
+                ?>
                     </div>
                 </div>
             </div>

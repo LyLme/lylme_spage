@@ -8,7 +8,7 @@ $html = array(
     'g3' => '<div class="list kongs"></div><div class="list kongs"></div><div class="list kongs"></div><div class="list kongs"></div></div>',  //分组结束标签
 
     'l1' => '<div class="list urllist" id="id_{link_id}" data-id="{link_id}" data-url="{link_url}">',  //链接开始标签
-    'l2' => '<a '.$rel.' href="{link_url}" title="{link_name}"  target="_blank">{link_icon}',  //链接内容
+    'l2' => '<a '.$rel.' href="{link_url}" title="{link_name_text}"  target="_blank">{link_icon}',  //链接内容
     'l3' => '<p class="name">{link_name}</p><p class="desc"></p></a></div>',  //链接结束标签
 );
 lists($html);
