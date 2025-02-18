@@ -107,7 +107,6 @@ if (isset($comparisonResult)): ?>
                                         <tr>
                                             <th>文件</th>
                                             <th>状态</th>
-                                            <th>查看</th>
                                         </tr>
                                     </thead>
                                     <tbody>
