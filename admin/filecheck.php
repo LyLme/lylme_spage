@@ -29,6 +29,7 @@ function generateFileMd5s($directory, $whitelist = [])
                         }
                     }
                 } elseif (is_dir($filePath)) {
+
                     traverseDirectory($filePath, $md5s, $directory, $whitelist);
                 }
             }
@@ -72,13 +73,15 @@ function compareMd5s($originalMd5s, $currentMd5s, $whitelist = [])
 }
 $whitelist = [
     '/config.php',
-    '/admin/cache.php',
+    '/' . ADMIN_PATH . '/cache.php',
     '/assets/img/cron.php'
 
 ];
 
 $currentMd5s = generateFileMd5s($targetDirectory, $whitelist);
-$remoteJson = get_curl('https://cdn.lylme.com/lylme_spage/file_check/v2.0.0/file.json');
+$remoteJsonUrl = 'https://cdn.lylme.com/lylme_spage/file_check/v' . VERSION . '/file.json';
+
+$remoteJson = str_replace('/admin/', '/' . ADMIN_PATH . '/', get_curl($remoteJsonUrl));
 if ($remoteJson === false) {
     $remotemsg =  '<div class="alert alert-danger" role="alert">无法获取远程配置，请检查服务器是否支持外网访问</div>';
 } else {
@@ -104,6 +107,7 @@ if (isset($comparisonResult)): ?>
                                         <tr>
                                             <th>文件</th>
                                             <th>状态</th>
+                                            <th>查看</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -127,7 +131,8 @@ if (isset($comparisonResult)): ?>
                             break;
                     }
                     foreach ($value as $file) {
-                        echo '<tr class="filecheck_' . $key . '"><td>' . $file . '</td><td>' . $statusy . '</td></tr>';
+                        $filename = str_replace('/' . ADMIN_PATH . '/', '/admin/', $file);
+                        echo '<tr class="filecheck_' . $key . '"><td><a  rel="noopener noreferrer" href="https://gitee.com/lylme/lylme_spage/blob/master' . $filename . '" target="_blank">' . $file . '</a></td><td>' . $statusy . '</td></tr>';
                     }
                 }
     ?>
@@ -157,6 +162,9 @@ if (isset($comparisonResult)): ?>
     tr.filecheck_normal {
         color: green;
     }
+td a {
+    color: #4d5259 !important;
+}
 </style>
 <?php
 include './footer.php';
