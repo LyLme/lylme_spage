@@ -18,7 +18,7 @@
 	    </div>
 	    <div class="content">
 		    <div class="inner">
-			    <?php echo $conf['home-title'] ?>
+			    <?php echo theme_config('home_title'); ?>
 		    </div>
 	    </div>
 	    <nav>
@@ -39,7 +39,14 @@ $tagslists = $site->getTags();
 	    </nav>
 	</header>
 	<footer id="footer">
-	<p class="copyright"><?php echo $conf['copyright']; ?></p>
+		 
+	<p class="copyright">
+	 <!--备案信息-->
+	 <?php if (!empty($conf['icp'])) {
+                echo '<p><a href="http://beian.miit.gov.cn/"  class="icp nav-link" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a></p>';
+            }
+            ?>	
+	<?php echo $conf['copyright']; ?></p>
 	</footer>
 </div>
 <div id="bg">

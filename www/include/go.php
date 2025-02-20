@@ -14,7 +14,7 @@ if($_POST['exit'] == 'exit') {
     header("Location: " . $_SERVER['HTTP_REFERER']);
     exit('注销登录成功');
 }
-@$pass = daddslashes($_POST['pass']);
+$pass = isset($_POST['pass']) ? daddslashes($_POST['pass']) : '';
 if($_SESSION['pass'] != 1) {
     //未登录
     if(!empty($pass)) {

@@ -1,4 +1,13 @@
 <?php
+/* 
+ * @Description: 渲染页面
+ * @Author: LyLme admin@lylme.com
+ * @Date: 2024-01-23 12:25:35
+ * @LastEditors: LyLme admin@lylme.com
+ * @LastEditTime: 2024-04-14 05:43:14
+ * @FilePath: /lylme_spage/include/lists.php
+ * @Copyright (c) 2024 by LyLme, All Rights Reserved. 
+ */
 // +----------------------------------------------------------+
 // | LyLme Spage                                              |
 // +----------------------------------------------------------+
@@ -122,6 +131,55 @@ function listjson()
     }
     return $arr;
 }
+function strexists($string, $find)
+{
+    return !(strpos($string, $find) === false);
+}
+function dstrpos($string, $arr)
+{
+    if (empty($string)) {
+        return false;
+    }
+    foreach ($arr as $v) {
+        if (strpos($string, $v) !== false) {
+            return true;
+        }
+    }
+    return false;
+}
+//判断移动端
+function checkmobile()
+{
+    $useragent = strtolower($_SERVER['HTTP_USER_AGENT']);
+    $ualist = array('android', 'midp', 'nokia', 'mobile', 'iphone', 'ipod', 'blackberry', 'windows phone');
+    if ((dstrpos($useragent, $ualist) || strexists($_SERVER['HTTP_ACCEPT'], "VND.WAP") || strexists(isset($_SERVER['HTTP_VIA']), "wap"))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+//CDN
+function cdnpublic($cdnpublic)
+{
+    if (empty($cdnpublic)) {
+        return '.';
+    } else {
+        return $cdnpublic . $GLOBALS['version'];
+    }
+}
 
-
+$cdnpublic = cdnpublic($conf['cdnpublic']);
+$templatepath = './template/' . $conf["template"];
+$template =  $templatepath . '/index.php';
+$background = $conf["background"];
+$wap_background = $conf["wap_background"];
+if (checkmobile()) {
+    if (!empty($wap_background)) {
+        $background_img = $wap_background;
+    } else {
+        $background_img = $background;
+    }
+} else {
+    $background_img = $background;
+}
 ?>

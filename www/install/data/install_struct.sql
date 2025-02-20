@@ -36,7 +36,7 @@ INSERT INTO `lylme_config` VALUES
 (5, 'background', './assets/img/background.jpg', '背景图片'),
 (6, 'title', '上网导航 - LyLme Spage', '网站标题'),
 (7, 'cdnpublic', NULL, 'CDN地址'),
-(8, 'copyright', 'Copyright ©2022 <a href=\"/\">LyLme Spage</a>.  All Rights Reserved.', '版权代码'),
+(8, 'copyright', 'Copyright ©2022-2024 <a href=\"/\">LyLme Spage</a>.  All Rights Reserved.', '版权代码'),
 (9, 'description', '六零导航页(LyLme Spage)致力于简洁高效无广告的上网导航和搜索入口，沉淀最具价值链接，全站无商业推广，简约而不简单。', '网站描述'),
 (10, 'home-title', '<h2 class=\"title\">上网，从这里开始！</h2>', '首页标题'),
 (11, 'icp', '', '备案号'),
@@ -46,7 +46,7 @@ INSERT INTO `lylme_config` VALUES
 (15, 'template', 'default', '网站模板'),
 (16, 'wztj', '', '网站统计代码(自定义footer)'),
 (17, 'tq', 'true', '天气显示开关'),
-(18, 'version', 'v1.8.5', '程序版本'),
+(18, 'version', 'v1.9.5', '程序版本'),
 (19, 'wap_background', NULL, '手机端背景'),
 (20, 'wxplus', '', '微信推送密钥'),
 (21, 'wxplustime', '20:00', '微信推送时间'),
@@ -106,7 +106,7 @@ INSERT INTO `lylme_links` VALUES
 (17, '斗鱼直播', 1, 'https://www.douyu.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-douyu00\"></use></svg>', NULL, 10, 1, 0),
 (18, '企鹅电竞', 1, 'https://egame.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-qie00\"></use></svg>', NULL, 10, 1, 0),
 (19, '微信文件传输助手', 1, 'https://filehelper.weixin.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wechat00\"></use></svg>', NULL, 10, 1, 0),
-(20, '120秒视界', 1, 'https://60s.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-remen\"></use></svg>', NULL, 10, 1, 0),
+(20, '今日热点', 1, 'https://60s.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-remen\"></use></svg>', NULL, 10, 1, 0),
 (21, 'Office模板', 2, 'https://www.officeplus.cn/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-office00\"></use></svg>', NULL, 10, 1, 0),
 (22, '搞定设计', 2, 'https://www.gaoding.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gaoding00\"></use></svg>', NULL, 10, 1, 0),
 (23, '素材天下', 2, 'http://www.sucaitianxia.net/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-video\"></use></svg>', NULL, 10, 1, 0),
@@ -164,9 +164,7 @@ INSERT INTO `lylme_links` VALUES
 (75, 'STEAM', 6, 'https://store.steampowered.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-steam00\"></use></svg>', NULL, 10, 1, 0),
 (76, '王者荣耀', 6, 'https://pvp.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wzry00\"></use></svg>', NULL, 10, 1, 0),
 (77, '3DM GAME', 6, 'https://www.3dmgame.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-games00\"></use></svg>', NULL, 10, 1, 0),
-(78, '官方主页', 7, 'https://www.lylme.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-home00\"></use></svg>', NULL, 10, 1, 0),
-(79, '申请收录', 7, '/apply', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sq00\"></use></svg>', NULL, 10, 1, 0),
-(80, '建议&反馈', 7, 'https://support.qq.com/products/356339', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-fk00\"></use></svg>', NULL, 10, 1, 0);
+(78, '申请收录', 7, '/apply', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sq00\"></use></svg>', NULL, 10, 1, 0);
 
 DROP TABLE IF EXISTS `lylme_pwd`;
 CREATE TABLE `lylme_pwd` (
@@ -210,9 +208,58 @@ CREATE TABLE `lylme_tags` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `lylme_tags` VALUES
-(1, '主页', 'https://www.lylme.com/', 0, 10),
-(2, '博客', 'https://blog.lylme.com/', 1, 10),
-(3, 'Github', 'https://github.com/lylme', 1, 10),
-(4, '关于本站', '/about', 1, 10),
-(5, '申请收录', '/apply', 1, 10),
-(6, '查看', '/pwd', 0, 10);
+(1, '关于本站', '/about', 1, 10),
+(2, '申请收录', '/apply', 1, 10),
+(3, '访问管理', '/pwd', 0, 10);
+
+
+ALTER TABLE `lylme_apply`
+  ADD PRIMARY KEY (`apply_id`);
+
+ALTER TABLE `lylme_config`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `k` (`k`);
+
+ALTER TABLE `lylme_groups`
+  ADD PRIMARY KEY (`group_id`) USING BTREE,
+  ADD UNIQUE KEY `group_name` (`group_name`) USING BTREE;
+
+ALTER TABLE `lylme_links`
+  ADD PRIMARY KEY (`id`) USING BTREE,
+  ADD KEY `组` (`group_id`) USING BTREE;
+
+ALTER TABLE `lylme_pwd`
+  ADD PRIMARY KEY (`pwd_id`);
+
+ALTER TABLE `lylme_sou`
+  ADD PRIMARY KEY (`sou_id`);
+
+ALTER TABLE `lylme_tags`
+  ADD PRIMARY KEY (`tag_id`);
+
+
+ALTER TABLE `lylme_apply`
+  MODIFY `apply_id` int(4) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `lylme_config`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=23;
+
+ALTER TABLE `lylme_groups`
+  MODIFY `group_id` int(2) NOT NULL AUTO_INCREMENT COMMENT '分组ID', AUTO_INCREMENT=8;
+
+ALTER TABLE `lylme_links`
+  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT COMMENT '链接ID', AUTO_INCREMENT=81;
+
+ALTER TABLE `lylme_pwd`
+  MODIFY `pwd_id` int(2) NOT NULL AUTO_INCREMENT COMMENT '加密组ID';
+
+ALTER TABLE `lylme_sou`
+  MODIFY `sou_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '搜索引擎ID', AUTO_INCREMENT=9;
+
+ALTER TABLE `lylme_tags`
+  MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '导航菜单ID', AUTO_INCREMENT=7;
+
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

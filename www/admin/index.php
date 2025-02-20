@@ -148,9 +148,10 @@ if (!empty($update)) {
 					<b>程序名称：</b>六零导航页(LyLme Spage)
 				</li>
 				<li class="list-group-item">
-					<b>授权状态：</b>
-					<a href="https://www.lylme.com/spage/" target="_blank">查询</a>
+					<b>授权状态：<?php echo  siteurl(2, 2) ?></b>
+					<a href="https://www.lylme.com/spage/?url=<?php echo  siteurl(2, 2) ?>" target="_blank">查询</a>
 				</li>
+
 				<li class="list-group-item">
 					<b>建站日期：</b><?php echo $conf['build'] ?>
 				</li>
@@ -158,7 +159,7 @@ if (!empty($update)) {
 					<b>当前版本：</b><?php echo $conf['version'] ?> <a href="./update.php" target="_blank">检查更新</a>
 				</li>
 				<li class="list-group-item">
-					<b>最新版本：</b> <?php echo $update['version'] ?> <a href="https://doc.lylme.com/spage/#/logs target=" _blank">更新日志</a>
+					<b>最新版本：</b> <?php echo $update['version'] ?> <a href="https://doc.lylme.com/spage/#/logs" target="_blank">更新日志</a>
 				</li>
 				<li class="list-group-item">
 					<b>项目作者：</b>六零 <a href="https://www.lylme.com/support/" target="_blank">捐赠作者</a>
@@ -177,7 +178,7 @@ if (!empty($update)) {
 include './footer.php';
 ?>
 <!--图表插件-->
-<script type="text/javascript" src="js/Chart.js"></script>
+<script type="text/javascript" src="/assets/admin/js/Chart.js"></script>
 <script type="text/javascript">
 	$(document).ready(function(e) {
 		var $dashChartBarsCnt = jQuery('.js-chartjs-bars')[0].getContext('2d'),

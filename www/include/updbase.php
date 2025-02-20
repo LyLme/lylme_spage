@@ -92,6 +92,28 @@ if ($sqlvn < $filevn) {
             }
         }
     }
+    if ($sqlvn < 10900) {
+        $version = 'v1.9.0';
+    }
+    if ($sqlvn < 10905) {
+        $version = 'v1.9.5';
+    }
+    if ($sqlvn < 20000) {
+        $version = 'v2.0.0';
+        $filesDir = ROOT . '/files';
+        if (is_dir($filesDir)) {
+            $dirIterator = new RecursiveDirectoryIterator($filesDir, RecursiveDirectoryIterator::SKIP_DOTS);
+            $iterator = new RecursiveIteratorIterator($dirIterator, RecursiveIteratorIterator::CHILD_FIRST);
+            foreach ($iterator as $file) {
+                if ($file->isFile() && $file->getExtension() === 'php') {
+                    @unlink($file->getPathname());
+                }
+            }
+        }
+    }
+    if ($sqlvn < 20100) {
+        $version = 'v2.1.0';
+    }
     $sql = explode(';', $sql);
     for ($i = 0; $i < count($sql); $i++) {
         if (trim($sql[$i]) == '') {

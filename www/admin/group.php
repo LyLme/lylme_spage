@@ -173,9 +173,9 @@ else {
 }
 include './footer.php';
 ?>
-<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/layer/3.1.1/layer.min.js" type="application/javascript"></script>
-<script type="text/javascript" src="js/lightyear.js"></script>
-<script src="js/bootstrap-notify.min.js"></script>
-<link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery-confirm/3.3.0/jquery-confirm.min.css" type="text/css" rel="stylesheet" />
-<script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery-confirm/3.3.0/jquery-confirm.min.js" type="application/javascript"></script>
-<script type="text/javascript" src="js/group.js"></script>
+<script src="/assets/admin/js/layer.min.js" type="application/javascript"></script>
+<script type="text/javascript" src="/assets/admin/js/lightyear.js"></script>
+<script src="/assets/admin/js/bootstrap-notify.min.js"></script>
+<link href="/assets/admin/js/jquery-confirm.min.css" type="text/css" rel="stylesheet" />
+<script src="/assets/admin/js/jquery-confirm.min.js" type="application/javascript"></script>
+<script type="text/javascript" src="/assets/admin/js/group.js"></script>

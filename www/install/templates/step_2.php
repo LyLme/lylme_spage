@@ -46,10 +46,17 @@
                 <tr>
                     <td height="40" align="right">数据库密码：</td>
                     <td><input type="password" name="dbpwd" id="dbpwd" class="input" onblur="CheckPwd()"/>
-                        <span class="cnote"><span id="cpwdTxt"></span></span>
-                        <input type="hidden" name="cpwd" id="cpwd" value="false"></td>
+                        </td>
                 </tr>
+                <tr>
+                    <td height="40" align="center" colspan="2">
 
+                    <span class="cnote"><span id="cpwdTxt"></span></span>
+                        <input type="hidden" name="cpwd" id="cpwd" value="false">
+                    </td>
+                    <td>
+                      </td>
+                </tr>
                 <tr>
                     <td height="40" colspan="2" align="left"><span class="title">默认管理员信息</span></td>
                 </tr>
