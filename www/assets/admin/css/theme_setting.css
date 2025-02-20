@@ -1,0 +1,51 @@
+.layui-form-item>.layui-input-block>tip {
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #a29c9c;
+    display: block;
+}
+
+.layui-form-item>.layui-input-block>tip a {
+    color: #33cabb;
+}
+
+.layui-form-item {
+    margin-bottom: 15px;
+    clear: both;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.layui-input-block {
+    margin-left: 0;
+    min-height: 36px;
+    width: 100%;
+}
+
+.layui-form-label {
+    float: left;
+    display: block;
+    padding: 0;
+    width: 100%;
+    font-weight: bold;
+    text-align: left;
+    color: #4d5259;
+}
+.layui-form-select dl dd.layui-this {
+    background-color: #33cabb;
+    color: #fff;
+}
+
+.layui-form-radio:hover *,
+.layui-form-radioed,
+.layui-form-radioed>i {
+    color: #33cabb;
+}
+.clr-alpha {
+    display: none !important;
+}
+
+textarea::-webkit-input-placeholder,input::-webkit-input-placeholder {
+    color: #aaaaaa;
+}

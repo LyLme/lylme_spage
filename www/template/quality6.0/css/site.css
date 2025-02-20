@@ -1,0 +1,31 @@
+.site-container{overflow:auto;margin-top:10px;width:100%}
+.site-left-column{float:left;width:60%}
+.site-right-column{float:right;width:39%}
+.site-info{margin:1px;padding:10px;height:450px;border-radius:5px;background:#ffffff0f;box-shadow:0 0 0 1px rgba(0,0,0,.07)!important;text-align:left}
+.site-right-nav,.site-right-nav a{overflow:hidden;color:#888;text-overflow:ellipsis;white-space:nowrap}
+.site-right-logo{float:left;margin:30px 0;width:50px;height:50px;border-radius:5px}
+.site-right-logo img,.site-right-logo svg{width:100%;height:100%}
+.site-right-title{display:flex;margin:30px 0;margin-left:0;margin-left:50px;padding:0 10px;height:50px;color:#5e5e5e;text-align:center;font-weight:700;font-size:1.2em;align-items:center}
+.site-right-url{margin-bottom:30px;text-align:center}
+.urls-tools-item{display:inline-block}
+.site-right-title span{display:-webkit-box;overflow:hidden;margin:0 auto;max-width:100%;color:#ff6000;text-overflow:ellipsis;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.urls-tools-btn{display:inline-block;margin-right:15px;padding:10px 15px;border-color:#eff1f5;border-radius:5px;background-color:#eff1f5;color:#828488;line-height:1.2}
+.btn-arrow{background:linear-gradient(40deg,#007bf5,#60b0ff);color:#fff}
+.urls-tools-qr #code{position:absolute;z-index:10;display:none;padding:5px;width:110px;height:110px;border-radius:5px;background:#212529}
+.urls-tools-qr:hover #code{display:block}
+.dh-entry-title{color:#c1933a;text-align:center}
+.dh-entry-tips{margin:1px;margin-top:15px;padding:10px;border-radius:5px;background:#ffffff0f url(/template/quality6.0/img/quote.svg) no-repeat 101% -15px;background-size:55px;box-shadow:0 0 0 1px rgba(0,0,0,.07)!important;color:#b52020;font-size:14px}
+.dh-entry-xinxi{font-size:.9em}
+.xinxi-text-1{display:-webkit-box;overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+.xinxi-text-2{display:-webkit-box;overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.xinxi-text-3{display:-webkit-box;overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+@media (max-width:1300px){.site-container{padding:0 10px}
+.site-left-info{height:260px}
+.site-left-column{width:100%}
+.site-right-column{margin-top:10px;width:100%}
+.dh-entry-tips{margin:10px}
+.urls-tools-qr{display:none}
+.urls-tools-btn{margin-right:0}
+}
+.lazyload {opacity: 0.5;transition: opacity 0.5s ease-in-out;}
+.lazyloaded{opacity: 1;}

@@ -44,10 +44,17 @@ p.content
 }
 
 #word li {
-    margin: 10px;
-    padding: 5px;
+    padding: 8px;
     width: 100%;
     cursor: pointer
+}
+
+li.selected {
+    background: #f1f1f1
+}
+
+#word li:hover {
+    background-color: #f1f1f1;
 }
 
 p.content {
@@ -62,15 +69,17 @@ p.content {
 .urllist svg,
 .site-name svg {
     width: 24px;
-    height: 20px;
+    height: 24px;
     margin: auto 15px auto 0px
 }
 
 .list svg.icon,
 .list img {
-    width: 22px;
-    height: 22px;
-    margin-right: 10px
+    width: 28px;
+    height: 28px;
+    margin-right: 10px;
+    padding: 2px;
+    border: 10px;
 }
 
 * {
@@ -91,7 +100,7 @@ textarea:focus {
 input {}
 
 body {
-    background-color: #f5f6fa
+    background-color: #f9f9f9
 }
 
 img {
@@ -133,8 +142,8 @@ a {
 .index-nav {
     width: 240px;
     height: 100vh;
-    background-color: #FFFFFF;
-    padding: 20px 5px 100px 0px;
+    background-color: #fff;
+    padding: 20px 5px 20px 0px;
     box-shadow: 1px 0px 5px 0 #eeeeee;
     position: fixed;
     top: 0;
@@ -151,7 +160,7 @@ a {
 .index-nav .logo a {
     display: block;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 20px;
     height: 30px;
     margin: 25px
 }
@@ -169,8 +178,8 @@ a {
 }
 
 .index-nav .type-list {
-    height: calc(100% - 60px);
-    padding: 0 25px 100px;
+    height: 100%;
+    padding: 0 25px 80px;
     overflow: auto
 }
 
@@ -185,7 +194,7 @@ a {
 }
 
 .index-nav .type-list::-webkit-scrollbar-thumb {
-    background-color: #64a15e;
+    background-color: #dddee3;
     border-radius: 50px
 }
 
@@ -212,12 +221,13 @@ a {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    font-size: 14px;
-    font-weight: bold;
+    font-size: 15px;
+    font-weight: 500;
     padding: 0 10px;
     border-radius: 5px;
     color: #3a3a3a;
-    transition: 0.3s all
+    transition: 0.3s all;
+    background: #fbfbfb;
 }
 
 .index-nav .type-list .list a i {
@@ -468,7 +478,8 @@ a {
 }
 
 .search-main .search-btnlist .search-lists {
-    width: 390px;
+    width: calc(100vw - 30px);
+    max-width: 500px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -480,7 +491,7 @@ a {
     padding: 12px;
     border-radius: 6px;
     z-index: 100;
-    box-shadow: 0px 0px 6px #000000
+    box-shadow: 0px 0px 6px #b4b4b4;
 }
 
 .search-main .search-btnlist .search-lists.hide {
@@ -492,7 +503,7 @@ a {
     line-height: 40px;
     padding: 0 10px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     font-size: 15px;
     border-radius: 6px;
@@ -503,8 +514,8 @@ a {
 .search-main .search-btnlist .search-lists .list img,
 .search-main .search-btnlist .search-lists .list svg {
     display: block;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     margin-right: 8px;
     border-radius: 6px
 }
@@ -517,7 +528,7 @@ a {
 
 .search-main-w .date-main {
     text-shadow: 1px 1px 8px #504b4b;
-    width: 49%;
+    width: 100%;
     height: 180px;
     background-color: #477975;
     background-repeat: no-repeat;
@@ -591,14 +602,16 @@ div#he-plugin-standard {
 }
 
 .site-main .site-name {
+    background: #fff;
+    border-radius: 6px;
+    color: #333333;
+    padding: 10px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    align-self: center;
-    font-size: 18px;
+    font-size: 15px;
     line-height: 30px;
-    font-weight: bold;
-    margin-bottom: 15px
+    margin-bottom: 15px;
 }
 
 .site-main .site-name i {
@@ -638,7 +651,7 @@ div#he-plugin-standard {
 .site-main .site-list .list {
     width: 24%;
     background-color: #ffffff;
-    border-radius: 4px;
+    border-radius: 6px;
     transition: 0.3s all;
     margin-bottom: 15px;
     position: relative;
@@ -668,16 +681,16 @@ div#he-plugin-standard {
 
 .site-main .site-list .list a {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    flex-wrap: nowrap;
     width: 100%;
-    padding: 0 5%
+    padding: 1.5% 5%;
+    justify-content: space-evenly;
+    flex-direction: row;
 }
 
 .site-main .site-list .list p.name {
-    color: #666666;
-    font-weight: bold;
-    width: 60%;
+    color: #555555;
+    width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     position: relative;
@@ -749,7 +762,7 @@ footer {
 }
 
 footer a {
-    color: #666
+    color: #2eb3ff
 }
 
 footer.show {
@@ -767,7 +780,10 @@ footer a:hover {
     z-index: 99;
     width: 45px
 }
-
+a.icp {
+    margin: 5px;
+    font-size: 14px;
+}
 .tool-list .list {
     width: 45px;
     height: 45px;
@@ -965,7 +981,9 @@ footer a:hover {
 .m-header {
     display: none
 }
-
+.index-nav .type-list .list a i {
+    font-size: 14px;
+}
 @media only screen and (max-width:1200px) {
     #word {
         top: 340px
@@ -1033,9 +1051,6 @@ footer a:hover {
         margin: auto
     }
 
-    .site-main .site-list .list a {
-        padding: 0 10% 0 5%
-    }
 
     footer {
         padding-left: 0
@@ -1070,8 +1085,8 @@ footer a:hover {
         height: 40px;
         font-size: 28px;
         text-align: center;
-        border: 1px solid #000;
-        color: #000;
+        /* border: 1px solid #919191; */
+        color: #919191;
         border-radius: 6px
     }
 
@@ -1089,7 +1104,6 @@ footer a:hover {
 
     .m-navlist {
         display: flex;
-        justify-content: space-between;
         flex-wrap: wrap;
         align-items: center
     }

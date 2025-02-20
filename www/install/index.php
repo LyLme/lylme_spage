@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @File:   index.php
  * @User:   LyLme <admin@lylme.com>
@@ -10,12 +11,12 @@ header('Content-Type:text/html; charset=utf-8');
 
 
 // 检测php版本号
-if (phpversion() < '5.4') {
-    exit('抱歉，您的PHP版本过低，请升级到PHP5.4或更高版本再安装！');
+if (!(version_compare(phpversion(), '7.1.0', '>=') && version_compare(phpversion(), '8.0.0', '<'))) {
+    exit('抱歉，您的PHP版本过低或过高，请将PHP版本修改为PHP7.1及以上(不支持PHP8)，再安装！');
 }
 
 // 不限制响应时间
-//error_reporting(0);
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
 set_time_limit(0);
 
 // 设置系统路径
@@ -42,11 +43,11 @@ $GLOBALS['isNext'] = true;
 // 获取当前步骤
 function getStep()
 {
-    $s1 = $_GET['s'] ?: 0;
+    $s1 = isset($_GET['s']) ? $_GET['s'] : 0;
     // 初始化参数
-    $s2 = $_POST['s'] ?: 0;
+    $s2 = isset($_POST['s']) ? $_POST['s'] : 0;
     // 如果有GET值则覆盖POST值
-    if ($s1 > 0 && in_array($s1, [1, 63832, md5('done')])) {
+    if ($s1 > 0 && in_array($s1, [1, 6766, md5('done')])) {
         $s2 = $s1;
     }
     return $s2;
@@ -187,7 +188,7 @@ if ($s == 3) {
 }
 
 // 检测数据库信息
-if ($s == 63832) {
+if ($s == 6766) {
     $dbhost = $_GET['dbhost'] ?: '';
     $dbuser = $_GET['dbuser'] ?: '';
     $dbpwd = $_GET['dbpwd'] ?: '';
@@ -197,7 +198,11 @@ if ($s == 63832) {
         $pdo = new PDO($dsn, $dbuser, $dbpwd);
         echo 'true';
     } catch (Exception $e) {
-        echo 'false';
+        if (strpos($e->getMessage(), '[1045]') !== false) {
+            echo '数据库用户名不存在或数据库密码错误！请核对后再试';
+        } else {
+            echo $e->getMessage();
+        }
     }
     exit();
 }
@@ -229,6 +234,10 @@ function getExtendArray()
         [
             'name' => 'mbstring',
             'status' => extension_loaded('mbstring'),
+        ],
+        [
+            'name' => 'MySQLi',
+            'status' => extension_loaded('mysqli'),
         ]
     ];
     foreach ($data as $item) {
@@ -300,9 +309,11 @@ function clearBOM($contents)
     $charset[1] = substr($contents, 0, 1);
     $charset[2] = substr($contents, 1, 1);
     $charset[3] = substr($contents, 2, 1);
-    if (ord($charset[1]) == 239 &&
+    if (
+        ord($charset[1]) == 239 &&
         ord($charset[2]) == 187 &&
-        ord($charset[3]) == 191) {
+        ord($charset[3]) == 191
+    ) {
         return substr($contents, 3);
     } else {
         return $contents;

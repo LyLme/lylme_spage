@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <!--
 模板：quality
 作者：六零
@@ -23,15 +24,13 @@
 		<meta name="x5-fullscreen" content="true">
 		<meta name="x5-page-mode" content="app">
 		<meta name="lsvn" content="<?php echo base64_encode($conf['version'])?>">
-		<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js" type="application/javascript"></script>
-		<link href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.5.3/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-		<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.5.3/js/bootstrap.min.js" type="application/javascript"></script>
-		
-		<link rel="stylesheet" href="<?php echo $cdnpublic ?>/assets/css/fontawesome-free5.13.0.css" type="text/css">
+		<script src="<?php echo $cdnpublic ?>/assets/js/jquery.min.js" type="application/javascript"></script>
+		<link href="<?php echo $cdnpublic ?>/assets/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+		<script src="<?php echo $cdnpublic ?>/assets/js/bootstrap.min.js" type="application/javascript"></script>
 		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/daohang.css" type="text/css">
-		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/style.css?v=20220510" type="text/css">
+		<link rel="stylesheet" href="<?php echo $templatepath;?>/css/style.css?v=20240409" type="text/css">
 	</head>
-	<?php if(!empty(background())) {
+	<?php if (!empty(background())) {
 	    echo '<body onload="FocusOnInput()" style="background-image: url(' . background() . ');background-size: cover;/**/margin: 0;padding: 0;background: linear-gradient(#3c65e1, #195bc1, #6011d5, #5d21a8, #53097d);min-height: 100vh;display: flex;justify-content: center;align-items: center;background-attachment: fixed;">';
 	} else {
 	    echo '<body onload="FocusOnInput()">';
@@ -97,7 +96,6 @@ $groups = $site->getGroups();
 				<div id="main">
 <div id="show_time"></div>  
 <div id="show_date"></div>  
-
 			</div>
 <?php
 		//调用随机一言
@@ -109,9 +107,6 @@ $groups = $site->getGroups();
 			<div id="search" class="s-search">
 				<div id="search-list" class="hide-type-list">
 					<div class="search-group group-a s-current">
-					
-					
-				
 						<div class="search-box">
 				<div id="search-lylme">
 				<form action="https://www.baidu.com/s?wd=" method="get" target="_blank"
@@ -121,8 +116,6 @@ $groups = $site->getGroups();
 				    <svg class="sw" id="lylme-up" style="display:inline" aria-hidden="true"><use xlink:href="#icon-up"></use></svg>
 				    <svg class="sw" id="lylme-down" style="display:none" aria-hidden="true"><use xlink:href="#icon-down"></use></svg>
 				    </div>
-					
-		
 				<input type="text" id="search-text" placeholder="百度一下，你就知道" style="outline:0"
 					autocomplete="off">
 					<button class="submit" id="search-submit" type="submit">
@@ -138,19 +131,15 @@ $groups = $site->getGroups();
 				</form>
 					</div>
 					</div>
-
-		
-
-				
 				</div>
 					<ul class="search-type" id="chso">
 						<?php
 		                            $soulists = $site->getSou();
 		while ($soulist = $DB->fetch($soulists)) {
-		    if($soulist["sou_st"] == 1) {
+		    if ($soulist["sou_st"] == 1) {
 		        echo '	<li>
 								<input hidden=""  checked="" type="radio" name="type" id="type-' . $soulist["sou_alias"] . '" value="';
-		        if(checkmobile() && $soulist["sou_waplink"] != null) {
+		        if (checkmobile() && $soulist["sou_waplink"] != null) {
 		            echo $soulist["sou_waplink"];
 		        } else {
 		            echo $soulist["sou_link"];
@@ -174,21 +163,17 @@ $groups = $site->getGroups();
 				<ul id="word" style="display: none;">
 					</ul>
 			</div>
-
-<style>
-
-</style>
-
 <?php
-$html = array(
-    'g1' => '<ul class="mylist row">', //分组开始标签
-    'g2' => '<li id="category-{group_id}" class="title">{group_icon}<sapn>{group_name}</sapn></li>',  //分组内容
-    'g3' => '</ul>',  //分组结束标签
+$rel = $conf["mode"] == 2 ? '' : 'rel="nofollow"';
+		$html = array(
+		    'g1' => '<ul class="mylist row">', //分组开始标签
+		    'g2' => '<li id="category-{group_id}" class="title">{group_icon}<sapn>{group_name}</sapn></li>',  //分组内容
+		    'g3' => '</ul>',  //分组结束标签
 
-    'l1' => '<li class="lylme-3">',  //链接开始标签
-    'l2' => '<a rel="nofollow" href="{link_url}" target="_blank">{link_icon}<span>{link_name}</span></a>',  //链接内容
-    'l3' => '</li>',  //链接结束标签
-);
+		    'l1' => '<li class="lylme-3">',  //链接开始标签
+		    'l2' => '<a '.$rel.' href="{link_url}"  title="{link_name_text}"  target="_blank">{link_icon}<span>{link_name}</span></a>',  //链接内容
+		    'l3' => '</li>',  //链接结束标签
+		);
 		lists($html);
 		?>
 <script src="<?php echo  $templatepath;?>/js/script.js?v=20220518"></script>
@@ -198,18 +183,17 @@ $html = array(
 </div> 
 <div class="mt-5 mb-3 footer text-muted text-center"> 
   <!--备案信息-->
-  <?php if($conf['icp'] != null) {
-      echo '<img src="./assets/img/icp.png" width="16px" height="16px" /><a href="http://beian.miit.gov.cn/" class="icp" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a>';
+  <?php if ($conf['icp'] != null) {
+      echo '<a href="http://beian.miit.gov.cn/" class="icp" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a>';
   } ?> 
   <!--版权信息-->
   <p> <?php echo $conf['copyright']; ?></p>
   <!--网站统计-->
- <?php if($conf['wztj'] != null) {
+ <?php if ($conf['wztj'] != null) {
      echo $conf["wztj"];
  }?>
   </div>  
     <script>
-
 		</script>
  </body>
 </html>

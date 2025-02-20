@@ -35,10 +35,7 @@ CREATE TABLE `lylme_tags` (
   `tag_target` int(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`) VALUES
-(1, '主页', 'https://www.lylme.com/', 0),
-(2, '博客', 'https://blog.lylme.com/', 1),
-(3, 'Github', 'https://github.com/lylme', 1),
-(4, '关于本站', '/about', 1);
+(1, '关于本站', '/about', 10);
 ALTER TABLE `lylme_tags`
   ADD PRIMARY KEY (`tag_id`);
 ALTER TABLE `lylme_tags`
