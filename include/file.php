@@ -37,7 +37,7 @@ function download_img($url)
     if (!validate_file_type($img_ext)) {
         exit('{"code": "-4","msg":"抓取的图片类型'.$img_ext.'不支持"}');
     }
-    $img_name = $IMG_NAME . '.' . $img_ext;
+    $img_name = $IMG_NAME  . $img_ext;
     // 验证文件名合法性
     if (!validate_filename($img_name)) {
         exit('{"code": "-5","msg":"文件后缀不合法"}');
