@@ -116,6 +116,9 @@ function CheckForm() {
  * @constructor
  */
 function CheckPwd() {
+    if (!$("#dbpwd").val()) {
+       return; 
+    }
     $.ajax({
         url: 'index.php',
         data: {

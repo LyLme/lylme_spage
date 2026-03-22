@@ -87,14 +87,9 @@ if (!defined('SQLITE')) {
     }
 
     if (!empty($missingFields)) {
-        // 数据库配置不完整，尝试清理安装锁文件
-        $installLock = ROOT . 'install/install.lock';
-        if (file_exists($installLock)) {
-            // 使用安全的方式删除文件
-            if (is_writable($installLock)) {
-                unlink($installLock);
-            }
-        }
+        // 数据库配置不完整
+        $errorMsg = '数据库配置无效：请编辑config.php配置数据库或删除install/install.lock文件重新安装本程序';
+        exit('<h3>' . htmlspecialchars($errorMsg, ENT_QUOTES, 'UTF-8') . '</h3>');
 
         // 重定向到安装页面
         if (!headers_sent()) {
@@ -157,7 +152,7 @@ try {
     if (defined('DEBUG') && DEBUG === true) {
         exit('<h3>数据库连接错误</h3><p>' . $errorMsg . '</p>');
     } else {
-        exit('<h3>数据库连接失败，请检查数据库配置</h3>');
+        exit('<h3>数据库连接失败，请检查数据库配置文件(config.php )</h3>');
     }
 }
 
@@ -183,7 +178,7 @@ try {
         if (defined('DEBUG') && DEBUG === true) {
             exit("<h3>LyLme Spage 系统错误</h3><p>{$errorMsg}</p><p>数据库错误: {$dbError}</p>");
         } else {
-            exit("<h3>系统初始化失败，请联系管理员</h3>");
+            exit("<h3>系统初始化失败，数据库错误</h3>");
         }
     }
 
