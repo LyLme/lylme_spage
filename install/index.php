@@ -137,33 +137,10 @@ if ($s == 3) {
         insInfo("数据库连接文件创建完成！");
         ob_flush();
         flush();
-
-
-
-
         // 创建表结构
         $tbstruct = readDataFile('install_struct.sql');
         $pdo->exec(trim($tbstruct));
         insInfo("数据库导入完成！");
-
-        ob_flush();
-        flush();
-
-        $sql = "INSERT INTO `lylme_config` (`k`, `v`, `description`) VALUES ('build', ?, '建站日期')";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(array(date("Y-m-d H:i")));
-
-        insInfo("网站安装完成！");
-
-        try {
-            $pdo->commit();
-        } catch (Exception $e) {
-            // 如果不在事务中，忽略错误
-            if (strpos($e->getMessage(), 'no active transaction') === false) {
-                throw $e;
-            }
-        }
-
         ob_flush();
         flush();
         // 结束缓存区
