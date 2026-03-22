@@ -56,24 +56,6 @@ INSERT INTO `lylme_config` (`id`, `k`, `v`, `description`) VALUES
 (23, 'about', '1', '新版关于页面'),
 (24, 'about_content', '<h3>关于本站</h3>\r\n<p>感谢来访，本站致力于简洁高效的上网导航和搜索入口，安全快捷。</p>\r\n<p>如果您喜欢我们的网站，请将本站添加到收藏夹（快捷键<code>Ctrl+D</code>），并<a href=\"https://jingyan.baidu.com/article/4dc40848868eba89d946f1c0.html\" target=\"_blank\">设为浏览器主页</a>，方便您的下次访问，感谢支持。<p>\r\n<hr>\r\n<h3>本站承诺</h3>\r\n<p><strong>绝对不会收集用户的隐私信息</strong><p>\r\n<p>区别于部分导航网站，本站链接直接跳转目标，不会对链接处理再后跳转，不会收集用户隐私信息，包括但不限于点击记录，访问记录和搜索记录，请放心使用</p>\r\n<hr>\r\n<h3>申请收录</h3>\r\n<p>请点<a href=\"../apply\" target=\"_blank\">这里</a></p>\r\n<hr>\r\n<h3>联系我们</h3>\r\n<p>若您在使用本站时遇到了包括但不限于以下问题：</p>\r\n<li>图标缺失</li>\r\n<li>目标网站无法打开</li>\r\n<li>描述错误</li>\r\n<li>网站违规</li>\r\n<li>收录加急处理</li>\r\n<li>链接删除</li>\r\n<p><strong>请发邮件与我们联系</strong></p>\r\n<h5>联系邮箱</h5>\r\n<p><a href=\"mailto:无\">无</a></p>\r\n<h5>联系说明</h5>\r\n<p>为了您的问题能快速被处理，建议在邮件主题添加【反馈】【投诉】【推荐】【友链】</p>', '关于页面');
 
-DROP TABLE IF EXISTS `lylme_groups`;
-CREATE TABLE `lylme_groups` (
-  `group_id` int(2) NOT NULL COMMENT '分组ID',
-  `group_name` varchar(10) NOT NULL COMMENT '分组名称',
-  `group_icon` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '分组图标',
-  `group_order` int(4) NOT NULL DEFAULT '5' COMMENT '分组排序',
-  `group_status` int(1) NOT NULL DEFAULT '1' COMMENT '分组状态',
-  `group_pwd` int(2) NOT NULL DEFAULT '0' COMMENT '加密组ID'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
-
-INSERT INTO `lylme_groups` (`group_id`, `group_name`, `group_icon`, `group_order`, `group_status`, `group_pwd`) VALUES
-(1, '常用导航', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-remen\"></use></svg>', 1, 1, 0),
-(2, '设计视觉', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sheji\"></use></svg>', 2, 1, 0),
-(3, '社交&存储', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-msg\"></use></svg>', 3, 1, 0),
-(4, '工具', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-ai-tool\"></use></svg>', 4, 1, 0),
-(5, '开发', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-kongzhitai\"></use></svg>', 5, 1, 0),
-(6, '游戏娱乐', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-game00\"></use></svg>', 6, 1, 0),
-(7, '网站公告', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gg00\"></use></svg>', 7, 1, 0);
 
 DROP TABLE IF EXISTS `lylme_links`;
 CREATE TABLE `lylme_links` (
@@ -167,6 +149,26 @@ INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`,
 (76, '王者荣耀', 6, 'https://pvp.qq.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-wzry00\"></use></svg>', NULL, 10, 1, 0),
 (77, '3DM GAME', 6, 'https://www.3dmgame.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-games00\"></use></svg>', NULL, 10, 1, 0),
 (78, '申请收录', 7, '/apply', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sq00\"></use></svg>', NULL, 10, 1, 0);
+
+DROP TABLE IF EXISTS `lylme_groups`;
+CREATE TABLE `lylme_groups` (
+  `group_id` int(2) NOT NULL COMMENT '分组ID',
+  `group_name` varchar(10) NOT NULL COMMENT '分组名称',
+  `group_icon` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '分组图标',
+  `group_order` int(4) NOT NULL DEFAULT '5' COMMENT '分组排序',
+  `group_status` int(1) NOT NULL DEFAULT '1' COMMENT '分组状态',
+  `group_pwd` int(2) NOT NULL DEFAULT '0' COMMENT '加密组ID'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
+
+INSERT INTO `lylme_groups` (`group_id`, `group_name`, `group_icon`, `group_order`, `group_status`, `group_pwd`) VALUES
+(1, '常用导航', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-remen\"></use></svg>', 1, 1, 0),
+(2, '设计视觉', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sheji\"></use></svg>', 2, 1, 0),
+(3, '社交&存储', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-msg\"></use></svg>', 3, 1, 0),
+(4, '工具', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-ai-tool\"></use></svg>', 4, 1, 0),
+(5, '开发', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-kongzhitai\"></use></svg>', 5, 1, 0),
+(6, '游戏娱乐', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-game00\"></use></svg>', 6, 1, 0),
+(7, '网站公告', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-gg00\"></use></svg>', 7, 1, 0);
+
 
 DROP TABLE IF EXISTS `lylme_pwd`;
 CREATE TABLE `lylme_pwd` (
