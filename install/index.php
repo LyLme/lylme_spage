@@ -149,22 +149,23 @@ if ($s == 3) {
         ob_flush();
         flush();
 
-        // 直接插入，不再验证
-        $sql = "INSERT INTO `lylme_config` (`k`, `v`, `description`) VALUES ('build', :build_date, '建站日期')";
+        $sql = "INSERT INTO `lylme_config` (`k`, `v`, `description`) VALUES ('build', ?, '建站日期')";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([':build_date' => date("Y-m-d H:i")]);
+        $stmt->execute(array(date("Y-m-d H:i")));
 
         insInfo("网站安装完成！");
 
-        // 不需要重新连接验证，因为原连接的数据已经生效
-        // 只需要确保事务提交
-        if ($pdo->inTransaction()) {
+        try {
             $pdo->commit();
+        } catch (Exception $e) {
+            // 如果不在事务中，忽略错误
+            if (strpos($e->getMessage(), 'no active transaction') === false) {
+                throw $e;
+            }
         }
 
         ob_flush();
         flush();
-
         // 结束缓存区
         ob_end_flush();
 
