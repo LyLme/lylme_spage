@@ -138,39 +138,32 @@ if ($s == 3) {
         ob_flush();
         flush();
 
+
+
+
         // 创建表结构
         $tbstruct = readDataFile('install_struct.sql');
         $pdo->exec(trim($tbstruct));
-
-        insInfo("数据库结构导入完成！");
-        ob_flush();
-        flush();
-
-        // 导入其他安装数据
-
-        $pdo->query("INSERT INTO `lylme_config` (`id`, `k`, `v`, `description`) VALUES (NULL, 'build', '" . date("Y-m-d H:i") . "', '建站日期');");
-        $data_str = readDataFile('install_data.sql');
-        $pdo->exec(trim($data_str));
-        insInfo("数据导入完成！");
+        insInfo("数据库导入完成！");
 
         ob_flush();
         flush();
 
+        // 直接插入，不再验证
+        $sql = "INSERT INTO `lylme_config` (`k`, `v`, `description`) VALUES ('build', :build_date, '建站日期')";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':build_date' => date("Y-m-d H:i")]);
 
+        insInfo("网站安装完成！");
 
-        // 查看是否需要安装测试数据
-        // if ($testdata == 'true') {
-        //     insInfo("正在加载测试数据！");
-        //     ob_flush();
-        //     flush();
+        // 不需要重新连接验证，因为原连接的数据已经生效
+        // 只需要确保事务提交
+        if ($pdo->inTransaction()) {
+            $pdo->commit();
+        }
 
-        //     $sqlstr_file = readDataFile('install_testdata.sql');
-        //     $pdo->exec(trim($sqlstr_file));
-
-        //     insInfo("测试数据导入完成！");
-        //     ob_flush();
-        //     flush();
-        // }
+        ob_flush();
+        flush();
 
         // 结束缓存区
         ob_end_flush();

@@ -1,4 +1,5 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -26,9 +27,10 @@ CREATE TABLE `lylme_config` (
   `k` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '键',
   `v` text COLLATE utf8mb4_unicode_ci COMMENT '值',
   `description` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '描述'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='导航配置' ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='网站配置' ROW_FORMAT=COMPACT;
 
-INSERT INTO `lylme_config` VALUES
+
+INSERT INTO `lylme_config` (`id`, `k`, `v`, `description`) VALUES
 (1, 'admin_pwd', '1ef987f238b7a80eaf3689cfc42aad2d', '管理员密码'),
 (2, 'admin_user', 'admin', '管理员账号'),
 (3, 'apply', '0', '收录申请'),
@@ -36,8 +38,8 @@ INSERT INTO `lylme_config` VALUES
 (5, 'background', './assets/img/background.jpg', '背景图片'),
 (6, 'title', '上网导航 - LyLme Spage', '网站标题'),
 (7, 'cdnpublic', NULL, 'CDN地址'),
-(8, 'copyright', 'Copyright ©2022-2024 <a href=\"/\">LyLme Spage</a>.  All Rights Reserved.', '版权代码'),
-(9, 'description', '六零导航页(LyLme Spage)致力于简洁高效无广告的上网导航和搜索入口，沉淀最具价值链接，全站无商业推广，简约而不简单。', '网站描述'),
+(8, 'copyright', 'Copyright ©2022-2026 <a href=\"/\">LyLme Spage</a>.  All Rights Reserved.', '版权代码'),
+(9, 'description', 'LyLme Spage致力于简洁高效无广告的上网导航和搜索入口，沉淀最具价值链接，全站无商业推广，简约而不简单。', '网站描述'),
 (10, 'home-title', '<h2 class=\"title\">上网，从这里开始！</h2>', '首页标题'),
 (11, 'icp', '', '备案号'),
 (12, 'keywords', '六零导航页,百度搜索,哔哩哔哩搜索,知乎搜索,六零导航,LyLme Spage,六零,LyLme,网站导航,上网导航', '关键字'),
@@ -46,7 +48,7 @@ INSERT INTO `lylme_config` VALUES
 (15, 'template', 'default', '网站模板'),
 (16, 'wztj', '', '网站统计代码(自定义footer)'),
 (17, 'tq', 'true', '天气显示开关'),
-(18, 'version', 'v1.9.5', '程序版本'),
+(18, 'version', 'v2.2.0', '程序版本'),
 (19, 'wap_background', NULL, '手机端背景'),
 (20, 'wxplus', '', '微信推送密钥'),
 (21, 'wxplustime', '20:00', '微信推送时间'),
@@ -64,7 +66,7 @@ CREATE TABLE `lylme_groups` (
   `group_pwd` int(2) NOT NULL DEFAULT '0' COMMENT '加密组ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
-INSERT INTO `lylme_groups` VALUES
+INSERT INTO `lylme_groups` (`group_id`, `group_name`, `group_icon`, `group_order`, `group_status`, `group_pwd`) VALUES
 (1, '常用导航', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-remen\"></use></svg>', 1, 1, 0),
 (2, '设计视觉', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sheji\"></use></svg>', 2, 1, 0),
 (3, '社交&存储', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-msg\"></use></svg>', 3, 1, 0),
@@ -86,7 +88,7 @@ CREATE TABLE `lylme_links` (
   `link_pwd` int(2) DEFAULT '0' COMMENT '加密组ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
 
-INSERT INTO `lylme_links` VALUES
+INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`, `link_order`, `link_status`, `link_pwd`) VALUES
 (1, '百度', 1, 'https://www.baidu.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-icon_baidulogo\"></use></svg>', NULL, 10, 1, 0),
 (2, '腾讯视频', 1, 'https://v.qq.com', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-tengxunshipin\"></use></svg>', NULL, 10, 1, 0),
 (3, '优酷', 1, 'https://www.youku.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-youku\"></use></svg>', NULL, 10, 1, 0),
@@ -188,7 +190,7 @@ CREATE TABLE `lylme_sou` (
   `sou_order` int(2) NOT NULL COMMENT '搜索引擎排序'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='搜索引擎';
 
-INSERT INTO `lylme_sou` VALUES
+INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `sou_color`, `sou_link`, `sou_waplink`, `sou_icon`, `sou_st`, `sou_order`) VALUES
 (1, 'baidu', '百度一下', '百度一下，你就知道', '#0c498c', 'https://www.baidu.com/s?word=', 'https://m.baidu.com/s?word=', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-icon_baidulogo\"></use></svg>', 1, 1),
 (2, 'sogou', '搜狗搜索', '上网从搜狗开始', '#696a6d', 'https://www.sogou.com/web?query=', NULL, '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-sougou\"></use></svg>', 1, 2),
 (3, 'bing', 'Bing必应', '微软必应搜索', '#696a6d', 'https://cn.bing.com/search?q=', NULL, '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#icon-bing\"></use></svg>', 1, 3),
@@ -207,7 +209,7 @@ CREATE TABLE `lylme_tags` (
   `sort` int(11) NOT NULL DEFAULT '10' COMMENT '权重'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `lylme_tags` VALUES
+INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`, `sort`) VALUES
 (1, '关于本站', '/about', 1, 10),
 (2, '申请收录', '/apply', 1, 10),
 (3, '访问管理', '/pwd', 0, 10);
@@ -242,7 +244,7 @@ ALTER TABLE `lylme_apply`
   MODIFY `apply_id` int(4) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `lylme_config`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=25;
 
 ALTER TABLE `lylme_groups`
   MODIFY `group_id` int(2) NOT NULL AUTO_INCREMENT COMMENT '分组ID', AUTO_INCREMENT=8;
@@ -258,7 +260,7 @@ ALTER TABLE `lylme_sou`
 
 ALTER TABLE `lylme_tags`
   MODIFY `tag_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '导航菜单ID', AUTO_INCREMENT=7;
-
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
