@@ -1,20 +1,41 @@
 <?php
+
+/**
+ * LyLme Spage - 六零导航页
+ * 公共初始化文件
+ * 
+ */
+
 // 系统常量定义
 define('ADMIN_PATH', 'admin');  // 后台目录（修改后需同步调整防火墙规则）
-define('DEBUG', true);  // 错误报告，默认关闭调试模式
+define('DEBUG', false);  // 调试模式(默认关闭：false)
 
 define('IN_CRONLITE', true);
 define('SYS_KEY', 'lylme_key');
 define('SYSTEM_ROOT', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 define('ROOT', dirname(SYSTEM_ROOT) . DIRECTORY_SEPARATOR);
+// PHP版本检测
+if (!defined('PHP_VERSION_ID')) {
+    define('PHP_VERSION_ID', version_compare(PHP_VERSION, '8.0.0', '>=') ? 8 : (version_compare(PHP_VERSION, '7.0.0', '>=') ? 7 : 5));
+}
 
 // 设置错误报告级别
 if (defined('DEBUG') && DEBUG === true) {
     error_reporting(E_ALL);
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
+
+    // PHP 8.0+ 移除 E_DEPRECATED
+    if (version_compare(PHP_VERSION, '8.0.0', '>=')) {
+        error_reporting(E_ALL & ~E_DEPRECATED);
+    }
 } else {
-    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE);
+    // PHP 8.2+ 移除 E_DEPRECATED
+    $error_levels = E_ALL & ~E_NOTICE & ~E_STRICT;
+    if (version_compare(PHP_VERSION, '8.0.0', '>=')) {
+        $error_levels &= ~E_DEPRECATED;
+    }
+    error_reporting($error_levels);
     ini_set('display_errors', '0');
     ini_set('display_startup_errors', '0');
 }
@@ -31,7 +52,9 @@ if (file_exists($versionFile) && is_readable($versionFile)) {
     if (!defined('VERSION')) {
         define('VERSION', 'v1.0.0');
     }
-    error_log("Version file missing: {$versionFile}");
+    if (defined('DEBUG') && DEBUG === true) {
+        error_log("Version file missing: {$versionFile}");
+    }
 }
 
 // 包含配置文件
@@ -52,17 +75,17 @@ if (!defined('SQLITE')) {
         error_log('Database Config Error: ' . $errorMsg);
         exit('<h3>' . htmlspecialchars($errorMsg, ENT_QUOTES, 'UTF-8') . '</h3>');
     }
-    
+
     // 验证必要配置项
     $requiredFields = ['host', 'user', 'pwd', 'dbname'];
     $missingFields = [];
-    
+
     foreach ($requiredFields as $field) {
         if (!isset($dbconfig[$field]) || empty($dbconfig[$field])) {
             $missingFields[] = $field;
         }
     }
-    
+
     if (!empty($missingFields)) {
         // 数据库配置不完整，尝试清理安装锁文件
         $installLock = ROOT . 'install/install.lock';
@@ -72,7 +95,7 @@ if (!defined('SQLITE')) {
                 unlink($installLock);
             }
         }
-        
+
         // 重定向到安装页面
         if (!headers_sent()) {
             // 使用绝对路径重定向
@@ -100,36 +123,37 @@ require $dbClassFile;
 
 // 初始化数据库连接（添加错误处理）
 try {
-    // 根据PHP版本选择适当的连接方式
+    // 获取端口配置，兼容字符串和整数
     $dbPort = isset($dbconfig['port']) ? (int)$dbconfig['port'] : 3306;
-    $dbHost = $dbconfig['host'];
-    
-    // PHP 8.1+ mysqli_report 配置
-    if (version_compare(PHP_VERSION, '8.1.0', '>=')) {
-        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    $dbHost = $dbconfig['host'] ?? 'localhost';
+
+    // PHP 8.1+ mysqli_report 配置 - 只在 mysqli 扩展可用时调用
+    if (version_compare(PHP_VERSION, '8.1.0', '>=') && extension_loaded('mysqli')) {
+        try {
+            mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        } catch (Exception $e) {
+            // 忽略mysqli_report设置错误
+        }
     }
-    
-    // 创建数据库实例
+
+    // 创建数据库实例 - 使用新的DB类
     $DB = new DB(
-        $dbconfig['host'],
+        $dbHost,
         $dbconfig['user'],
         $dbconfig['pwd'],
         $dbconfig['dbname'],
         $dbPort
     );
-    
+
     // 测试数据库连接
-    if (method_exists($DB, 'connect')) {
-        $DB->connect();
-    } elseif (method_exists($DB, 'query')) {
-        // 备用连接测试
-        $DB->query("SELECT 1");
+    $testResult = $DB->query("SELECT 1");
+    if ($testResult === false) {
+        throw new Exception($DB->error());
     }
-    
 } catch (Exception $e) {
     $errorMsg = '数据库连接失败: ' . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
     error_log('Database Connection Error: ' . $e->getMessage());
-    
+
     if (defined('DEBUG') && DEBUG === true) {
         exit('<h3>数据库连接错误</h3><p>' . $errorMsg . '</p>');
     } else {
@@ -146,42 +170,23 @@ if (file_exists($functionFile) && is_readable($functionFile)) {
     error_log("Function file missing: {$functionFile}");
 }
 
-// 同样的，包含其他可能依赖的基础文件
-$baseFiles = [
-    'lists.php',
-    'member.php',
-    'site.php',
-    'include.php',
-    'tj.php',
-    'updbase.php'
-];
 
-foreach ($baseFiles as $baseFile) {
-    $filePath = SYSTEM_ROOT . $baseFile;
-    if (file_exists($filePath) && is_readable($filePath)) {
-        require $filePath;
-    } elseif (defined('DEBUG') && DEBUG === true) {
-        error_log("Base file missing: {$baseFile}");
-    }
-}
-
-// 现在读取数据库配置
 try {
     $web_config = $DB->query("SELECT * FROM `lylme_config`");
-    
+
     if ($web_config === false) {
         // 查询失败
         $errorMsg = '系统配置表查询失败';
         $dbError = method_exists($DB, 'error') ? $DB->error() : '未知数据库错误';
         error_log('System Error: ' . $errorMsg . ' - ' . $dbError);
-        
+
         if (defined('DEBUG') && DEBUG === true) {
             exit("<h3>LyLme Spage 系统错误</h3><p>{$errorMsg}</p><p>数据库错误: {$dbError}</p>");
         } else {
             exit("<h3>系统初始化失败，请联系管理员</h3>");
         }
     }
-    
+
     // 检查结果集是否有数据
     $hasRows = false;
     if (method_exists($DB, 'num_rows')) {
@@ -196,24 +201,24 @@ try {
             }
         }
     }
-    
+
     if (!$hasRows) {
         $errorMsg = '系统配置表为空，请检查数据库结构';
         error_log('System Error: ' . $errorMsg);
-        
+
         if (defined('DEBUG') && DEBUG === true) {
             exit("<h3>LyLme Spage 系统错误</h3><p>{$errorMsg}</p>");
         } else {
             exit("<h3>系统配置不完整，请联系管理员</h3>");
         }
     }
-    
+
     // 读取网站配置
     global $conf;  // 确保全局作用域
     $conf = [];
-    
-$conf["mode"] = isset($conf["mode"]) ? $conf["mode"] : 2;
-    // 使用原始的方法读取数据
+
+    $conf["mode"] = $conf["mode"] ?? 1;
+    // 使用DB类的方法读取数据
     if (method_exists($DB, 'fetch')) {
         while ($row = $DB->fetch($web_config)) {
             if (isset($row['k']) && isset($row['v'])) {
@@ -230,23 +235,46 @@ $conf["mode"] = isset($conf["mode"]) ? $conf["mode"] : 2;
             }
         }
     }
-    
+
     // 验证必要的配置项
     if (empty($conf)) {
         $errorMsg = '系统配置读取失败，配置数组为空';
         error_log('System Error: ' . $errorMsg);
         exit('<h3>' . htmlspecialchars($errorMsg, ENT_QUOTES, 'UTF-8') . '</h3>');
     }
-    
+
     // 确保$conf是全局可访问的
     if (!isset($GLOBALS['conf'])) {
         $GLOBALS['conf'] = $conf;
     }
-    
+    // 包含不依赖数据库配置的基础文件（必须在读取配置之前）
+    $earlyBaseFiles = [
+        'lists.php',
+        'site.php',
+        'include.php',
+        'tj.php',
+        'updbase.php'
+    ];
+
+    foreach ($earlyBaseFiles as $baseFile) {
+        $filePath = SYSTEM_ROOT . $baseFile;
+        if (file_exists($filePath) && is_readable($filePath)) {
+            require $filePath;
+        } elseif (defined('DEBUG') && DEBUG === true) {
+            error_log("Base file missing: {$baseFile}");
+        }
+    }
+
+    // 包含依赖数据库配置的文件（必须在 $conf 读取之后）
+    // member.php 需要 $conf['admin_user'] 和 $conf['admin_pwd'] 来验证登录
+    $memberFile = SYSTEM_ROOT . 'member.php';
+    if (file_exists($memberFile) && is_readable($memberFile)) {
+        require $memberFile;
+    }
 } catch (Exception $e) {
     $errorMsg = '系统配置读取失败: ' . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
     error_log('Config Read Error: ' . $e->getMessage());
-    
+
     if (defined('DEBUG') && DEBUG === true) {
         exit('<h3>系统配置错误</h3><p>' . $errorMsg . '</p>');
     } else {

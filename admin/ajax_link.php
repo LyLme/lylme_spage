@@ -71,10 +71,11 @@ switch ($submit) {
 		$icon = $_POST['icon'];
 		$group_id = $_POST['group_id'];
 		$link_order = $linksrows + 1;
+		$link_desc = isset($_POST['link_desc']) ? $_POST['link_desc'] : '';
 		if ($name == null or $url == null) {
 			exit('保存错误,请确保带星号的都不为空！');
 		} else {
-			$sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`,`link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $name . "', '" . $link_order . "');";
+			$sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`,`link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $link_desc . "', '" . $link_order . "');";
 			if ($DB->query($sql)) {
 				exit('添加链接 ' . $name . ' 成功！');
 			} else {
@@ -99,12 +100,13 @@ switch ($submit) {
 		}
 		$url = $_POST['url'];
 		$icon = $_POST['icon'];
+		$link_desc = isset($_POST['link_desc']) ? $_POST['link_desc'] : '';
 		$link_pwd = $_POST['link_pwd'];
 		$group_id = $_POST['group_id'];
 		if ($name == null or $url == null) {
 			echo '保存错误,请确保带星号的都不为空！';
 		} else {
-			$sql = "UPDATE `lylme_links` SET `name` = '" . $name1 . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = " . $link_pwd . " WHERE `lylme_links`.`id` = '" . $id . "';";
+			$sql = "UPDATE `lylme_links` SET `name` = '" . $name1 . "', `link_desc` = '" . $link_desc . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = " . $link_pwd . " WHERE `lylme_links`.`id` = '" . $id . "';";
 			//   exit($sql);
 			if ($DB->query($sql)) {
 				echo '修改链接 ' . $name . ' 成功！';
@@ -175,7 +177,7 @@ switch ($submit) {
 		}
 		break;
 
-		//修改分组
+	//修改分组
 	case 'set_group':
 		foreach ($_POST['links'] as $lk => $lv) {
 			$sql = "UPDATE `lylme_links` SET `group_id` = '" . $_POST['group_id'] . "' WHERE `lylme_links`.`id` = " . $lv . ";";
@@ -260,14 +262,14 @@ switch ($submit) {
 		}
 		break;
 
-		//获取链接信息
+	//获取链接信息
 	case 'geturl':
 		$url = $_GET['url'];
 		$head = get_head($url);
 		if (empty($head['title']) && empty($head['icon'])) exit('Unable to access');
 		exit(json_encode($head, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));  //输出json
 		break;
-		//检测更新
+	//检测更新
 	case 'update':
 		function zipExtract($src, $dest)
 		{

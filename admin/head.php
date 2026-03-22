@@ -1,8 +1,45 @@
 <?php
+
+/**
+ * 后台头部文件
+ * PHP 8.x 兼容性修复
+ */
+
+// 包含公共文件
 include_once("../include/common.php");
-if (isset($islogin) == 1) {
-} else {
-  exit("<script language='javascript'>window.location.href='./login.php';</script>");
+
+// 包含会员验证模块（设置 $islogin 变量）
+include_once("../include/member.php");
+
+// 安全检查 - 使用 === 比较
+if (!isset($islogin) || $islogin !== 1) {
+  // 使用安全的重定向方式
+  if (!headers_sent()) {
+    header("Location: ./login.php");
+    exit;
+  } else {
+    exit("<script language='javascript'>window.location.href='./login.php';</script>");
+  }
+}
+
+// 获取页面标题
+$page_title = $title ?? '后台管理';
+
+// 获取网站标题（安全处理）
+$site_title = $conf['title'] ?? '六零导航页';
+
+// 获取管理员用户名
+$admin_user = $conf['admin_user'] ?? 'admin';
+
+// 获取待审核数量
+$applyrows = 0;
+try {
+  $apply_result = $DB->query("SELECT * FROM `lylme_apply` WHERE `apply_status` = 0");
+  if ($apply_result !== false && method_exists($DB, 'num_rows')) {
+    $applyrows = $DB->num_rows($apply_result);
+  }
+} catch (Exception $e) {
+  // 忽略错误
 }
 ?>
 <!DOCTYPE html>
@@ -11,7 +48,7 @@ if (isset($islogin) == 1) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title><?php echo $title . ' - ' . $conf['title']; ?></title>
+  <title><?php echo htmlspecialchars($page_title . ' - ' . $site_title); ?></title>
   <link rel="icon" href="/assets/img/logo.png" type="image/ico">
   <meta name="author" content="yinqi">
   <link href="/assets/admin/css/bootstrap.min.css" rel="stylesheet">
@@ -40,10 +77,10 @@ if (isset($islogin) == 1) {
               </ul>
             </li>
             <li class="nav-item active"> <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理 </a>
-              <?php $applyrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_apply` WHERE `apply_status` = 0"));
+              <?php
               if ($applyrows > 0) {
                 echo '<style> .applyrow{width: 18px;height: 18px;top: 15px;right: 24px;font-size: 10px;font-weight: bold;color: #fff;background-color: red;border-radius: 100%;text-align: center;vertical-align: middle;position: absolute;line-height: 1.5;}</style>
-	<div class="applyrow">' . $applyrows . '</div>';
+        <div class="applyrow">' . intval($applyrows) . '</div>';
               }
               ?></li>
             <li class="nav-item active"> <a href="./theme.php"><i class="mdi mdi-seal"></i>主题设置</a></li>
@@ -55,14 +92,12 @@ if (isset($islogin) == 1) {
             <li class="nav-item active"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
             <li class="nav-item active"> <a href="./wxplus.php"><i class="mdi mdi-wechat"></i>微信推送</a> </li>
             <li class="nav-item active"> <a href="./license.php"><i class="mdi mdi-checkbox-marked-circle"></i>网站授权</a> </li>
-         
+
             <li> <a href="javascript:loginout()"><i class="mdi mdi-logout"></i> 退出登录</a> </li>
           </ul>
         </nav>
         <div class="sidebar-footer">
-          <p class="copyright">Copyright &copy;
-            <?php echo (date('Y'));
-            ?> Powered by <br> <a href="https://github.com/LyLme/lylme_spage"><?php echo explode("-", $conf['title'])[0]; ?> </a></p>
+          <p class="copyright">Copyright <?php echo date('Y'); ?> Powered by <br> <a href="https://github.com/LyLme/lylme_spage"><?php echo htmlspecialchars(explode("-", $site_title)[0]); ?></a></p>
         </div>
       </div>
     </aside>
@@ -77,14 +112,12 @@ if (isset($islogin) == 1) {
               <span class="lyear-toggler-bar"></span>
               <span class="lyear-toggler-bar"></span>
             </div>
-            <span class="navbar-page-title"> <?php echo $title;
-                                              ?></span>
+            <span class="navbar-page-title"> <?php echo htmlspecialchars($page_title); ?></span>
           </div>
           <ul class="topbar-right">
             <li class="dropdown dropdown-profile">
               <a href="javascript:void(0)" data-toggle="dropdown">
-                <span><?php echo $conf['admin_user'];
-                      ?><span class="caret"></span></span>
+                <span><?php echo htmlspecialchars($admin_user); ?><span class="caret"></span></span>
               </a>
               <ul class="dropdown-menu dropdown-menu-right">
                 <li> <a href="./user.php"><i class="mdi mdi-lock-outline"></i> 修改密码</a> </li>
