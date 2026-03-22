@@ -95,7 +95,7 @@ if (!defined('SQLITE')) {
         if (!headers_sent()) {
             // 使用绝对路径重定向
             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
-            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+            $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
             $redirectUrl = "{$protocol}://{$host}/install/";
             header('Location: ' . $redirectUrl);
         } else {
@@ -119,8 +119,8 @@ require $dbClassFile;
 // 初始化数据库连接（添加错误处理）
 try {
     // 获取端口配置，兼容字符串和整数
-    $dbPort = isset($dbconfig['port']) ? (int)$dbconfig['port'] : 3306;
-    $dbHost = $dbconfig['host'] ?? 'localhost';
+    $dbPort = isset($dbconfig['port']) ? (int) $dbconfig['port'] : 3306;
+    $dbHost = isset($dbconfig['host']) ? $dbconfig['host'] : 'localhost';
 
     // PHP 8.1+ mysqli_report 配置 - 只在 mysqli 扩展可用时调用
     if (version_compare(PHP_VERSION, '8.1.0', '>=') && extension_loaded('mysqli')) {
@@ -212,7 +212,7 @@ try {
     global $conf;  // 确保全局作用域
     $conf = [];
 
-    $conf["mode"] = $conf["mode"] ?? 1;
+    $conf["mode"] = isset($conf["mode"]) ? $conf["mode"] : 1;
     // 使用DB类的方法读取数据
     if (method_exists($DB, 'fetch')) {
         while ($row = $DB->fetch($web_config)) {

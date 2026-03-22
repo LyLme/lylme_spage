@@ -100,7 +100,7 @@ $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
                         <div class="form-group">
                         <label>*网站名称:</label><br>
                         <input type="text" class="form-control" name="name"  id="urlname" value="' . strip_tags($row['name']) . '" required>
-                       <input type="text" class="coloris form-control" onchange="select_color()"  placeholder="链接颜色(留空默认)"  name="color" value="' . ($color[1][0] ?? '') . '" />
+                       <input type="text" class="coloris form-control" onchange="select_color()"  placeholder="链接颜色(留空默认)"  name="color" value="' . (isset($color[1][0]) ? $color[1][0] : '') .'" />
                         </div>
                         <div class="input-group">
                         <label>链接图标:</label><br>
