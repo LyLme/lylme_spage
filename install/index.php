@@ -10,10 +10,6 @@
 header('Content-Type:text/html; charset=utf-8');
 
 
-// 检测php版本号
-if (!(version_compare(phpversion(), '7.1.0', '>=') && version_compare(phpversion(), '8.0.0', '<'))) {
-    exit('抱歉，您的PHP版本过低或过高，请将PHP版本修改为PHP7.1及以上(不支持PHP8)，再安装！');
-}
 
 // 不限制响应时间
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
@@ -88,7 +84,7 @@ if ($s == 3) {
         $dbpwd = $_POST['dbpwd'] ?: '';
         $dbport = $_POST['dbport'] ?: 3306;
 
-        $testdata = $_POST['testdata'] ?: '';
+        // $testdata = $_POST['testdata'] ?: '';
 
         // 连接证数据库
         try {
