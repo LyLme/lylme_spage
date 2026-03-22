@@ -28,8 +28,8 @@ if (isset($_COOKIE["admin_token"])) {
             $sid = isset($token_parts[1]) ? $token_parts[1] : '';
 
             // 获取配置中的用户信息
-            $admin_user = $conf['admin_user'] ?? '';
-            $admin_pwd = $conf['admin_pwd'] ?? '';
+            $admin_user = isset($conf['admin_user']) ? $conf['admin_user'] : '';
+            $admin_pwd = isset($conf['admin_pwd']) ? $conf['admin_pwd'] : '';
 
             // 计算session
             $session = md5($admin_user . $admin_pwd);

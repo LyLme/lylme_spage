@@ -24,7 +24,7 @@ class SITE extends DB
         $condition_str = 'AND `group_pwd` = 0 ';
 
         // 安全处理session变量
-        $session_list = $_SESSION['list'] ?? [];
+        $session_list = isset($_SESSION['list']) ? $_SESSION['list'] : array();
         if (is_array($session_list)) {
             foreach ($session_list as $condition) {
                 $safe_condition = is_numeric($condition) ? (int)$condition : 0;
@@ -92,12 +92,12 @@ class SITE extends DB
 $site = null;
 if (isset($dbconfig) && is_array($dbconfig)) {
     $site = new SITE(
-        $dbconfig['host'] ?? 'localhost',
-        $dbconfig['user'] ?? '',
-        $dbconfig['pwd'] ?? '',
-        $dbconfig['dbname'] ?? '',
-        $dbconfig['port'] ?? 3306
-    );
+    isset($dbconfig['host']) ? $dbconfig['host'] : 'localhost',
+    isset($dbconfig['user']) ? $dbconfig['user'] : '',
+    isset($dbconfig['pwd']) ? $dbconfig['pwd'] : '',
+    isset($dbconfig['dbname']) ? $dbconfig['dbname'] : '',
+    isset($dbconfig['port']) ? $dbconfig['port'] : 3306
+);
 }
 
 // 安全检查：确保必要的常量已定义
@@ -118,7 +118,7 @@ if (!defined('ROOT')) {
 }
 
 // 初始化全局变量
-$conf = $conf ?? [];
+$conf = isset($conf) ? $conf : array();
 $GLOBALS['conf'] = &$conf;
 
 //拦截开关(1为开启，0关闭)
@@ -231,34 +231,33 @@ function webscan_StopAttack($StrFiltKey, $StrFiltValue, $ArrFiltReq, $method)
 {
     $StrFiltValue = webscan_arr_foreach($StrFiltValue);
 
-    // PHP 8.0+ 使用 match 表达式替代 switch，但为兼容性保留 if
     if (preg_match("/" . $ArrFiltReq . "/is", $StrFiltValue) == 1) {
-        webscan_slog([
-            'ip' => $_SERVER["REMOTE_ADDR"] ?? 'unknown',
-            'time' => date("Y-m-d H:i:s"),
-            'page' => $_SERVER["PHP_SELF"] ?? '',
-            'method' => $method,
-            'rkey' => $StrFiltKey,
-            'rdata' => $StrFiltValue,
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
-            'request_url' => $_SERVER["REQUEST_URI"] ?? ''
-        ]);
-        exit(webscan_pape());
-    }
+    webscan_slog([
+        'ip' => isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : 'unknown',
+        'time' => date("Y-m-d H:i:s"),
+        'page' => isset($_SERVER["PHP_SELF"]) ? $_SERVER["PHP_SELF"] : '',
+        'method' => $method,
+        'rkey' => $StrFiltKey,
+        'rdata' => $StrFiltValue,
+        'user_agent' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '',
+        'request_url' => isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : ''
+    ]);
+    exit(webscan_pape());
+}
 
-    if (preg_match("/" . $ArrFiltReq . "/is", $StrFiltKey) == 1) {
-        webscan_slog([
-            'ip' => $_SERVER["REMOTE_ADDR"] ?? 'unknown',
-            'time' => date("Y-m-d H:i:s"),
-            'page' => $_SERVER["PHP_SELF"] ?? '',
-            'method' => $method,
-            'rkey' => $StrFiltKey,
-            'rdata' => $StrFiltKey,
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
-            'request_url' => $_SERVER["REQUEST_URI"] ?? ''
-        ]);
-        exit(webscan_pape());
-    }
+if (preg_match("/" . $ArrFiltReq . "/is", $StrFiltKey) == 1) {
+    webscan_slog([
+        'ip' => isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : 'unknown',
+        'time' => date("Y-m-d H:i:s"),
+        'page' => isset($_SERVER["PHP_SELF"]) ? $_SERVER["PHP_SELF"] : '',
+        'method' => $method,
+        'rkey' => $StrFiltKey,
+        'rdata' => $StrFiltKey,
+        'user_agent' => isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '',
+        'request_url' => isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : ''
+    ]);
+    exit(webscan_pape());
+}
 }
 
 /**
@@ -269,8 +268,8 @@ function webscan_StopAttack($StrFiltKey, $StrFiltValue, $ArrFiltReq, $method)
  */
 function webscan_white($webscan_white_name, $webscan_white_url = [])
 {
-    $url_path = $_SERVER['SCRIPT_NAME'] ?? '';
-    $url_var = $_SERVER['QUERY_STRING'] ?? '';
+$url_path = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : '';
+$url_var = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
 
     if (preg_match("/" . $webscan_white_name . "/is", $url_path) == 1 && !empty($webscan_white_name)) {
         return false;

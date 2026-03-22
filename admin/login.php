@@ -15,17 +15,17 @@ if (isset($_POST['user']) && isset($_POST['pass'])) {
   // 检查验证码
   if (isset($_REQUEST['authcode'])) {
 
-    $session_code = $_SESSION['authcode'] ?? '';
-    $input_code = strtolower($_REQUEST['authcode']);
+   $session_code = isset($_SESSION['authcode']) ? $_SESSION['authcode'] : '';
+$input_code = strtolower(isset($_REQUEST['authcode']) ? $_REQUEST['authcode'] : '');
 
-    if ($input_code === strtolower($session_code)) {
-      // 安全的用户输入处理
-      $user = daddslashes($_POST['user']);
-      $pass = md5('lylme' . daddslashes($_POST['pass']));
+if ($input_code === strtolower($session_code)) {
+    // 安全的用户输入处理
+    $user = daddslashes(isset($_POST['user']) ? $_POST['user'] : '');
+    $pass = md5('lylme' . daddslashes(isset($_POST['pass']) ? $_POST['pass'] : ''));
 
-      // 获取配置中的用户信息
-      $admin_user = $conf['admin_user'] ?? '';
-      $admin_pwd = $conf['admin_pwd'] ?? '';
+    // 获取配置中的用户信息
+    $admin_user = isset($conf['admin_user']) ? $conf['admin_user'] : '';
+    $admin_pwd = isset($conf['admin_pwd']) ? $conf['admin_pwd'] : '';
 
       if ($user === $admin_user && $pass === $admin_pwd) {
         $session = md5($user . $pass);

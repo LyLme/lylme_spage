@@ -82,7 +82,7 @@ function daddslashes($string)
         return $string;
     } else {
         // 其他类型转换为字符串处理
-        return addslashes((string)$string);
+        return addslashes((string) $string);
     }
 }
 
@@ -178,7 +178,8 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0)
             return '';
         }
 
-        if (($timestamp == 0 || (int)$timestamp - time() > 0)
+        if (
+            ($timestamp == 0 || (int) $timestamp - time() > 0)
             && $md5_check == substr(md5($data . $keyb), 0, 16)
         ) {
             return $data;
@@ -323,11 +324,11 @@ function get_urlpath($srcurl, $baseurl)
         $url .= ':' . $baseinfo['port'];
     }
 
-    if (substr($srcinfo['path'] ?? '', 0, 1) == '/') {
+    if (substr(isset($srcinfo['path']) ? $srcinfo['path'] : '', 0, 1) == '/') {
         $path = $srcinfo['path'];
     } else {
         $basepath = isset($baseinfo['path']) ? $baseinfo['path'] : '/';
-        $path = dirname($basepath) . '/' . ($srcinfo['path'] ?? '');
+        $path = dirname($basepath) . '/' . (isset($srcinfo['path']) ? $srcinfo['path'] : '');
     }
 
     $rst = [];
@@ -385,7 +386,7 @@ function get_real_ip()
 
     foreach ($headers as $header) {
         // PHP 8.2兼容性：使用 ?? 操作符替代 isset() + 直接访问
-        $server_value = $_SERVER[$header] ?? '';
+        $server_value = isset($_SERVER[$header]) ? $_SERVER[$header] : '';
         if (!empty($server_value)) {
             $ips = explode(',', $server_value);
             $ip = trim($ips[0]);
@@ -406,7 +407,7 @@ function get_real_ip()
     }
 
     // 返回REMOTE_ADDR或默认值
-    $remoteAddr = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
     return filter_var($remoteAddr, FILTER_VALIDATE_IP) ? $remoteAddr : '0.0.0.0';
 }
 
@@ -464,7 +465,8 @@ function rearr($data, $arr)
     $alt = isset($data['name']) ? $data['name'] : (isset($data['group_name']) ? $data['group_name'] : '');
     $icon = '';
 
-    if (empty($data['icon'] ?? '')) {
+    $icon = isset($data['icon']) ? $data['icon'] : '';
+    if (empty($icon)) {
         $icon = '<img src="/assets/img/default-icon.png" alt="' . htmlspecialchars(strip_tags($alt), ENT_QUOTES, 'UTF-8') . '" />';
     } elseif (isset($data['icon']) && !preg_match("/^<svg*/", $data['icon'])) {
         $icon = '<img src="' . htmlspecialchars($data['icon'], ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars(strip_tags($alt), ENT_QUOTES, 'UTF-8') . '" />';
@@ -497,7 +499,7 @@ function get_head($url, $cache = false)
     $id = null;
 
     if ($cache && is_numeric($url)) {
-        $id = (int)$url;
+        $id = (int) $url;
         global $DB;
 
         if (isset($DB) && $DB instanceof DB) {
@@ -550,7 +552,7 @@ function get_head($url, $cache = false)
     // 获取网站title - 修复PHP 8.2不支持 ${var} 语法
     $title = '';
     if (preg_match('/<title.*?>(?<title>.*?)<\/title>/sim', $data, $title_matches)) {
-        $title = $title_matches['title'] ?? '';
+        $title = isset($title_matches['title']) ? $title_matches['title'] : '';
     }
 
     // 检测编码
@@ -576,7 +578,7 @@ function get_head($url, $cache = false)
     preg_match('/<link[^>]*rel=("|\')?(icon|shortcut icon|apple-touch-icon)("|\')?[^>]*>/i', $data, $icon_matches);
     if (!empty($icon_matches[0])) {
         preg_match('/href=("|\')?([^"\'>]+)("|\')?/i', $icon_matches[0], $href_matches);
-        $icon = $href_matches[2] ?? '';
+        $icon = isset($href_matches[2]) ? $href_matches[2] : '';
     }
 
     if (!empty($icon)) {
@@ -596,12 +598,12 @@ function get_head($url, $cache = false)
     // 获取description
     $description = '';
     preg_match('/<meta[^>]*name=("|\')?description("|\')?[^>]*content=("|\')?([^"\'>]+)("|\')?[^>]*>/i', $data, $desc_matches);
-    $description = $desc_matches[4] ?? '';
+    $description = isset($desc_matches[4]) ? $desc_matches[4] : '';
 
     // 获取keywords
     $keywords = '';
     preg_match('/<meta[^>]*name=("|\')?keywords("|\')?[^>]*content=("|\')?([^"\'>]+)("|\')?[^>]*>/i', $data, $keyword_matches);
-    $keywords = $keyword_matches[4] ?? '';
+    $keywords = isset($keyword_matches[4]) ? $keyword_matches[4] : '';
 
     $result = [
         'title' => trim($title),
@@ -679,7 +681,7 @@ function get_curl($url)
 function strlens($str, $max_length = 255)
 {
     if (!is_string($str)) {
-        $str = (string)$str;
+        $str = (string) $str;
     }
     return strlen($str) > $max_length;
 }
@@ -700,8 +702,8 @@ function apply($name, $url, $icon, $group_id, $status)
     $name = strip_tags(daddslashes($name));
     $url = strip_tags(daddslashes($url));
     $icon = strip_tags(daddslashes($icon));
-    $group_id = (int)strip_tags(daddslashes($group_id));
-    $status = (int)strip_tags(daddslashes($status));
+    $group_id = (int) strip_tags(daddslashes($group_id));
+    $status = (int) strip_tags(daddslashes($status));
     $userip = get_real_ip();
     $date = date("Y-m-d H:i:s");
 
@@ -769,7 +771,7 @@ function ins_link($name, $url, $icon, $group_id)
     $name = strip_tags(daddslashes($name));
     $url = strip_tags(daddslashes($url));
     $icon = strip_tags(daddslashes($icon));
-    $group_id = (int)strip_tags(daddslashes($group_id));
+    $group_id = (int) strip_tags(daddslashes($group_id));
 
     // 获取最大排序值
     $link_order = 1;
@@ -777,7 +779,7 @@ function ins_link($name, $url, $icon, $group_id)
     if ($count_result !== false) {
         $count_row = $DB->fetch($count_result);
         if ($count_row && isset($count_row['max_id'])) {
-            $link_order = (int)$count_row['max_id'] + 1;
+            $link_order = (int) $count_row['max_id'] + 1;
         }
     }
 

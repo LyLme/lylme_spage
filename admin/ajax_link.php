@@ -129,7 +129,7 @@ switch ($submit) {
 		} else {
 			$st = 0;
 		}
-		$sou_order = $sousrows + 1;
+	$sou_order = isset($sousrows) ? (int)$sousrows + 1 : 1;
 		if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon)) {
 			echo '保存错误,请确保带星号的都不为空！';
 		} else {
@@ -159,11 +159,11 @@ switch ($submit) {
 		$color = $_POST['color'];
 		$icon = $_POST['icon'];
 		$order = $_POST['order'];
-		if ($_POST['st'] == true) {
-			$st = 1;
-		} else {
-			$st = 0;
-		}
+		if (isset($_POST['st']) && $_POST['st'] == true) {
+    $st = 1;
+} else {
+    $st = 0;
+}
 
 		if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon) && empty($order)) {
 			echo '保存错误,请确保带星号的都不为空！';

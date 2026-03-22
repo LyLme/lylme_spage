@@ -23,13 +23,13 @@ if (!isset($islogin) || $islogin !== 1) {
 }
 
 // 获取页面标题
-$page_title = $title ?? '后台管理';
+$page_title = isset($title) ? $title : '后台管理';
 
 // 获取网站标题（安全处理）
-$site_title = $conf['title'] ?? '六零导航页';
+$site_title = isset($conf['title']) ? $conf['title'] : '六零导航页';
 
 // 获取管理员用户名
-$admin_user = $conf['admin_user'] ?? 'admin';
+$admin_user = isset($conf['admin_user']) ? $conf['admin_user'] : 'admin';
 
 // 获取待审核数量
 $applyrows = 0;
@@ -54,6 +54,7 @@ try {
   <link href="/assets/admin/css/bootstrap.min.css" rel="stylesheet">
   <link href="/assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="/assets/admin/css/style.min.css" rel="stylesheet">
+<link href="/assets/js/layui/css/layui.css" type="text/css" rel="stylesheet" />
 </head>
 <div class="lyear-layout-web">
   <div class="lyear-layout-container">

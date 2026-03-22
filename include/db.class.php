@@ -234,7 +234,7 @@ class DBPdo extends DBBase
     public function error()
     {
         $error = $this->link->errorInfo();
-        return '[' . ($error[1] ?? 0) . '] ' . ($error[2] ?? 'Unknown error');
+        return '[' . (isset($error[1]) ? $error[1] : 0) . '] ' . (isset($error[2]) ? $error[2] : 'Unknown error');
     }
 
     public function insert_id()
@@ -322,7 +322,7 @@ class DBMysqli extends DBBase
         if ($result) {
             $row = mysqli_fetch_array($result);
             mysqli_free_result($result);
-            return $row[0] ?? false;
+            return isset($row[0]) ? $row[0] : false;
         }
         return false;
     }
@@ -410,7 +410,7 @@ if ($enable_old_mysql) {
             if ($result) {
                 $row = mysql_fetch_array($result);
                 mysql_free_result($result);
-                return $row[0] ?? false;
+                return isset($row[0]) ? $row[0] : false;
             }
             return false;
         }
