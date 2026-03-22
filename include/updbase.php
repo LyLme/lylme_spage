@@ -26,6 +26,9 @@ if (!isset($conf['version']) || empty($conf['version'])) {
 $sqlvn = get_vernum($conf['version']);  // 数据库版本
 $filevn = get_vernum(constant("VERSION"));  // 文件版本
 
+if(!(isset($conf['build'])?$conf['build']:"")){
+    saveSetting('build', date("Y-m-d H:i"));
+}
 if ($sqlvn < $filevn) {
     // 文件版本大于数据库版本，执行更新
     $sql = '';
