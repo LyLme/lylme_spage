@@ -8,6 +8,7 @@ if ($set == 'save') {
 	$hostmode =  $_POST['hostmode'];
 	saveSetting('c', $licensecode, "程序授权码");
 	saveSetting('hostmode', $hostmode, "域名获取方式");
+	@unlink('log.txt');
 	echo '<script>alert("修改成功！");window.location.href="./license.php";</script>';
 } else {
 ?>

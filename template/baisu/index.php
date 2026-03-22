@@ -18,10 +18,10 @@
 	<style>
 		<?php
 		if (!empty(theme_config('group_font_weight', ""))) {
-			echo '.site-main .site-name{font-weight: '.theme_config('group_font_weight', "normal").'}';
+			echo '.site-main .site-name{font-weight: ' . theme_config('group_font_weight', "normal") . '}';
 		}
 		if (!empty(theme_config('url_font_weight', ""))) {
-			echo '.site-main .site-list .list p.name{font-weight: '.theme_config('url_font_weight', "normal").'}';
+			echo '.site-main .site-list .list p.name{font-weight: ' . theme_config('url_font_weight', "normal") . '}';
 		}
 		?>
 	</style>
@@ -125,7 +125,7 @@
 				$soulists = $site->getSou();
 				while ($soulist = $DB->fetch($soulists)) {
 					if ($soulist["sou_st"] == 1) {
-						if (!$fso) {
+						if (!$fso = isset($fso) ? $fso : false) {
 							echo '<button class="search-btn" data-url="';
 							if (checkmobile() && $soulist["sou_waplink"] != null) {
 								echo $soulist["sou_waplink"];
