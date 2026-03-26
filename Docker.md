@@ -31,6 +31,14 @@ docker run -d \
 
 ✅ 使用命名卷，数据永久保存
 
+### 方式三：推荐方式（国内镜像加速）
+
+```bash
+docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage docker.1ms.run/lylme/lylme_spage:latest
+```
+
+✅ 效果和方式二完全一致，Docker官方访问不了的情况可以使用此方式
+
 ## 🔐 访问信息
 
 | 项目 | 地址 |
