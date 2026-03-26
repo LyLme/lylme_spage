@@ -21,12 +21,7 @@ docker run -d -p 8080:80 lylme/lylme_spage
 ### 方式二：推荐方式（数据持久化）
 
 ```bash
-docker run -d \
-  -p 8080:80 \
-  -v lylme_mysql:/var/lib/mysql \
-  -v lylme_www:/var/www/html \
-  --name lylme_spage \
-  lylme/lylme_spage
+docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage lylme/lylme_spage
 ```
 
 ✅ 使用命名卷，数据永久保存
