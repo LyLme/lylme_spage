@@ -145,13 +145,6 @@ docker volume rm lylme_mysql lylme_www
 docker run -d -p 80:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage lylme/lylme_spage
 ```
 
-## 🏗️ 本地构建
-
-```bash
-cd E:\lylme_spage_docker
-docker build -t lylme/lylme_spage .
-docker run -d -p 80:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html lylme/lylme_spage
-```
 
 ## 📦 包含组件
 
