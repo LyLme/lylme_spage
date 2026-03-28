@@ -2,7 +2,12 @@
 
 if(!empty($_GET['url'])) {
     $url = $_GET['url'];
-    header("Location:$url");
+    // Prevent open redirect: only allow relative URLs
+    if (preg_match('/^https?:\/\//i', $url) || strpos($url, '//') === 0) {
+        header("Location: /");
+        exit();
+    }
+    header("Location:" . $url);
     exit();
 }
 include("common.php");
@@ -20,7 +25,7 @@ if($_SESSION['pass'] != 1) {
     if(!empty($pass)) {
         //用户提交登录
         $show = array();
-        $pwds = $DB->query("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '" . $pass . "';");
+        $pwds = $DB->query("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '" . $DB->real_escape_string($pass) . "';");
         while ($pwd = $DB->fetch($pwds)) {
             array_push($show, $pwd['pwd_id']);
         }
@@ -37,7 +42,7 @@ if($_SESSION['pass'] != 1) {
     //已登录
     if(!empty($pass)) {
         $show = array();
-        $pwds = $DB->query("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '" . $pass . "';");
+        $pwds = $DB->query("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '" . $DB->real_escape_string($pass) . "';");
         while ($pwd = $DB->fetch($pwds)) {
             array_push($show, $pwd['pwd_id']);
         }
