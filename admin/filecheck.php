@@ -47,9 +47,16 @@ function compareMd5s($originalMd5s, $currentMd5s, $whitelist = [])
         'normal' => [],
         'mutable' => []
     ];
+    
+    // 确保参数是数组类型
+    if (!is_array($originalMd5s) || !is_array($currentMd5s)) {
+        return $result;
+    }
+    
     if (empty($originalMd5s)) {
         return $result;
     }
+    
     $allFilePaths = array_unique(array_merge(array_keys($originalMd5s), array_keys($currentMd5s)));
     foreach ($allFilePaths as $filePath) {
         $filePath = str_replace('\\', '/', $filePath);
@@ -90,6 +97,12 @@ if ($remoteJson === false) {
                             <p> <small class="help-block">该页面用于检查网站脚本文件是否被篡改器<br>该页面仅供参考，需注意“篡改”和"冗余"文件是否存在恶意代码并从上方链接对比替换</br>排除完成后建议修改后台账号密码和数据库密码</br>该功能需要服务器支持外网访问，仅适用于Linux内核的服务器，Windows服务器暂不支持</small></p>
                         </div>';
     $originalMd5s = json_decode($remoteJson, true);
+    
+    // 确保originalMd5s是数组
+    if (!is_array($originalMd5s)) {
+        $originalMd5s = [];
+    }
+    
     $comparisonResult = compareMd5s($originalMd5s, $currentMd5s, $whitelist);
 }
 ?>
