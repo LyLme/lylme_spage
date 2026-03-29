@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# 开发文件
+*.md
+*.log
+
+# 初始化脚本目录（已在Dockerfile中处理）
+# init/
+
+# 临时文件
+*.tmp
+*.bak
+*.swp
+*~
+
+# IDE
+.idea
+.vscode
+*.sublime-*
+
+# 系统文件
+.DS_Store
+Thumbs.db

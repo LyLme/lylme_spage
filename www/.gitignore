@@ -7,3 +7,6 @@ files/*
 include/webscan.log
 cache
 include/qrcode.png
+.htaccess
+nginx.htaccess
+config.php

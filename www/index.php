@@ -1,11 +1,58 @@
 <?php
-
-@header('Content-Type: text/html; charset=UTF-8');
-if (!file_exists('install/install.lock')) {
-    header("Location:/install");
-    exit();
+declare(strict_types=1);
+if (ob_get_level() === 0) {
+    ob_start();
 }
-require "./include/common.php";
-session_start(); //设置session
-$_SESSION['list'] = isset($_SESSION['list']) ? $_SESSION['list'] : array();
-require $template;
+if (!headers_sent()) {
+    header('Content-Type: text/html; charset=UTF-8');
+}
+// 安装检查
+$installLockFile = 'install/install.lock';
+if (!file_exists($installLockFile) || !is_file($installLockFile)) {
+    if (!headers_sent()) {
+        header("Location: /install");
+    } else {
+        echo '<script>window.location.href = "/install";</script>';
+    }
+    exit;
+}
+
+// 包含公共文件
+$commonFile = __DIR__ . '/include/common.php';
+if (!file_exists($commonFile) || !is_file($commonFile)) {
+    error_log("Common file not found: {$commonFile}");
+    http_response_code(500);
+    echo 'include/common.php文件丢失';
+    exit;
+}
+
+require $commonFile;
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start([
+        'use_strict_mode' => version_compare(PHP_VERSION, '5.5.2', '>=') ? 1 : 0,
+        'use_cookies' => 1,
+        'use_only_cookies' => 1,
+        'cookie_httponly' => true,
+        'cookie_samesite' => version_compare(PHP_VERSION, '7.3.0', '>=') ? 'Strict' : null
+    ]);
+}
+
+if (!isset($_SESSION['list'])) {
+    $_SESSION['list'] = [];
+}
+
+// 引入模板文件
+if (!isset($template) || empty($template)) {
+    error_log('主题模板变量未定义');
+    http_response_code(500);
+    echo '主题模板配置错误 ';
+    exit;
+}
+
+require $templateFile;
+
+// 清理输出缓冲区
+if (ob_get_level() > 0) {
+    ob_end_flush();
+}

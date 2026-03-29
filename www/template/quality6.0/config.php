@@ -19,7 +19,16 @@ $theme_config =  [
     'name' => 'background_video',
     'title' => '视频背景',
     'description' => '不填不启用，请填写视频的url，视频大小不建议超过10M',
+    'placeholder' => 'http://xxx.com/background.mp4',
     "value" =>  ''
-  ]
+  ],
+  [
+    'type' => 'text',
+    'name' => 'gonganbei',
+    'title' => '公安备案号',
+    'description' => '公安备案号，留空不显示',
+    'value' => '',
+    'placeholder' => "京公安网备xxxxxxxxxx号"
+  ],
 
 ];

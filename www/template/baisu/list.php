@@ -2,6 +2,11 @@
 
 // 主题开发文档：https://doc.lylme.com/dev/theme
 $rel = $conf["mode"] == 2 ? '' : 'rel="nofollow"';
+	$link_desc = '';
+		if (theme_config('link_desc') == '1') {
+			$link_desc = '{link_desc}';
+		}
+
 $html = array(
     'g1' => '<div class="site-name" id="category-{group_id}">{group_icon}{group_name}</div>', //分组开始标签
     'g2' => '<div class="site-list">',  //分组内容
@@ -9,6 +14,6 @@ $html = array(
 
     'l1' => '<div class="list urllist" id="id_{link_id}" data-id="{link_id}" data-url="{link_url}">',  //链接开始标签
     'l2' => '<a '.$rel.' href="{link_url}" title="{link_name_text}"  target="_blank">{link_icon}',  //链接内容
-    'l3' => '<p class="name">{link_name}</p><p class="desc"></p></a></div>',  //链接结束标签
+    'l3' => '<p class="name">{link_name}</p></a><p class="desc">'.$link_desc.'</p></div>',  //链接结束标签
 );
 lists($html);

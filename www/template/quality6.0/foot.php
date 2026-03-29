@@ -1,12 +1,28 @@
         <div class="footer-inner">
             <div class="footer-text">
-                <?php if (!empty($conf['wztj'])) {
-                    echo '<p>' . $conf["wztj"] . '</p>';
-                }
-                ?>
-                <p>本站内容源自互联网，如有内容侵犯了您的权益，请联系删除相关内容。</p>
-                <p><?php echo $conf['copyright']; ?> <a href="https://beian.miit.gov.cn/"> <?php echo $conf['icp'] ?> </a> Theme By <a href="https://www.hbd0.cn/thread-1407-1-1.html">quality6.0</a></p>
-            </div>
+
+             <!--备案信息-->
+    <?php
+    if (!empty(theme_config('gonganbei', ""))) {
+
+        preg_match_all('/\d+/', theme_config('gonganbei'), $gab);
+
+        echo '<p><a class="gab" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=' . $gab[0][0] . '" target="_blank" rel="nofollow noopener">
+    <img src="/assets/img/icp.png" alt="公安网备" width="16" height="16">' . theme_config('gonganbei') . ' </a></p>';
+    }
+    ?>
+    <?php if ($conf['icp'] != null) {
+        echo '<p><a href="http://beian.miit.gov.cn/" class="icp" target="_blank" _mstmutation="1" _istranslated="1">' . $conf['icp'] . '</a></p>';
+    } ?>
+    <!--版权信息-->
+    <p> <?php echo $conf['copyright']; ?></p>
+    <!--网站统计-->
+    <?php if ($conf['wztj'] != null) {
+        echo $conf["wztj"];
+    } ?>
+
+
+          </div>
         </div>
         <script>
             var backgroundimg = "url(<?php echo background(); ?>)";

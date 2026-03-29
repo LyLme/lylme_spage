@@ -1,0 +1,23 @@
+﻿# ===== 数据持久化完整示例 =====
+
+# 1. 首次启动（创建命名卷）
+docker run -d -p 80:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage lylme/lylme_spage
+
+# 2. 查看数据卷
+docker volume ls | grep lylme
+
+# 3. 备份数据库
+docker exec lylme_spage mysqldump -u lylme -plylme123456 --socket=/var/run/mysqld/mysqld.sock lylme_spage > backup_$(date +%Y%m%d).sql
+
+# 4. 停止服务
+docker stop lylme_spage
+
+# 5. 删除容器（数据保留在卷中）
+docker rm lylme_spage
+
+# 6. 恢复服务（自动加载之前的数据）
+docker run -d -p 80:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage lylme/lylme_spage
+
+# 7. 完全清理（删除所有数据）
+docker rm -f lylme_spage
+docker volume rm lylme_mysql lylme_www

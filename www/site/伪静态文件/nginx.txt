@@ -1,2 +1,0 @@
-rewrite ^/site-(\d+)\.html$ /site/index.php?id=$1;
-rewrite ^/sitemap.xml$ /site/sitemap.php;

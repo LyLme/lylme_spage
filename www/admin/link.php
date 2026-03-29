@@ -54,6 +54,13 @@ $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
                             }
                             echo '</select></div>
                         <div class="form-group">
+                        <label>链接描述:</label><br>
+                       	<textarea  type="text" rows="2" class="form-control" name="link_desc" placeholder="仅部分主题支持，可不填"></textarea>
+                       <small class="help-block">链接描述仅部分主题支持显示</small>
+                        </div>
+
+
+                        <div class="form-group">
                         <input type="submit" class="btn btn-primary btn-block" value="添加">
                         </form>
                         </div>
@@ -93,7 +100,7 @@ $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
                         <div class="form-group">
                         <label>*网站名称:</label><br>
                         <input type="text" class="form-control" name="name"  id="urlname" value="' . strip_tags($row['name']) . '" required>
-                        <input type="text" class="coloris form-control" onchange="select_color()"  placeholder="链接颜色(留空默认)"  name="color" value="' . $color[1][0] . '" />
+                       <input type="text" class="coloris form-control" onchange="select_color()"  placeholder="链接颜色(留空默认)"  name="color" value="' . (isset($color[1][0]) ? $color[1][0] : '') .'" />
                         </div>
                         <div class="input-group">
                         <label>链接图标:</label><br>
@@ -139,6 +146,11 @@ $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
                         <small class="help-block"><code>注意：对链接所在的分组加密后，单独设置的链接加密将会失效</code><br>
                         加密后只能通过输入密码访问，使用该功能先配置加密组
                         <a href="./pwd.php" target="_blank">管理加密组</a></small>
+                        </div>
+                         <div class="form-group">
+                        <label>链接描述:</label><br>
+                       	<textarea  type="text" rows="2" class="form-control" name="link_desc" placeholder="仅部分主题支持，可不填">'.$row['link_desc'].'</textarea>
+                       <small class="help-block">链接描述仅部分主题支持显示</small>
                         </div>
                         <div class="form-group">
                         <input type="submit" class="btn btn-primary btn-block" value="修改"></form>

@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # Web服务 - Apache + PHP 8.2
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lylme/lylme_spage:latest
+    container_name: lylme_spage
+    ports:
+      - "80:80"
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=lylme
+      - MYSQL_PASSWORD=lylme123456
+      - MYSQL_DATABASE=lylme_spage
+      - MYSQL_ROOT_PASSWORD=root123456
+    volumes:
+      - lylme_data:/var/www/html
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - lylme_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # MySQL服务 - 仅本地socket访问
+  mysql:
+    image: mysql:8.0
+    container_name: lylme_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123456
+      - MYSQL_DATABASE=lylme_spage
+      - MYSQL_USER=lylme
+      - MYSQL_PASSWORD=lylme123456
+      - MYSQL_INITDB_SKIP_TZINFO=1
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_socket:/var/run/mysqld
+    networks:
+      - lylme_network
+    restart: unless-stopped
+    # 安全配置：仅监听本地socket，不暴露端口
+    command: 
+      - --bind-address=127.0.0.1
+      - --skip-networking=0
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root123456}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+# 持久化卷
+volumes:
+  mysql_data:
+    driver: local
+    name: lylme_mysql_data
+  lylme_data:
+    driver: local
+    name: lylme_web_data
+  mysql_socket:
+    driver: local
+    name: lylme_mysql_socket
+
+# 内部网络
+networks:
+  lylme_network:
+    driver: bridge
+    name: lylme_network
