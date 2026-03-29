@@ -11,8 +11,7 @@
 $title =  '主题自定义设置';
 include './head.php';
 ?>
-<link href="../assets/js/layui/css/layui.css" type="text/css" rel="stylesheet" />
-<script src="../assets/js/layui/layui.js" type="application/javascript"></script>
+<script src="/assets/js/layui/layui.js" type="application/javascript"></script>
 <link rel="stylesheet" href="../assets/admin/css/theme_setting.css">
 <main class="lyear-layout-content">
     <div class="container-fluid">

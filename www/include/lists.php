@@ -18,161 +18,352 @@
 // | Authors: LyLme <admin@lylme.com>                         |
 // | date: 2022-06-10                                         |
 // +----------------------------------------------------------+
-function lists($htmls) {
-	global $DB;
-	$groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC");
-	// 获取分类
-	$i = 0;
-	//初始化循环次数
-	while ($group = $DB->fetch($groups)) {
-		//循环所有分组
-		$html = rearr($group,$htmls);
-		if($group["group_status"]=='0') {
-			continue;
-		}
-		if(!in_array($group['group_pwd'],$_SESSION['list'])&&!empty($group['group_pwd'])) {
-			//如果 分组加密未在认证列表 并且分组设置了密码(不显示分组)
-			continue;
-		}
-		$sql = "SELECT * FROM `lylme_links` WHERE `group_id` = " . $group['group_id']." ORDER BY `link_order` ASC;";
-		$group_links = $DB->query($sql);
-		$link_num = $DB->num_rows($group_links);
-		// 获取返回字段条目数量
-		echo $html['g1'].$html['g2'];
-		//输出分组图标和标题
-		if ($link_num == 0) {
-			echo $html['g3'] . "\n\n";
-			$i = 0;
-			continue;
-		}
-		while ($link = $DB->fetch($group_links)) {
-			// 循环每个链接
-			$html = rearr($link,$htmls);
-			// 返回指定分组下的所有字段
-			$lpwd = true;
-			if ($link_num > $i) {
-				$i = $i + 1;
-				if(!empty($group['group_pwd'])&&!empty($link['link_pwd'])) {
-					//分组和链接同时加密
-					//忽略链接加密正常显示分组
-				} else if(!in_array($link['link_pwd'],$_SESSION['list'])&&!empty($link['link_pwd'])) {
-					//当前链接加密
-					$lpwd = false;
-				}
-				if($link['link_status'] && $lpwd ) {
-					echo "\n" .$html['l1'].$html['l2'].$html['l3'];
-				}
-				//输出图标和链接
-			}
-			if ($link_num == $i) {
-				//判断当前分组链接循环完毕
-				echo $html['g3'] . "\n\n";
-				//输出分类结束标签
-				$i = 0;
-				break;
-				//重置$i为0跳出当前循环
-			}
-		}
-	}
+
+// 初始化全局变量，防止未定义错误
+if (!isset($conf)) {
+    $conf = [];
 }
-function listjson()
+
+if (!isset($GLOBALS['conf'])) {
+    $GLOBALS['conf'] = &$conf;
+}
+
+/**
+ * 渲染链接列表
+ * @param array $htmls HTML模板数组
+ * @return void
+ */
+function lists($htmls)
 {
-    global $DB;
+    global $DB, $conf;
+
+    // 安全检查：确保$DB和$conf已定义
+    if (!isset($DB) || !($DB instanceof DB)) {
+        error_log("Database connection not initialized in lists() function");
+        return;
+    }
+
     $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC");
-    // 获取分类
+    if ($groups === false) {
+        error_log("Failed to query groups from database");
+        return;
+    }
+
     $i = 0;
-    $g = 0;
-    $arr = array();
-    //初始化循环次数
+    $sessionList = isset($_SESSION['list']) ? $_SESSION['list'] : [];
+
     while ($group = $DB->fetch($groups)) {
-        //循环所有分组
-        if($group["group_status"] == '0') {
+        if ($group === false) {
             continue;
         }
-        if(!in_array($group['group_pwd'], $_SESSION['list']) && !empty($group['group_pwd'])) {
-            //如果 分组加密未在认证列表 并且分组设置了密码(不显示分组)
+
+        $html = rearr($group, $htmls);
+
+        if (isset($group["group_status"]) && $group["group_status"] == '0') {
             continue;
         }
-        $sql = "SELECT * FROM `lylme_links` WHERE `group_id` = " . $group['group_id'] . " ORDER BY `link_order` ASC;";
+
+        $groupPwd = isset($group['group_pwd']) ? $group['group_pwd'] : '';
+        if (!empty($groupPwd) && !in_array((int)$groupPwd, $sessionList, true)) {
+            continue;
+        }
+
+        $groupId = isset($group['group_id']) ? (int) $group['group_id'] : 0;
+        $sql = "SELECT * FROM `lylme_links` WHERE `group_id` = " . $groupId . " ORDER BY `link_order` ASC;";
         $group_links = $DB->query($sql);
+
+        if ($group_links === false) {
+            if (isset($html['g1']) && isset($html['g2'])) {
+                echo $html['g1'] . $html['g2'];
+            }
+            if (isset($html['g3'])) {
+                echo $html['g3'] . "\n\n";
+            }
+            $i = 0;
+            continue;
+        }
+
         $link_num = $DB->num_rows($group_links);
-        // 获取返回字段条目数量
-        $arr[$g] = array("id" => $group['group_id'],"title" => $group['group_name'],"icon" => $group['group_icon'],);
-        //输出分组图标和标题
+
+        if (isset($html['g1']) && isset($html['g2'])) {
+            echo $html['g1'] . $html['g2'];
+        }
+
+        if ($link_num == 0) {
+            if (isset($html['g3'])) {
+                echo $html['g3'] . "\n\n";
+            }
+            $i = 0;
+            continue;
+        }
 
         while ($link = $DB->fetch($group_links)) {
-            // 循环每个链接
-            $arr[$g]['items'][] = array("id" => $link['id'],
-            "title" => $link['name'],
-            "alias" => 'link'.$link['id'],
-            "keyword" => $link['name'],
-            "category_id" => $group['group_id'],
-            "icon" => $link['icon'],
-            "url" =>$link['url'],
-            "out" => true);
-            // 返回指定分组下的所有字段
+            if ($link === false) {
+                break;
+            }
+
+            $html = rearr($link, $htmls);
             $lpwd = true;
+
             if ($link_num > $i) {
-                $i = $i + 1;
-                if(!empty($group['group_pwd']) && !empty($link['link_pwd'])) {
-                    //分组和链接同时加密
-                    //忽略链接加密正常显示分组
-                } elseif(!in_array($link['link_pwd'], $_SESSION['list']) && !empty($link['link_pwd'])) {
-                    //当前链接加密
+                $i++;
+
+                $linkPwd = isset($link['link_pwd']) ? $link['link_pwd'] : '';
+                if (empty($groupPwd) && !empty($linkPwd) && !in_array((int)$linkPwd, $sessionList, true)) {
                     $lpwd = false;
                 }
-                if($link['link_status'] && $lpwd) {
-                    
+
+                $linkStatus = isset($link['link_status']) ? $link['link_status'] : 1;
+                if ($linkStatus && $lpwd && isset($html['l1']) && isset($html['l2']) && isset($html['l3'])) {
+                    echo "\n" . $html['l1'] . $html['l2'] . $html['l3'];
                 }
-                //输出图标和链接
+            }
+
+            if ($link_num == $i) {
+                if (isset($html['g3'])) {
+                    echo $html['g3'] . "\n\n";
+                }
+                $i = 0;
+                break;
+            }
+        }
+    }
+}
+
+/**
+ * 生成JSON格式的链接列表
+ * @return array
+ */
+function listjson()
+{
+    global $DB, $conf;
+
+    // 安全检查
+    if (!isset($DB) || !($DB instanceof DB)) {
+        error_log("Database connection not initialized in listjson() function");
+        return [];
+    }
+
+    $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC");
+    if ($groups === false) {
+        error_log("Failed to query groups from database in listjson()");
+        return [];
+    }
+
+    $i = 0;
+    $g = 0;
+    $arr = [];
+    $sessionList = isset($_SESSION['list']) ? $_SESSION['list'] : [];
+
+    while ($group = $DB->fetch($groups)) {
+        if ($group === false) {
+            continue;
+        }
+
+        if (isset($group["group_status"]) && $group["group_status"] == '0') {
+            continue;
+        }
+
+        $groupPwd = isset($group['group_pwd']) ? $group['group_pwd'] : '';
+        if (!empty($groupPwd) && !in_array($groupPwd, $sessionList, true)) {
+            continue;
+        }
+
+        $groupId = isset($group['group_id']) ? (int) $group['group_id'] : 0;
+        $sql = "SELECT * FROM `lylme_links` WHERE `group_id` = " . $groupId . " ORDER BY `link_order` ASC;";
+        $group_links = $DB->query($sql);
+
+        if ($group_links === false) {
+            continue;
+        }
+
+        $link_num = $DB->num_rows($group_links);
+        $arr[$g] = [
+            "id" => $groupId,
+            "title" => isset($group['group_name']) ? $group['group_name'] : '',
+            "icon" => isset($group['group_icon']) ? $group['group_icon'] : '',
+            "items" => []
+        ];
+
+        while ($link = $DB->fetch($group_links)) {
+            if ($link === false) {
+                break;
+            }
+
+            $linkId = isset($link['id']) ? (int) $link['id'] : 0;
+            $linkName = isset($link['name']) ? $link['name'] : '';
+            $linkIcon = isset($link['icon']) ? $link['icon'] : '';
+            $linkUrl = isset($link['url']) ? $link['url'] : '';
+
+            $arr[$g]['items'][] = [
+                "id" => $linkId,
+                "title" => $linkName,
+                "alias" => 'link' . $linkId,
+                "keyword" => $linkName,
+                "category_id" => $groupId,
+                "icon" => $linkIcon,
+                "url" => $linkUrl,
+                "out" => true
+            ];
+
+            $lpwd = true;
+            if ($link_num > $i) {
+                $i++;
+
+                $linkPwd = isset($link['link_pwd']) ? $link['link_pwd'] : '';
+                if (empty($groupPwd) && !empty($linkPwd) && !in_array((int)$linkPwd, $sessionList, true)) {
+                    $lpwd = false;
+                }
+
+                $linkStatus = isset($link['link_status']) ? $link['link_status'] : 1;
+                if ($linkStatus && $lpwd) {
+                    // 链接正常显示
+                }
             }
         }
         $g++;
     }
+
     return $arr;
 }
+
+/**
+ * 检查字符串是否包含子串
+ * @param string $string 原始字符串
+ * @param string $find 查找的子串
+ * @return bool
+ */
 function strexists($string, $find)
 {
-    return !(strpos($string, $find) === false);
-}
-function dstrpos($string, $arr)
-{
-    if (empty($string)) {
+    if (!is_string($string) || !is_string($find)) {
         return false;
     }
+    return strpos($string, $find) !== false;
+}
+
+/**
+ * 检查字符串是否包含数组中的任意子串
+ * @param string $string 原始字符串
+ * @param array $arr 子串数组
+ * @return bool
+ */
+function dstrpos($string, $arr)
+{
+    if (!is_string($string) || empty($string) || !is_array($arr) || empty($arr)) {
+        return false;
+    }
+
     foreach ($arr as $v) {
-        if (strpos($string, $v) !== false) {
+        if (is_string($v) && strpos($string, $v) !== false) {
             return true;
         }
     }
     return false;
 }
-//判断移动端
+
+/**
+ * 判断是否为移动端
+ * @return bool
+ */
 function checkmobile()
 {
-    $useragent = strtolower($_SERVER['HTTP_USER_AGENT']);
-    $ualist = array('android', 'midp', 'nokia', 'mobile', 'iphone', 'ipod', 'blackberry', 'windows phone');
-    if ((dstrpos($useragent, $ualist) || strexists($_SERVER['HTTP_ACCEPT'], "VND.WAP") || strexists(isset($_SERVER['HTTP_VIA']), "wap"))) {
-        return true;
-    } else {
+    // 检查是否通过命令行访问
+    if (php_sapi_name() === 'cli' || !isset($_SERVER['HTTP_USER_AGENT'])) {
         return false;
     }
-}
-//CDN
-function cdnpublic($cdnpublic)
-{
-    if (empty($cdnpublic)) {
-        return '.';
-    } else {
-        return $cdnpublic . $GLOBALS['version'];
+
+    $useragent = strtolower($_SERVER['HTTP_USER_AGENT']);
+    $ualist = ['android', 'midp', 'nokia', 'mobile', 'iphone', 'ipod', 'blackberry', 'windows phone'];
+
+    // 检查HTTP_ACCEPT
+    $httpAccept = isset($_SERVER['HTTP_ACCEPT']) ? strtolower($_SERVER['HTTP_ACCEPT']) : '';
+
+    // 检查HTTP_VIA
+    $httpVia = isset($_SERVER['HTTP_VIA']) ? strtolower($_SERVER['HTTP_VIA']) : '';
+
+    if (
+        dstrpos($useragent, $ualist) ||
+        strexists($httpAccept, "vnd.wap") ||
+        strexists($httpVia, "wap")
+    ) {
+        return true;
     }
+
+    // 额外检查：触摸屏设备
+    if (
+        isset($_SERVER['HTTP_X_WAP_PROFILE']) ||
+        isset($_SERVER['HTTP_PROFILE']) ||
+        (isset($_SERVER['HTTP_ACCEPT']) &&
+            (strpos($_SERVER['HTTP_ACCEPT'], 'text/vnd.wap.wml') !== false ||
+                strpos($_SERVER['HTTP_ACCEPT'], 'application/vnd.wap.xhtml+xml') !== false))
+    ) {
+        return true;
+    }
+
+    return false;
 }
 
-$cdnpublic = cdnpublic($conf['cdnpublic']);
-$templatepath = './template/' . $conf["template"];
-$template =  $templatepath . '/index.php';
-$background = $conf["background"];
-$wap_background = $conf["wap_background"];
+/**
+ * 获取CDN公共路径
+ * @param string|null $cdnpublic CDN配置
+ * @return string
+ */
+function cdnpublic($cdnpublic = null)
+{
+    global $conf;
+
+    // 如果未传入参数，尝试从全局配置获取
+    if ($cdnpublic === null && isset($conf['cdnpublic'])) {
+        $cdnpublic = $conf['cdnpublic'];
+    }
+
+    if (empty($cdnpublic)) {
+        return '.';
+    }
+
+    // 获取版本号
+    $version = '';
+    if (isset($GLOBALS['version'])) {
+        $version = $GLOBALS['version'];
+    } elseif (defined('VERSION')) {
+        $version = VERSION;
+    }
+
+    return rtrim($cdnpublic, '/') . '/' . ltrim($version, '/');
+}
+
+// === 初始化变量 ===
+// 使用更安全的变量初始化方式
+
+// 初始化全局变量
+if (!isset($GLOBALS['version'])) {
+    $GLOBALS['version'] = defined('VERSION') ? VERSION : '1.0.0';
+}
+
+// 获取CDN路径
+$cdnpublic = cdnpublic(isset($conf['cdnpublic']) ? $conf['cdnpublic'] : null);
+
+// 获取模板路径
+$template = isset($conf["template"]) ? $conf["template"] : 'default';
+$templatepath = './template/' . $template;
+
+// 检查模板目录是否存在
+if (!is_dir($templatepath) && defined('DEBUG') && DEBUG === true) {
+    error_log("Template directory not found: {$templatepath}");
+}
+
+$templateFile = $templatepath . '/index.php';
+
+// 检查模板文件是否存在
+if (!file_exists($templateFile) && defined('DEBUG') && DEBUG === true) {
+    error_log("Template file not found: {$templateFile}");
+}
+
+// 设置背景图片
+$background = isset($conf["background"]) ? $conf["background"] : '';
+$wap_background = isset($conf["wap_background"]) ? $conf["wap_background"] : '';
+$background_img = '';
+
 if (checkmobile()) {
     if (!empty($wap_background)) {
         $background_img = $wap_background;
@@ -182,4 +373,8 @@ if (checkmobile()) {
 } else {
     $background_img = $background;
 }
-?>
+
+// 确保背景图片变量被定义
+if (empty($background_img) && isset($conf["background"])) {
+    $background_img = $conf["background"];
+}

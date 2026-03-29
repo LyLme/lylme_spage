@@ -9,41 +9,37 @@
 
 class Form
 {
-    public const layui_form = 'LayuiForm';
+    const layui_form = 'LayuiForm';
+    const autocomplete_on = 'on';
+    const autocomplete_off = 'off';
+    const verify_required = 'required'; //（必填项）
+    const verify_phone = 'phone'; //（手机号）
+    const verify_email = 'email'; //（邮箱）
+    const verify_url = 'url'; //（网址）
+    const verify_number = 'number'; //（数字）
+    const verify_date = 'date'; //（日期）
+    const verify_identity = 'identity'; //（身份证）
+    const form_method_post = 'post';
+    const form_method_get = 'get';
 
-    public const autocomplete_on = 'on';
-    public const autocomplete_off = 'off';
-
-    public const verify_required = 'required'; //（必填项）
-    public const verify_phone = 'phone'; //（手机号）
-    public const verify_email = 'email'; //（邮箱）
-    public const verify_url = 'url'; //（网址）
-    public const verify_number = 'number'; //（数字）
-    public const verify_date = 'date'; //（日期）
-    public const verify_identity = 'identity'; //（身份证）
-
-    public const form_method_post = 'post';
-    public const form_method_get = 'get';
-
-    public $config = [
+    public $config = array(
         'form_id' => '',
         'form_method' => 'post',
         'form_action' => '',
-        'form_class' => []
-    ];
+        'form_class' => array()
+    );
     private $inline = false;
-    private $inline_schema = [];
-    public $schema = [];
-    private $table_schema = [];
-    public $data = [];
-    public $display_none_field = [];
-
+    private $inline_schema = array();
+    public $schema = array();
+    private $table_schema = array();
+    public $data = array();
+    public $display_none_field = array();
 
     private static $instance;
 
     private function __construct()
     {
-        $this->config['form_action'] = $_SERVER['REQUEST_URI'];
+        $this->config['form_action'] = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     }
 
     private function __clone()
@@ -59,11 +55,10 @@ class Form
         return self::$instance;
     }
 
-
     //文本输入框
-    public function input_text($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = [self::verify_required])
+    public function input_text($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = array(self::verify_required))
     {
-        $init = [
+        $init = array(
             'type' => 'text',
             'name' => $name,
             'title' => $title,
@@ -72,7 +67,7 @@ class Form
             'autocomplete' => $autocomplete,
             'verify' => $verify,
             'value' => $value,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -82,9 +77,9 @@ class Form
     }
 
     //范围输入框
-    public function input_range($title, $description, $name, $value = [], $disabled = false, $autocomplete = self::autocomplete_off, $verify = [self::verify_required])
+    public function input_range($title, $description, $name, $value = array(), $disabled = false, $autocomplete = self::autocomplete_off, $verify = array(self::verify_required))
     {
-        $init = [
+        $init = array(
             'type' => 'range',
             'name' => $name,
             'title' => $title,
@@ -93,7 +88,7 @@ class Form
             'autocomplete' => $autocomplete,
             'verify' => $verify,
             'value' => $value,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -104,19 +99,19 @@ class Form
 
     public function input_hidden($name, $value = '')
     {
-        $init = [
+        $init = array(
             'type' => 'hidden',
             'name' => $name,
             'value' => $value,
-        ];
+        );
         $this->schema[] = $init;
         return $this;
     }
 
     //日期输入框
-    public function input_date($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = [self::verify_required])
+    public function input_date($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = array(self::verify_required))
     {
-        $init = [
+        $init = array(
             'type' => 'date',
             'name' => $name,
             'title' => $title,
@@ -125,7 +120,7 @@ class Form
             'autocomplete' => $autocomplete,
             'verify' => $verify,
             'value' => $value,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -135,9 +130,9 @@ class Form
     }
 
     //密码输入框
-    public function input_password($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = [self::verify_required])
+    public function input_password($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = array(self::verify_required))
     {
-        $init = [
+        $init = array(
             'type' => 'password',
             'name' => $name,
             'title' => $title,
@@ -146,7 +141,7 @@ class Form
             'autocomplete' => $autocomplete,
             'verify' => $verify,
             'value' => $value,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -157,12 +152,12 @@ class Form
 
     public function empty_item($title, $description, $name)
     {
-        $init = [
+        $init = array(
             'type' => 'empty_box',
             'name' => $name,
             'title' => $title,
             'description' => $description,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -171,16 +166,15 @@ class Form
         return $this;
     }
 
-
     public function empty_box($title, $description, $name)
     {
         return $this->empty_item($title, $description, $name);
     }
 
     //复选框
-    public function checkbox($title, $description, $name, array $enum, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = [self::verify_required])
+    public function checkbox($title, $description, $name, array $enum, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = array(self::verify_required))
     {
-        $init = [
+        $init = array(
             'type' => 'checkbox',
             'name' => $name,
             'title' => $title,
@@ -190,7 +184,7 @@ class Form
             'autocomplete' => $autocomplete,
             'verify' => $verify,
             'value' => $value,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -200,9 +194,9 @@ class Form
     }
 
     //开关
-    public function switch($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = [self::verify_required])
+    public function addSwitch($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = array(self::verify_required))
     {
-        $init = [
+        $init = array(
             'type' => 'switch',
             'name' => $name,
             'title' => $title,
@@ -211,7 +205,7 @@ class Form
             'autocomplete' => $autocomplete,
             'verify' => $verify,
             'value' => $value,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -221,9 +215,9 @@ class Form
     }
 
     //单选框
-    public function radio($title, $description, $name, array $enum, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = [self::verify_required])
+    public function radio($title, $description, $name, array $enum, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = array(self::verify_required))
     {
-        $init = [
+        $init = array(
             'type' => 'radio',
             'name' => $name,
             'title' => $title,
@@ -233,7 +227,7 @@ class Form
             'autocomplete' => $autocomplete,
             'verify' => $verify,
             'value' => $value,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -243,9 +237,9 @@ class Form
     }
 
     //下拉选项
-    public function select($title, $description, $name, array $enum, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = [self::verify_required])
+    public function select($title, $description, $name, array $enum, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = array(self::verify_required))
     {
-        $init = [
+        $init = array(
             'type' => 'select',
             'name' => $name,
             'title' => $title,
@@ -255,7 +249,7 @@ class Form
             'autocomplete' => $autocomplete,
             'verify' => $verify,
             'value' => $value,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -265,9 +259,9 @@ class Form
     }
 
     //编辑框
-    public function textarea($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = [self::verify_required])
+    public function textarea($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = array(self::verify_required))
     {
-        $init = [
+        $init = array(
             'type' => 'textarea',
             'name' => $name,
             'title' => $title,
@@ -276,7 +270,7 @@ class Form
             'autocomplete' => $autocomplete,
             'verify' => $verify,
             'value' => $value,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -284,10 +278,11 @@ class Form
         }
         return $this;
     }
+
     //编辑器
-    public function editor($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = [self::verify_required])
+    public function editor($title, $description, $name, $value = '', $disabled = false, $autocomplete = self::autocomplete_off, $verify = array(self::verify_required))
     {
-        $init = [
+        $init = array(
             'type' => 'editor',
             'name' => $name,
             'title' => $title,
@@ -297,7 +292,7 @@ class Form
             'autocomplete' => $autocomplete,
             'verify' => $verify,
             'value' => $value,
-        ];
+        );
         if ($this->inline) {
             $this->inline_schema[] = $init;
         } else {
@@ -307,16 +302,16 @@ class Form
     }
 
     //表格
-    public function table($title, $description, $name, array $init, array $value = [])
+    public function table($title, $description, $name, array $init, array $value = array())
     {
-        $init = [
+        $init = array(
             'type' => 'table',
             'name' => $name,
             'title' => $title,
             'description' => $description,
             'init' => $init,
             'value' => $value,
-        ];
+        );
         $this->schema[] = $init;
         return $this;
     }
@@ -332,7 +327,7 @@ class Form
     public function input_inline_end()
     {
         $this->schema[] = $this->inline_schema;
-        $this->inline_schema = [];
+        $this->inline_schema = array();
         $this->inline = false;
         return $this;
     }
@@ -340,7 +335,7 @@ class Form
     //表单类Class
     public function form_class($class_name)
     {
-        $class_name = is_scalar($class_name) ? [$class_name] : $class_name;
+        $class_name = is_scalar($class_name) ? array($class_name) : $class_name;
         $this->config['form_class'] = array_merge($this->config['form_class'], $class_name);
         return $this;
     }
@@ -370,9 +365,9 @@ class Form
     public function form_init(array $init_data)
     {
         if ($this->inline) {
-            $this->inline_schema += $init_data;
+            $this->inline_schema = array_merge($this->inline_schema, $init_data);
         } else {
-            $this->schema += $init_data;
+            $this->schema = array_merge($this->schema, $init_data);
         }
         return $this;
     }
@@ -390,24 +385,24 @@ class Form
 
     public function input_submit($title, $submit_btn_raw_text = '', $reset_btn_raw_text = '', $display_none_show_btn_raw_text = '')
     {
-        $init = [
+        $init = array(
             'type' => 'submit',
             'title' => $title,
             'raw_text' => $submit_btn_raw_text,
             'reset_btn_raw_text' => $reset_btn_raw_text,
             'display_none_show_btn_raw_text' => $display_none_show_btn_raw_text,
-        ];
+        );
         if ($this->inline) {
-            $this->inline_schema = array_merge($this->inline_schema, [$init]);
+            $this->inline_schema = array_merge($this->inline_schema, array($init));
         } else {
-            $this->schema = array_merge($this->schema, [$init]);
+            $this->schema = array_merge($this->schema, array($init));
         }
         return $this;
     }
 
     public function create($form_type = self::layui_form)
     {
-        return call_user_func_array([new $form_type(), __FUNCTION__], [$this]);
+        return call_user_func_array(array(new $form_type(), 'create'), array($this));
     }
 
     //判断表单类型是否存在
@@ -416,17 +411,16 @@ class Form
         if (!$this->schema) {
             return false;
         }
-        $_type = [];
+        $_type = array();
         foreach ($this->schema as $value) {
             if (isset($value[0])) {
                 foreach ($value as $val) {
-                    $_type[] = $val['type'];
+                    $_type[] = isset($val['type']) ? $val['type'] : '';
                 }
             } else {
-                $_type[] = $value['type'];
+                $_type[] = isset($value['type']) ? $value['type'] : '';
             }
         }
-        $_type = array_column((array)$this->schema, 'type');
         if (in_array($form_type, $_type)) {
             return true;
         } else {
@@ -451,15 +445,15 @@ class Form
  */
 class LayuiForm
 {
-    public const form_class_pane = 'layui-form-pane';
+    const form_class_pane = 'layui-form-pane';
     private $form_instance;
 
     public function create(Form $formObj)
     {
         $this->form_instance = $formObj;
         //渲染html
-        $formObj->schema = array_values($formObj->schema ?? []);
-        $item_html = [];
+        $formObj->schema = array_values(isset($formObj->schema) ? $formObj->schema : array());
+        $item_html = array();
         foreach ($formObj->schema as $item) {
             $is_block = isset($item['type']) ? true : false;
             if ($is_block) {
@@ -472,10 +466,10 @@ class LayuiForm
         $form_id = $formObj->config['form_id'] ? 'id="' . $formObj->config['form_id'] . '"' : '';
         $form_action = $formObj->config['form_action'] ? 'action="' . $formObj->config['form_action'] . '"' : '';
         $form_method = $formObj->config['form_method'] ? 'method="' . $formObj->config['form_method'] . '"' : '';
-        $form_class = $formObj->config['form_class'] ? 'class="' . join(' ', array_merge(['layui-form'], $formObj->config['form_class'])) . '"' : '';
+        $form_class = $formObj->config['form_class'] ? 'class="' . join(' ', array_merge(array('layui-form'), $formObj->config['form_class'])) . '"' : '';
         $html = <<<ST
-			<form {$form_class} {$form_id} {$form_action} {$form_method}>
-			{$item_html}
+            <form {$form_class} {$form_id} {$form_action} {$form_method}>
+            {$item_html}
 ST;
         return $html;
     }
@@ -485,10 +479,10 @@ ST;
         if (isset($init_data['name']) and isset($this->form_instance->data[$init_data['name']])) {
             $init_data['value'] = $this->form_instance->data[$init_data['name']];
         }
-        $input_type = $init_data['type'] ?? '';
-        $description = $init_data['description'] ?? '';
+        $input_type = isset($init_data['type']) ? $init_data['type'] : '';
+        $description = isset($init_data['description']) ? $init_data['description'] : '';
         $tip_html = $description ? "<tip>{$description}</tip>" : '';
-        $input_html = $this->render_input($init_data, $init_data['value'] ?? '');
+        $input_html = $this->render_input($init_data, isset($init_data['value']) ? $init_data['value'] : '');
         if (strtolower($input_type) == 'hidden') {
             $block_html = <<<ST
             {$input_html}
@@ -504,7 +498,7 @@ ST;
                 </div>
 ST;
         } else {
-            $label_text = $init_data['title'] ?? '';
+            $label_text = isset($init_data['title']) ? $init_data['title'] : '';
             $block_html = <<<ST
                 <div class="layui-form-item">
                     <label class="layui-form-label">{$label_text}</label>
@@ -520,21 +514,21 @@ ST;
 
     private function render_item_inline($item_datas)
     {
-        $inline_html = [];
+        $inline_html = array();
         foreach ($item_datas as $init_data) {
-            if ($init_data['name'] ?? '' and $this->form_instance->data[$init_data['name']] ?? '') {
+            if (isset($init_data['name']) and isset($this->form_instance->data[$init_data['name']])) {
                 $init_data['value'] = $this->form_instance->data[$init_data['name']];
             } else {
                 $init_data['value'] = '';
             }
-            $input_type = $init_data['type'] ?? '';
+            $input_type = isset($init_data['type']) ? $init_data['type'] : '';
             if (strtolower($input_type) == 'hidden') {
-                $input_html = $this->render_input($init_data, $init_data['value'] ?? '');
+                $input_html = $this->render_input($init_data, isset($init_data['value']) ? $init_data['value'] : '');
                 $html = $input_html;
             } elseif (strtolower($input_type) == 'none') {
                 $html = '';
             } elseif (strtolower($input_type) == 'submit') {
-                $input_html = $this->render_input($init_data, $init_data['value'] ?? '');
+                $input_html = $this->render_input($init_data, isset($init_data['value']) ? $init_data['value'] : '');
                 $html = <<<ST
                 <div class="layui-inline">
                      {$input_html}
@@ -550,7 +544,7 @@ ST;
                 $init_data['name'] = $init_data['name'] . "[]";
                 $input_html1 = $this->render_input($init_data, isset($init_data['value'][0]) ? $init_data['value'][0] : '');
                 $input_html2 = $this->render_input($init_data, isset($init_data['value'][1]) ? $init_data['value'][1] : '');
-                $label_text = $init_data['title'] ?? '';
+                $label_text = isset($init_data['title']) ? $init_data['title'] : '';
                 $html = <<<str
                   <div class="layui-inline {$display_none_class_str}" {$display_none_css_str}>
                     <label class="layui-form-label">{$label_text}</label>
@@ -570,8 +564,8 @@ str;
                     $display_none_css_str = "style=\"display:none\"";
                     $display_none_class_str = 'inline_display_none_tag';
                 }
-                $input_html = $this->render_input($init_data, $init_data['value'] ?? '');
-                $label_text = $init_data['title'] ?? '';
+                $input_html = $this->render_input($init_data, isset($init_data['value']) ? $init_data['value'] : '');
+                $label_text = isset($init_data['title']) ? $init_data['title'] : '';
                 $html = <<<str
                     <div class="layui-inline {$display_none_class_str}" {$display_none_css_str}>
                         <label class="layui-form-label">{$label_text}</label>
@@ -594,15 +588,17 @@ ST;
 
     private function render_input($init_data, $value)
     {
-        $init_data['type'] = $init_data['type'] ?? '';
-        $init_data['name'] = $init_data['name'] ?? '';
-        $init_data['title'] = $init_data['title'] ?? '';
-        $init_data['enum'] = $init_data['enum'] ?? [];
-        $init_data['disabled'] = $init_data['disabled'] ?? false;
+        $init_data['type'] = isset($init_data['type']) ? $init_data['type'] : '';
+        $init_data['name'] = isset($init_data['name']) ? $init_data['name'] : '';
+        $init_data['title'] = isset($init_data['title']) ? $init_data['title'] : '';
+        $init_data['enum'] = isset($init_data['enum']) ? $init_data['enum'] : array();
+        $init_data['disabled'] = isset($init_data['disabled']) ? $init_data['disabled'] : false;
+
         if ($init_data['type'] == 'submit') {
-            $init_data['raw_text'] = $init_data['raw_text'] ?? '';
-            $init_data['reset_btn_raw_text'] = $init_data['reset_btn_raw_text'] ?? '';
-            $init_data['display_none_show_btn_raw_text'] = $init_data['display_none_show_btn_raw_text'] ?? '';
+            $init_data['raw_text'] = isset($init_data['raw_text']) ? $init_data['raw_text'] : '';
+            $init_data['reset_btn_raw_text'] = isset($init_data['reset_btn_raw_text']) ? $init_data['reset_btn_raw_text'] : '';
+            $init_data['display_none_show_btn_raw_text'] = isset($init_data['display_none_show_btn_raw_text']) ? $init_data['display_none_show_btn_raw_text'] : '';
+
             if ($init_data['reset_btn_raw_text']) {
                 $reset_html = <<<STR
     <button type="reset" {$init_data['reset_btn_raw_text']} >重置</button>
@@ -611,7 +607,7 @@ STR;
                 $reset_html = '';
             }
 
-            if (array_filter($this->form_instance->display_none_field)) {
+            if (is_array($this->form_instance->display_none_field) && count(array_filter($this->form_instance->display_none_field))) {
                 $display_none_show_btn_html = <<<STR
     <button type="button" {$init_data['display_none_show_btn_raw_text']} >高级搜索 ></button>
 STR;
@@ -626,28 +622,29 @@ STR;
 str;
         } elseif ($init_data['type'] == 'text') {
             $disabled_str = $init_data['disabled'] ? 'disabled' : '';
-            $html = [];
-            $value = (array)$value;
+            $html = array();
+            $value = is_array($value) ? $value : array($value);
             foreach ($value as $ke => $val) {
                 if (count($value) > 1) {
                     $name_str = "{$init_data['name']}[{$ke}]";
-                    $name_verify = "{$init_data['verify']}[{$ke}]";
-                    $name_placeholder = "{$init_data['placeholder']}[{$ke}]";
+                    $name_verify = isset($init_data['verify'][$ke]) ? "{$init_data['verify'][$ke]}" : "";
+                    $name_placeholder = isset($init_data['placeholder'][$ke]) ? "{$init_data['placeholder'][$ke]}" : "";
                 } else {
                     $name_str = $init_data['name'];
-                    $name_verify = "";
-                    $name_placeholder = $init_data['placeholder'];
+                    $name_verify = isset($init_data['verify']) ? is_array($init_data['verify']) ? join(',', $init_data['verify']) : $init_data['verify'] : "";
+                    $name_placeholder = isset($init_data['placeholder']) ? $init_data['placeholder'] : "";
                 }
-                $html = <<<str
+                $html[] = <<<str
 <input name="{$name_str}" value="{$val}" type="text"  lay-verify="{$name_verify}"  placeholder="{$name_placeholder}"   class="layui-input"  {$disabled_str}/>
 str;
             }
+            $html = join("", $html);
         } elseif ($init_data['type'] == 'date') {
             $name_str = $init_data['name'] ? "name=\"{$init_data['name']}\"" : '';
-            $value = (array)$value;
+            $value = is_array($value) ? $value : array($value);
 
             $disabled_str = $init_data['disabled'] ? 'disabled' : '';
-            $html = [];
+            $html = array();
             foreach ($value as $val) {
                 $html[] = <<<str
 <input {$name_str}  class="layui-input"  {$disabled_str} value="{$val}" type="text"  input_type="date"/>
@@ -656,9 +653,9 @@ str;
             $html = join("\n", $html);
         } elseif ($init_data['type'] == 'color') {
             $name_str = $init_data['name'] ? "name=\"{$init_data['name']}\"" : '';
-            $value = (array)$value;
+            $value = is_array($value) ? $value : array($value);
             $disabled_str = $init_data['disabled'] ? 'disabled' : '';
-            $html = [];
+            $html = array();
             foreach ($value as $val) {
                 $html[] = <<<str
                 <input type="text" class="coloris form-control"  placeholder="请选择颜色" {$disabled_str} {$name_str} value="{$val}">
@@ -683,15 +680,15 @@ STR;
         } elseif ($init_data['type'] == 'select') {
             $disabled_str = $init_data['disabled'] ? 'disabled' : '';
             $name_str = $init_data['name'] ? "name=\"{$init_data['name']}\"" : '';
-            $init_data['enum'] = $init_data['enum'] ?? [];
-            $enum = [];
+            $init_data['enum'] = isset($init_data['enum']) ? $init_data['enum'] : array();
+            $enum = array();
             foreach ($init_data['enum'] as $key => $item) {
                 if (is_array($item)) {
-                    $item['value'] = $item['value'] ?? '';
-                    $item['name'] = $item['name'] ?? '';
+                    $item['value'] = isset($item['value']) ? $item['value'] : '';
+                    $item['name'] = isset($item['name']) ? $item['name'] : '';
                 } elseif (is_scalar($item)) {
                     $_name = $item;
-                    $item = [];
+                    $item = array();
                     $item['value'] = $key;
                     $item['name'] = $_name;
                 } else {
@@ -710,17 +707,18 @@ STR;
         } elseif ($init_data['type'] == 'select_multi') {
             $disabled_str = $init_data['disabled'] ? 'disabled' : '';
             $name_str = $init_data['name'] ? "name=\"{$init_data['name']}\"" : '';
-            $init_data['enum'] = $init_data['enum'] ?? [];
-            $enum = [];
+            $init_data['enum'] = isset($init_data['enum']) ? $init_data['enum'] : array();
+            $enum = array();
             $value = str_replace('|', ',', $value);
             $value = is_scalar($value) ? explode(',', $value) : $value;
+            $value = is_array($value) ? $value : array($value);
             foreach ($init_data['enum'] as $key => $item) {
                 if (is_array($item)) {
-                    $item['value'] = $item['value'] ?? '';
-                    $item['name'] = $item['name'] ?? '';
+                    $item['value'] = isset($item['value']) ? $item['value'] : '';
+                    $item['name'] = isset($item['name']) ? $item['name'] : '';
                 } elseif (is_scalar($item)) {
                     $_name = $item;
-                    $item = [];
+                    $item = array();
                     $item['value'] = $key;
                     $item['name'] = $_name;
                 } else {
@@ -738,16 +736,16 @@ STR;
 STR;
         } elseif ($init_data['type'] == 'radio') {
             $name_str = $init_data['name'] ? "name=\"{$init_data['name']}\"" : '';
-            $init_data['enum'] = $init_data['enum'] ?? [];
-            $value = (string)$value;
-            $enum = [];
+            $init_data['enum'] = isset($init_data['enum']) ? $init_data['enum'] : array();
+            $value = (string) $value;
+            $enum = array();
             foreach ($init_data['enum'] as $key => $item) {
                 if (is_array($item)) {
-                    $item['value'] = $item['value'] ?? '';
-                    $item['name'] = $item['name'] ?? '';
+                    $item['value'] = isset($item['value']) ? $item['value'] : '';
+                    $item['name'] = isset($item['name']) ? $item['name'] : '';
                 } elseif (is_scalar($item)) {
                     $_name = $item;
-                    $item = [];
+                    $item = array();
                     $item['value'] = $key;
                     $item['name'] = $_name;
                 } else {
@@ -762,17 +760,18 @@ STR;
 STR;
         } elseif ($init_data['type'] == 'checkbox') {
             $name_str = $init_data['name'] ? "name=\"{$init_data['name']}[]\"" : '';
-            $init_data['enum'] = $init_data['enum'] ?? [];
+            $init_data['enum'] = isset($init_data['enum']) ? $init_data['enum'] : array();
             $value = str_replace('|', ',', $value);
             $value = is_scalar($value) ? explode(',', $value) : $value;
-            $enum = [];
+            $value = is_array($value) ? $value : array($value);
+            $enum = array();
             foreach ($init_data['enum'] as $key => $item) {
                 if (is_array($item)) {
-                    $item['value'] = $item['value'] ?? '';
-                    $item['name'] = $item['name'] ?? '';
+                    $item['value'] = isset($item['value']) ? $item['value'] : '';
+                    $item['name'] = isset($item['name']) ? $item['name'] : '';
                 } elseif (is_scalar($item)) {
                     $_name = $item;
-                    $item = [];
+                    $item = array();
                     $item['value'] = $key;
                     $item['name'] = $_name;
                 } else {
@@ -793,37 +792,38 @@ STR;
             <input type="checkbox" {$name_str} lay-skin="switch" {$checked}/>
 STR;
         } elseif ($init_data['type'] == 'textarea') {
-            $name_placeholder =  isset($init_data['placeholder']) ? $init_data['placeholder'] : "请输入内容";
-            $name_str = $init_data['name'] ?? '' ? "name=\"{$init_data['name']}\"" : '';
-            $id_str = $init_data['name'] ?? '' ? "id=\"{$init_data['name']}\"" : '';
+            $name_placeholder = isset($init_data['placeholder']) ? $init_data['placeholder'] : "请输入内容";
+            $name_str = isset($init_data['name']) ? "name=\"{$init_data['name']}\"" : '';
+            $id_str = isset($init_data['name']) ? "id=\"{$init_data['name']}\"" : '';
             $html = <<<STR
             <textarea {$id_str} {$name_str} placeholder="{$name_placeholder}"  class="layui-textarea" >{$value}</textarea>
 STR;
         } elseif ($init_data['type'] == 'table') {
-            $value = (array)$value;
-            $init_data['init'] = $init_data['init'] ?? [];
+            $value = is_array($value) ? $value : array($value);
+            $init_data['init'] = isset($init_data['init']) ? $init_data['init'] : array();
+            $th = array();
             foreach ($init_data['init'] as $v) {
-                if (in_array($v['type'], ['hidden', 'none'])) {
+                if (in_array($v['type'], array('hidden', 'none'))) {
                     continue;
                 }
-                $v['title'] = $v['title'] ?? '';
+                $v['title'] = isset($v['title']) ? $v['title'] : '';
                 $th[] = "<th>{$v['title']}</th>";
             }
             $th = join("\n", $th);
             $thead_tr = "<tr>{$th}</tr>";
-            $tbody_tr = [];
+            $tbody_tr = array();
             $i = 0;
             foreach ($value as $val) {
-                $td = [];
+                $td = array();
                 foreach ($init_data['init'] as $v) {
                     if ($v['type'] == 'none') {
                         continue;
                     }
-                    $v['name'] = $v['name'] ?? '';
+                    $v['name'] = isset($v['name']) ? $v['name'] : '';
                     $_init = $v;
                     $_init['name'] = "{$init_data['name']}[{$i}][{$v['name']}]";
-                    $input_html = $this->render_input($_init, $val[$v['name']] ?? '');
-                    if (in_array($v['type'], ['hidden'])) {
+                    $input_html = $this->render_input($_init, isset($val[$v['name']]) ? $val[$v['name']] : '');
+                    if (in_array($v['type'], array('hidden'))) {
                         $td[] = $input_html;
                     } else {
                         $td[] = "<td>{$input_html}</td>";
@@ -840,12 +840,12 @@ STR;
                         <tfoot></tfoot>
                     </table>";
         } elseif ($init_data['type'] == 'file') {
-            $init_data['type'] = $init_data['type'] ?? '';
-            $init_data['name'] = $init_data['name'] ?? '';
+            $init_data['type'] = isset($init_data['type']) ? $init_data['type'] : '';
+            $init_data['name'] = isset($init_data['name']) ? $init_data['name'] : '';
             $class_str = "class=\"file\"";
 
-            $html = [];
-            $value = (array)$value;
+            $html = array();
+            $value = is_array($value) ? $value : array($value);
             foreach ($value as $ke => $val) {
                 if (count($value) > 1) {
                     $name_str = "{$init_data['name']}[{$ke}]";
@@ -857,15 +857,14 @@ STR;
             }
             $html = join("\n", $html);
         } elseif ($init_data['type'] == 'editor') {
-            $name_str = $init_data['name'] ?? '' ? "name=\"{$init_data['name']}\"" : '';
-            $id_str = $init_data['name'] ?? '' ? "id=\"{$init_data['name']}\"" : '';
+            $name_str = isset($init_data['name']) ? "name=\"{$init_data['name']}\"" : '';
+            $id_str = isset($init_data['name']) ? "id=\"{$init_data['name']}\"" : '';
             $html = "<textarea {$id_str} {$name_str} placeholder=\"请输入内容\" input_type=\"editor\">{$value}</textarea>";
         } else {
-            $init_data['type'] = $init_data['type'] ?? '';
-            // $init_data['name'] = $init_data['name'] ?? '';
+            $init_data['type'] = isset($init_data['type']) ? $init_data['type'] : '';
+            $init_data['name'] = isset($init_data['name']) ? $init_data['name'] : '';
             $init_data['name'] = is_scalar($init_data['name']) ? $init_data['name'] : json_encode($init_data['name']);
             $name_str = $init_data['name'] ? "name=\"{$init_data['name']}\"" : '';
-
 
             $value = is_scalar($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE);
 

@@ -1,4 +1,5 @@
 <?php if (!defined('IN_INSTALL')) {
+
     exit('Request Error!');
 } ?>
 <!DOCTYPE html>
@@ -41,7 +42,7 @@
                 </tr>
                 <tr>
                     <td height="40" align="right">数据库用户名：</td>
-                    <td><input type="text" name="dbuser" id="dbuser" class="input" value=""/></td>
+                    <td><input type="text" name="dbuser" id="dbuser" class="input" value="" onblur="CheckPwd()"/></td>
                 </tr>
                 <tr>
                     <td height="40" align="right">数据库密码：</td>

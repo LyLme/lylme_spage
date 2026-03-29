@@ -355,7 +355,7 @@ input[type="text"]:focus, input[type="password"]:focus {
 
 .installed a {
     background: #46a6ff;
-    padding: 5px 10px;
+    padding: 10px 15px;
     font-size: 16px;
     border-radius: 10px;
     color: #fff;

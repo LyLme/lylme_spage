@@ -3,37 +3,37 @@ $title = '后台管理';
 include './head.php';
 $last = date("Ym");
 if (@file_get_contents('log.txt') != $last || !file_exists('cache.php')) {
-    $update = update();
-    file_put_contents('log.txt', $last);
-    var_export($update, true);
-    $content = "<?php\nreturn " . var_export($update, true) . "\n?>";
-    file_put_contents('cache.php', $content);
+	$update = update();
+	file_put_contents('log.txt', $last);
+	var_export($update, true);
+	$content = "<?php\nreturn " . var_export($update, true) . "\n?>";
+	file_put_contents('cache.php', $content);
 }
 function tjsj($tjname)
 {
-    if ($tjname == '') {
-        echo '0';
-    } else {
-        echo $tjname;
-    }
+	if ($tjname == '') {
+		echo '0';
+	} else {
+		echo $tjname;
+	}
 }
 ?>
 <!--页面主要内容-->
 <main class="lyear-layout-content">
 	<div class="container-fluid">
 		<?php
-        $update  = require('cache.php');
-if (!empty($update)) {
-    if ($update['switch']) {
-        if ($update['msg_switch'] && !empty($update['msg'])) {
-            echo '<div class="card"><div class="card-header"><h4>' . $update['title'] . '</h4></div><ul class="list-group">' . $update['msg'] . '</ul></div>';
-        }
-        if (getver($update['version']) > getver($conf['version'])) {
-            echo '<div class="card"><div class="card-header"><h4>更新提示</h4></div><ul class="list-group">' . $update['update_msg'] . '</ul></div>';
-        }
-    }
-}
-?>
+		$update  = require('cache.php');
+		if (!empty($update)) {
+			if ($update['switch']) {
+				if ($update['msg_switch'] && !empty($update['msg'])) {
+					echo '<div class="card"><div class="card-header"><h4>' . $update['title'] . '</h4></div><ul class="list-group">' . $update['msg'] . '</ul></div>';
+				}
+				if (getver($update['version']) > getver($conf['version'])) {
+					echo '<div class="card"><div class="card-header"><h4>更新提示</h4></div><ul class="list-group">' . $update['update_msg'] . '</ul></div>';
+				}
+			}
+		}
+		?>
 		<div class="row">
 			<div class="col-sm-6 col-lg-3">
 				<div class="card bg-primary">
@@ -41,7 +41,7 @@ if (!empty($update)) {
 						<div class="pull-right">
 							<p class="h6 text-white m-t-0">链接数量</p>
 							<p class="h3 text-white m-b-0 fa-1-5x"><?php tjsj($linksrows);
-?></p>
+																	?></p>
 						</div>
 						<div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-web fa-1-5x"></i></span> </div>
 					</div>
@@ -53,7 +53,7 @@ if (!empty($update)) {
 						<div class="pull-right">
 							<p class="h6 text-white m-t-0">今日浏览量</p>
 							<p class="h3 text-white m-b-0 fa-1-5x"><?php tjsj($tjtoday);
-?></p>
+																	?></p>
 						</div>
 						<div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-account fa-1-5x"></i></span> </div>
 					</div>
@@ -65,7 +65,7 @@ if (!empty($update)) {
 						<div class="pull-right">
 							<p class="h6 text-white m-t-0">昨日浏览量</p>
 							<p class="h3 text-white m-b-0 fa-1-5x"><?php tjsj($tjyesterday);
-?></p>
+																	?></p>
 						</div>
 						<div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-account-convert fa-1-5x"></i></span> </div>
 					</div>
@@ -77,7 +77,7 @@ if (!empty($update)) {
 						<div class="pull-right">
 							<p class="h6 text-white m-t-0">累计浏览量</p>
 							<p class="h3 text-white m-b-0 fa-1-5x"><?php tjsj($tjtotal);
-?></p>
+																	?></p>
 						</div>
 						<div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-account-multiple fa-1-5x"></i></span> </div>
 					</div>
@@ -85,8 +85,8 @@ if (!empty($update)) {
 			</div>
 		</div>
 		<?php
-        if ($applyrows > 0) {
-            echo '
+		if ($applyrows > 0) {
+			echo '
         <div class="row">   
         <div class="col-sm-6 col-lg-12">
             <div class="card bg-info">
@@ -100,8 +100,8 @@ if (!empty($update)) {
             </div>
           </div>
           </div>';
-        }
-?>
+		}
+		?>
 		<div class="row">
 			<div class="col-lg-6">
 				<div class="card">
@@ -132,11 +132,11 @@ if (!empty($update)) {
 				<li class="list-group-item">
 					<b>PHP 版本：</b><?php echo phpversion() ?>
 					<?php if (ini_get('safe_mode')) {
-					    echo '线程安全';
+						echo '线程安全';
 					} else {
-					    echo '非线程安全';
+						echo '非线程安全';
 					}
-?>
+					?>
 				</li>
 				<li class="list-group-item">
 					<b>MySQL 版本：</b><?php echo $DB->count("select VERSION()") ?>
@@ -156,7 +156,10 @@ if (!empty($update)) {
 					<b>建站日期：</b><?php echo $conf['build'] ?>
 				</li>
 				<li class="list-group-item">
-					<b>当前版本：</b><?php echo $conf['version'] ?> <a href="./update.php" target="_blank">检查更新</a>
+					<b>主程序版本：</b><?php echo VERSION ?> <a href="./update.php" target="_blank">检查更新</a>
+				</li>
+				<li class="list-group-item">
+					<b>数据库版本：</b><?php echo $conf['version'] ?>
 				</li>
 				<li class="list-group-item">
 					<b>最新版本：</b> <?php echo $update['version'] ?> <a href="https://doc.lylme.com/spage/#/logs" target="_blank">更新日志</a>
@@ -193,10 +196,10 @@ include './footer.php';
 				hoverBackgroundColor: "rgba(51,202,185,0.7)",
 				hoverBorderColor: "rgba(0,0,0,0)",
 				data: [<?php echo $tjtoday;
-?>, <?php echo $tjyesterday;
-?>, <?php echo $tjmonth;
-?>, <?php echo $tjtotal;
-?>]
+						?>, <?php echo $tjyesterday;
+	?>, <?php echo $tjmonth;
+	?>, <?php echo $tjtotal;
+	?>]
 			}]
 		};
 		var $dashChartLinesData = {
@@ -204,10 +207,10 @@ include './footer.php';
 			datasets: [{
 				label: '数量',
 				data: [<?php echo $tjtoday;
-?>, <?php echo $tjyesterday;
-?>, <?php echo $tjmonth;
-?>, <?php echo $tjtotal;
-?>],
+						?>, <?php echo $tjyesterday;
+	?>, <?php echo $tjmonth;
+	?>, <?php echo $tjtotal;
+	?>],
 				borderColor: '#358ed7',
 				backgroundColor: 'rgba(53, 142, 215, 0.175)',
 				borderWidth: 1,

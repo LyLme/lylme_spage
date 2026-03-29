@@ -10,10 +10,6 @@
 header('Content-Type:text/html; charset=utf-8');
 
 
-// 检测php版本号
-if (!(version_compare(phpversion(), '7.1.0', '>=') && version_compare(phpversion(), '8.0.0', '<'))) {
-    exit('抱歉，您的PHP版本过低或过高，请将PHP版本修改为PHP7.1及以上(不支持PHP8)，再安装！');
-}
 
 // 不限制响应时间
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
@@ -88,7 +84,7 @@ if ($s == 3) {
         $dbpwd = $_POST['dbpwd'] ?: '';
         $dbport = $_POST['dbport'] ?: 3306;
 
-        $testdata = $_POST['testdata'] ?: '';
+        // $testdata = $_POST['testdata'] ?: '';
 
         // 连接证数据库
         try {
@@ -141,41 +137,12 @@ if ($s == 3) {
         insInfo("数据库连接文件创建完成！");
         ob_flush();
         flush();
-
         // 创建表结构
         $tbstruct = readDataFile('install_struct.sql');
         $pdo->exec(trim($tbstruct));
-
-        insInfo("数据库结构导入完成！");
+        insInfo("数据库导入完成！");
         ob_flush();
         flush();
-
-        // 导入其他安装数据
-
-        $pdo->query("INSERT INTO `lylme_config` (`id`, `k`, `v`, `description`) VALUES (NULL, 'build', '" . date("Y-m-d H:i") . "', '建站日期');");
-        $data_str = readDataFile('install_data.sql');
-        $pdo->exec(trim($data_str));
-        insInfo("数据导入完成！");
-
-        ob_flush();
-        flush();
-
-
-
-        // 查看是否需要安装测试数据
-        // if ($testdata == 'true') {
-        //     insInfo("正在加载测试数据！");
-        //     ob_flush();
-        //     flush();
-
-        //     $sqlstr_file = readDataFile('install_testdata.sql');
-        //     $pdo->exec(trim($sqlstr_file));
-
-        //     insInfo("测试数据导入完成！");
-        //     ob_flush();
-        //     flush();
-        // }
-
         // 结束缓存区
         ob_end_flush();
 

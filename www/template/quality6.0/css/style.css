@@ -134,3 +134,5 @@ html.night-mode .dropdown-content a:hover{background-color:#312e2e;}
 .tip-container:hover .tip-text{bottom:calc(100% + 1px);visibility:visible;opacity:1;transition:opacity .3s,bottom .3s}
 html.night-mode .tip-text {background-color: #d7d7d7;color: #000;}
 html.night-mode .tip-text::after {border-color: #d7d7d7 transparent transparent transparent;}
+.gab img {vertical-align: middle;}
+.icp, .gab {color: #565656;}

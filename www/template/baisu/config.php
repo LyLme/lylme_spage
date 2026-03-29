@@ -27,7 +27,16 @@
  * }
  */
 $theme_config =  [
-
+ [
+    'type' => 'radio',
+    'name' => 'link_desc',
+    'title' => '链接描述',
+    'value' => 2,
+    'enum' => [
+      1 => "显示",
+      2 => "隐藏",
+    ],
+  ],
   [
     'type' => 'select',
     'name' => 'lytoday',
