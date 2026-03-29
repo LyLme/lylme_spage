@@ -64,7 +64,7 @@ function lists($htmls)
         }
 
         $groupPwd = isset($group['group_pwd']) ? $group['group_pwd'] : '';
-        if (!empty($groupPwd) && !in_array($groupPwd, $sessionList, true)) {
+        if (!empty($groupPwd) && !in_array((int)$groupPwd, $sessionList, true)) {
             continue;
         }
 
@@ -109,7 +109,7 @@ function lists($htmls)
                 $i++;
 
                 $linkPwd = isset($link['link_pwd']) ? $link['link_pwd'] : '';
-                if (empty($groupPwd) && !empty($linkPwd) && !in_array($linkPwd, $sessionList, true)) {
+                if (empty($groupPwd) && !empty($linkPwd) && !in_array((int)$linkPwd, $sessionList, true)) {
                     $lpwd = false;
                 }
 
@@ -211,7 +211,7 @@ function listjson()
                 $i++;
 
                 $linkPwd = isset($link['link_pwd']) ? $link['link_pwd'] : '';
-                if (empty($groupPwd) && !empty($linkPwd) && !in_array($linkPwd, $sessionList, true)) {
+                if (empty($groupPwd) && !empty($linkPwd) && !in_array((int)$linkPwd, $sessionList, true)) {
                     $lpwd = false;
                 }
 

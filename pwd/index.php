@@ -66,7 +66,7 @@ include("../include/common.php");
 		}
 
 		.button-panel {
-			margin: 40px 0;
+			margin: 30px 0;
 			width: 100%
 		}
 
@@ -89,6 +89,20 @@ include("../include/common.php");
 
 		.button:hover {
 			background: #00c8ff
+		}
+
+		.btn_home {
+			padding: 10px 15px;
+			background: #b8b8b8;
+			border: none;
+			border-radius: 15px;
+			color: #ffffff;
+			height: 50px;
+			font-size: 1rem;
+			letter-spacing: 0.05em;
+			text-align: center;
+			/* width: 100%; */
+			text-decoration: none;
 		}
 
 		@media only screen and (max-width:320px) {
@@ -170,47 +184,53 @@ include("../include/common.php");
 			if ($DB->num_rows($DB->query("SELECT * FROM `lylme_pwd`")) != 0) {
 				echo '<h1>访问管理</h1>'; ?>
 
-		</div>
-		<?php
+			</div>
+			<?php
+			if (session_status() == PHP_SESSION_NONE) {
 				session_start(); //设置session
-				if (isset($_SESSION['pass']) != 1) { ?>
-			<p>请输入密码登录</p>
-			<form name="form" action="../include/go.php" method="POST">
-				<div class="form">
-
-					<div class="form-item">
-						<input type="password" autocomplete="new-password" name="pass" required="required" value="" placeholder="密码" autocomplete="off">
-					</div>
-					<div class="button-panel">
-						<input type="submit" class="button" title="登录" value="登录">
-					</div>
-				</div>
-			</form><?php } else { ?>
-			<form name="form" action="../include/go.php" method="POST">
-				<div class="form">
-					<div class="button-panel">
-						<p> 欢迎回来，您已登录！<br><br>用户组:
-							<?php foreach ($_SESSION['list'] as $list) {
-								echo (' [' . $list . '] ');
-							}
-							?></p>
+			}
+			if (!isset($_SESSION['pass']) || $_SESSION['pass'] != 1) { ?>
+				<p>请输入密码登录</p>
+				<form name="form" action="../include/go.php" method="POST">
+					<div class="form">
+						<?php echo csrf_field(); ?>
 						<div class="form-item">
-							<input type="hidden" autocomplete="new-password" name="exit" required="required" value="exit">
+							<input type="password" autocomplete="new-password" name="pass" required="required" value=""
+								placeholder="密码" autocomplete="off">
 						</div>
-						<input type="submit" class="button" title="注销登录" value="注销登录">
+						<div class="button-panel">
+							<input type="submit" class="button" title="登录" value="登录">
+						</div>
 					</div>
-				</div>
+				</form><?php } else { ?>
+				<form name="form" action="../include/go.php" method="POST">
+					<div class="form">
+						<?php echo csrf_field(); ?>
+						<div class="button-panel">
+							<p> 欢迎回来，您已登录！<br><br>用户组:
+								<?php foreach ($_SESSION['list'] as $list) {
+									echo (' [' . htmlspecialchars($list, ENT_QUOTES, 'UTF-8') . '] ');
+								}
+								?>
+							</p>
+							<div class="form-item">
+								<input type="hidden" autocomplete="new-password" name="exit" required="required" value="exit">
+							</div>
+							<input type="submit" class="button" title="注销登录" value="注销登录">
+						</div>
+					</div>
 
-			</form>
-		<?php
-				}
+				</form>
+				<?php
+			}
 			} else { ?>
 
-		<h2>当前站点未启用链接加密</h2>
+			<h2>当前站点未启用链接加密</h2>
+
+		<?php } ?>
 		<div class="button-panel">
-			<a href="../" class="button">返回首页</a>
+			<a href="../" class="btn_home">返回首页</a>
 		</div>
-	<?php } ?>
 	</div>
 	</div>
 </body>
