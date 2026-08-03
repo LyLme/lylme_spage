@@ -96,11 +96,6 @@ function daddslashes($string)
  */
 function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0)
 {
-    // Debug
-    if (isset($_GET['debug_authcode'])) {
-        echo "<!-- authcode: string=$string, operation=$operation, key=$key, expiry=$expiry, ENCRYPT_KEY=" . ENCRYPT_KEY . " -->";
-    }
-
     if (!is_string($string) || empty($string)) {
         return '';
     }
@@ -714,6 +709,7 @@ function apply($name, $url, $icon, $group_id, $status)
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
         return '{"code": "-2", "msg": "链接不符合要求"}';
     }
+    $name = mb_substr($name, 0, 20, 'UTF-8');
 
     if (strlens($name) || strlens($url) || strlens($icon) || strlens($group_id) || strlens($userip)) {
         return '{"code": "500", "msg": "参数过长"}';

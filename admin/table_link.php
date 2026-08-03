@@ -3,7 +3,7 @@ include_once("../include/common.php");
 if (!isset($islogin) || $islogin !== 1) {
     exit("<script>window.location.href='./login.php';</script>");
 }
-    $page = isset($_GET['page'])? $_GET['page'] : 1;
+    $page = isset($_GET['page'])? intval($_GET['page']) : 1;
     $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC"); //获取分组
     $gpwd = $DB->fetch($DB->query("SELECT `group_id`, `group_pwd` FROM `lylme_groups` WHERE `group_id` = ".$page))["group_pwd"]; //分组加密状态
     $rs = $DB->query("SELECT * FROM `lylme_links` WHERE `group_id` = ".$page." ORDER BY `lylme_links`.`id` ASC");  //获取链接

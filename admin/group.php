@@ -22,7 +22,7 @@ if ($set == 'add') {
 <div class="form-group">
 <label>分组图标:</label><br>
 <textarea type="text" class="form-control" name="group_icon" value=""></textarea>
-<small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
+<small class="help-block">方式1：使用图片地址，需要img标签，如<code>&lt;img src="/assets/img/logo.png" /&gt; </code><br>
 方式2：粘贴图标的<code>SVG</code>代码，<a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
 <div class="form-group">
@@ -45,7 +45,7 @@ echo '
 </div></div>
 ';
 } elseif ($set == 'edit') {
-    $id = $_GET['id'];
+    $id = intval($_GET['id']);
     $row2 = $DB->query("select * from lylme_groups where group_id='$id' limit 1");
     $row = $DB->fetch($row2);
     echo '<h4>修改分组信息</h4>
@@ -58,7 +58,7 @@ echo '
 <div class="form-group">
 <label>分组图标:</label><br>
 <textarea type="text" class="form-control" name="group_icon">' . $row['group_icon'] . '</textarea>
-<small class="help-block">方式1：填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
+<small class="help-block">方式1：使用图片地址，需要img标签，如<code>&lt;img src="/assets/img/logo.png" /&gt; </code><br>
 方式2：粘贴图标的<code>SVG</code>代码，<a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
 <div class="form-group">
@@ -81,9 +81,9 @@ echo '
 </div>
 <br/><a href="./group.php"><<返回分组列表</a></div></div>';
 } elseif ($set == 'add_submit') {
-    $name = $_POST['group_name'];
-    $icon = $_POST['group_icon'];
-    $pwd = $_POST['group_pwd'];
+    $name = daddslashes($_POST['group_name']);
+    $icon = daddslashes($_POST['group_icon']);
+    $pwd = intval($_POST['group_pwd']);
     $group_order = $groupsrows + 1;
     if ($name == NULL) {
         echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
@@ -97,13 +97,13 @@ echo '
     }
     echo '<script>alert("添加分组失败,名称重复");history.go(-1);</script>';
 } elseif ($set == 'edit_submit') {
-    $id = $_GET['id'];
+    $id = intval($_GET['id']);
     $rows2 = $DB->query("select * from lylme_groups where group_id='$id' limit 1");
     $rows = $DB->fetch($rows2);
     if (!$rows) echo '<script>alert("当前记录不存在！");history.go(-1);</script>';
-    $name = $_POST['group_name'];
-    $icon = $_POST['group_icon'];
-    $pwd = $_POST['group_pwd'];
+    $name = daddslashes($_POST['group_name']);
+    $icon = daddslashes($_POST['group_icon']);
+    $pwd = intval($_POST['group_pwd']);
     if ($name == NULL) {
         echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
     } else {
@@ -112,26 +112,27 @@ echo '
         else echo '<script>alert("' . $sql . '修改分组失败");history.go(-1);</script>';
     }
 } elseif ($set == 'del') {
-    $id = $_POST['group_id'];
+    $id = intval($_POST['group_id']);
     $delsql1 = 'DELETE FROM `lylme_links` WHERE group_id =' . $id;
     $delsql2 = 'DELETE FROM `lylme_groups` WHERE group_id=' . $id;
     $DB->query($delsql1);
     $DB->query($delsql2);
     exit();
 } elseif ($set == 'on') {
-    $id = $_POST['group_id'];
+    $id = intval($_POST['group_id']);
     $sql = "UPDATE `lylme_groups` SET `group_status` = '1' WHERE `lylme_groups`.`group_id` =" . $id;
     $DB->query($sql);
     exit();
 } elseif ($set == 'off') {
-    $id = $_POST['group_id'];
+    $id = intval($_POST['group_id']);
     $sql = "UPDATE `lylme_groups` SET `group_status` = '0' WHERE `lylme_groups`.`group_id` =" . $id;
     $DB->query($sql);
     exit();
 } 
 elseif ($set == 'sort') {
      for ($i=0; $i<count($_POST["groups"]); $i++) {
-		$sql = "UPDATE `lylme_groups` SET `group_order` = '".$i."' WHERE `lylme_groups`.`group_id` = ".$_POST["groups"][$i].";";
+     	$group_id = intval($_POST["groups"][$i]);
+		$sql = "UPDATE `lylme_groups` SET `group_order` = '".$i."' WHERE `lylme_groups`.`group_id` = ".$group_id.";";
 		$DB->query($sql);
 	}
 	exit();

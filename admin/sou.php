@@ -84,7 +84,7 @@ $sousrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_sou`"));
                                 });
                             </script>';
                         } elseif ($set == 'edit') {
-                            $id = $_GET['id'];
+                            $id = intval($_GET['id']);
                         
                             $row2 = $DB->query("select * from lylme_sou where sou_id='$id' limit 1");
                             $row = $DB->fetch($row2);
@@ -165,7 +165,7 @@ $sousrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_sou`"));
                                 });
                             </script>';
                         } elseif ($set == 'delete') {
-                            $id = $_GET['id'];
+                            $id = intval($_GET['id']);
                             $sql = "DELETE FROM lylme_sou WHERE sou_id='$id'";
                             if ($DB->query($sql)) {
                                 echo '<script>alert("删除成功！");window.location.href="./sou.php";</script>';

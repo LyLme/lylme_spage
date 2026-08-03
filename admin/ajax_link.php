@@ -13,9 +13,9 @@ switch ($submit) {
 
 
 	case 'add_tag':
-		$name = $_POST['name'];
-		$link = $_POST['link'];
-		$sort = $_POST['sort'] ?: 10;
+		$name = daddslashes($_POST['name']);
+		$link = daddslashes($_POST['link']);
+		$sort = intval($_POST['sort'] ?: 10);
 		if ($_POST['target'] == true) {
 			$target = 1;
 		} else {
@@ -34,15 +34,15 @@ switch ($submit) {
 		break;
 
 	case 'edit_tag':
-		$id = $_GET['id'];
-		$sort = $_POST['sort'] ?: 10;
+		$id = intval($_GET['id']);
+		$sort = intval($_POST['sort'] ?: 10);
 		$rows2 = $DB->query("select * from lylme_tags where tag_id='$id' limit 1");
 		$rows = $DB->fetch($rows2);
 		if (!$rows) {
 			exit('该条记录不存在！');
 		}
-		$name = $_POST['name'];
-		$link = $_POST['link'];
+		$name = daddslashes($_POST['name']);
+		$link = daddslashes($_POST['link']);
 		if ($_POST['target'] == true) {
 			$target = 1;
 		} else {
@@ -61,18 +61,18 @@ switch ($submit) {
 		break;
 
 	case 'add_link':
-		$color = $_POST['color'];
-		$name = $_POST['name'];
+		$color = daddslashes($_POST['color']);
+		$name = daddslashes($_POST['name']);
 		if (empty($color)) {
 			$name1 = $name;
 		} else {
 			$name1 = '<font color="' . $color . '">' . $name . '</font>';
 		}
-		$url = $_POST['url'];
-		$icon = $_POST['icon'];
-		$group_id = $_POST['group_id'];
+		$url = daddslashes($_POST['url']);
+		$icon = daddslashes($_POST['icon']);
+		$group_id = intval($_POST['group_id']);
 		$link_order = $linksrows + 1;
-		$link_desc = isset($_POST['link_desc']) ? $_POST['link_desc'] : '';
+		$link_desc = isset($_POST['link_desc']) ? daddslashes($_POST['link_desc']) : '';
 		if ($name == null or $url == null) {
 			exit('保存错误,请确保带星号的都不为空！');
 		} else {
@@ -86,24 +86,24 @@ switch ($submit) {
 		break;
 
 	case 'edit_link':
-		$id = $_GET['id'];
+		$id = intval($_GET['id']);
 		$rows2 = $DB->query("select * from lylme_links where id='$id' limit 1");
 		$rows = $DB->fetch($rows2);
 		if (!$rows) {
 			exit('该条记录不存在！');
 		}
-		$color = $_POST['color'];
-		$name = $_POST['name'];
+		$color = daddslashes($_POST['color']);
+		$name = daddslashes($_POST['name']);
 		if (empty($color)) {
 			$name1 = $name;
 		} else {
 			$name1 = '<font color="' . $color . '">' . $name . '</font>';
 		}
-		$url = $_POST['url'];
-		$icon = $_POST['icon'];
-		$link_desc = isset($_POST['link_desc']) ? $_POST['link_desc'] : '';
-		$link_pwd = $_POST['link_pwd'];
-		$group_id = $_POST['group_id'];
+		$url = daddslashes($_POST['url']);
+		$icon = daddslashes($_POST['icon']);
+		$link_desc = isset($_POST['link_desc']) ? daddslashes($_POST['link_desc']) : '';
+		$link_pwd = intval($_POST['link_pwd']);
+		$group_id = intval($_POST['group_id']);
 		if ($name == null or $url == null) {
 			echo '保存错误,请确保带星号的都不为空！';
 		} else {
@@ -118,13 +118,13 @@ switch ($submit) {
 		break;
 
 	case 'add_sou':
-		$name = $_POST['name'];
-		$alias = $_POST['alias'];
-		$hint = $_POST['hint'];
-		$link = $_POST['link'];
-		$waplink = $_POST['waplink'];
-		$color = $_POST['color'];
-		$icon = $_POST['icon'];
+		$name = daddslashes($_POST['name']);
+		$alias = daddslashes($_POST['alias']);
+		$hint = daddslashes($_POST['hint']);
+		$link = daddslashes($_POST['link']);
+		$waplink = daddslashes($_POST['waplink']);
+		$color = daddslashes($_POST['color']);
+		$icon = daddslashes($_POST['icon']);
 		if ($_POST['st'] == true) {
 			$st = 1;
 		} else {
@@ -146,20 +146,20 @@ switch ($submit) {
 		break;
 
 	case 'edit_sou':
-		$id = $_GET['id'];
+		$id = intval($_GET['id']);
 		$rows2 = $DB->query("select * from lylme_sou where sou_id='$id' limit 1");
 		$rows = $DB->fetch($rows2);
 		if (!$rows) {
 			exit('该条记录不存在！');
 		}
-		$name = $_POST['name'];
-		$alias = $_POST['alias'];
-		$hint = $_POST['hint'];
-		$link = $_POST['link'];
-		$waplink = $_POST['waplink'];
-		$color = $_POST['color'];
-		$icon = $_POST['icon'];
-		$order = $_POST['order'];
+		$name = daddslashes($_POST['name']);
+		$alias = daddslashes($_POST['alias']);
+		$hint = daddslashes($_POST['hint']);
+		$link = daddslashes($_POST['link']);
+		$waplink = daddslashes($_POST['waplink']);
+		$color = daddslashes($_POST['color']);
+		$icon = daddslashes($_POST['icon']);
+		$order = intval($_POST['order']);
 		if (isset($_POST['st']) && $_POST['st'] == true) {
     $st = 1;
 } else {
@@ -180,8 +180,10 @@ switch ($submit) {
 
 	//修改分组
 	case 'set_group':
+		$group_id = intval($_POST['group_id']);
 		foreach ($_POST['links'] as $lk => $lv) {
-			$sql = "UPDATE `lylme_links` SET `group_id` = '" . $_POST['group_id'] . "' WHERE `lylme_links`.`id` = " . $lv . ";";
+			$lv = intval($lv);
+			$sql = "UPDATE `lylme_links` SET `group_id` = '" . $group_id . "' WHERE `lylme_links`.`id` = " . $lv . ";";
 			if (!$DB->query($sql)) {
 				$e++;
 			}
@@ -195,7 +197,8 @@ switch ($submit) {
 	case 'allorder':
 		//拖拽排序
 		for ($i = 0; $i < count($_POST["link_array"]); $i++) {
-			$sql = "UPDATE `lylme_links` SET `link_order` = '" . $i . "' WHERE `lylme_links`.`id` = " . $_POST["link_array"][$i] . ";";
+			$link_id = intval($_POST["link_array"][$i]);
+			$sql = "UPDATE `lylme_links` SET `link_order` = '" . $i . "' WHERE `lylme_links`.`id` = " . $link_id . ";";
 			if (!$DB->query($sql)) {
 				$e++;
 			}
@@ -208,8 +211,10 @@ switch ($submit) {
 		break;
 	case 'pwd_link':
 		//链接加密
+		$pwd_id = intval($_POST['pwd_id']);
 		foreach ($_POST['links'] as $lk => $lv) {
-			$sql = "UPDATE `lylme_links` SET `link_pwd` = '" . $_POST['pwd_id'] . "' WHERE `lylme_links`.`id` = " . $lv . ";";
+			$lv = intval($lv);
+			$sql = "UPDATE `lylme_links` SET `link_pwd` = '" . $pwd_id . "' WHERE `lylme_links`.`id` = " . $lv . ";";
 			if (!$DB->query($sql)) {
 				$e++;
 			}
@@ -223,6 +228,7 @@ switch ($submit) {
 	case 'on':
 		//链接启用
 		foreach ($_POST['links'] as $lk => $lv) {
+			$lv = intval($lv);
 			$sql = "UPDATE `lylme_links` SET `link_status` = '1' WHERE `lylme_links`.`id` = " . $lv . ";";
 			if (!$DB->query($sql)) {
 				$e++;
@@ -237,6 +243,7 @@ switch ($submit) {
 	case 'off':
 		//链接禁用
 		foreach ($_POST['links'] as $lk => $lv) {
+			$lv = intval($lv);
 			$sql = "UPDATE `lylme_links` SET `link_status` = '0' WHERE `lylme_links`.`id` = " . $lv . ";";
 			if (!$DB->query($sql)) {
 				$e++;
@@ -251,6 +258,7 @@ switch ($submit) {
 	case 'del':
 		//链接删除
 		foreach ($_POST['links'] as $lk => $lv) {
+			$lv = intval($lv);
 			$sql = "DELETE FROM `lylme_links` WHERE `lylme_links`.`id` = " . $lv . ";";
 			if (!$DB->query($sql)) {
 				$e++;
