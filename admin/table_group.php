@@ -9,9 +9,9 @@
  * @Copyright (c) 2024 by LyLme, All Rights Reserved. 
  */
 include_once("../include/common.php");
-if (isset($islogin) == 1) {
-} else exit("<script language='javascript'>window.location.href='./login.php';</script>");
-
+if (!isset($islogin) || $islogin !== 1) {
+    exit("<script>window.location.href='./login.php';</script>");
+}
 echo '<div class="alert alert-info">系统共有 <b>' . $groupsrows . '</b> 个分组<br/><a href="./group.php?set=add" class="btn btn-primary">新建分组</a></div>
       <div class="table-responsive">
         <table class="table table-striped">

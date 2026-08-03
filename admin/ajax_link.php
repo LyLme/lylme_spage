@@ -3,8 +3,9 @@ header('Content-Type:application/json');
 include_once("../include/common.php");
 
 
-if (isset($islogin) == 1) {
-} else exit("<script language='javascript'>window.location.href='./login.php';</script>");
+if (!isset($islogin) || $islogin !== 1) {
+    exit("<script>window.location.href='./login.php';</script>");
+}
 $submit = isset($_GET['submit']) ? $_GET['submit'] : null;
 $e = 0;
 switch ($submit) {
@@ -306,12 +307,16 @@ switch ($submit) {
 		$scriptpath = substr($scriptpath, 0, strrpos($scriptpath, '/'));
 		$admin_path = substr($scriptpath, strrpos($scriptpath, '/') + 1);
 		$update  = require('cache.php');
-		if (!empty($update) && $update['switch']) {
-			if (!$update['file'] == $_POST['file']) {
-				exit('{"code": -1,"msg":"更新文件校验不通过！"}');
-			}
-		} else {
+		// 
+		if (empty($update) || !$update['switch']) {
 			exit('{"code": -99,"msg":"更新未经鉴权！"}');
+		}
+		// 修复逻辑错误导致的任意文件上传rce
+		$RemoteFile = $_POST['file'];
+		$host = parse_url($RemoteFile, PHP_URL_HOST);
+		$allowed_hosts = ['cdn.lylme.com'];  // 使用域名白名单校验
+		if (!$host || !in_array($host, $allowed_hosts, true)) {
+			exit('{"code": -1,"msg":"更新文件校验不通过！"}');
 		}
 		$RemoteFile = $_POST['file'];
 		$ZipFile = "lylme_spage-update.zip";

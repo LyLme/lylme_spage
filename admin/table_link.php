@@ -1,8 +1,8 @@
 <?php
 include_once("../include/common.php");
-if(isset($islogin)==1) {
-} else exit("<script language='javascript'>window.location.href='./login.php';</script>");
-
+if (!isset($islogin) || $islogin !== 1) {
+    exit("<script>window.location.href='./login.php';</script>");
+}
     $page = isset($_GET['page'])? $_GET['page'] : 1;
     $groups = $DB->query("SELECT * FROM `lylme_groups` ORDER BY `group_order` ASC"); //获取分组
     $gpwd = $DB->fetch($DB->query("SELECT `group_id`, `group_pwd` FROM `lylme_groups` WHERE `group_id` = ".$page))["group_pwd"]; //分组加密状态

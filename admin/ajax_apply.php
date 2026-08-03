@@ -1,9 +1,8 @@
 <?php
 
 include_once("../include/common.php");
-if (isset($islogin) == 1) {
-} else {
-    exit("<script language='javascript'>window.location.href='./login.php';</script>");
+if (!isset($islogin) || $islogin !== 1) {
+    exit("<script>window.location.href='./login.php';</script>");
 }
 header('Content-Type:application/json');
 
