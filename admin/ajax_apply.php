@@ -18,6 +18,7 @@ switch ($set) {
         }
         $e = 0;
         foreach ($ids as $id) {
+            $id = intval($id);
             if ($sw == 1) {
                 //将通过的链接插入到数据库
                 $applyres =  $DB->get_row("SELECT * FROM `lylme_apply` WHERE `apply_status` = 0  ANd `apply_id` = $id");
@@ -49,6 +50,7 @@ switch ($set) {
         }
         $e = 0;
         foreach ($ids as $id) {
+            $id = intval($id);
             if (!$DB->query("DELETE FROM `lylme_apply` WHERE apply_id = $id")) {
                 $e++;
             }

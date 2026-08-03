@@ -59,7 +59,7 @@ if ($set == 'add') {
         });
     </script>';
 }elseif ($set == 'edit') {
-    $id = $_GET['id'];
+    $id = intval($_GET['id']);
     $row2 = $DB->query("select * from lylme_tags where tag_id='$id' limit 1");
     $row = $DB->fetch($row2);
     echo '<h4>修改导航菜单链接</h4>
@@ -110,7 +110,7 @@ if ($set == 'add') {
         });
     </script>';
 } elseif ($set == 'delete') {
-    $id = $_GET['id'];
+    $id = intval($_GET['id']);
     $sql = "DELETE FROM lylme_tags WHERE tag_id='$id'";
     if ($DB->query($sql)) {
         echo '<script>alert("删除成功！");window.location.href="./tag.php";</script>';

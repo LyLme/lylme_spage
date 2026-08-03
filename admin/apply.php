@@ -188,8 +188,8 @@ $grouplists = $DB->query("SELECT * FROM `lylme_groups`");
                                             if ($res["apply_status"] == 0) {
                                                 if (empty($res["apply_icon"])) {
                                                     echo '未提交图标';
-                                                } else if (preg_match("/^<svg*/", $link["icon"])) {
-                                                    echo $link["icon"];
+                                                } else if (preg_match("/^<svg*/", $res["apply_icon"])) {
+                                                    echo $res["apply_icon"];
                                                 } else {
                                                     echo '<img class="lazy" src="https://cdn.lylme.com/admin/lyear/img/loading.gif" data-original="' . $res["apply_icon"] . '" />';
                                                 }

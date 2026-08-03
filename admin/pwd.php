@@ -46,7 +46,7 @@ include './head.php';
 </div></div>
 ';
                         } elseif ($set == 'edit') {
-                            $id = $_GET['id'];
+                            $id = intval($_GET['id']);
                             $pg = $DB->fetch($DB->query("SELECT * FROM `lylme_pwd` WHERE `pwd_id` = " . $id));
                             echo '<h4>修改加密组信息</h4>
     <div class="panel-body"><form action="./pwd.php?set=edit_submit&id=' . $id . '" method="POST">
@@ -62,7 +62,7 @@ include './head.php';
     </div>
     <div class="form-group">
     <label>加密组备注:</label><br>
-    <input type="text" class="form-control" name="pwd_ps" value="' . $pg['pwd_key'] . '">
+    <input type="text" class="form-control" name="pwd_ps" value="' . $pg['pwd_ps'] . '">
     <small class="help-block">加密组备注，仅在后台显示(可不填)</small>
     </div>
     <div class="form-group">
@@ -72,9 +72,9 @@ include './head.php';
     </div></div>
     ';
                         } elseif ($set == 'add_submit') {
-                            $pwd_name = $_POST['pwd_name'];
-                            $pwd_key = $_POST['pwd_key'];
-                            $pwd_ps = $_POST['pwd_ps'];
+                            $pwd_name = daddslashes($_POST['pwd_name']);
+                            $pwd_key = daddslashes($_POST['pwd_key']);
+                            $pwd_ps = daddslashes($_POST['pwd_ps']);
                             if (empty($pwd_name) || empty($pwd_key)) {
                                 echo '<script>alert("失败，请确保带星号的项目都不为空！");history.go(-1);</script>';
                             } else {
@@ -86,10 +86,10 @@ include './head.php';
                                 }
                             }
                         } elseif ($set == 'edit_submit') {
-                            $id = $_GET['id'];
-                            $pwd_name = $_POST['pwd_name'];
-                            $pwd_key = $_POST['pwd_key'];
-                            $pwd_ps = $_POST['pwd_ps'];
+                            $id = intval($_GET['id']);
+                            $pwd_name = daddslashes($_POST['pwd_name']);
+                            $pwd_key = daddslashes($_POST['pwd_key']);
+                            $pwd_ps = daddslashes($_POST['pwd_ps']);
                             if (empty($pwd_name) || empty($pwd_key)) {
                                 echo '<script>alert("失败，请确保带星号的项目都不为空！");history.go(-1);</script>';
                             } else {
@@ -101,7 +101,7 @@ include './head.php';
                                 }
                             }
                         } elseif ($set == 'delete') {
-                            $id = $_GET['id'];
+                            $id = intval($_GET['id']);
                             $delsql = "DELETE FROM `lylme_pwd` WHERE `lylme_pwd`.`pwd_id` = " . $id;
                             if ($DB->query($delsql)) {
                                 echo '<script>window.location.href="./pwd.php";</script>';
