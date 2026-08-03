@@ -12,13 +12,63 @@ if (@file_get_contents('log.txt') != $last || !file_exists('cache.php')) {
 }
 function uploadimg($arr, $uppath, $uptype)
 {
-    if ((($arr["type"] == "image/jpeg") || ($arr["type"] == "image/jpg") || ($arr["type"] == "image/png")) && $arr["size"] < 10485760) {
-        copy($arr["tmp_name"], ROOT . $uppath);
-        saveSetting($uptype, '/' . $uppath);
-    } elseif ($arr["size"] == 0) {
-    } else {
-        echo '<script>alert("上传的图片大小超过10MB或类型不符！");history.go(-1);</script>';
+    // 文件大小为空则跳过
+    if (!isset($arr["size"]) || $arr["size"] == 0) {
+        return;
     }
+
+    // 验证文件大小（最大10MB）
+    if ($arr["size"] > 10485760) {
+        echo '<script>alert("上传的图片大小超过10MB！");history.go(-1);</script>';
+        exit;
+    }
+
+    // 验证MIME类型
+    $allowed_mimes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!isset($arr["type"]) || !in_array($arr["type"], $allowed_mimes, true)) {
+        echo '<script>alert("上传的图片类型不符，仅支持JPEG和PNG格式！");history.go(-1);</script>';
+        exit;
+    }
+
+    // 使用getimagesize验证文件是否为真实图片（防止MIME伪造）
+    $image_info = @getimagesize($arr["tmp_name"]);
+    if ($image_info === false) {
+        echo '<script>alert("上传的文件不是有效的图片！");history.go(-1);</script>';
+        exit;
+    }
+
+    // 验证图片类型一致性
+    $actual_type = image_type_to_mime_type($image_info[2]);
+    $allowed_actual = ['image/jpeg', 'image/png'];
+    if (!in_array($actual_type, $allowed_actual, true)) {
+        echo '<script>alert("上传的图片格式无效！");history.go(-1);</script>';
+        exit;
+    }
+
+    // 重新生成图片以去除可能的恶意代码
+    $dest_path = ROOT . $uppath;
+    switch ($actual_type) {
+        case 'image/jpeg':
+            $src = @imagecreatefromjpeg($arr["tmp_name"]);
+            if ($src) {
+                @imagejpeg($src, $dest_path, 90);
+                @imagedestroy($src);
+            }
+            break;
+        case 'image/png':
+            $src = @imagecreatefrompng($arr["tmp_name"]);
+            if ($src) {
+                @imagepng($src, $dest_path, 9);
+                @imagedestroy($src);
+            }
+            break;
+        default:
+            // 不应该到这里，但作为安全兜底
+            @copy($arr["tmp_name"], $dest_path);
+            break;
+    }
+
+    saveSetting($uptype, '/' . $uppath);
 }
 $set = isset($_GET['set']) ? $_GET['set'] : null;
 if ($set == 'save') {

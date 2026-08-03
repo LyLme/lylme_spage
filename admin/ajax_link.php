@@ -284,6 +284,21 @@ switch ($submit) {
 		{
 			$zip = new ZipArchive();
 			if ($zip->open($src) === true) {
+				// 防护Zip Slip漏洞：遍历检查所有条目防止路径遍历
+				$dest = rtrim(str_replace('\\', '/', realpath($dest) ?: $dest), '/') . '/';
+				for ($i = 0; $i < $zip->numFiles; $i++) {
+					$entry = $zip->getNameIndex($i);
+					if ($entry === false) {
+						continue;
+					}
+					$filepath = $dest . str_replace('\\', '/', $entry);
+					$realpath = str_replace('\\', '/', realpath(dirname($filepath)) ?: dirname($filepath));
+					// 确保解压路径在目标目录内
+					if (strpos($realpath . '/', $dest) !== 0) {
+						$zip->close();
+						return false;
+					}
+				}
 				$zip->extractTo($dest);
 				$zip->close();
 				return true;
@@ -314,6 +329,10 @@ switch ($submit) {
 		$scriptpath = str_replace('\\', '/', $_SERVER['SCRIPT_NAME']);
 		$scriptpath = substr($scriptpath, 0, strrpos($scriptpath, '/'));
 		$admin_path = substr($scriptpath, strrpos($scriptpath, '/') + 1);
+		// 安全验证：admin_path不能为空或包含路径遍历字符
+		if (empty($admin_path) || $admin_path === '.' || $admin_path === '..' || strpos($admin_path, '/') !== false) {
+			exit('{"code": -2,"msg":"无效的管理员路径！"}');
+		}
 		$update  = require('cache.php');
 		// 
 		if (empty($update) || !$update['switch']) {

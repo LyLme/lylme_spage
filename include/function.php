@@ -62,7 +62,6 @@ function is_spider()
 }
 
 /**
- * 递归添加斜杠 (增强PHP 8.2兼容性)
  * @param mixed $string 输入数据
  * @return mixed
  */
@@ -73,17 +72,27 @@ function daddslashes($string)
             $string[$key] = daddslashes($val);
         }
         return $string;
-    } elseif (is_string($string)) {
-        // PHP 8.1+ 兼容性：addslashes对null返回空字符串
-        return addslashes($string);
-    } elseif (is_null($string)) {
-        return '';
-    } elseif (is_numeric($string) || is_bool($string)) {
-        return $string;
-    } else {
-        // 其他类型转换为字符串处理
-        return addslashes((string) $string);
     }
+
+    if (is_null($string) || $string === '') {
+        return '';
+    }
+
+    if (is_numeric($string) || is_bool($string)) {
+        return $string;
+    }
+
+    $string = (string)$string;
+
+    global $DB;
+    if (isset($DB) && is_object($DB) && method_exists($DB, 'escape')) {
+        $escaped = $DB->escape($string);
+        if (is_string($escaped)) {
+            return $escaped;
+        }
+    }
+
+    return addslashes($string);
 }
 
 /**
