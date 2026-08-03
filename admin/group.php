@@ -48,16 +48,18 @@ echo '
     $id = intval($_GET['id']);
     $row2 = $DB->query("select * from lylme_groups where group_id='$id' limit 1");
     $row = $DB->fetch($row2);
+    $esc_group_name = htmlspecialchars($row['group_name'], ENT_QUOTES, 'UTF-8');
+    $esc_group_icon = htmlspecialchars($row['group_icon'], ENT_QUOTES, 'UTF-8');
     echo '<h4>修改分组信息</h4>
 <div class="panel-body">
 <form action="./group.php?set=edit_submit&id=' . $id . '" method="POST">
 <div class="form-group">
 <label>*名称:</label><br>
-<input type="text" class="form-control" name="group_name" value="' . $row['group_name'] . '" required>
+<input type="text" class="form-control" name="group_name" value="' . $esc_group_name . '" required>
 </div>
 <div class="form-group">
 <label>分组图标:</label><br>
-<textarea type="text" class="form-control" name="group_icon">' . $row['group_icon'] . '</textarea>
+<textarea type="text" class="form-control" name="group_icon">' . $esc_group_icon . '</textarea>
 <small class="help-block">方式1：使用图片地址，需要img标签，如<code>&lt;img src="/assets/img/logo.png" /&gt; </code><br>
 方式2：粘贴图标的<code>SVG</code>代码，<a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方式3：留空使用默认图标</small>
 </div>
@@ -90,7 +92,7 @@ echo '
     } else {
         $sql = "INSERT INTO `lylme_groups` (`group_id`, `group_name`, `group_icon`,`group_order`,`group_pwd`) VALUES (NULL, '" . $name . "', '" . $icon . "', '" . $group_order . "', '" . $pwd . "')";
         if ($DB->query($sql)) {
-            echo '<script>alert("添加分组 ' . $name . ' 成功！");window.location.href="./group.php";</script>';
+            echo '<script>alert("添加分组 ' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ' 成功！");window.location.href="./group.php";</script>';
             exit();
         } else echo '<script>alert("添加分组失败");history.go(-1);</script>';
         exit();
@@ -108,7 +110,7 @@ echo '
         echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
     } else {
         $sql = "UPDATE `lylme_groups` SET `group_name` = '" . $name . "', `group_icon` = '" . $icon . "',`group_pwd` = '" . $pwd . "' WHERE `lylme_groups`.`group_id` = '" . $id . "';";
-        if ($DB->query($sql)) echo '<script>alert("修改分组 ' . $name . ' 成功！");window.location.href="./group.php";</script>';
+        if ($DB->query($sql)) echo '<script>alert("修改分组 ' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . ' 成功！");window.location.href="./group.php";</script>';
         else echo '<script>alert("' . $sql . '修改分组失败");history.go(-1);</script>';
     }
 } elseif ($set == 'del') {

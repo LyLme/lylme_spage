@@ -38,7 +38,10 @@ if ($sqlvn < $filevn) {
         $version = 'v2.2.0';
         $sql .= '';
     }
-
+ if ($sqlvn < 20300) {
+        $version = 'v2.3.0';
+        $sql .= '';
+    }
     // 执行SQL语句
     if (!empty($sql)) {
         $sqlStatements = explode(';', $sql);

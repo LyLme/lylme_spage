@@ -48,21 +48,24 @@ include './head.php';
                         } elseif ($set == 'edit') {
                             $id = intval($_GET['id']);
                             $pg = $DB->fetch($DB->query("SELECT * FROM `lylme_pwd` WHERE `pwd_id` = " . $id));
+                            $esc_name = htmlspecialchars($pg['pwd_name'], ENT_QUOTES, 'UTF-8');
+                            $esc_key  = htmlspecialchars($pg['pwd_key'], ENT_QUOTES, 'UTF-8');
+                            $esc_ps   = htmlspecialchars($pg['pwd_ps'], ENT_QUOTES, 'UTF-8');
                             echo '<h4>修改加密组信息</h4>
     <div class="panel-body"><form action="./pwd.php?set=edit_submit&id=' . $id . '" method="POST">
     <div class="form-group">
     <label>*加密组名称:</label><br>
-    <input type="text" class="form-control" name="pwd_name" value="' . $pg['pwd_name'] . '" required>
+    <input type="text" class="form-control" name="pwd_name" value="' . $esc_name . '" required>
     <small class="help-block">加密组名称，如：<code>会员组</code></small>
     </div>
     <div class="form-group">
     <label>*加密组密码:</label><br>
-    <input type="text" class="form-control" name="pwd_key" value="' . $pg['pwd_key'] . '" required>
+    <input type="text" class="form-control" name="pwd_key" value="' . $esc_key . '" required>
     <small class="help-block">加密组的密码(不超过20个字符)<br><code>提示：密码和其他加密组密码相同时，登录时显示同密码的所有加密链接</code></small>
     </div>
     <div class="form-group">
     <label>加密组备注:</label><br>
-    <input type="text" class="form-control" name="pwd_ps" value="' . $pg['pwd_ps'] . '">
+    <input type="text" class="form-control" name="pwd_ps" value="' . $esc_ps . '">
     <small class="help-block">加密组备注，仅在后台显示(可不填)</small>
     </div>
     <div class="form-group">
@@ -126,8 +129,12 @@ include './head.php';
                                         <?php
                                         $pgs = $DB->query("SELECT * FROM `lylme_pwd`");
                                         while ($pg = $DB->fetch($pgs)) {
-                                            echo '<tr><td>' . $pg['pwd_name'] . '</td>
-        <td>' . $pg['pwd_key'] . '</td><td>' . $pg['pwd_ps'] . '</td><td>&nbsp;<a href="./pwd.php?set=edit&id=' . $pg['pwd_id'] . '" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./pwd.php?set=delete&id=' . $pg['pwd_id'] . '" class="btn btn-xs btn-danger" onclick="return confirm(\'是否删除加密组 ' . $pg['pwd_name'] . '\');">删除</a> </td></tr>';
+                                            $esc_name = htmlspecialchars($pg['pwd_name'], ENT_QUOTES, 'UTF-8');
+                                            $esc_key  = htmlspecialchars($pg['pwd_key'], ENT_QUOTES, 'UTF-8');
+                                            $esc_ps   = htmlspecialchars($pg['pwd_ps'], ENT_QUOTES, 'UTF-8');
+                                            $esc_name_js = htmlspecialchars($pg['pwd_name'], ENT_QUOTES, 'UTF-8');
+                                            echo '<tr><td>' . $esc_name . '</td>
+        <td>' . $esc_key . '</td><td>' . $esc_ps . '</td><td>&nbsp;<a href="./pwd.php?set=edit&id=' . $pg['pwd_id'] . '" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./pwd.php?set=delete&id=' . $pg['pwd_id'] . '" class="btn btn-xs btn-danger" onclick="return confirm(\'是否删除加密组 ' . $esc_name_js . '\');">删除</a> </td></tr>';
                                         }
                                         ?>
 
