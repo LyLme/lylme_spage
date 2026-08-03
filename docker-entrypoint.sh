@@ -185,7 +185,12 @@ main() {
     # 检查是否需要初始化 MySQL 数据目录
     if [ ! -d "/var/lib/mysql/mysql" ]; then
         log_info "初始化 MySQL 数据目录..."
-        mysql_install_db --user=mysql --datadir=/var/lib/mysql
+        # 使用 mariadb-install-db (新版MariaDB兼容)
+        if command -v mariadb-install-db &> /dev/null; then
+            mariadb-install-db --user=mysql --datadir=/var/lib/mysql --auth-root-authentication-method=normal
+        elif command -v mysql_install_db &> /dev/null; then
+            mysql_install_db --user=mysql --datadir=/var/lib/mysql
+        fi
         chown -R mysql:mysql /var/lib/mysql
     fi
     

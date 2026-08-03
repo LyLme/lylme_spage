@@ -1,7 +1,7 @@
 # LyLme Spage Docker Image - All-in-One
 # Apache + PHP 8.2 + MariaDB (内置)
 
-FROM php:8.2-apache
+FROM php:8.2-apache-bookworm
 
 LABEL maintainer="lylme(六零)"
 LABEL description="六零导航页-简洁高效的上网导航"
@@ -41,13 +41,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         opcache \
     && pecl install redis && docker-php-ext-enable redis || true
 
-# 配置 MariaDB 只监听本地 socket
+# 配置 MariaDB 只监听本地 socket，同时兼容 ARM 和 x86
 RUN mkdir -p /var/run/mysqld && \
     chown mysql:mysql /var/run/mysqld && \
     chmod 755 /var/run/mysqld && \
     echo "[mysqld]" > /etc/mysql/mariadb.conf.d/99-local-only.cnf && \
     echo "bind-address = 127.0.0.1" >> /etc/mysql/mariadb.conf.d/99-local-only.cnf && \
-    echo "skip-ssl" >> /etc/mysql/mariadb.conf.d/99-local-only.cnf
+    echo "skip-ssl" >> /etc/mysql/mariadb.conf.d/99-local-only.cnf && \
+    # ARM 优化：调整 MariaDB 性能参数
+    echo "innodb_buffer_pool_size = 128M" >> /etc/mysql/mariadb.conf.d/99-local-only.cnf && \
+    echo "innodb_log_file_size = 32M" >> /etc/mysql/mariadb.conf.d/99-local-only.cnf
 
 # 配置 PHP
 RUN { \
