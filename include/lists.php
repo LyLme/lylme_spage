@@ -150,7 +150,6 @@ function listjson()
         return [];
     }
 
-    $i = 0;
     $g = 0;
     $arr = [];
     $sessionList = isset($_SESSION['list']) ? $_SESSION['list'] : [];
@@ -165,7 +164,7 @@ function listjson()
         }
 
         $groupPwd = isset($group['group_pwd']) ? $group['group_pwd'] : '';
-        if (!empty($groupPwd) && !in_array($groupPwd, $sessionList, true)) {
+        if (!empty($groupPwd) && !in_array((int)$groupPwd, $sessionList, true)) {
             continue;
         }
 
@@ -177,7 +176,6 @@ function listjson()
             continue;
         }
 
-        $link_num = $DB->num_rows($group_links);
         $arr[$g] = [
             "id" => $groupId,
             "title" => isset($group['group_name']) ? $group['group_name'] : '',
@@ -188,6 +186,16 @@ function listjson()
         while ($link = $DB->fetch($group_links)) {
             if ($link === false) {
                 break;
+            }
+
+            $linkPwd = isset($link['link_pwd']) ? $link['link_pwd'] : '';
+            if (empty($groupPwd) && !empty($linkPwd) && !in_array((int)$linkPwd, $sessionList, true)) {
+                continue;
+            }
+
+            $linkStatus = isset($link['link_status']) ? $link['link_status'] : 1;
+            if (!$linkStatus) {
+                continue;
             }
 
             $linkId = isset($link['id']) ? (int) $link['id'] : 0;
@@ -205,21 +213,6 @@ function listjson()
                 "url" => $linkUrl,
                 "out" => true
             ];
-
-            $lpwd = true;
-            if ($link_num > $i) {
-                $i++;
-
-                $linkPwd = isset($link['link_pwd']) ? $link['link_pwd'] : '';
-                if (empty($groupPwd) && !empty($linkPwd) && !in_array((int)$linkPwd, $sessionList, true)) {
-                    $lpwd = false;
-                }
-
-                $linkStatus = isset($link['link_status']) ? $link['link_status'] : 1;
-                if ($linkStatus && $lpwd) {
-                    // 链接正常显示
-                }
-            }
         }
         $g++;
     }
