@@ -478,6 +478,10 @@ body {
     height: 22px;
 }
 
+.group-icon:empty {
+    display: none;
+}
+
 .group-icon img {
     width: 18px;
     height: 18px;
