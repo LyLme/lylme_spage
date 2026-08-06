@@ -63,11 +63,11 @@ function tjsj($tjname)
 				<div class="card bg-success">
 					<div class="card-body clearfix">
 						<div class="pull-right">
-							<p class="h6 text-white m-t-0">昨日浏览量</p>
-							<p class="h3 text-white m-b-0 fa-1-5x"><?php tjsj($tjyesterday);
+							<p class="h6 text-white m-t-0">今日独立IP</p>
+							<p class="h3 text-white m-b-0 fa-1-5x"><?php tjsj($tjtodayip);
 																	?></p>
 						</div>
-						<div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-account-convert fa-1-5x"></i></span> </div>
+						<div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-account-network fa-1-5x"></i></span> </div>
 					</div>
 				</div>
 			</div>
@@ -106,7 +106,7 @@ function tjsj($tjname)
 			<div class="col-lg-6">
 				<div class="card">
 					<div class="card-header">
-						<h4>仪表盘柱状统计图</h4>
+						<h4>近7天独立IP统计</h4>
 					</div>
 					<div class="card-body">
 						<canvas class="js-chartjs-bars"></canvas>
@@ -116,7 +116,7 @@ function tjsj($tjname)
 			<div class="col-lg-6">
 				<div class="card">
 					<div class="card-header">
-						<h4>仪表盘折线统计图</h4>
+						<h4>近7天浏览量统计</h4>
 					</div>
 					<div class="card-body">
 						<canvas class="js-chartjs-lines"></canvas>
@@ -129,8 +129,18 @@ function tjsj($tjname)
 				<h4>服务器信息</h4>
 			</div>
 			<ul class="list-group">
+				<?php
+				$isWin = stripos(PHP_OS, 'WIN') === 0;
+				$sysName = $isWin ? 'Windows' : 'Linux';
+				$kernel  = php_uname('r');
+				$arch    = php_uname('m'); // x86_64 / aarch64
+				?>
 				<li class="list-group-item">
-					<b>PHP 版本：</b><?php echo phpversion() ?>
+					<b>操作系统：</b>
+					<?php echo "$sysName ({$kernel}, {$arch})"; ?>
+				</li>
+				<li class="list-group-item">
+					<b>PHP版本：</b><?php echo phpversion() ?>
 					<?php if (ini_get('safe_mode')) {
 						echo '线程安全';
 					} else {
@@ -139,7 +149,7 @@ function tjsj($tjname)
 					?>
 				</li>
 				<li class="list-group-item">
-					<b>MySQL 版本：</b><?php echo $DB->count("select VERSION()") ?>
+					<b>MySQL版本：</b><?php echo $DB->count("select VERSION()") ?>
 				</li>
 				<li class="list-group-item">
 					<b>服务器软件：</b><?php echo $_SERVER['SERVER_SOFTWARE'] ?>
@@ -153,7 +163,7 @@ function tjsj($tjname)
 				</li>
 
 				<li class="list-group-item">
-					<b>建站日期：</b><?php echo $conf['build'] ?>
+					<b>建站时间：</b><?php echo $conf['build'] ?>
 				</li>
 				<li class="list-group-item">
 					<b>主程序版本：</b><?php echo VERSION ?> <a href="./update.php" target="_blank">检查更新</a>
@@ -187,30 +197,22 @@ include './footer.php';
 		var $dashChartBarsCnt = jQuery('.js-chartjs-bars')[0].getContext('2d'),
 			$dashChartLinesCnt = jQuery('.js-chartjs-lines')[0].getContext('2d');
 		var $dashChartBarsData = {
-			labels: ['今日浏览', '昨日浏览', '本月浏览', '总浏览'],
+			labels: <?php echo json_encode($tj_chart_labels, JSON_UNESCAPED_UNICODE); ?>,
 			datasets: [{
-				label: '数量',
+				label: '独立IP',
 				borderWidth: 1,
 				borderColor: 'rgba(0,0,0,0)',
 				backgroundColor: 'rgba(51,202,185,0.5)',
 				hoverBackgroundColor: "rgba(51,202,185,0.7)",
 				hoverBorderColor: "rgba(0,0,0,0)",
-				data: [<?php echo $tjtoday;
-						?>, <?php echo $tjyesterday;
-	?>, <?php echo $tjmonth;
-	?>, <?php echo $tjtotal;
-	?>]
+				data: <?php echo json_encode($tj_chart_ip); ?>
 			}]
 		};
 		var $dashChartLinesData = {
-			labels: ['今日浏览', '昨日浏览', '本月浏览', '总浏览'],
+			labels: <?php echo json_encode($tj_chart_labels, JSON_UNESCAPED_UNICODE); ?>,
 			datasets: [{
-				label: '数量',
-				data: [<?php echo $tjtoday;
-						?>, <?php echo $tjyesterday;
-	?>, <?php echo $tjmonth;
-	?>, <?php echo $tjtotal;
-	?>],
+				label: '浏览量(PV)',
+				data: <?php echo json_encode($tj_chart_pv); ?>,
 				borderColor: '#358ed7',
 				backgroundColor: 'rgba(53, 142, 215, 0.175)',
 				borderWidth: 1,
