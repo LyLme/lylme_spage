@@ -56,7 +56,12 @@ $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
                         <div class="form-group">
                         <label>链接描述:</label><br>
                        	<textarea  type="text" rows="2" class="form-control" name="link_desc" placeholder="仅部分主题支持，可不填"></textarea>
-                       <small class="help-block">链接描述仅部分主题支持显示</small>
+                       <small class="help-block">链接描述仅部分主题支持显示和详情页SEO，访问详情页时若为空将自动采集写入，采集失败写入"无"</small>
+                        </div>
+                        <div class="form-group">
+                        <label>链接关键词:</label><br>
+                        <input type="text" class="form-control" name="link_keywords" maxlength="512" placeholder="多个关键词用逗号分隔，留空访问详情页时自动采集">
+                        <small class="help-block">关键词用于详情页 SEO，访问详情页时若为空将自动采集写入，采集失败写入"无"</small>
                         </div>
 
 
@@ -150,7 +155,12 @@ $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
                          <div class="form-group">
                         <label>链接描述:</label><br>
                        	<textarea  type="text" rows="2" class="form-control" name="link_desc" placeholder="仅部分主题支持，可不填">'.$row['link_desc'].'</textarea>
-                       <small class="help-block">链接描述仅部分主题支持显示</small>
+                       <small class="help-block">链接描述仅部分主题支持显示和详情页SEO，访问详情页时若为空将自动采集写入，采集失败写入"无"</small>
+                        </div>
+                         <div class="form-group">
+                        <label>链接关键词:</label><br>
+                        <input type="text" class="form-control" name="link_keywords" maxlength="512" placeholder="多个关键词用逗号分隔" value="' . htmlspecialchars($row['link_keywords']) . '">
+                        <small class="help-block">关键词用于详情页 SEO，为空时访问详情页将自动采集写入</small>
                         </div>
                         <div class="form-group">
                         <input type="submit" class="btn btn-primary btn-block" value="修改"></form>

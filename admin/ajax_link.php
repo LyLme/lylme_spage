@@ -73,10 +73,11 @@ switch ($submit) {
 		$group_id = intval($_POST['group_id']);
 		$link_order = $linksrows + 1;
 		$link_desc = isset($_POST['link_desc']) ? daddslashes($_POST['link_desc']) : '';
+		$link_keywords = isset($_POST['link_keywords']) ? daddslashes($_POST['link_keywords']) : '';
 		if ($name == null or $url == null) {
 			exit('保存错误,请确保带星号的都不为空！');
 		} else {
-			$sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`,`link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $link_desc . "', '" . $link_order . "');";
+			$sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`, `link_keywords`, `link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $link_desc . "', '" . $link_keywords . "', '" . $link_order . "');";
 			if ($DB->query($sql)) {
 				exit('添加链接 ' . $name . ' 成功！');
 			} else {
@@ -102,12 +103,13 @@ switch ($submit) {
 		$url = daddslashes($_POST['url']);
 		$icon = daddslashes($_POST['icon']);
 		$link_desc = isset($_POST['link_desc']) ? daddslashes($_POST['link_desc']) : '';
+		$link_keywords = isset($_POST['link_keywords']) ? daddslashes($_POST['link_keywords']) : '';
 		$link_pwd = intval($_POST['link_pwd']);
 		$group_id = intval($_POST['group_id']);
 		if ($name == null or $url == null) {
 			echo '保存错误,请确保带星号的都不为空！';
 		} else {
-			$sql = "UPDATE `lylme_links` SET `name` = '" . $name1 . "', `link_desc` = '" . $link_desc . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = " . $link_pwd . " WHERE `lylme_links`.`id` = '" . $id . "';";
+			$sql = "UPDATE `lylme_links` SET `name` = '" . $name1 . "', `link_desc` = '" . $link_desc . "', `link_keywords` = '" . $link_keywords . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = " . $link_pwd . " WHERE `lylme_links`.`id` = '" . $id . "';";
 			//   exit($sql);
 			if ($DB->query($sql)) {
 				echo '修改链接 ' . $name . ' 成功！';
