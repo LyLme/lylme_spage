@@ -2,7 +2,7 @@
     header("Location:/");
 } ?>
 <script src="<?php echo $cdnpublic ?>/assets/js/bootstrap.min.js" type="application/javascript"></script>
-<script src="<?php echo $templatepath; ?>/js/script.js?v=20240414"></script>
+<script src="<?php echo $templatepath; ?>/js/script.js?v=20260806"></script>
 <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
 <div style="display:none;" class="back-to" id="toolBackTop">
     <a title="返回顶部" onclick="window.scrollTo(0,0);return false;" href="#top" class="back-top"></a>
