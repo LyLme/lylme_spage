@@ -40,7 +40,7 @@ if ($sqlvn < $filevn) {
     }
  if ($sqlvn < 20300) {
         $version = 'v2.3.0';
-        $sql .= '';
+        $sql .= "ALTER TABLE `lylme_links` ADD `link_keywords` VARCHAR(512) NULL DEFAULT NULL COMMENT '链接关键词' AFTER `link_desc`;";
     }
     // 执行SQL语句
     if (!empty($sql)) {
