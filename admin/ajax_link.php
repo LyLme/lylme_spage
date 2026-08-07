@@ -79,7 +79,8 @@ switch ($submit) {
 		} else {
 			$sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`, `link_keywords`, `link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $link_desc . "', '" . $link_keywords . "', '" . $link_order . "');";
 			if ($DB->query($sql)) {
-				exit('添加链接 ' . $name . ' 成功！');
+				$newid = $DB->insert_id();
+				exit('添加链接 ' . $name . ' 成功！ID=' . $newid);
 			} else {
 				exit('添加链接失败！');
 			}
