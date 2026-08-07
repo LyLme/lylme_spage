@@ -494,36 +494,25 @@ function rearr($data, $arr)
 
 /**
  * 获取网站head信息
- * @param string|int $url URL或链接ID
+ * @param string $url URL
  * @param bool $cache 是否使用缓存
  * @return array
  */
 function get_head($url, $cache = false)
 {
-    $id = null;
+    // 读取缓存（以 URL 的 md5 为缓存键，7 天内有效）
+    if ($cache && is_string($url) && !empty($url)) {
+        $cache_path = defined('ROOT') ? ROOT . "cache/" : __DIR__ . "/../../cache/";
+        $cache_file = $cache_path . md5($url) . ".txt";
 
-    if ($cache && is_numeric($url)) {
-        $id = (int) $url;
-        global $DB;
-
-        if (isset($DB) && $DB instanceof DB) {
-            $site_head = $DB->get_row("SELECT * FROM `lylme_links` WHERE `id` = $id AND `link_pwd` = 0");
-            if ($site_head && isset($site_head['url'])) {
-                $url = $site_head['url'];
-
-                $cache_path = defined('ROOT') ? ROOT . "cache/" : __DIR__ . "/../../cache/";
-                $cache_file = $cache_path . md5($url) . ".txt";
-
-                if (file_exists($cache_file) && is_readable($cache_file)) {
-                    $file_mtime = filemtime($cache_file);
-                    if ((time() - $file_mtime) < 7 * 24 * 60 * 60) {
-                        $cached = @file_get_contents($cache_file);
-                        if ($cached !== false) {
-                            $data = json_decode($cached, true);
-                            if (is_array($data)) {
-                                return $data;
-                            }
-                        }
+        if (file_exists($cache_file) && is_readable($cache_file)) {
+            $file_mtime = filemtime($cache_file);
+            if ((time() - $file_mtime) < 7 * 24 * 60 * 60) {
+                $cached = @file_get_contents($cache_file);
+                if ($cached !== false) {
+                    $data = json_decode($cached, true);
+                    if (is_array($data)) {
+                        return $data;
                     }
                 }
             }
@@ -532,6 +521,8 @@ function get_head($url, $cache = false)
 
     if (!is_string($url) || empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
         return [
+            'code' => 403,
+            'msg' => '请求失败',
             'title' => '',
             'charset' => 'UTF-8',
             'icon' => '',
@@ -544,6 +535,8 @@ function get_head($url, $cache = false)
     $data = get_curl($url);
     if ($data === 404 || empty($data)) {
         return [
+            'code' => 404,
+            'msg' => '请求失败',
             'title' => '',
             'charset' => 'UTF-8',
             'icon' => '',
@@ -610,6 +603,10 @@ function get_head($url, $cache = false)
     $keywords = isset($keyword_matches[4]) ? $keyword_matches[4] : '';
 
     $result = [
+
+        //加入状态码和错误
+        'code' => empty($data) ? 404 : 200,
+        'msg' => empty($data) ? '请求失败' : '请求成功',
         'title' => trim($title),
         'charset' => $encode,
         'icon' => trim($icon),
@@ -619,7 +616,7 @@ function get_head($url, $cache = false)
     ];
 
     // 缓存结果
-    if ($cache && $id !== null) {
+    if ($cache) {
         $cache_path = defined('ROOT') ? ROOT . "cache/" : __DIR__ . "/../../cache/";
         if (!file_exists($cache_path)) {
             @mkdir($cache_path, 0755, true);
@@ -634,46 +631,78 @@ function get_head($url, $cache = false)
 }
 
 /**
- * 模拟GET请求
- * @param string $url 请求URL
+ * 模拟GET请求（已加 SSRF 防护）
+ * @param string $url
+ * @param int $max_redirects 最大手动重定向次数
  * @return string|int
  */
-function get_curl($url)
+function get_curl($url, $max_redirects = 3)
 {
+    // 没有 curl 时不再用 file_get_contents 兜底（它无法安全防 SSRF）
     if (!function_exists('curl_init')) {
-        return @file_get_contents($url) ?: 404;
-    }
-
-    $ch = curl_init();
-    curl_setopt_array($ch, [
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_MAXREDIRS => 5,
-        CURLOPT_TIMEOUT => 10,
-        CURLOPT_CONNECTTIMEOUT => 5,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_SSL_VERIFYHOST => false,
-        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36',
-        CURLOPT_ENCODING => '',
-        CURLOPT_HTTPHEADER => [
-            'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language: zh-CN,zh;q=0.9,en;q=0.8',
-            'Accept-Encoding: gzip, deflate',
-            'Connection: keep-alive',
-            'Upgrade-Insecure-Requests: 1'
-        ]
-    ]);
-
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    if ($httpCode == 404) {
         return 404;
     }
 
-    return $response !== false ? $response : '';
+    $redirects = 0;
+    while (true) {
+        // 每一跳都重新做 SSRF 校验，并拿到已校验通过的 IP
+        list($ok, $ip) = ssrf_validate_url($url);
+        if (!$ok) {
+            return 404; // 统一按不可访问处理，避免把内网探测结果回显给攻击者
+        }
+
+        $p = parse_url($url);
+        $host = trim($p['host'], '[]');
+        $port = isset($p['port'])
+            ? (int)$p['port']
+            : (strtolower($p['scheme']) === 'https' ? 443 : 80);
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_CONNECTTIMEOUT => 5,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 2,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+            CURLOPT_RESOLVE => ["{$host}:{$port}:{$ip}"],
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36',
+            CURLOPT_ENCODING => '',
+            CURLOPT_HTTPHEADER => [
+                'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language: zh-CN,zh;q=0.9,en;q=0.8',
+                'Connection: keep-alive',
+                'Upgrade-Insecure-Requests: 1',
+            ],
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $location = curl_getinfo($ch, CURLINFO_REDIRECT_URL);
+        curl_close($ch);
+
+        // 手动处理重定向：把 Location 拼成绝对地址后回到循环重新校验
+        if (in_array($httpCode, [301, 302, 303, 307, 308], true) && $redirects < $max_redirects) {
+            if (empty($location)) {
+                break;
+            }
+            // 相对跳转补全为绝对 URL（复用你已有的 get_urlpath）
+            if (!parse_url($location, PHP_URL_SCHEME)) {
+                $location = get_urlpath($location, $url);
+            }
+            $url = $location;
+            $redirects++;
+            continue;
+        }
+
+        if ($httpCode == 404) {
+            return 404;
+        }
+        return $response !== false ? $response : '';
+    }
+    return '';
 }
 
 /**
@@ -891,4 +920,122 @@ function csrf_field()
 $background_img = '';
 if (isset($conf['background']) && !empty($conf['background'])) {
     $background_img = $conf['background'];
+}
+/**
+ * SSRF 防护：校验 URL 是否为「公网可访问的 http/https 地址」
+ * 通过返回 [true, 命中的IP]，不通过返回 [false, 原因]
+ */
+function ssrf_validate_url($url)
+{
+    if (!is_string($url) || $url === '') {
+        return [false, 'bad input'];
+    }
+
+    $parts = @parse_url($url);
+    if ($parts === false || empty($parts['host'])) {
+        return [true, 'skip: no host'];
+    }
+
+    $host = trim($parts['host'], '[]');
+
+    if (filter_var($host, FILTER_VALIDATE_IP)) {
+        $ip = $host;
+        if (!filter_var(
+            $ip,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+        )) {
+            return [false, 'private/reserved ip: ' . $ip];
+        }
+        return [true, $ip];
+    }
+
+    $ips = [];
+
+    // IPv4
+    $a = @gethostbynamel($host);
+    if (is_array($a)) {
+        $ips = array_merge($ips, $a);
+    }
+
+    // IPv6（可选）
+    if (function_exists('dns_get_record')) {
+        $aaaa = @dns_get_record($host, DNS_AAAA);
+        if (is_array($aaaa)) {
+            foreach ($aaaa as $r) {
+                if (!empty($r['ipv6'])) {
+                    $ips[] = $r['ipv6'];
+                }
+            }
+        }
+    }
+
+    // ---------- 3. DNS 解析失败 → 直接跳过 ----------
+    if (empty($ips)) {
+        return [true, 'skip: dns resolve failed'];
+    }
+
+    // ---------- 4. 只要有内网 IP 就拦 ----------
+    foreach ($ips as $ip) {
+        if (!filter_var(
+            $ip,
+            FILTER_VALIDATE_IP,
+            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+        )) {
+            return [false, 'private/reserved ip: ' . $ip];
+        }
+    }
+
+    return [true, $ips[0]];
+}
+/**
+ * 简单的滑动窗口限流（基于文件 + flock，无需额外依赖）
+ * @param string $key    限流标识（如 "apply_geturl_1.2.3.4"）
+ * @param int    $max    窗口内最大请求次数
+ * @param int    $window 窗口秒数
+ * @return bool  true=放行，false=超限
+ */
+function rate_limit($key, $max = 20, $window = 60)
+{
+    $dir = (defined('ROOT') ? ROOT : __DIR__ . '/../../') . 'logs/ratelimit/';
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0755, true);
+    }
+    // 目录不可写时不阻断正常业务（fail-open）；若想更严格可改成 return false
+    if (!is_dir($dir) || !is_writable($dir)) {
+        return true;
+    }
+
+    $file = $dir . md5($key) . '.json';
+    $now  = time();
+
+    $fp = @fopen($file, 'c+');
+    if (!$fp) {
+        return true;
+    }
+
+    $allowed = true;
+    if (flock($fp, LOCK_EX)) {
+        $hits = json_decode(stream_get_contents($fp), true);
+        if (!is_array($hits)) {
+            $hits = [];
+        }
+        // 只保留窗口内的时间戳
+        $hits = array_values(array_filter($hits, function ($t) use ($now, $window) {
+            return is_numeric($t) && ($now - $t) < $window;
+        }));
+
+        if (count($hits) >= $max) {
+            $allowed = false;               // 超限
+        } else {
+            $hits[] = $now;                 // 记一次
+            ftruncate($fp, 0);
+            rewind($fp);
+            fwrite($fp, json_encode($hits));
+            fflush($fp);
+        }
+        flock($fp, LOCK_UN);
+    }
+    fclose($fp);
+    return $allowed;
 }

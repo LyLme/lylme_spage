@@ -32,10 +32,10 @@ function download_img($url)
         exit('{"code": "-1","msg":"抓取的图片超过' . $maxsize / pow(1024, 2) . 'M，当前为：' . round($size / pow(1024, 2), 2) . 'M"}');
     }
 
-    $img_ext ='.'. pathinfo($url, PATHINFO_EXTENSION);
+    $img_ext = '.' . pathinfo($url, PATHINFO_EXTENSION);
     //文件后缀名
     if (!validate_file_type($img_ext)) {
-        exit('{"code": "-4","msg":"抓取的图片类型'.$img_ext.'不支持"}');
+        exit('{"code": "-4","msg":"抓取的图片类型' . $img_ext . '不支持"}');
     }
     $img_name = $IMG_NAME  . $img_ext;
     // 验证文件名合法性
@@ -81,7 +81,7 @@ function download_img($url)
     fwrite($downloaded_file, $data);
     fclose($downloaded_file);
     $fileurl =  '/' . SAVE_PATH . 'download/' . $img_name;
-    echo('{"code": "200","msg":"抓取图片成功","url":"' . $fileurl . '","size":"' . round($fileSize / 1024, 2) . 'KB"}');
+    echo ('{"code": "200","msg":"抓取图片成功","url":"' . $fileurl . '","size":"' . round($fileSize / 1024, 2) . 'KB"}');
     return $save_to;
 }
 // 获取远程文件大小
@@ -120,7 +120,7 @@ function upload_img($upfile)
     $parts = explode('.', $upfile["name"]);
     $img_ext = "." . end($parts);
     if (!validate_file_type($img_ext)) {
-        exit('{"code": "-4","msg":"上传的图片类型'.$img_ext.'不支持"}');
+        exit('{"code": "-4","msg":"上传的图片类型' . $img_ext . '不支持"}');
     }
     if ($size > $maxsize) {
         exit('{"code": "-1","msg":"图片不能超过' . $maxsize / pow(1024, 2) . 'M"}');
@@ -138,7 +138,7 @@ function upload_img($upfile)
         exit('{"code": "-4","msg":"上传的文件不是有效的图片"}');
     }
     if (move_uploaded_file($tmp_name, $dir . $img_name)) {
-        echo('{"code": "200","msg":"上传成功","url":"' . $url . '"}');
+        echo ('{"code": "200","msg":"上传成功","url":"' . $url . '"}');
         return  $dir . $img_name;
     }
 }
@@ -169,7 +169,7 @@ function validate_file_type($type)
 function is_valid_image($data)
 {
     $image_info = @getimagesizefromstring($data);
-    return $image_info!== false;
+    return $image_info !== false;
 }
 
 /**
@@ -256,6 +256,10 @@ if (empty($_POST["url"]) && !empty($_FILES["file"])) {
     }
     //上传图片
 } elseif (!empty($_POST["url"])) {
+    $client_ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
+    if (!rate_limit('download_img_' . $client_ip, 3, 60)) {
+        exit('{"code":"-8","msg":"抓取请求过于频繁，请稍后再试"}');
+    }
     $filename = download_img($_POST["url"]);
     //下载图片
 } else {

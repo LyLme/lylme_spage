@@ -3,9 +3,19 @@ include("../include/common.php");
 $grouplists = $DB->query("SELECT * FROM `lylme_groups` WHERE `group_pwd` = 0");
 if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
     header('Content-Type:application/json');
-    //获取网站信息
-    $head = get_head($_GET['url']);
-    $head = json_encode($head, JSON_UNESCAPED_UNICODE);  //将合并后的数组转换为json
+    $client_ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
+    if (!rate_limit('apply_geturl_' . $client_ip, 5, 60)) {
+        exit('{"code":"-8","msg":"获取请求频繁，请稍后再试"}');
+    }
+
+    // SSRF 防护：拒绝内网/非 http(s) 地址
+    list($ok, ) = ssrf_validate_url($url);
+    if (!$ok) {
+        exit('{"code":"-9","msg":"链接地址不合法"}');
+    }
+
+    $head = get_head($url);
+    $head = json_encode($head, JSON_UNESCAPED_UNICODE);
     exit($head);  //输出json
 
 } elseif (isset($_GET['submit']) == 'post') {

@@ -49,7 +49,7 @@ if (!empty($site['link_desc']) && !empty($site['link_keywords'])) {
         'url' => $site['url']
     );
 } else {
-    $info = get_head($site["id"], true);
+    $info = get_head($site['url'], true);
     // 采集链接描述/关键词并写入数据库，采集失败写入"无"，下次访问不再采集
     $save_desc = !empty($info['description']) ? trim(strip_tags($info['description'])) : '无';
     $save_kw = !empty($info['keywords']) ? trim(strip_tags($info['keywords'])) : '无';
