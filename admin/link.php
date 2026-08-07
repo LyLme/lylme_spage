@@ -87,7 +87,7 @@ $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
                                 });
                             </script>';
                         } elseif ($set == 'edit') {
-                            $id = $_GET['id'];
+                            $id = intval($_GET['id']);
                             $row2 = $DB->query("select * from lylme_links where id='$id' limit 1");
                             $row = $DB->fetch($row2);
                             preg_match_all('/<font color=[\"|\']+(.*?)[\"|\']>/i', $row['name'], $color);

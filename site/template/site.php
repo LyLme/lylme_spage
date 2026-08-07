@@ -86,7 +86,8 @@
             <nav class="crumb">
                 <a href="/">首页</a>
                 <span class="sep">/</span>
-                <a href="/"><?php echo $group_name; ?></a>
+
+                <a href="/#group_<?php echo $group_id; ?>"><?php echo $group_name; ?></a>
                 <span class="sep">/</span>
                 <span class="cur"><?php echo $url_name; ?></span>
             </nav>
