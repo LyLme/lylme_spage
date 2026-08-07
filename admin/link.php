@@ -184,10 +184,7 @@ $pwd_lists = $DB->query("SELECT * FROM `lylme_pwd`");
                                 });
                             </script>';
                         } else {
-                            echo '<div class="mb-3" style="margin-bottom:15px;text-align:right;">
-                <a href="./batch_add.php" target="_blank" class="btn btn-primary"><i class="mdi mdi-import"></i> 批量导入链接</a>
-            </div>
-            <div id="listTable"></div>
+                            echo '<div id="listTable"></div>
                 </div>
             </div>
           </div>

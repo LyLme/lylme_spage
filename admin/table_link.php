@@ -43,6 +43,9 @@ while ($group = $DB->fetch($groups)) {
               echo '
             <button class="btn btn-label btn btn-purple" id="save_order" style="display:none" onclick="save_order()">
             <label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label> 保存排序</button>
+
+                <a href="./batch_add.php" target="_blank" class="btn btn-label btn  btn-purple"> <label><i class="mdi mdi-import  aria-hidden="true""></i> </label> 批量导入链接</a>
+
           </div> 
           <!-- 功能按钮 E -->
 		<div class="table-responsive">       
