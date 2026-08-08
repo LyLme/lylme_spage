@@ -116,12 +116,14 @@ input[type=color]{width:44px;height:34px;border:1px solid #dcdfe6;border-radius:
 .res-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .res-status{flex-shrink:0;font-weight:600}
 .res-status.ok{color:#67c23a}
+.res-status.skip{color:#e6a23c}
 .res-status.fail{color:#e74c3c}
 .res-name{font-weight:600;color:#333;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .res-url{color:#999;flex:1;min-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .res-edit{flex-shrink:0;padding:2px 12px;border:1px solid #33cabb;border-radius:4px;background:#fff;color:#33cabb;font-size:12px;cursor:pointer}
 .res-edit:hover{background:#33cabb;color:#fff}
 .res-fail-msg{color:#e74c3c;margin-top:4px;word-break:break-all}
+.res-skip-msg{color:#e6a23c;margin-top:4px;word-break:break-all}
 .res-edit-form{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed #eef0f3}
 .res-edit-form.show{display:block}
 .edit-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
@@ -227,12 +229,21 @@ input[type=color]{width:44px;height:34px;border:1px solid #dcdfe6;border-radius:
         <div class="form-group">
             <label class="checkbox-line"><input type="checkbox" id="autoFetch" checked> 自动抓取每个链接的标题与图标（链接数量较多时速度较慢）</label>
         </div>
+        <div class="form-group">
+            <label>图标处理方式</label>
+            <select id="iconMode">
+                <option value="save" selected>抓取图标并保存到服务器（推荐）</option>
+                <option value="link">只抓取图标链接（不保存到服务器）</option>
+                <option value="none">不抓取图标</option>
+            </select>
+            <div class="hint">仅在勾选"自动抓取"时生效；保存到服务器会将图标下载至网站 files/download 目录，避免外链失效</div>
+        </div>
         <div class="btn-row">
             <button type="button" class="btn btn-primary" id="batchBtn" onclick="batchImport()">开始批量导入</button>
         </div>
         <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
         <div id="progressText"></div>
-        <div class="hint">每条抓取完成即入库，可随时点"编辑"修改名称、图标等，其他任务并行继续，互不影响</div>
+        <div class="hint">每条抓取完成即入库，可随时点"编辑"修改名称、图标等，其他任务并行继续，互不影响；已存在的链接自动跳过</div>
         <div id="resultList"></div>
 <?php endif; ?>
     </div>
@@ -252,6 +263,14 @@ function hostFromUrl(u) {
         return m ? m[1] : u;
     }
 }
+// 按字符数截断文本（兼容中文/emoji），超出部分用"..."替代，防止超出数据库字段长度
+function truncateText(s, max) {
+    if (s == null) return '';
+    s = String(s);
+    var chars = Array.from(s);
+    if (chars.length <= max) return s;
+    return chars.slice(0, Math.max(0, max - 3)).join('') + '...';
+}
 function getXhr(url, timeout) {
     return new Promise(function (resolve) {
         var xhr = new XMLHttpRequest();
@@ -266,6 +285,20 @@ function getXhr(url, timeout) {
 }
 function postForm(url, fd) {
     return fetch(url, { method: 'POST', body: fd, credentials: 'same-origin' }).then(function (r) { return r.text(); });
+}
+// 将图标下载保存到服务器本地（参考 apply/apply.js 的 downloadimg），成功返回本地地址，失败返回空字符串
+function saveIcon(iconUrl, referer) {
+    return new Promise(function (resolve) {
+        var fd = new FormData();
+        fd.append('url', iconUrl);
+        fd.append('referer', referer);
+        postForm('../include/file.php', fd).then(function (txt) {
+            try {
+                var d = JSON.parse(txt);
+                resolve(d && d.code == '200' && d.url ? d.url : '');
+            } catch (e) { resolve(''); }
+        }).catch(function () { resolve(''); });
+    });
 }
 
 <?php if ($mode === 'quick'): ?>
@@ -282,12 +315,25 @@ function fetchInfo() {
     showTip('正在抓取网站信息...', 'loading');
     getXhr('ajax_link.php?submit=geturl&url=' + encodeURIComponent(url), 15000).then(function (d) {
         if (!d) { showTip('获取失败，目标网站无法访问或防火墙限制，请手动填写', 'error'); return; }
-        if (d.title && !nameInput.value) nameInput.value = d.title;
-        if (d.icon && !iconInput.value) iconInput.value = d.icon;
-        if (d.description && !descInput.value) descInput.value = d.description;
-        if (d.keywords && !kwInput.value) kwInput.value = d.keywords;
-        showTip('获取成功', 'success');
-        setTimeout(hideTip, 1500);
+        if (d.title && !nameInput.value) nameInput.value = truncateText(d.title, 255);
+        if (d.description && !descInput.value) descInput.value = truncateText(d.description, 255);
+        if (d.keywords && !kwInput.value) kwInput.value = truncateText(d.keywords, 512);
+        if (d.icon) {
+            if (!iconInput.value) {
+                showTip('获取成功，正在将图标保存到服务器...', 'loading');
+                saveIcon(d.icon, url).then(function (local) {
+                    iconInput.value = local || '';
+                    showTip(local ? '获取成功，图标已保存到服务器' : '未获取到图标', local ? 'success' : 'error');
+                    setTimeout(hideTip, 1500);
+                });
+            } else {
+                showTip('获取成功', 'success');
+                setTimeout(hideTip, 1500);
+            }
+        } else {
+            showTip('获取成功', 'success');
+            setTimeout(hideTip, 1500);
+        }
     });
 }
 
@@ -373,10 +419,12 @@ bmBtn.addEventListener('click', function (e) {
     copyText(bmBtn.getAttribute('href'));
 });
 
-function updateProgress(done, total, success, fail) {
+function updateProgress(done, total, success, fail, skip) {
     var pct = total ? Math.round(done / total * 100) : 0;
     document.getElementById('progressBar').style.width = pct + '%';
-    document.getElementById('progressText').textContent = '进度 ' + done + '/' + total + '，成功 ' + success + '，失败 ' + fail;
+    var t = '进度 ' + done + '/' + total + '，成功 ' + success + '，失败 ' + fail;
+    if (skip) t += '，跳过 ' + skip;
+    document.getElementById('progressText').textContent = t;
 }
 
 function esc(s) {
@@ -391,14 +439,16 @@ function groupOptions(selected) {
     return html;
 }
 
-function appendResult(u, name, icon, desc, kw, groupId, id, ok, msg) {
+function appendResult(u, name, icon, desc, kw, groupId, id, ok, skip, msg) {
     var list = document.getElementById('resultList');
     var div = document.createElement('div');
     div.className = 'res-item';
     if (ok) div.setAttribute('data-id', id);
     div.setAttribute('data-url', u);
+    var stCls = ok ? 'ok' : (skip ? 'skip' : 'fail');
+    var stTxt = ok ? 'OK' : (skip ? 'SKIP' : 'FAIL');
     var html = '<div class="res-head">' +
-        '<span class="res-status ' + (ok ? 'ok' : 'fail') + '">' + (ok ? 'OK' : 'FAIL') + '</span>' +
+        '<span class="res-status ' + stCls + '">' + stTxt + '</span>' +
         '<span class="res-name" title="' + esc(msg) + '">' + esc(name) + '</span>' +
         '<span class="res-url">' + esc(u) + '</span>';
     if (ok) {
@@ -415,6 +465,8 @@ function appendResult(u, name, icon, desc, kw, groupId, id, ok, msg) {
             '<div class="edit-row"><label>关键词</label><input type="text" class="f-kw" value="' + esc(kw) + '"></div>' +
             '<div class="edit-actions"><button type="button" class="btn-sm" onclick="saveEdit(this)">保存修改</button></div>' +
             '</div>';
+    } else if (skip) {
+        html += '<div class="res-skip-msg">' + esc(msg) + '</div>';
     } else {
         html += '<div class="res-fail-msg">' + esc(msg) + '</div>';
     }
@@ -434,18 +486,19 @@ function saveEdit(btn) {
     var form = item.querySelector('.res-edit-form');
     var id = item.getAttribute('data-id');
     var fd = new FormData();
-    fd.append('url', item.getAttribute('data-url'));
-    fd.append('name', form.querySelector('.f-name').value.trim());
+    var editName = truncateText(form.querySelector('.f-name').value.trim(), 255);
+    fd.append('url', truncateText(item.getAttribute('data-url'), 255));
+    fd.append('name', editName);
     fd.append('icon', form.querySelector('.f-icon').value.trim());
-    fd.append('color', form.querySelector('.f-color').value.trim());
+    fd.append('color', truncateText(form.querySelector('.f-color').value.trim(), 32));
     fd.append('group_id', form.querySelector('.f-group').value);
-    fd.append('link_desc', form.querySelector('.f-desc').value.trim());
-    fd.append('link_keywords', form.querySelector('.f-kw').value.trim());
+    fd.append('link_desc', truncateText(form.querySelector('.f-desc').value.trim(), 255));
+    fd.append('link_keywords', truncateText(form.querySelector('.f-kw').value.trim(), 512));
     fd.append('link_pwd', '0');
     if (!fd.get('name')) { showTip('名称不能为空', 'error'); return; }
     postForm('ajax_link.php?submit=edit_link&id=' + id, fd).then(function (txt) {
         if (txt.indexOf('成功') > -1) {
-            item.querySelector('.res-name').textContent = form.querySelector('.f-name').value;
+            item.querySelector('.res-name').textContent = editName;
             form.classList.remove('show');
             btn.textContent = '编辑';
             showTip('已保存修改', 'success');
@@ -466,11 +519,11 @@ async function batchImport() {
     urls = Array.from(new Set(urls));
     var groupId = document.getElementById('batchGroup').value;
     var autoFetch = document.getElementById('autoFetch').checked;
-    var total = urls.length, done = 0, success = 0, fail = 0;
+    var total = urls.length, done = 0, success = 0, fail = 0, skip = 0;
     btn.disabled = true;
     btn.textContent = '导入中...';
     document.getElementById('resultList').innerHTML = '';
-    updateProgress(0, total, success, fail);
+    updateProgress(0, total, success, fail, skip);
     showTip('开始导入，共 ' + total + ' 条，并发抓取中，每条完成即可点"编辑"修改，其他任务继续...', 'loading');
 
     // 并发池：多个 worker 同时取任务，每完成一条立即入库并显示"编辑"，互不影响
@@ -487,41 +540,55 @@ async function batchImport() {
                 if (autoFetch) {
                     var info = await getXhr('ajax_link.php?submit=geturl&url=' + encodeURIComponent(u), 10000);
                     if (info) {
-                        if (info.title) name = info.title;
+                        if (info.title) name = truncateText(info.title, 255);
                         if (info.icon) icon = info.icon;
-                        if (info.description) desc = info.description;
-                        if (info.keywords) kw = info.keywords;
+                        if (info.description) desc = truncateText(info.description, 255);
+                        if (info.keywords) kw = truncateText(info.keywords, 512);
+                    }
+                }
+                // 根据"图标处理方式"处理图标：save=保存到服务器，link=仅保留链接，none=不抓取
+                var iconMode = document.getElementById('iconMode').value;
+                if (icon) {
+                    if (iconMode === 'none') {
+                        icon = '';
+                    } else if (iconMode === 'save') {
+                        var localIcon = await saveIcon(icon, u);
+                        if (localIcon) icon = localIcon; // 下载失败时回退为原始图标链接
                     }
                 }
                 var fd = new FormData();
-                fd.append('url', u);
-                fd.append('name', name);
+                fd.append('url', truncateText(u, 255));
+                fd.append('name', truncateText(name, 255));
                 fd.append('icon', icon);
                 fd.append('group_id', groupId);
-                fd.append('link_desc', desc);
-                fd.append('link_keywords', kw);
+                fd.append('link_desc', truncateText(desc, 255));
+                fd.append('link_keywords', truncateText(kw, 512));
                 fd.append('color', '');
                 var msg = '';
                 try { msg = await postForm('ajax_link.php?submit=add_link', fd); } catch (e) { msg = '网络错误'; }
                 var ok = msg.indexOf('成功') > -1;
+                // 后端返回"链接已存在，跳过"时按跳过错行处理，不计入失败
+                var isSkip = !ok && msg.indexOf('已存在') > -1;
                 var id = '';
                 if (ok) {
                     var m = msg.match(/ID=(\d+)/);
                     id = m ? m[1] : '';
                     success++;
+                } else if (isSkip) {
+                    skip++;
                 } else {
                     fail++;
                 }
-                appendResult(u, name, icon, desc, kw, groupId, id, ok, msg);
+                appendResult(u, name, icon, desc, kw, groupId, id, ok, isSkip, msg);
                 done++;
-                updateProgress(done, total, success, fail);
+                updateProgress(done, total, success, fail, skip);
             }
         })());
     }
     await Promise.all(workers);
     btn.disabled = false;
     btn.textContent = '开始批量导入';
-    showTip('导入完成：成功 ' + success + ' 条，失败 ' + fail + ' 条，可继续点"编辑"完善信息', fail ? 'error' : 'success');
+    showTip('导入完成：成功 ' + success + ' 条，跳过 ' + skip + ' 条，失败 ' + fail + ' 条，可继续点"编辑"完善信息', fail ? 'error' : 'success');
 }
 <?php endif; ?>
 </script>

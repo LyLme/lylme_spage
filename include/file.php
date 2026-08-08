@@ -257,7 +257,9 @@ if (empty($_POST["url"]) && !empty($_FILES["file"])) {
     //上传图片
 } elseif (!empty($_POST["url"])) {
     $client_ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
-    if (!rate_limit('download_img_' . $client_ip, 3, 60)) {
+    // 已登录管理员放宽频率限制（后台批量导入图标需要），未登录游客保持 3 次/分钟
+    $rate_max = (isset($islogin) && $islogin === 1) ? 120 : 3;
+    if (!rate_limit('download_img_' . $client_ip, $rate_max, 60)) {
         exit('{"code":"-8","msg":"抓取请求过于频繁，请稍后再试"}');
     }
     $filename = download_img($_POST["url"]);
