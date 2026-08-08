@@ -354,8 +354,8 @@ switch ($submit) {
 		$scriptpath = str_replace('\\', '/', $_SERVER['SCRIPT_NAME']);
 		$scriptpath = substr($scriptpath, 0, strrpos($scriptpath, '/'));
 		$admin_path = substr($scriptpath, strrpos($scriptpath, '/') + 1);
-		// 安全验证：admin_path不能为空或包含路径遍历字符
-		if (empty($admin_path) || $admin_path === '.' || $admin_path === '..' || strpos($admin_path, '/') !== false) {
+		// 安全验证：admin_path不能为空、不能包含路径遍历字符，且只允许安全的目录名字符
+		if (empty($admin_path) || !preg_match('/^[A-Za-z0-9_-]+$/', $admin_path)) {
 			exit('{"code": -2,"msg":"无效的管理员路径！"}');
 		}
 		$update  = require('cache.php');
@@ -378,6 +378,23 @@ switch ($submit) {
 				//修改后台地址
 				deldir(ROOT . $admin_path);
 				rename(ROOT . 'admin', ROOT . $admin_path);
+			}
+			// 更新完成后，将 include/common.php 中的 ADMIN_PATH 常量同步为实际的后台目录
+			$commonFile = ROOT . 'include/common.php';
+			$commonContent = @file_get_contents($commonFile);
+			if ($commonContent === false) {
+				unlink($ZipFile);
+				exit('{"code": 10,"msg":"更新成功，但无法读取 include/common.php，请手动确认后台目录配置！"}');
+			}
+			$newDefine = "define('ADMIN_PATH', '" . $admin_path . "')";
+			$newContent = preg_replace("/define\(['\"]ADMIN_PATH['\"]\s*,\s*['\"][^'\"]*['\"]\s*\)/", $newDefine, $commonContent, 1);
+			if ($newContent === null) {
+				unlink($ZipFile);
+				exit('{"code": 10,"msg":"更新成功，但无法解析 include/common.php 配置，请手动确认后台目录配置！"}');
+			}
+			if ($newContent !== $commonContent && @file_put_contents($commonFile, $newContent) === false) {
+				unlink($ZipFile);
+				exit('{"code": 10,"msg":"更新成功，但无法写入 include/common.php 后台目录配置，请手动修改 ADMIN_PATH 常量！"}');
 			}
 			unlink($ZipFile);
 			exit('{"code": 200,"msg":"更新成功"}');
