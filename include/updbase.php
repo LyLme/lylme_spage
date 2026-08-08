@@ -26,7 +26,7 @@ if (!isset($conf['version']) || empty($conf['version'])) {
 $sqlvn = get_vernum($conf['version']);  // 数据库版本
 $filevn = get_vernum(constant("VERSION"));  // 文件版本
 
-if(!(isset($conf['build'])?$conf['build']:"")){
+if (!(isset($conf['build']) ? $conf['build'] : "")) {
     saveSetting('build', date("Y-m-d H:i"));
 }
 if ($sqlvn < $filevn) {
@@ -38,9 +38,12 @@ if ($sqlvn < $filevn) {
         $version = 'v2.2.0';
         $sql .= '';
     }
- if ($sqlvn < 20300) {
+    if ($sqlvn < 20300) {
         $version = 'v2.3.0';
         $sql .= "ALTER TABLE `lylme_links` ADD `link_keywords` VARCHAR(512) NULL DEFAULT NULL COMMENT '链接关键词' AFTER `link_desc`;";
+    }
+      if ($sqlvn < 20301) {
+        $version = 'v2.3.1';
     }
     // 执行SQL语句
     if (!empty($sql)) {
