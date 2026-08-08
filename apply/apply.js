@@ -1,4 +1,13 @@
 
+//按字符数截断文本并追加省略号，防止超出数据库字段长度
+function truncateText(s, max) {
+    if (s == null) return '';
+    s = String(s);
+    var chars = Array.from(s);
+    if (chars.length <= max) return s;
+    return chars.slice(0, Math.max(0, max - 3)).join('') + '...';
+}
+
 //补全URL
 function gurl() {
     var url = $("input[name=\'url\']").val();
@@ -50,8 +59,8 @@ function submit() {
         type: "POST",
         dataType: "json",
         data: {
-            url: url.val(),
-            name: name.val(),
+            url: truncateText(url.val(), 255),
+            name: truncateText(name.val(), 255),
             group_id: group_id.val(),
             icon: icon.val(),
             authcode: authcode.val()
@@ -118,7 +127,7 @@ function get_url() {
                 $('#loading').css("display", "none");
                 return false;
             }
-            $("input[name=\'name\']").val(data.title);
+            $("input[name=\'name\']").val(truncateText(data.title, 255));
             if (!data.title && !data.icon) {
                 layer.msg('获取失败，请手动填写');
                 $('#loading').css("display", "none");

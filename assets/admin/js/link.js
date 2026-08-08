@@ -1,3 +1,12 @@
+//按字符数截断文本并追加省略号，防止超出数据库字段长度
+function truncateText(s, max) {
+    if (s == null) return '';
+    s = String(s);
+    var chars = Array.from(s);
+    if (chars.length <= max) return s;
+    return chars.slice(0, Math.max(0, max - 3)).join('') + '...';
+}
+
 //请求页面
 function listTable(query) {
     var url = window.document.location.href.toString();
@@ -123,7 +132,7 @@ function geturl() {
         dataType: "json",
         data: { url: url },
         success: function (data) {
-            $("input[name=\'name\']").val(data.title);
+            $("input[name=\'name\']").val(truncateText(data.title, 255));
             if (!data.title && !data.icon) {
                 layer.msg('获取失败，请手动填写');
             }

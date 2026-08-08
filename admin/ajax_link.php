@@ -8,6 +8,22 @@ if (!isset($islogin) || $islogin !== 1) {
 }
 $submit = isset($_GET['submit']) ? $_GET['submit'] : null;
 $e = 0;
+
+// 按字符数截断文本并追加省略号，防止超出数据库字段长度
+function truncate_text($str, $max)
+{
+    $str = (string)$str;
+    $max = max(1, (int)$max);
+    if (function_exists('mb_strlen')) {
+        if (mb_strlen($str, 'UTF-8') > $max) {
+            return mb_substr($str, 0, max(0, $max - 3), 'UTF-8') . '...';
+        }
+    } elseif (strlen($str) > $max) {
+        return substr($str, 0, max(0, $max - 3)) . '...';
+    }
+    return $str;
+}
+
 switch ($submit) {
 
 
@@ -61,22 +77,28 @@ switch ($submit) {
 		break;
 
 	case 'add_link':
-		$color = daddslashes($_POST['color']);
-		$name = daddslashes($_POST['name']);
+		$color = daddslashes(truncate_text(isset($_POST['color']) ? $_POST['color'] : '', 32));
+		$name = daddslashes(truncate_text(isset($_POST['name']) ? $_POST['name'] : '', 255));
 		if (empty($color)) {
 			$name1 = $name;
 		} else {
 			$name1 = '<font color="' . $color . '">' . $name . '</font>';
 		}
-		$url = daddslashes($_POST['url']);
-		$icon = daddslashes($_POST['icon']);
+		$url = daddslashes(truncate_text(isset($_POST['url']) ? $_POST['url'] : '', 255));
+		$icon = daddslashes(isset($_POST['icon']) ? $_POST['icon'] : '');
 		$group_id = intval($_POST['group_id']);
 		$link_order = $linksrows + 1;
-		$link_desc = isset($_POST['link_desc']) ? daddslashes($_POST['link_desc']) : '';
-		$link_keywords = isset($_POST['link_keywords']) ? daddslashes($_POST['link_keywords']) : '';
+		$link_desc = isset($_POST['link_desc']) ? daddslashes(truncate_text($_POST['link_desc'], 255)) : '';
+		$link_keywords = isset($_POST['link_keywords']) ? daddslashes(truncate_text($_POST['link_keywords'], 512)) : '';
 		if ($name == null or $url == null) {
 			exit('保存错误,请确保带星号的都不为空！');
 		} else {
+			// 链接查重：已存在则跳过（忽略末尾斜杠差异），防止重复入库
+			$url_check = rtrim($url, '/');
+			$exists = $DB->get_row("SELECT `id` FROM `lylme_links` WHERE `url` = '$url_check' OR `url` = '$url_check/' LIMIT 1");
+			if ($exists) {
+				exit('链接已存在，跳过！ID=' . $exists['id']);
+			}
 			$sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`, `link_keywords`, `link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $link_desc . "', '" . $link_keywords . "', '" . $link_order . "');";
 			if ($DB->query($sql)) {
 				$newid = $DB->insert_id();
@@ -94,17 +116,17 @@ switch ($submit) {
 		if (!$rows) {
 			exit('该条记录不存在！');
 		}
-		$color = daddslashes($_POST['color']);
-		$name = daddslashes($_POST['name']);
+		$color = daddslashes(truncate_text(isset($_POST['color']) ? $_POST['color'] : '', 32));
+		$name = daddslashes(truncate_text(isset($_POST['name']) ? $_POST['name'] : '', 255));
 		if (empty($color)) {
 			$name1 = $name;
 		} else {
 			$name1 = '<font color="' . $color . '">' . $name . '</font>';
 		}
-		$url = daddslashes($_POST['url']);
-		$icon = daddslashes($_POST['icon']);
-		$link_desc = isset($_POST['link_desc']) ? daddslashes($_POST['link_desc']) : '';
-		$link_keywords = isset($_POST['link_keywords']) ? daddslashes($_POST['link_keywords']) : '';
+		$url = daddslashes(truncate_text(isset($_POST['url']) ? $_POST['url'] : '', 255));
+		$icon = daddslashes(isset($_POST['icon']) ? $_POST['icon'] : '');
+		$link_desc = isset($_POST['link_desc']) ? daddslashes(truncate_text($_POST['link_desc'], 255)) : '';
+		$link_keywords = isset($_POST['link_keywords']) ? daddslashes(truncate_text($_POST['link_keywords'], 512)) : '';
 		$link_pwd = intval($_POST['link_pwd']);
 		$group_id = intval($_POST['group_id']);
 		if ($name == null or $url == null) {

@@ -747,7 +747,10 @@ function apply($name, $url, $icon, $group_id, $status)
     if (!filter_var($url, FILTER_VALIDATE_URL)) {
         return '{"code": "-2", "msg": "链接不符合要求"}';
     }
-    $name = mb_substr($name, 0, 20, 'UTF-8');
+    // 截断超长字段，超出部分用省略号替代（apply_name 为 varchar(20)）
+    if (mb_strlen($name, 'UTF-8') > 20) {
+        $name = mb_substr($name, 0, 17, 'UTF-8') . '...';
+    }
 
     if (strlens($name) || strlens($url) || strlens($icon) || strlens($group_id) || strlens($userip)) {
         return '{"code": "500", "msg": "参数过长"}';
