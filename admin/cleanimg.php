@@ -14,7 +14,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_POST['files
         $rel = trim((string) $rel);
         $rel = str_replace('\\', '/', $rel);
         // 安全校验：仅允许 download/ 或 upload/ 目录下的文件，防止路径穿越
-        if (!preg_match('#^(download|upload)/[^/]+$#i', $rel) || strpos($rel, '..') !== false) {
+       if (!preg_match('#^(download|upload)/[^/]+$#i', $rel) || preg_match('#(^|/)\.\.(/|$)#', $rel)) {
             $fail++;
             continue;
         }
