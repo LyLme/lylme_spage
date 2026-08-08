@@ -90,6 +90,7 @@ try {
             <li class="nav-item active"> <a href="./tag.php"><i class="mdi mdi-cube"></i>导航菜单</a></li>
             <li class="nav-item active"> <a href="./sou.php"><i class="mdi mdi-magnify"></i>搜索引擎</a></li>
             <li class="nav-item active"> <a href="./pwd.php"><i class="mdi mdi-key-variant"></i>加密管理</a></li>
+            <li class="nav-item active"> <a href="./cleanimg.php"><i class="mdi mdi-image-filter"></i>文件清理</a> </li>
             <li class="nav-item active"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
             <li class="nav-item active"> <a href="./wxplus.php"><i class="mdi mdi-wechat"></i>微信推送</a> </li>
             <li class="nav-item active"> <a href="./license.php"><i class="mdi mdi-checkbox-marked-circle"></i>网站授权</a> </li>
