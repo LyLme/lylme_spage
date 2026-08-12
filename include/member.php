@@ -34,8 +34,8 @@ if (isset($_COOKIE["admin_token"])) {
             // 计算session
             $session = md5($admin_user . $admin_pwd);
 
-            // 验证
-            if ($session === $sid && !empty($user)) {
+            // 验证（常量时间比较，避免时序攻击）
+            if (!empty($user) && hash_equals($session, $sid)) {
                 $islogin = 1;
             }
         }
