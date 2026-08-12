@@ -38,28 +38,30 @@ if (!empty($set)) {
                   $themes = glob($theme_path . "*", GLOB_ONLYDIR);
                   foreach ($themes as $theme) {
                     $theme =  str_replace($theme_path, "", $theme);
-                    echo '<tr><td><h4>' . theme($theme, "theme_name") . ' </h4>版本：' . theme($theme, "theme_version") . '</td>';
+                  ?>
+<tr><td><h5><?php echo theme($theme, "theme_name"); ?> </h5>版本：<?php echo theme($theme, "theme_version"); ?></td>
 
-                    echo '<td><p>' . theme($theme, "theme_explain") . '</p>';
-                    if (theme($theme, "theme_course")) {
-                      echo ' <a href="' . theme($theme, "theme_course") . '" target="_blank">主题教程</a>';
-                    }
-                    echo '</td>';
-                    echo '<td><p>' . theme($theme, "author_name") . '</p>';
-                    if (theme($theme, "author_link")) {
-                      echo ' <a href="' . theme($theme, "author_link") . '" target="_blank">作者主页</a>';
-                    }
-                    echo '</td><td>';
-                    if (theme($theme, "theme_demo")) {
-                      echo '<p><a  class="btn btn-default" href="' . theme($theme, "theme_demo") . '" target="_blank">在线演示</a></p>';
-                    }
-                    echo '</td>';
-                    if ($conf['template'] == $theme) {
-                      echo '<td><p class="btn btn-default disabled">当前使用</p></td>';
-                    } else {
-                      echo '<td><a href="./theme.php?set=' . $theme . '" class="btn btn-label btn-primary"><label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label>使用</a></td>';
-                    }
-                    echo '</tr>' . "\n";
+<td><p><?php echo theme($theme, "theme_explain"); ?></p>
+<?php if (theme($theme, "theme_course")): ?>
+<a href="<?php echo theme($theme, "theme_course"); ?>" target="_blank">主题教程</a>
+<?php endif; ?>
+</td>
+<td><p><?php echo theme($theme, "author_name"); ?></p>
+<?php if (theme($theme, "author_link")): ?>
+<a href="<?php echo theme($theme, "author_link"); ?>" target="_blank">作者主页</a>
+<?php endif; ?>
+</td><td>
+<?php if (theme($theme, "theme_demo")): ?>
+<p><a class="btn btn-default" href="<?php echo theme($theme, "theme_demo"); ?>" target="_blank">在线演示</a></p>
+<?php endif; ?>
+</td>
+<?php if ($conf['template'] == $theme): ?>
+<td><p class="btn btn-default disabled">当前使用</p></td>
+<?php else: ?>
+<td><a href="./theme.php?set=<?php echo $theme; ?>" class="btn btn-label btn-primary"><label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label>使用</a></td>
+<?php endif; ?>
+</tr>
+<?php
                   }
                   ?>
                 </tbody>

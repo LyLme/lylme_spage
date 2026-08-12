@@ -1,58 +1,61 @@
 <?php
-/* 
- * @Description: 
- * @Author: LyLme admin@lylme.com
- * @Date: 2024-01-23 12:25:35
- * @LastEditors: LyLme admin@lylme.com
- * @LastEditTime: 2024-04-14 05:35:10
- * @FilePath: /lylme_spage/admin/table_group.php
- * @Copyright (c) 2024 by LyLme, All Rights Reserved. 
- */
 include_once("../include/common.php");
 if (!isset($islogin) || $islogin !== 1) {
     exit("<script>window.location.href='./login.php';</script>");
 }
-echo '<div class="alert alert-info">系统共有 <b>' . $groupsrows . '</b> 个分组<br/><a href="./group.php?set=add" class="btn btn-primary">新建分组</a></div>
+// 预取加密组（pwd_id => pwd_key）
+$pwd_map = array();
+$pq = $DB->query("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd`");
+while ($p = $DB->fetch($pq)) {
+    $pwd_map[$p['pwd_id']] = $p['pwd_key'];
+}
+// 预取各分组链接数（group_id => 数量）
+$link_count_map = array();
+$lq = $DB->query("SELECT `group_id`, COUNT(`id`) AS cnt FROM `lylme_links` GROUP BY `group_id`");
+while ($l = $DB->fetch($lq)) {
+    $link_count_map[$l['group_id']] = intval($l['cnt']);
+}
+$groupsrows = $DB->num_rows($DB->query("SELECT `group_id` FROM `lylme_groups`")); //分组数量
+$rs = $DB->query("SELECT * FROM lylme_groups ORDER BY group_order ASC");
+?>
+<div class="alert alert-info alert-stat"><div><i class="mdi mdi-folder-multiple mdi-alert-icon"></i>系统共有 <b><?php echo $groupsrows; ?></b> 个分组</div><a href="./group.php?set=add" class="btn btn-primary btn-sm">新建分组</a></div>
       <div class="table-responsive">
         <table class="table table-striped">
-          <thead><tr><th>名称</th><th>排序</th><th>链接数</th><th>访问密码</th><th>状态</th><th>操作</th></tr></thead>
-          <tbody>';
-
-$rs = $DB->query("SELECT * FROM lylme_groups ORDER BY group_order ASC");
+          <thead><tr><th>名称</th><th>排序</th><th>链接数</th><th>加密</th><th>状态</th><th>操作</th></tr></thead>
+          <tbody>
+<?php
 while ($res = $DB->fetch($rs)) {
   $pwd = null;
   if (isset($res['group_pwd']) && $res['group_pwd'] !== 0) {
-   
-    $pwd_row = $DB->get_row("SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_id` = " . intval($res['group_pwd']));
-    if ($pwd_row !== null) {
-      $pwd = $pwd_row['pwd_key'];
-    } 
-  } 
-  echo '<tr><td><input type="hidden" name="group_id" value="' . $res['group_id'] . '">' . $res['group_name'] . '</td><td>
-        <button  class="btn btn-primary btn-xs sort-up">上移</button>&nbsp;<button class="btn btn-cyan btn-xs sort-down">下移</button></td>
-        <td>' . $DB->num_rows($DB->query("SELECT `id` FROM `lylme_links` WHERE `group_id` =" . $res['group_id'])) . '</td>
-        <td>';
-  if ($pwd || $res['group_pwd']) {
-    if (empty($pwd)) {
-      echo '<font color="red">失效[请重新设置加密组]</font>';
-    } else {
-      echo '<font color="f96197">' . $pwd . '</font>';
+    if (isset($pwd_map[$res['group_pwd']])) {
+      $pwd = $pwd_map[$res['group_pwd']];
     }
-  } else {
-    echo '<font color="green">未加密</font>';
   }
-  echo ' </td><td>';
-
-  if ($res['group_status']) {
-    echo '<button  class="btn btn-pink btn-xs" onclick="off_group(' . $res['group_id'] . ')">禁用</button>';
-  } else {
-    echo '<button  class="btn btn-success btn-xs" onclick="on_group(' . $res['group_id'] . ')">启用</button>';
-  }
-
-  echo '</td><td>&nbsp;<a href="./group.php?set=edit&id=' . $res['group_id'] . '" class="btn btn-info btn-xs">编辑</a>&nbsp;<button class="btn btn-xs btn-danger" onclick="del_group(' . $res['group_id'] . ')">删除</button></td></tr>';
+  $link_count = isset($link_count_map[$res['group_id']]) ? $link_count_map[$res['group_id']] : 0;
+?>
+<tr><td><input type="hidden" name="group_id" value="<?php echo $res['group_id']; ?>"><?php echo $res['group_name']; ?></td><td>
+  <button class="btn btn-primary btn-xs sort-up">上移</button>&nbsp;<button class="btn btn-primary btn-xs sort-down">下移</button></td>
+  <td><?php echo $link_count; ?></td>
+  <td>
+  <?php if ($pwd || $res['group_pwd']): ?>
+    <?php if (empty($pwd)): ?>
+    <font color="red">失效[请重新设置加密组]</font>
+    <?php else: ?>
+    <font color="f96197"><?php echo $pwd; ?></font>
+    <?php endif; ?>
+  <?php else: ?>
+    <font color="green">未加密</font>
+  <?php endif; ?>
+  </td><td>
+  <?php if ($res['group_status']): ?>
+    <button class="btn btn-pink btn-xs" onclick="off_group(<?php echo $res['group_id']; ?>)">禁用</button>
+  <?php else: ?>
+    <button class="btn btn-success btn-xs" onclick="on_group(<?php echo $res['group_id']; ?>)">启用</button>
+  <?php endif; ?>
+  </td><td>&nbsp;<a href="./group.php?set=edit&id=<?php echo $res['group_id']; ?>" class="btn btn-info btn-xs">编辑</a>&nbsp;<button class="btn btn-xs btn-danger" onclick="del_group(<?php echo $res['group_id']; ?>)">删除</button></td></tr>
+<?php
 }
 ?>
-
-</tbody>
-</table>
-</div>
+          </tbody>
+        </table>
+      </div>

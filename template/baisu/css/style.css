@@ -971,15 +971,6 @@ a.icp {
   box-shadow: 0px 0px 6px #333333;
 }
 
-.addsite-main .layui-unselect,
-.addsite-main .layui-unselect * {
-  box-sizing: content-box;
-}
-
-.addsite-main .layui-form-switch {
-  margin-top: 0;
-}
-
 .m-header {
   display: none;
 }

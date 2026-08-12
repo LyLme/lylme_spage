@@ -34,8 +34,7 @@ if ($set == 'save') {
     } else {
         echo '<script>alert("当前密码错误！");history.go(-1);</script>';
     }
-} else {
-    ?>
+} else { ?>
 
   <!--页面主要内容-->
   <main class="lyear-layout-content">

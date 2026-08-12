@@ -22,6 +22,41 @@ if (!isset($islogin) || $islogin !== 1) {
   }
 }
 
+// 获取当前页面文件名，用于侧边栏菜单高亮
+$current_page = basename($_SERVER['PHP_SELF']);
+
+// 菜单项与页面文件的映射
+$menu_map = array(
+  'index.php'        => 'home',
+  'set.php'          => 'config',
+  'about.php'        => 'config',
+  'user.php'         => 'config',
+  'apply.php'        => 'apply',
+  'theme.php'        => 'theme',
+  'theme_setting.php' => 'theme',
+  'group.php'        => 'group',
+  'table_group.php'  => 'group',
+  'link.php'         => 'link',
+  'table_link.php'   => 'link',
+  'batch_add.php'    => 'link',
+  'tag.php'          => 'tag',
+  'sou.php'          => 'sou',
+  'pwd.php'          => 'pwd',
+  'cleanimg.php'     => 'cleanimg',
+  'update.php'       => 'update',
+  'wxplus.php'       => 'wxplus',
+  'license.php'      => 'license',
+);
+$current_menu = isset($menu_map[$current_page]) ? $menu_map[$current_page] : '';
+// 输出当前菜单的 active 类；$open 为 true 时同时展开子菜单
+function menu_active($key, $open = false) {
+  global $current_menu;
+  if ($current_menu === $key) {
+    return $open ? ' active open' : ' active';
+  }
+  return '';
+}
+
 // 获取页面标题
 $page_title = isset($title) ? $title : '后台管理';
 
@@ -54,7 +89,6 @@ try {
   <link href="/assets/admin/css/bootstrap.min.css" rel="stylesheet">
   <link href="/assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="/assets/admin/css/style.min.css" rel="stylesheet">
-<link href="/assets/js/layui/css/layui.css" type="text/css" rel="stylesheet" />
 </head>
 <div class="lyear-layout-web">
   <div class="lyear-layout-container">
@@ -67,33 +101,33 @@ try {
       <div class="lyear-layout-sidebar-scroll">
         <nav class="sidebar-main">
           <ul class="nav nav-drawer">
-            <li class="nav-item active"> <a href="./"><i class="mdi mdi-home-map-marker"></i>后台首页</a> </li>
-            <li class="nav-item nav-item-has-subnav">
+            <li class="nav-item<?php echo menu_active('home'); ?>"> <a href="./"><i class="mdi mdi-home-map-marker"></i>后台首页</a> </li>
+            <li class="nav-item nav-item-has-subnav<?php echo menu_active('config', true); ?>">
               <a href="javascript:void(0)"><i class="mdi mdi-palette"></i>网站配置</a>
               <ul class="nav nav-subnav">
-                <li> <a href="./set.php">网站基本设置</a> </li>
-                <li> <a href="./about.php">关于页面设置</a> </li>
-                <li> <a href="./user.php">修改账号密码</a> </li>
+                <li<?php echo $current_page === 'set.php' ? ' class="active"' : ''; ?>> <a href="./set.php">网站基本设置</a> </li>
+                <li<?php echo $current_page === 'about.php' ? ' class="active"' : ''; ?>> <a href="./about.php">关于页面设置</a> </li>
+                <li<?php echo $current_page === 'user.php' ? ' class="active"' : ''; ?>> <a href="./user.php">修改账号密码</a> </li>
 
               </ul>
             </li>
-            <li class="nav-item active"> <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理 </a>
+            <li class="nav-item<?php echo menu_active('apply'); ?>"> <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理 </a>
               <?php
               if ($applyrows > 0) {
-                echo '<style> .applyrow{width: 18px;height: 18px;top: 15px;right: 24px;font-size: 10px;font-weight: bold;color: #fff;background-color: red;border-radius: 100%;text-align: center;vertical-align: middle;position: absolute;line-height: 1.5;}</style>
+                echo '<style> .applyrow{width: 18px;height: 18px;top: 98px;right: 20px;font-size: 10px;font-weight: bold;color: #fff;background-color: red;border-radius: 100%;text-align: center;vertical-align: middle;position: absolute;line-height: 1.5;}</style>
         <div class="applyrow">' . intval($applyrows) . '</div>';
               }
               ?></li>
-            <li class="nav-item active"> <a href="./theme.php"><i class="mdi mdi-seal"></i>主题设置</a></li>
-            <li class="nav-item active"> <a href="./group.php"><i class="mdi mdi-folder"></i>分组管理</a></li>
-            <li class="nav-item active"> <a href="./link.php"><i class="mdi mdi-web"></i>链接管理</a></li>
-            <li class="nav-item active"> <a href="./tag.php"><i class="mdi mdi-cube"></i>导航菜单</a></li>
-            <li class="nav-item active"> <a href="./sou.php"><i class="mdi mdi-magnify"></i>搜索引擎</a></li>
-            <li class="nav-item active"> <a href="./pwd.php"><i class="mdi mdi-key-variant"></i>加密管理</a></li>
-            <li class="nav-item active"> <a href="./cleanimg.php"><i class="mdi mdi-image-filter"></i>文件清理</a> </li>
-            <li class="nav-item active"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
-            <li class="nav-item active"> <a href="./wxplus.php"><i class="mdi mdi-wechat"></i>微信推送</a> </li>
-            <li class="nav-item active"> <a href="./license.php"><i class="mdi mdi-checkbox-marked-circle"></i>网站授权</a> </li>
+            <li class="nav-item<?php echo menu_active('theme'); ?>"> <a href="./theme.php"><i class="mdi mdi-seal"></i>主题设置</a></li>
+            <li class="nav-item<?php echo menu_active('group'); ?>"> <a href="./group.php"><i class="mdi mdi-folder"></i>分组管理</a></li>
+            <li class="nav-item<?php echo menu_active('link'); ?>"> <a href="./link.php"><i class="mdi mdi-web"></i>链接管理</a></li>
+            <li class="nav-item<?php echo menu_active('tag'); ?>"> <a href="./tag.php"><i class="mdi mdi-cube"></i>导航菜单</a></li>
+            <li class="nav-item<?php echo menu_active('sou'); ?>"> <a href="./sou.php"><i class="mdi mdi-magnify"></i>搜索引擎</a></li>
+            <li class="nav-item<?php echo menu_active('pwd'); ?>"> <a href="./pwd.php"><i class="mdi mdi-key-variant"></i>加密管理</a></li>
+            <li class="nav-item<?php echo menu_active('cleanimg'); ?>"> <a href="./cleanimg.php"><i class="mdi mdi-image-filter"></i>文件清理</a> </li>
+            <li class="nav-item<?php echo menu_active('update'); ?>"> <a href="./update.php"><i class="mdi mdi-update"></i>检查更新</a> </li>
+            <li class="nav-item<?php echo menu_active('wxplus'); ?>"> <a href="./wxplus.php"><i class="mdi mdi-wechat"></i>微信推送</a> </li>
+            <li class="nav-item<?php echo menu_active('license'); ?>"> <a href="./license.php"><i class="mdi mdi-checkbox-marked-circle"></i>网站授权</a> </li>
 
             <li> <a href="javascript:loginout()"><i class="mdi mdi-logout"></i> 退出登录</a> </li>
           </ul>
@@ -118,7 +152,7 @@ try {
           </div>
           <ul class="topbar-right">
             <li class="dropdown dropdown-profile">
-              <a href="javascript:void(0)" data-toggle="dropdown">
+              <a href="javascript:void(0)" data-bs-toggle="dropdown">
                 <span><?php echo htmlspecialchars($admin_user); ?><span class="caret"></span></span>
               </a>
               <ul class="dropdown-menu dropdown-menu-right">
@@ -128,7 +162,7 @@ try {
               </ul>
             </li>
             <li class="dropdown dropdown-skin">
-              <span data-toggle="dropdown" class="icon-palette" aria-expanded="false"><i class="mdi mdi-palette"></i></span>
+              <span data-bs-toggle="dropdown" class="icon-palette" aria-expanded="false"><i class="mdi mdi-palette"></i></span>
               <ul class="dropdown-menu dropdown-menu-right" data-stoppropagation="true">
                 <li class="drop-title">
                   <p>主题</p>

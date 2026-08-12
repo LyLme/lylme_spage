@@ -90,11 +90,14 @@ $remoteJsonUrl = 'https://cdn.lylme.com/lylme_spage/file_check/v' . VERSION . '/
 
 $remoteJson = str_replace('/admin/', '/' . ADMIN_PATH . '/', get_curl($remoteJsonUrl));
 if ($remoteJson === false) {
-    $remotemsg =  '<div class="alert alert-danger" role="alert">无法获取远程配置，请检查服务器是否支持外网访问</div>';
+    $remotemsg =  '<div class="alert alert-danger" role="alert"><i class="mdi mdi-cloud-alert mdi-alert-icon"></i>无法获取远程配置，请检查服务器是否支持外网访问</div>';
 } else {
     $remotemsg = '<div class="alert alert-success" role="alert">
-                            <p><b>当前文件版本：v' . VERSION . '</b>&nbsp;&nbsp;<a href="https://gitee.com/LyLme/lylme_spage" target="_blank" class="alert-link">[查看源代码]</a></p>
-                            <p> <small class="help-block">该页面用于检查网站脚本文件是否被篡改器<br>该页面仅供参考，需注意“篡改”和"冗余"文件是否存在恶意代码并从上方链接对比替换</br>排除完成后建议修改后台账号密码和数据库密码</br>该功能需要服务器支持外网访问，仅适用于Linux内核的服务器，Windows服务器暂不支持</small></p>
+                            <div class="alert-stat">
+                              <div><i class="mdi mdi-shield-check mdi-alert-icon"></i><b>当前文件版本：v' . VERSION . '</b></div>
+                              <a href="https://gitee.com/LyLme/lylme_spage" target="_blank" class="alert-link">[查看源代码]</a>
+                            </div>
+                            <span class="alert-help">该页面用于检查网站脚本文件是否被篡改器<br>该页面仅供参考，需注意"篡改"和"冗余"文件是否存在恶意代码并从上方链接对比替换<br>排除完成后建议修改后台账号密码和数据库密码<br>该功能需要服务器支持外网访问，仅适用于Linux内核的服务器，Windows服务器暂不支持</span>
                         </div>';
     $originalMd5s = json_decode($remoteJson, true);
     
@@ -144,7 +147,9 @@ if (isset($comparisonResult)): ?>
                     }
                     foreach ($value as $file) {
                         $filename = str_replace('/' . ADMIN_PATH . '/', '/admin/', $file);
-                        echo '<tr class="filecheck_' . $key . '"><td><a  rel="noopener noreferrer" href="https://gitee.com/lylme/lylme_spage/blob/master' . $filename . '" target="_blank">' . $file . '</a></td><td>' . $statusy . '</td></tr>';
+?>
+<tr class="filecheck_<?php echo $key; ?>"><td><a rel="noopener noreferrer" href="https://gitee.com/lylme/lylme_spage/blob/master<?php echo $filename; ?>" target="_blank"><?php echo $file; ?></a></td><td><?php echo $statusy; ?></td></tr>
+<?php
                     }
                 }
     ?>

@@ -2,6 +2,9 @@
 
 include("../include/common.php");
 
+// Bootstrap 5 官方 CDN 地址（可自由更换其他官方版本 CDN）
+$bootstrap_cdn = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist';
+
 // 设置响应头
 header('Content-Type: text/html; charset=UTF-8');
 
@@ -306,39 +309,49 @@ $background = background();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>后台登录 - <?php echo htmlspecialchars($page_title); ?></title>
-  <link href="../assets/admin/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<?php echo $bootstrap_cdn; ?>/css/bootstrap.min.css" rel="stylesheet">
   <link href="../assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="../assets/admin/css/style.min.css" rel="stylesheet">
   <style>
-    .lyear-wrapper {
-      position: relative;
-    }
-
-    .lyear-login {
-      display: flex !important;
+    /* 全屏布局容器：手机/电脑自动居中 */
+    .login-page {
       min-height: 100vh;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-
-    .lyear-login:after {
-      content: '';
-      min-height: inherit;
-      font-size: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background-color: #eef2f7;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
 
     .login-center {
       background: #fff;
-      width: 42rem; /* 固定卡片宽度，输入框自动撑满，无/有验证码宽度始终一致 */
-      max-width: 100%;
-      min-width: 29.25rem;
-      padding: 2.14286em 3.57143em;
-      border-radius: 3px;
-      margin: 2.85714em;
+      width: 100%;
+      max-width: 27.5rem; /* 440px：电脑端卡片，手机端全宽 */
+      padding: 2.5rem 2rem;
+      border-radius: 1.25rem;
+      box-shadow: 0 20px 60px rgba(30, 41, 59, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+    .login-center:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #3b82f6, #60a5fa, #2563eb);
     }
 
     .login-header {
       margin-bottom: 1.5rem !important;
+    }
+    .login-header h2 {
+      color: #1e293b;
+      font-weight: 700;
     }
 
     .login-center .has-feedback.feedback-left .form-control {
@@ -378,66 +391,70 @@ $background = background();
       z-index: 5;
     }
 
+    /* 手机端：卡片占满宽度、减小留白 */
+    @media (max-width: 480px) {
+      .login-page {
+        padding: 0.75rem;
+      }
+      .login-center {
+        padding: 2rem 1.25rem;
+        border-radius: 1rem;
+      }
+    }
+
   </style>
 </head>
 
 <body>
-  <?php
-  if (!empty($background)) {
-    $background = str_replace('./', '../', $background);
-    echo '<div class="row lylme-wrapper" style="background-image: url(' . htmlspecialchars($background) . ');background-size: cover;">';
-  }
-  ?>
-  <div class="row lyear-wrapper">
-    <div class="lyear-login">
-      <div class="login-center">
-        <div class="login-header text-center">
-          <h2>后台登录</h2>
-        </div>
-        <form action="" method="post">
-          <?php if ($isLocked): ?>
-            <div class="alert alert-warning" role="alert">
-              登录尝试次数过多，账号已临时锁定，请 <?php echo (int)ceil(($lockUntil - time()) / 60); ?> 分钟后再试。
-            </div>
-          <?php elseif ($loginError !== ''): ?>
-            <div class="alert alert-danger alert-dismissible" role="alert">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <?php echo htmlspecialchars($loginError); ?>
-            </div>
-          <?php endif; ?>
-          <div class="form-group has-feedback feedback-left">
-            <input type="text" placeholder="用户名" class="form-control" name="user" id="username" autocomplete="username" value="<?php echo htmlspecialchars($loginUser); ?>" />
-            <span class="mdi mdi-account form-control-feedback" aria-hidden="true"></span>
-          </div>
-          <div class="form-group has-feedback feedback-left">
-            <input type="password" placeholder="密码" class="form-control" id="password" name="pass" autocomplete="current-password" value="" />
-            <span class="mdi mdi-lock form-control-feedback" aria-hidden="true"></span>
-          </div>
-
-          <?php if ($needCaptcha): ?>
-            <div class="form-group has-feedback feedback-left captcha-row">
-              <input type="text" name="authcode" autocomplete="off" class="form-control" placeholder="验证码" required>
-              <span class="mdi mdi-check form-control-feedback" aria-hidden="true"></span>
-              <img id="captcha_img" title="验证码" src='../include/validatecode.php' class="captcha-img" onclick="recode()" />
-            </div>
-          <?php endif; ?>
-          <div class="form-group">
-            <button class="btn btn-block btn-primary" type="submit" id="login">登录</button>
-          </div>
-          <?php
-          if ($needCaptcha || isset($_COOKIE['login_failed'])) {
-            echo '  <p class="m-b-0 text-right"><a target="_blank" title="忘记后台密码" href="https://doc.lylme.com/spage/#/reset">忘记密码</a></p>';
-          } ?>
-        </form>
-        <hr>
-        <footer class="col-sm-12 text-center">
-          <p class="m-b-0">Copyright <?php echo date('Y'); ?> <a href="/"><?php echo htmlspecialchars($page_title); ?></a></p>
-        </footer>
+  <div class="login-page"<?php if (!empty($background)) { $background = str_replace('./', '../', $background); echo ' style="background-image:url(' . htmlspecialchars($background) . ')"'; } ?>>
+    <div class="login-center">
+      <div class="login-header text-center">
+        <h2>后台登录</h2>
       </div>
+      <form action="" method="post">
+        <?php if ($isLocked): ?>
+          <div class="alert alert-warning" role="alert">
+            <i class="mdi mdi-clock-alert mdi-alert-icon"></i>登录尝试次数过多，账号已临时锁定，请 <?php echo (int)ceil(($lockUntil - time()) / 60); ?> 分钟后再试。
+          </div>
+        <?php elseif ($loginError !== ''): ?>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="mdi mdi-alert-circle mdi-alert-icon"></i>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <?php echo htmlspecialchars($loginError); ?>
+          </div>
+        <?php endif; ?>
+        <div class="form-group has-feedback feedback-left mb-3">
+          <input type="text" placeholder="用户名" class="form-control" name="user" id="username" autocomplete="username" value="<?php echo htmlspecialchars($loginUser); ?>" />
+          <span class="mdi mdi-account form-control-feedback" aria-hidden="true"></span>
+        </div>
+        <div class="form-group has-feedback feedback-left mb-3">
+          <input type="password" placeholder="密码" class="form-control" id="password" name="pass" autocomplete="current-password" value="" />
+          <span class="mdi mdi-lock form-control-feedback" aria-hidden="true"></span>
+        </div>
+
+        <?php if ($needCaptcha): ?>
+          <div class="form-group has-feedback feedback-left captcha-row mb-3">
+            <input type="text" name="authcode" autocomplete="off" class="form-control" placeholder="验证码" required>
+            <span class="mdi mdi-check form-control-feedback" aria-hidden="true"></span>
+            <img id="captcha_img" title="验证码" src='../include/validatecode.php' class="captcha-img" onclick="recode()" />
+          </div>
+        <?php endif; ?>
+        <div class="form-group mb-0">
+          <button class="btn btn-primary w-100" type="submit" id="login">登录</button>
+        </div>
+        <?php
+        if ($needCaptcha || isset($_COOKIE['login_failed'])) {
+          echo '  <p class="m-b-0 text-end mt-3"><a target="_blank" title="忘记后台密码" href="https://doc.lylme.com/spage/#/reset">忘记密码</a></p>';
+        } ?>
+      </form>
+      <hr class="my-4">
+      <footer class="text-center">
+        <p class="m-b-0">Copyright <?php echo date('Y'); ?> <a href="/"><?php echo htmlspecialchars($page_title); ?></a></p>
+      </footer>
     </div>
   </div>
   <script type="text/javascript" src="../assets/admin/js/jquery.min.js"></script>
-  <script type="text/javascript" src="../assets/admin/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="<?php echo $bootstrap_cdn; ?>/js/bootstrap.bundle.min.js"></script>
   <script>
     $(document).ready(function() {
       if ($('#captcha_img').length) {

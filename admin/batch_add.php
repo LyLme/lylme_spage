@@ -69,7 +69,7 @@ $bookmark_code = "javascript:(function(){var u=location.href,t=document.title;vo
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",Arial,sans-serif;background:#f0f2f5;padding:18px}
 .card{max-width:800px;margin:0 auto;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.08);overflow:hidden}
-.card-header{background:linear-gradient(135deg, #17b7a7, #33cabb);color:#fff;padding:16px 20px}
+.card-header{background:linear-gradient(135deg, #2563eb, #3b82f6);color:#fff;padding:16px 20px}
 .card-header h3{font-size:16px;font-weight:600}
 .card-header p{font-size:12px;opacity:.85;margin-top:4px}
 .card-body{padding:20px}
@@ -77,39 +77,39 @@ body{font-family:"Microsoft YaHei","PingFang SC","Helvetica Neue",Arial,sans-ser
 label{display:block;font-size:13px;color:#333;margin-bottom:6px}
 label .req{color:#e74c3c;margin-left:2px}
 input[type=text],input[type=url],select,textarea{width:100%;padding:9px 12px;border:1px solid #dcdfe6;border-radius:6px;font-size:13px;outline:none;transition:border-color .2s;background:#fff;color:#333}
-input:focus,select:focus,textarea:focus{border-color:#33cabb}
+input:focus,select:focus,textarea:focus{border-color:#3b82f6}
 textarea{resize:vertical}
 .input-group{display:flex;gap:8px}
 .input-group input,.input-group textarea{flex:1}
 .btn-sm{flex-shrink:0;padding:0 14px;border:1px solid #dcdfe6;border-radius:6px;background:#f5f7fa;color:#555;font-size:13px;cursor:pointer}
-.btn-sm:hover{color:#33cabb;border-color:#33cabb}
+.btn-sm:hover{color:#3b82f6;border-color:#3b82f6}
 .color-row{display:flex;align-items:center;gap:10px}
 input[type=color]{width:44px;height:34px;border:1px solid #dcdfe6;border-radius:6px;padding:2px;background:#fff;cursor:pointer}
 .color-row input[type=text]{flex:1}
 .btn-row{display:flex;gap:10px;margin-top:20px}
 .btn{flex:1;padding:10px;border:none;border-radius:6px;font-size:14px;cursor:pointer}
-.btn-primary{background:linear-gradient(135deg, #17b7a7, #33cabb);color:#fff}
+.btn-primary{background:linear-gradient(135deg, #2563eb, #3b82f6);color:#fff}
 .btn-primary:hover{opacity:.92}
 .btn-primary:disabled{opacity:.6;cursor:not-allowed}
 .btn-default{background:#fff;color:#666;border:1px solid #dcdfe6}
-.btn-default:hover{color:#33cabb;border-color:#33cabb}
+.btn-default:hover{color:#3b82f6;border-color:#3b82f6}
 .hint{font-size:12px;color:#999;margin-top:5px}
 .tip{display:none;padding:9px 12px;border-radius:6px;font-size:13px;margin-bottom:14px}
 .tip.show{display:block}
 .tip.loading{background:#ecf5ff;color:#3370ff}
 .tip.error{background:#fef0f0;color:#e74c3c}
 .tip.success{background:#f0f9eb;color:#67c23a}
-.section-title{font-size:14px;font-weight:600;color:#333;margin:0 0 10px;padding-left:10px;border-left:3px solid #33cabb}
+.section-title{font-size:14px;font-weight:600;color:#333;margin:0 0 10px;padding-left:10px;border-left:3px solid #3b82f6}
 .bookmark-box{background:#fafbfc;border:1px solid #eef0f3;border-radius:8px;padding:14px;margin-bottom:18px}
 .steps{margin:10px 0 0;padding-left:18px;font-size:13px;color:#555;line-height:1.9}
-.lylme-bookmark-btn{display:inline-block;background:linear-gradient(135deg, #17b7a7, #33cabb);color:#fff !important;text-decoration:none;padding:12px 22px;border-radius:6px;font-size:0;cursor:move;user-select:none;margin-top:6px;text-align: center;width: 100%;}
+.lylme-bookmark-btn{display:inline-block;background:linear-gradient(135deg, #2563eb, #3b82f6);color:#fff !important;text-decoration:none;padding:12px 22px;border-radius:6px;font-size:0;cursor:move;user-select:none;margin-top:6px;text-align: center;width: 100%;}
 .lylme-bookmark-btn::after{content:"拖拽到收藏夹收藏或点击复制";font-size:15px}
-.lylme-bookmark-btn:hover{background:#17a98c}
+.lylme-bookmark-btn:hover{background:#1d4ed8}
 .lylme-bookmark-tip{margin-top:12px;font-size:13px;color:#1abc9c;min-height:20px}
 .checkbox-line{display:flex;align-items:center;gap:8px;font-size:13px;color:#333}
 .checkbox-line input{width:auto}
 .progress{height:8px;background:#eef0f3;border-radius:4px;overflow:hidden;margin-top:12px}
-.progress-bar{height:100%;width:0;background:linear-gradient(135deg, #17b7a7, #33cabb);transition:width .2s}
+.progress-bar{height:100%;width:0;background:linear-gradient(135deg, #2563eb, #3b82f6);transition:width .2s}
 #progressText{font-size:12px;color:#666;margin-top:6px}
 #resultList{margin-top:10px;max-height:500px;overflow:auto;font-size:12px;line-height:1.9;padding-right:4px}
 .res-item{border:1px solid #eef0f3;border-radius:6px;padding:8px 10px;margin-bottom:8px;background:#fcfcfd}
@@ -120,8 +120,8 @@ input[type=color]{width:44px;height:34px;border:1px solid #dcdfe6;border-radius:
 .res-status.fail{color:#e74c3c}
 .res-name{font-weight:600;color:#333;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .res-url{color:#999;flex:1;min-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.res-edit{flex-shrink:0;padding:2px 12px;border:1px solid #33cabb;border-radius:4px;background:#fff;color:#33cabb;font-size:12px;cursor:pointer}
-.res-edit:hover{background:#33cabb;color:#fff}
+.res-edit{flex-shrink:0;padding:2px 12px;border:1px solid #3b82f6;border-radius:4px;background:#fff;color:#3b82f6;font-size:12px;cursor:pointer}
+.res-edit:hover{background:#3b82f6;color:#fff}
 .res-fail-msg{color:#e74c3c;margin-top:4px;word-break:break-all}
 .res-skip-msg{color:#e6a23c;margin-top:4px;word-break:break-all}
 .res-edit-form{display:none;margin-top:8px;padding-top:8px;border-top:1px dashed #eef0f3}
@@ -130,7 +130,7 @@ input[type=color]{width:44px;height:34px;border:1px solid #dcdfe6;border-radius:
 .edit-row label{width:64px;flex-shrink:0;margin:0;font-size:12px;color:#666;text-align:right}
 .edit-row input,.edit-row select{flex:1;padding:6px 10px;font-size:12px}
 .edit-actions{text-align:right;margin-top:6px}
-.edit-actions .btn-sm{padding:5px 18px;background:#33cabb;color:#fff;border:none}
+.edit-actions .btn-sm{padding:5px 18px;background:#3b82f6;color:#fff;border:none}
 .edit-actions .btn-sm:hover{opacity:.9}
 .divider{height:1px;background:#eef0f3;margin:20px 0}
 </style>

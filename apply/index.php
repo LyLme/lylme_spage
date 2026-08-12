@@ -150,10 +150,17 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
     ?>
     <div class="lylme-form">
         <div class="lylme-center">
-            <?php if ($conf["apply"] == 2) {
-                exit('<div class="lylme-header text-center"><h2>网站已关闭收录</h2></div>' . $conf['apply_gg'] . '</div>');
-            }
-            ?>
+            <?php if ($conf["apply"] == 2): ?>
+            <div class="lylme-header text-center">
+                <h2>网站已关闭收录</h2>
+            </div>
+            <div class="apply_gg">
+                <?php echo $conf['apply_gg'] ?>
+            </div>
+            <center>
+                <p><a href="../" class="home">返回首页</a></p><?php echo $conf['copyright'] ?>
+            </center>
+            <?php else: ?>
             <div class="lylme-header text-center">
                 <h2>申请收录</h2>
             </div>
@@ -177,8 +184,9 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
                         <?php
                         $applygroup = $site->getGroups();
                         while ($grouplist = $DB->fetch($applygroup)) {
-                            echo '
-	<option value="' . $grouplist["group_id"] . '">' . $grouplist["group_name"] . '</option>';
+                        ?>
+	<option value="<?php echo $grouplist['group_id']; ?>"><?php echo $grouplist['group_name']; ?></option>
+                        <?php
                         }
                         ?>
                     </select>
@@ -225,6 +233,7 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
             <center>
                 <p><a href="../" class="home">返回首页</a></p><?php echo $conf['copyright'] ?>
             </center>
+            <?php endif; ?>
         </div>
     </div>
 </body>

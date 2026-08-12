@@ -84,24 +84,21 @@ function tjsj($tjname)
 				</div>
 			</div>
 		</div>
-		<?php
-		if ($applyrows > 0) {
-			echo '
-        <div class="row">   
+		<?php if ($applyrows > 0): ?>
+        <div class="row">
         <div class="col-sm-6 col-lg-12">
             <div class="card bg-info">
               <div class="card-body clearfix">
-              <a href="./apply.php">  <div class="pull-right">
+              <a href="./apply.php"><div class="pull-right">
                   <p class="h6 text-white m-t-0">待审核链接</p>
-                  <p class="h3 text-white m-b-0 fa-1-5x">' . $applyrows . '</p>
+                  <p class="h3 text-white m-b-0 fa-1-5x"><?php echo $applyrows; ?></p>
                 </div></a>
                 <div class="pull-left"> <span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi mdi-link fa-1-5x"></i></span> </div>
               </div>
             </div>
           </div>
-          </div>';
-		}
-		?>
+          </div>
+        <?php endif; ?>
 		<div class="row">
 			<div class="col-lg-6">
 				<div class="card">
@@ -202,8 +199,8 @@ include './footer.php';
 				label: '独立IP',
 				borderWidth: 1,
 				borderColor: 'rgba(0,0,0,0)',
-				backgroundColor: 'rgba(51,202,185,0.5)',
-				hoverBackgroundColor: "rgba(51,202,185,0.7)",
+				backgroundColor: 'rgba(59,130,246,0.5)',
+				hoverBackgroundColor: "rgba(59,130,246,0.7)",
 				hoverBorderColor: "rgba(0,0,0,0)",
 				data: <?php echo json_encode($tj_chart_ip); ?>
 			}]

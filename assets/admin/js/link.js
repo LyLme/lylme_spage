@@ -22,6 +22,11 @@ function listTable(query) {
         success: function (data) {
             layer.close(ii);
             $("#listTable").html(data);
+            if (typeof bootstrap !== 'undefined') {
+                document.querySelectorAll('#listTable [data-bs-toggle="tooltip"]').forEach(function (el) {
+                    new bootstrap.Tooltip(el, { container: 'body' });
+                });
+            }
             $("#link").dragsort({
                 dragBetween: true,
                 dragSelector: "td.lylme",

@@ -36,7 +36,7 @@ if ($set == 'default') {
                                 <div class="form-group" id="about">
                                     <label class="btn-block" for="web_yan_status">关于页面地址</label>
                                     <p><code><?php echo siteurl() ?>/about</code></p>
-                                    <a class="btn btn-cyan" href="<?php echo siteurl() ?>/about" target="_blank">访问关于页面</a>
+                                    <a class="btn btn-primary" href="<?php echo siteurl() ?>/about" target="_blank">访问关于页面</a>
                                     <a class="btn btn-danger" href="./about.php?set=default" onclick="return confirm('确定将关于页面内容恢复默认？\n注意：该操作不可逆');">恢复默认内容</a>
                                 </div>
                                 <div class="form-group">

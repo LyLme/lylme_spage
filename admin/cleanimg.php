@@ -153,19 +153,19 @@ function stat_card($color, $icon, $label, $value)
                     <div class="card-body">
                         <ul class="nav nav-tabs" id="dirTab" role="tablist">
                             <li class="active">
-                                <a href="#tab-download" data-toggle="tab">抓取的图标(download )
+                                <a href="#tab-download" data-bs-toggle="tab">抓取的图标(download )
                                     <?php if ($dirs['download']['unused'] > 0) { ?><span class="badge badge-danger"><?php echo $dirs['download']['unused']; ?></span><?php } ?>
                                 </a>
                             </li>
                             <li>
-                                <a href="#tab-upload" data-toggle="tab">上传的图标(upload)
+                                <a href="#tab-upload" data-bs-toggle="tab">上传的图标(upload)
                                     <?php if ($dirs['upload']['unused'] > 0) { ?><span class="badge badge-danger"><?php echo $dirs['upload']['unused']; ?></span><?php } ?>
                                 </a>
                             </li>
                         </ul>
                         <div class="tab-content p-t-15">
                             <?php foreach ($scan_dirs as $d) { ?>
-                                <div class="tab-pane fade<?php echo $d == 'download' ? ' in active' : ''; ?>" id="tab-<?php echo $d; ?>">
+                                <div class="tab-pane fade<?php echo $d == 'download' ? ' show active' : ''; ?>" id="tab-<?php echo $d; ?>">
                                     <?php if ($dirs[$d]['unused'] > 0) { ?>
                                         <form method="post" action="cleanimg.php?action=delete" onsubmit="return confirm('确定删除选中的文件吗？删除后不可恢复！');" id="delForm-<?php echo $d; ?>">
                                             <div class="m-b-10">
@@ -205,7 +205,7 @@ function stat_card($color, $icon, $label, $value)
                                             </div>
                                         </form>
                                     <?php } else { ?>
-                                        <div class="alert alert-success"><?php echo $d; ?> 目录未发现未使用的文件，所有文件均被数据库引用。</div>
+                                        <div class="alert alert-success"><i class="mdi mdi-check-circle mdi-alert-icon"></i><?php echo $d; ?> 目录未发现未使用的文件，所有文件均被数据库引用。</div>
                                     <?php } ?>
                                 </div>
                             <?php } ?>
