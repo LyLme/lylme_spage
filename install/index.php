@@ -87,32 +87,30 @@ if ($s == 3) {
         // $testdata = $_POST['testdata'] ?: '';
 
         // 连接证数据库
-        try {
-            $dsn = "mysql:host={$dbhost};port={$dbport};charset=utf8";
-            $pdo = new PDO($dsn, $dbuser, $dbpwd);
-            $pdo->query("SET NAMES utf8"); // 设置数据库编码
-        } catch (Exception $e) {
+        $con = @mysqli_connect($dbhost, $dbuser, $dbpwd, '', $dbport);
+        if (!$con) {
             insError('数据库连接错误，请检查！');
         }
+        mysqli_set_charset($con, 'utf8'); // 设置数据库编码
 
         // 查询数据库
-        $res = $pdo->query('show Databases');
+        $res = mysqli_query($con, 'show Databases');
 
         // 遍历所有数据库，存入数组
         $dbnameArr = [];
-        foreach ($res->fetchAll(PDO::FETCH_ASSOC) as $row) {
+        while ($row = mysqli_fetch_assoc($res)) {
             $dbnameArr[] = $row['Database'];
         }
 
         // 检查数据库是否存在，没有则创建数据库
         if (!in_array(trim($dbname), $dbnameArr)) {
-            if (!$pdo->exec("CREATE DATABASE `$dbname`")) {
+            if (!mysqli_query($con, "CREATE DATABASE `$dbname`")) {
                 insError("创建数据库失败，请检查权限或联系管理员！");
             }
         }
 
         // 数据库创建完成，开始连接
-        $pdo->query("USE `$dbname`");
+        mysqli_select_db($con, $dbname);
 
         //数据库配置
         $config_str = '<?php
@@ -139,7 +137,22 @@ if ($s == 3) {
         flush();
         // 创建表结构
         $tbstruct = readDataFile('install_struct.sql');
-        $pdo->exec(trim($tbstruct));
+        if (!mysqli_multi_query($con, trim($tbstruct))) {
+            insError('数据库导入失败：' . mysqli_error($con));
+        }
+        // 循环消费剩余结果集，避免 "Commands out of sync" 错误
+        while (mysqli_more_results($con)) {
+            if (!mysqli_next_result($con)) {
+                break;
+            }
+            $r = mysqli_store_result($con);
+            if ($r) {
+                mysqli_free_result($r);
+            }
+        }
+        if (mysqli_error($con)) {
+            insError('数据库导入失败：' . mysqli_error($con));
+        }
         insInfo("数据库导入完成！");
         ob_flush();
         flush();
@@ -148,7 +161,6 @@ if ($s == 3) {
 
         // 安装完成进行跳转
         echo '<script>setTimeout(function () { location.href="?s=' . md5('done') . '"; }, 3000)</script>';
-        @msgInfo("aHR0cHM6Ly9kZXYuaGFvLmx5bG1lLmNvbS8/dj0=");
         exit();
     }
     exit();
@@ -159,16 +171,16 @@ if ($s == 6766) {
     $dbhost = $_GET['dbhost'] ?: '';
     $dbuser = $_GET['dbuser'] ?: '';
     $dbpwd = $_GET['dbpwd'] ?: '';
-    $dbport = $_GET['dbport'] ?: '';
-    try {
-        $dsn = "mysql:host=$dbhost;port={$dbport};charset=utf8";
-        $pdo = new PDO($dsn, $dbuser, $dbpwd);
+    $dbport = intval($_GET['dbport'] ?: 3306);
+    $con = @mysqli_connect($dbhost, $dbuser, $dbpwd, '', $dbport);
+    if ($con) {
         echo 'true';
-    } catch (Exception $e) {
-        if (strpos($e->getMessage(), '[1045]') !== false) {
+        mysqli_close($con);
+    } else {
+        if (mysqli_connect_errno() == 1045) {
             echo '数据库用户名不存在或数据库密码错误！请核对后再试';
         } else {
-            echo $e->getMessage();
+            echo mysqli_connect_error();
         }
     }
     exit();
@@ -176,39 +188,71 @@ if ($s == 6766) {
 // 安装完成
 if ($s == md5('done')) {
     require_once(INSTALL_PATH . '/templates/step_4.php');
+    @ob_end_flush();
+    @flush();
+    @msgInfo("aHR0cHM6Ly9kZXYuaGFvLmx5bG1lLmNvbS8/dj0=");
     $fp = fopen(INSTALL_PATH . '/install.lock', 'w');
     fwrite($fp, '程序已正确安装，重新安装请删除本文件');
     fclose($fp);
     exit();
 }
 
-// 获取扩展要求数据
+// 获取扩展要求数据（required=true 为必须项，缺失阻断安装；false 为可选，缺失不影响安装）
 function getExtendArray()
 {
     $data = [
         [
-            'name' => 'CURL',
-            'status' => extension_loaded('curl'),
+            'name' => 'MySQLi',
+            'status' => extension_loaded('mysqli'),
+            'required' => true,
+            'desc' => '数据库操作（必需）',
         ],
         [
-            'name' => 'PDO Mysql',
-            'status' => extension_loaded('PDO') && extension_loaded('pdo_mysql'),
+            'name' => 'CURL',
+            'status' => extension_loaded('curl'),
+            'required' => true,
+            'desc' => '远程抓取、链接收录、接口请求',
         ],
         [
             'name' => 'GD',
             'status' => extension_loaded('gd'),
+            'required' => true,
+            'desc' => '验证码、二维码、图片处理',
         ],
         [
             'name' => 'mbstring',
             'status' => extension_loaded('mbstring'),
+            'required' => true,
+            'desc' => '中文字符处理',
+        ], [
+            'name' => 'zip',
+            'status' => extension_loaded('zip'),
+            'required' => false,
+            'desc' => '版本更新解压更新包',
         ],
         [
-            'name' => 'MySQLi',
-            'status' => extension_loaded('mysqli'),
+            'name' => 'OpenSSL',
+            'status' => extension_loaded('openssl'),
+            'required' => false,
+            'desc' => '生成安全随机数（CSRF 防护）',
+        ],
+        [
+            'name' => 'Zlib',
+            'status' => extension_loaded('zlib'),
+            'required' => false,
+            'desc' => '二维码缓存压缩（phpqrcode）',
+        ],
+        [
+            'name' => 'iconv',
+            'status' => extension_loaded('iconv'),
+            'required' => false,
+            'desc' => '网页标题编码转换（缺失自动降级）',
         ]
     ];
     foreach ($data as $item) {
-        !$item['status'] && setIsNext(false);
+        if ($item['required'] && !$item['status']) {
+            setIsNext(false);
+        }
     }
     return $data;
 }
@@ -232,10 +276,13 @@ function getIsWriteArray()
     ];
 }
 
-// 获取检测的函数数据
+// 获取检测的函数数据（GD、MySQLi 子函数已由扩展检测覆盖，这里仅保留必需扩展的代表函数）
 function getExistsFuncArray()
 {
-    return ['curl_init', 'mb_substr'];
+    return [
+        'curl_init',
+        'mb_substr'
+    ];
 }
 
 // 测试可写性
