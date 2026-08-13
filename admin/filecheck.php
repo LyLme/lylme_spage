@@ -84,6 +84,11 @@ $whitelist = [
     '/assets/img/cron.php'
 
 ];
+// 若后台已修改系统设置（ADMIN_PATH 或 DEBUG），则不再校验 include/common.php，
+// 避免其 MD5 与官方版本不一致被误判为"篡改"
+if (isset($system_settings_modified) && $system_settings_modified === true) {
+    $whitelist[] = '/include/common.php';
+}
 
 $currentMd5s = generateFileMd5s($targetDirectory, $whitelist);
 $remoteJsonUrl = 'https://cdn.lylme.com/lylme_spage/file_check/v' . VERSION . '/file.json';
