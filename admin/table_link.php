@@ -27,7 +27,7 @@ $linksrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_links`")); //链接�
 
 <!-- 功能按钮 S-->
 <div id="toolbar" class="toolbar-btn-action mb-2">
-  <button class="btn btn-label btn btn-purple" id="save_order" style="display:none" onclick="save_order()">
+  <button class="btn btn-label btn btn-info" id="save_order" style="display:none" onclick="save_order()">
     <label><i class="mdi mdi-checkbox-marked-circle-outline"></i></label> 保存排序</button>
   <a href="./link.php?set=add" class="btn btn-primary btn-label">
     <label><i class="mdi mdi-plus" aria-hidden="true"></i></label>新增</a>
@@ -37,7 +37,7 @@ $linksrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_links`")); //链接�
     <label><i class="mdi mdi-block-helper" aria-hidden="true"></i></label>禁用 </button>
   <button id="btn_delete" type="button" class="btn btn-danger btn-label" onclick="del_link()">
     <label><i class="mdi mdi-window-close" aria-hidden="true"></i></label>删除</button>
-  <button id="edit_group" type="button" class="btn btn-info btn-label" onclick="edit_group(mv_group)">
+  <button id="edit_group" type="button" class="btn btn-cyan btn-label" onclick="edit_group(mv_group)">
     <label><i class="mdi mdi-account-edit" aria-hidden="true"></i></label>移动</button>
   <?php if (empty($gpwd)): ?>
     <button id="btn_delete" type="button" class="btn btn btn-pink btn-label" onclick="pwd_link(pwd_list)">
@@ -48,6 +48,8 @@ $linksrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_links`")); //链接�
   <?php endif; ?>
 
   <a href="./batch_add.php" target="_blank" class="btn btn-label btn btn-purple"> <label><i class="mdi mdi-import" aria-hidden="true"></i> </label> 批量导入链接</a>
+  <button id="btn_check" type="button" class="btn btn-dark btn-label" onclick="check_group_links()">
+    <label><i class="mdi mdi-radar" aria-hidden="true"></i></label>检测失效</button>
 </div>
 
 <!-- 功能按钮 E -->
@@ -87,7 +89,7 @@ $linksrows = $DB->num_rows($DB->query("SELECT * FROM `lylme_links`")); //链接�
           </td>
           <!-- 链接排序 E -->
           <td class="lylme"><?php echo $res['name']; ?></td>
-          <td>
+          <td class="link-url" data-url="<?php echo htmlspecialchars($res['url'], ENT_QUOTES); ?>">
             <?php if (!empty($res['link_pwd']) || !empty($gpwd)): ?><font color="#f96197"><?php echo $res['url']; ?></font><?php else: ?><?php echo $res['url']; ?><?php endif; ?>
           </td>
           <td><?php echo $gname; ?></td>

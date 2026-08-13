@@ -214,7 +214,7 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
 <!--消息提示-->
 <script src="/assets/admin/js/bootstrap-notify.min.js"></script>
 <script type="text/javascript" src="/assets/admin/js/lightyear.js"></script>
-<script type="text/javascript" src="/assets/admin/js/link.js"></script>
+<script type="text/javascript" src="/assets/admin/js/link.js?v=20260813f"></script>
 <script type="text/javascript">
   // 新增/编辑表单 AJAX 提交（阻止默认跳转，弹窗显示服务端返回）
   function bindFormAjax(formId) {
