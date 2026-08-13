@@ -10,66 +10,6 @@ if (@file_get_contents('log.txt') != $last || !file_exists('cache.php')) {
     $content = "<?php\nreturn " . var_export($update, true) . "\n?>";
     file_put_contents('cache.php', $content);
 }
-function uploadimg($arr, $uppath, $uptype)
-{
-    // 文件大小为空则跳过
-    if (!isset($arr["size"]) || $arr["size"] == 0) {
-        return;
-    }
-
-    // 验证文件大小（最大10MB）
-    if ($arr["size"] > 10485760) {
-        echo '<script>alert("上传的图片大小超过10MB！");history.go(-1);</script>';
-        exit;
-    }
-
-    // 验证MIME类型
-    $allowed_mimes = ['image/jpeg', 'image/jpg', 'image/png'];
-    if (!isset($arr["type"]) || !in_array($arr["type"], $allowed_mimes, true)) {
-        echo '<script>alert("上传的图片类型不符，仅支持JPEG和PNG格式！");history.go(-1);</script>';
-        exit;
-    }
-
-    // 使用getimagesize验证文件是否为真实图片（防止MIME伪造）
-    $image_info = @getimagesize($arr["tmp_name"]);
-    if ($image_info === false) {
-        echo '<script>alert("上传的文件不是有效的图片！");history.go(-1);</script>';
-        exit;
-    }
-
-    // 验证图片类型一致性
-    $actual_type = image_type_to_mime_type($image_info[2]);
-    $allowed_actual = ['image/jpeg', 'image/png'];
-    if (!in_array($actual_type, $allowed_actual, true)) {
-        echo '<script>alert("上传的图片格式无效！");history.go(-1);</script>';
-        exit;
-    }
-
-    // 重新生成图片以去除可能的恶意代码
-    $dest_path = ROOT . $uppath;
-    switch ($actual_type) {
-        case 'image/jpeg':
-            $src = @imagecreatefromjpeg($arr["tmp_name"]);
-            if ($src) {
-                @imagejpeg($src, $dest_path, 90);
-                @imagedestroy($src);
-            }
-            break;
-        case 'image/png':
-            $src = @imagecreatefrompng($arr["tmp_name"]);
-            if ($src) {
-                @imagepng($src, $dest_path, 9);
-                @imagedestroy($src);
-            }
-            break;
-        default:
-            // 不应该到这里，但作为安全兜底
-            @copy($arr["tmp_name"], $dest_path);
-            break;
-    }
-
-    saveSetting($uptype, '/' . $uppath);
-}
 $set = isset($_GET['set']) ? $_GET['set'] : null;
 if ($set == 'save') {
     $title = $_POST['title'];
@@ -103,15 +43,48 @@ if ($set == 'save') {
     saveSetting('icp', $icp, "ICP备案号");
     saveSetting('wztj', $wztj, "自定义footer");
     saveSetting('cdnpublic', $cdnpublic, "CDN地址");
-    uploadimg($_FILES["logoimg"], 'assets/img/web-logo.png', 'logo');
-    uploadimg($_FILES["wapbackgroundimg"], 'assets/img/web-wapbackground.jpg', 'wap_background');
-    uploadimg($_FILES["backgroundimg"], 'assets/img/web-background.jpg', 'background');
+    // 注：LOGO/背景图已在页面通过 file.php?target=xxx 白名单接口上传，URL 已写入对应文本框
     echo '<script>alert("修改成功！");window.location.href="./set.php";</script>';
 } else {
     ?>
 	<script>
-		function updatetext(check) {
-			document.getElementById(check).innerHTML = "重新选择";
+		// 通过 file.php 固定文件名白名单上传（LOGO/背景图），返回固定URL后写入文本框
+		function uploadFixed(target, inputId, textId, btnId) {
+			var input = document.getElementById(inputId);
+			if (!input.files || !input.files[0]) {
+				return;
+			}
+			var btn = document.getElementById(btnId);
+			btn.innerHTML = "上传中...";
+			var fd = new FormData();
+			fd.append('file', input.files[0]);
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', '../include/file.php?target=' + target, true);
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState !== 4) {
+					return;
+				}
+				if (xhr.status === 200) {
+					try {
+						var res = JSON.parse(xhr.responseText);
+						if (res.code === '200') {
+							document.getElementById(textId).value = res.url;
+							btn.innerHTML = "已上传";
+							input.value = ''; // 清空文件选择，避免随表单重复提交
+						} else {
+							alert(res.msg || '上传失败');
+							btn.innerHTML = "选择图片";
+						}
+					} catch (e) {
+						alert('上传失败');
+						btn.innerHTML = "选择图片";
+					}
+				} else {
+					alert('上传失败');
+					btn.innerHTML = "选择图片";
+				}
+			};
+			xhr.send(fd);
 		}
 	</script>
 	<!--页面主要内容-->
@@ -133,7 +106,7 @@ if ($set == 'save') {
 											<input type="text" class="form-control" name="logo" id="web_site_logo" value="<?php echo $conf['logo'] ?>" />
 											<div class="input-group-btn">
 												<label class="btn btn-default" for="logoimg" id="checklogo" type="button">选择图片</label>
-												<input type="file" style="display:none" accept=".png,.jpeg,.jpg" id="logoimg" name="logoimg" onclick="updatetext('checklogo');" />
+												<input type="file" style="display:none" accept=".png,.jpeg,.jpg,.gif,.webp" id="logoimg" name="logoimg" onchange="uploadFixed('web_logo', 'logoimg', 'web_site_logo', 'checklogo');" />
 											</div>
 										</div>
 										<small class="help-block">比例1:1(正方形)，可填写图片的URL，默认值：<code>./assets/img/logo.png</code>或<code><?php echo siteurl() ?>/assets/img/logo.png</code>或从<code>本地上传</code></small>
@@ -144,7 +117,7 @@ if ($set == 'save') {
 											<input type="text" class="form-control" name="background" accept="image/png,image/jpeg" id="web_site_background" value="<?php echo $conf['background'] ?>" />
 											<div class="input-group-btn">
 												<label class="btn btn-default" id="checkbackground" for="backgroundimg" type="button">选择图片</label>
-												<input type="file" style="display:none" accept="image/png,image/jpeg" id="backgroundimg" name="backgroundimg" onclick="updatetext('checkbackground');" />
+												<input type="file" style="display:none" accept=".png,.jpeg,.jpg,.gif,.webp" id="backgroundimg" name="backgroundimg" onchange="uploadFixed('web_background', 'backgroundimg', 'web_site_background', 'checkbackground');" />
 											</div>
 										</div>
 										<small class="help-block">填写图片的URL,如：<code>/assets/img/background.jpg</code>或从<code>本地上传</code><br>设置Bing每日壁纸：<code>/assets/img/bing.php</code><br>注：修改后需要清除浏览器缓存才会改变</small>
@@ -155,7 +128,7 @@ if ($set == 'save') {
 											<input type="text" class="form-control" name="wapbackground" accept="image/png,image/jpeg" id="wap_site_background" value="<?php echo $conf['wap_background'] ?>" />
 											<div class="input-group-btn">
 												<label class="btn btn-default" id="checkwapbackground" for="wapbackgroundimg" type="button">选择图片</label>
-												<input type="file" style="display:none" accept="image/png,image/jpeg" id="wapbackgroundimg" name="wapbackgroundimg" onclick="updatetext('checkwapbackground');" />
+												<input type="file" style="display:none" accept=".png,.jpeg,.jpg,.gif,.webp" id="wapbackgroundimg" name="wapbackgroundimg" onchange="uploadFixed('wap_background', 'wapbackgroundimg', 'wap_site_background', 'checkwapbackground');" />
 											</div>
 										</div>
 										<small class="help-block">手机端独立背景，留空则使用PC端壁纸<br>注:修改后需要清除浏览器缓存才会改变</small>

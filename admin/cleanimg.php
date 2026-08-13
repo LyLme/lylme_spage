@@ -152,14 +152,14 @@ function stat_card($color, $icon, $label, $value)
 
                     <div class="card-body">
                         <ul class="nav nav-tabs" id="dirTab" role="tablist">
-                            <li class="active">
-                                <a href="#tab-download" data-bs-toggle="tab">抓取的图标(download )
-                                    <?php if ($dirs['download']['unused'] > 0) { ?><span class="badge badge-danger"><?php echo $dirs['download']['unused']; ?></span><?php } ?>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="tab-download-tab" data-bs-toggle="tab" href="#tab-download" role="tab" aria-controls="tab-download" aria-selected="true">抓取的图标(download)
+                                    <?php if ($dirs['download']['unused'] > 0) { ?><span class="badge bg-danger"><?php echo $dirs['download']['unused']; ?></span><?php } ?>
                                 </a>
                             </li>
-                            <li>
-                                <a href="#tab-upload" data-bs-toggle="tab">上传的图标(upload)
-                                    <?php if ($dirs['upload']['unused'] > 0) { ?><span class="badge badge-danger"><?php echo $dirs['upload']['unused']; ?></span><?php } ?>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="tab-upload-tab" data-bs-toggle="tab" href="#tab-upload" role="tab" aria-controls="tab-upload" aria-selected="false">上传的图标(upload)
+                                    <?php if ($dirs['upload']['unused'] > 0) { ?><span class="badge bg-danger"><?php echo $dirs['upload']['unused']; ?></span><?php } ?>
                                 </a>
                             </li>
                         </ul>
