@@ -24,7 +24,7 @@ $(function() {
             if (res.code != 200) {
                 showToast(res.msg || '保存失败', 'danger');
             } else {
-                showToast(res.msg || '保存成功', 'success');
+                showToast(res.msg || '保存成功', 'primary');
             }
         }, 'json').fail(function() {
             showToast('保存失败', 'danger');
