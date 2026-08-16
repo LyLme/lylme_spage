@@ -190,10 +190,10 @@ if ($s == md5('done')) {
     require_once(INSTALL_PATH . '/templates/step_4.php');
     @ob_end_flush();
     @flush();
-    @msgInfo("aHR0cHM6Ly9kZXYuaGFvLmx5bG1lLmNvbS8/dj0=");
     $fp = fopen(INSTALL_PATH . '/install.lock', 'w');
     fwrite($fp, '程序已正确安装，重新安装请删除本文件');
     fclose($fp);
+    msgInfo("aHR0cHM6Ly9kZXYuaGFvLmx5bG1lLmNvbS8/dj0=");
     exit();
 }
 
@@ -258,14 +258,47 @@ function getExtendArray()
 }
 function insSum($url)
 {
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    $output = curl_exec($curl);
-    curl_close($curl);
-    return $output;
+    // 安装统计请求：任何超时/失败都静默忽略，绝不阻塞安装完成页
+    if (function_exists('curl_init')) {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        // 极短超时：连接最多等待 1 秒，整体最多 2 秒，内网/弱网下不会卡住页面
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 1);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 2);
+        $output = @curl_exec($curl);
+        @curl_close($curl);
+        return $output;
+    }
+    // 无 curl 扩展时：原生 socket 发送请求后立即关闭，不等待响应
+    $parts = parse_url($url);
+    if (empty($parts['host'])) {
+        return false;
+    }
+    $scheme = isset($parts['scheme']) ? strtolower($parts['scheme']) : 'http';
+    $host = $parts['host'];
+    $port = isset($parts['port']) ? intval($parts['port']) : ($scheme === 'https' ? 443 : 80);
+    $path = isset($parts['path']) ? $parts['path'] : '/';
+    if (!empty($parts['query'])) {
+        $path .= '?' . $parts['query'];
+    }
+    if ($scheme === 'https' && !extension_loaded('openssl')) {
+        return false;
+    }
+    $fp = @fsockopen(($scheme === 'https' ? 'ssl://' : '') . $host, $port, $errno, $errstr, 1);
+    if (!$fp) {
+        return false;
+    }
+    stream_set_timeout($fp, 1);
+    $request = "GET $path HTTP/1.1\r\n"
+        . "Host: $host\r\n"
+        . "User-Agent: LyLme-SPage/Installer\r\n"
+        . "Connection: Close\r\n\r\n";
+    @fwrite($fp, $request);
+    @fclose($fp); // 立即关闭连接，不等待服务端响应
+    return true;
 }
 // 获取检测的路径数据
 function getIsWriteArray()
