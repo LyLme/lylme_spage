@@ -368,7 +368,7 @@ function clearBOM($contents)
 }
 
 // 设置是否允许下一步
-function setIsNext(bool $bool)
+function setIsNext($bool)
 {
     $GLOBALS['isNext'] = $bool;
 }
