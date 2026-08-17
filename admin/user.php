@@ -14,46 +14,40 @@ if ($set == 'syssave') {
 
     // 校验后台目录：仅允许字母、数字、下划线、中划线，防止路径遍历
     if (empty($new_admin_path) || !preg_match('/^[A-Za-z0-9_-]+$/', $new_admin_path)) {
-        echo '<script>alert("后台目录不合法！只能使用字母、数字、下划线、中划线");history.go(-1);</script>';
-        exit;
+        exit('<script>$.alert({title:"错误",content:"后台目录不合法！只能使用字母、数字、下划线、中划线",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
+        
     }
     // 校验后台目录是否存在（目录名发生变化时才需要检查，防止配置指向不存在的目录导致后台无法访问）
     if ($new_admin_path !== ADMIN_PATH && !is_dir(ROOT . $new_admin_path)) {
-        echo '<script>alert("后台目录 ' . $new_admin_path . ' 不存在！请先将当前后台目录重命名为 ' . $new_admin_path . '，再保存设置");history.go(-1);</script>';
-        exit;
+        exit('<script>$.alert({title:"错误",content:"后台目录 ' . $new_admin_path . ' 不存在！请先将当前后台目录重命名为 ' . $new_admin_path . '，再保存设置",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
     if ($new_debug !== '0' && $new_debug !== '1') {
-        echo '<script>alert("调试模式参数无效！");history.go(-1);</script>';
-        exit;
+        exit('<script>$.alert({title:"错误",content:"调试模式参数无效！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
 
     $commonFile = ROOT . 'include/common.php';
     $content = @file_get_contents($commonFile);
     if ($content === false) {
-        echo '<script>alert("无法读取 include/common.php，请检查文件权限");history.go(-1);</script>';
-        exit;
+        exit('<script>$.alert({title:"错误",content:"无法读取 include/common.php，请检查文件权限",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
 
     // 替换 ADMIN_PATH 常量
     $pattern = "/define\(['\"]ADMIN_PATH['\"]\s*,\s*['\"][^'\"]*['\"]\s*\)/";
     if (!preg_match($pattern, $content)) {
-        echo '<script>alert("未找到 ADMIN_PATH 配置项，无法修改");history.go(-1);</script>';
-        exit;
+        exit('<script>$.alert({title:"错误",content:"未找到 ADMIN_PATH 配置项，无法修改",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
     $content = preg_replace($pattern, "define('ADMIN_PATH', '" . $new_admin_path . "')", $content, 1);
 
     // 替换 DEBUG 常量
     $pattern = "/define\(['\"]DEBUG['\"]\s*,\s*(?:true|false|0|1|['\"][^'\"]*['\"])\s*\)/";
     if (!preg_match($pattern, $content)) {
-        echo '<script>alert("未找到 DEBUG 配置项，无法修改");history.go(-1);</script>';
-        exit;
+        exit('<script>$.alert({title:"错误",content:"未找到 DEBUG 配置项，无法修改",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
     $debugVal = $new_debug === '1' ? 'true' : 'false';
     $content = preg_replace($pattern, "define('DEBUG', " . $debugVal . ")", $content, 1);
 
     if (@file_put_contents($commonFile, $content) === false) {
-        echo '<script>alert("写入 include/common.php 失败，请检查文件权限");history.go(-1);</script>';
-        exit;
+        exit('<script>$.alert({title:"错误",content:"写入 include/common.php 失败，请检查文件权限",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
 
     // 维护 config.php 中的系统设置标记：非默认设置时写入 $system_settings_modified = true;
@@ -85,8 +79,8 @@ if ($set == 'syssave') {
     if ($new_admin_path !== ADMIN_PATH) {
         $msg .= '\n后台目录已修改为 ' . $new_admin_path . '，请通过新的地址访问后台（' . $new_admin_path . '/）';
     }
-    echo '<script>alert("' . $msg . '");window.location.href="./user.php";</script>';
-    exit;
+    exit('<script>$.alert({title:"成功",content:"' . $msg . '",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./user.php";}}}});</script>');
+   
 } elseif ($set == 'save') {
     $user = $_POST['new-usernameuser'];
     $oldpwd = $_POST['oldpwd'];
@@ -96,28 +90,28 @@ if ($set == 'syssave') {
     if (md5('lylme' . $oldpwd) == $conf['admin_pwd']) {
         if (empty($newpwd)) { //未修改密码
             if (empty($user)) {
-                echo '<script>alert("未做出更改");history.go(-1);</script>';
+                exit('<script>$.alert({title:"提示",content:"未做出更改",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
             } else {
                 //只修改用户名
                 saveSetting('admin_user', $user);
-                echo '<script>alert("用户名修改成功！\n新用户名：' . $user . '\n请牢记，将重新登录！");window.location.href="./";</script>';
+                exit('<script>$.alert({title:"成功",content:"用户名修改成功！<br>新用户名：' . $user . '<br>请牢记，将重新登录！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./";}}}});</script>');
             }
         } elseif (!empty($newpwd)) { //修改密码
             if ($newpwd == $repwd  && empty($user)) {
                 $admin_pwd = md5('lylme' . $newpwd);
                 saveSetting('admin_pwd', $admin_pwd);
-                echo '<script>alert("密码修改成功！\n新密码：' . $newpwd . '\n请牢记，将重新登录！");window.location.href="./";</script>';
+                exit('<script>$.alert({title:"成功",content:"密码修改成功！<br>新密码：' . $newpwd . '<br>请牢记，将重新登录！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./";}}}});</script>');
             } elseif ($newpwd == $repwd) {
                 $admin_pwd = md5('lylme' . $newpwd);
                 saveSetting('admin_user', $user);
                 saveSetting('admin_pwd', $admin_pwd);
-                echo '<script>alert("修改成功！\n新用户名：' . $user . '\n新密码：' . $newpwd . '\n请牢记，将重新登录！");window.location.href="./";</script>';
+                exit('<script>$.alert({title:"成功",content:"修改成功！<br>新用户名：' . $user . '<br>新密码：' . $newpwd . '<br>请牢记，将重新登录！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./";}}}});</script>');
             }
         } else {
-            echo '<script>alert("两次新密码不一致！");history.go(-1);</script>';
+            exit('<script>$.alert({title:"错误",content:"两次新密码不一致！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
         }
     } else {
-        echo '<script>alert("当前密码错误！");history.go(-1);</script>';
+        exit('<script>$.alert({title:"错误",content:"当前密码错误！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
 } else { ?>
 
@@ -152,7 +146,7 @@ if ($set == 'syssave') {
                   <label for="confirm-password">确认新密码</label>
                   <input type="password" class="form-control" name="confirmpwd" id="confirm-password" placeholder="重复输入新的密码">
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">修改</button>
+                <button type="submit" class="btn btn-primary d-block w-100">修改</button>
               </form>
             </div>
           </div>
@@ -179,7 +173,7 @@ if ($set == 'syssave') {
                   </select>
                   <small class="help-block">开启后页面将显示详细错误信息，仅排障时使用，正式环境请保持关闭</small>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">保存设置</button>
+                <button type="submit" class="btn btn-primary d-block w-100">保存设置</button>
               </form>
             </div>
           </div>

@@ -89,6 +89,11 @@ try {
   <link href="/assets/admin/css/bootstrap.min.css" rel="stylesheet">
   <link href="/assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="/assets/admin/css/style.min.css" rel="stylesheet">
+  <link href="/assets/admin/js/jquery-confirm.min.css" type="text/css" rel="stylesheet" />
+  <script type="text/javascript" src="/assets/admin/js/jquery.min.js"></script>
+  <script type="text/javascript" src="/assets/admin/js/bootstrap-notify.min.js"></script>
+  <script type="text/javascript" src="/assets/admin/js/lightyear.js"></script>
+  <script type="text/javascript" src="/assets/admin/js/jquery-confirm.min.js"></script>
 </head>
 <div class="lyear-layout-web">
   <div class="lyear-layout-container">
@@ -111,13 +116,13 @@ try {
 
               </ul>
             </li>
-            <li class="nav-item<?php echo menu_active('apply'); ?>"> <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理 </a>
-              <?php
+            <li class="nav-item<?php echo menu_active('apply'); ?>">
+              <a href="./apply.php"><i class="mdi mdi-link"></i>收录管理<?php
               if ($applyrows > 0) {
-                echo '<style> .applyrow{width: 18px;height: 18px;top: 98px;right: 20px;font-size: 10px;font-weight: bold;color: #fff;background-color: red;border-radius: 100%;text-align: center;vertical-align: middle;position: absolute;line-height: 1.5;}</style>
-        <div class="applyrow">' . intval($applyrows) . '</div>';
+                echo ' <span class="applyrow">' . intval($applyrows) . '</span>';
               }
-              ?></li>
+              ?></a>
+            </li>
             <li class="nav-item<?php echo menu_active('theme'); ?>"> <a href="./theme.php"><i class="mdi mdi-seal"></i>主题设置</a></li>
             <li class="nav-item<?php echo menu_active('group'); ?>"> <a href="./group.php"><i class="mdi mdi-folder"></i>分组管理</a></li>
             <li class="nav-item<?php echo menu_active('link'); ?>"> <a href="./link.php"><i class="mdi mdi-web"></i>链接管理</a></li>
@@ -140,8 +145,8 @@ try {
     <!--End 左侧导航-->
     <!--头部信息-->
     <header class="lyear-layout-header">
-      <nav class="navbar navbar-default">
-        <div class="topbar">
+      <nav class="navbar">
+        <div class="topbar w-100">
           <div class="topbar-left">
             <div class="lyear-aside-toggler">
               <span class="lyear-toggler-bar"></span>
@@ -152,18 +157,18 @@ try {
           </div>
           <ul class="topbar-right">
             <li class="dropdown dropdown-profile">
-              <a href="javascript:void(0)" data-bs-toggle="dropdown">
-                <span><?php echo htmlspecialchars($admin_user); ?><span class="caret"></span></span>
+              <a href="javascript:void(0)" data-bs-toggle="dropdown" aria-expanded="false">
+                <span><?php echo htmlspecialchars($admin_user); ?> <i class="mdi mdi-menu-down"></i></span>
               </a>
-              <ul class="dropdown-menu dropdown-menu-right">
-                <li> <a href="./user.php"><i class="mdi mdi-lock-outline"></i> 修改密码</a> </li>
-                <li class="divider"></li>
-                <li> <a href="javascript:loginout()"><i class="mdi mdi-logout-variant"></i> 退出登录</a> </li>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="./user.php"><i class="mdi mdi-lock-outline"></i> 修改密码</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="javascript:loginout()"><i class="mdi mdi-logout-variant"></i> 退出登录</a></li>
               </ul>
             </li>
             <li class="dropdown dropdown-skin">
               <span data-bs-toggle="dropdown" class="icon-palette" aria-expanded="false"><i class="mdi mdi-palette"></i></span>
-              <ul class="dropdown-menu dropdown-menu-right" data-stoppropagation="true">
+              <ul class="dropdown-menu dropdown-menu-end" data-bs-stoppropagation="true">
                 <li class="drop-title">
                   <p>主题</p>
                 </li>
@@ -177,7 +182,6 @@ try {
                     <label for="site_theme_2" onclick="theme('dark')"></label>
                   </span>
                 </li>
-
               </ul>
             </li>
           </ul>

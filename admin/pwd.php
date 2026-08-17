@@ -19,16 +19,16 @@ if ($set == 'add_submit') {
     $pwd_key = daddslashes($_POST['pwd_key']);
     $pwd_ps = daddslashes($_POST['pwd_ps']);
     if (empty($pwd_name) || empty($pwd_key)) {
-        echo '<script>alert("失败，请确保带星号的项目都不为空！");history.go(-1);</script>';
-        exit;
+       exit('<script>$.alert({title:"错误",content:"失败，请确保带星号的项目都不为空！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
+        
     }
     $sql = "INSERT INTO `lylme_pwd` (`pwd_id`, `pwd_name`, `pwd_key`, `pwd_ps`) VALUES (NULL, '" . $pwd_name . "', '" . $pwd_key . "', '" . $pwd_ps . "');";
     if ($DB->query($sql)) {
-        echo '<script>window.location.href="./pwd.php";</script>';
+       exit('<script>window.location.href="./pwd.php";</script>');
     } else {
-        echo '<script>alert("添加失败");history.go(-1);</script>';
+       exit('<script>$.alert({title:"错误",content:"添加失败",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
-    exit;
+    
 }
 
 // 修改加密组
@@ -38,16 +38,16 @@ if ($set == 'edit_submit') {
     $pwd_key = daddslashes($_POST['pwd_key']);
     $pwd_ps = daddslashes($_POST['pwd_ps']);
     if (empty($pwd_name) || empty($pwd_key)) {
-        echo '<script>alert("失败，请确保带星号的项目都不为空！");history.go(-1);</script>';
-        exit;
+       exit('<script>$.alert({title:"错误",content:"失败，请确保带星号的项目都不为空！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
+        
     }
     $sql = "UPDATE `lylme_pwd` SET `pwd_name` = '" . $pwd_name . "', `pwd_key` = '" . $pwd_key . "', `pwd_ps` = '" . $pwd_ps . "' WHERE `lylme_pwd`.`pwd_id` = " . $id . ";";
     if ($DB->query($sql)) {
-        echo '<script>window.location.href="./pwd.php";</script>';
+       exit('<script>window.location.href="./pwd.php";</script>');
     } else {
-        echo '<script>alert("修改失败");history.go(-1);</script>';
+       exit('<script>$.alert({title:"错误",content:"修改失败",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
-    exit;
+    
 }
 
 // 删除加密组
@@ -55,11 +55,11 @@ if ($set == 'delete') {
     $id = intval($_GET['id']);
     $delsql = "DELETE FROM `lylme_pwd` WHERE `lylme_pwd`.`pwd_id` = " . $id;
     if ($DB->query($delsql)) {
-        echo '<script>window.location.href="./pwd.php";</script>';
+       exit('<script>window.location.href="./pwd.php";</script>');
     } else {
-        echo '<script>alert("删除失败！");history.go(-1);</script>';
+       exit('<script>$.alert({title:"错误",content:"删除失败！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
-    exit;
+    
 }
 ?>
 <main class="lyear-layout-content">
@@ -89,7 +89,7 @@ if ($set == 'delete') {
             <small class="help-block">加密组备注，仅在后台显示(可不填)</small>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-primary btn-block" value="添加">
+            <input type="submit" class="btn btn-primary d-block w-100" value="添加">
         </div>
     </form>
     <br/><a href="./pwd.php">&lt;&lt;返回加密组列表</a>
@@ -122,7 +122,7 @@ if ($set == 'delete') {
             <small class="help-block">加密组备注，仅在后台显示(可不填)</small>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-primary btn-block" value="修改">
+            <input type="submit" class="btn btn-primary d-block w-100" value="修改">
         </div>
     </form>
     <br/><a href="./pwd.php">&lt;&lt;返回加密组列表</a>
@@ -164,7 +164,7 @@ if ($set == 'delete') {
                                             <td><?php echo $esc_name; ?></td>
                                             <td><?php echo $esc_key; ?></td>
                                             <td><?php echo $esc_ps; ?></td>
-                                            <td>&nbsp;<a href="./pwd.php?set=edit&id=<?php echo $pg['pwd_id']; ?>" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./pwd.php?set=delete&id=<?php echo $pg['pwd_id']; ?>" class="btn btn-xs btn-danger" onclick="return confirm('是否删除加密组 <?php echo $esc_name_js; ?>');">删除</a> </td>
+                                            <td>&nbsp;<a href="./pwd.php?set=edit&id=<?php echo $pg['pwd_id']; ?>" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./pwd.php?set=delete&id=<?php echo $pg['pwd_id']; ?>" class="btn btn-xs btn-danger" onclick="var h=this.href;event.preventDefault();$.confirm({title:'警告',content:'是否删除加密组 <?php echo $esc_name_js; ?>',type:'red',buttons:{confirm:{text:'删除',btnClass:'btn-danger',action:function(){window.location.href=h;}},cancel:{text:'取消'}}});return false;">删除</a> </td>
                                         </tr>
 <?php } ?>
 

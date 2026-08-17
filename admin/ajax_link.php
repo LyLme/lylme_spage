@@ -9,6 +9,14 @@ if (!isset($islogin) || $islogin !== 1) {
 $submit = isset($_GET['submit']) ? $_GET['submit'] : null;
 $e = 0;
 
+// 统一 JSON 响应输出
+function json_response($code, $msg, $extra = array())
+{
+    $res = array('code' => $code, 'msg' => $msg);
+    if (!empty($extra)) $res = array_merge($res, $extra);
+    exit(json_encode($res, JSON_UNESCAPED_UNICODE));
+}
+
 // 按字符数截断文本并追加省略号，防止超出数据库字段长度
 function truncate_text($str, $max)
 {
@@ -38,13 +46,13 @@ switch ($submit) {
 			$target = 0;
 		}
 		if ($name == null or $link == null) {
-			echo '保存错误,请确保带星号的都不为空！';
+			json_response(100, '保存错误,请确保带星号的都不为空！');
 		} else {
 			$sql = "INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`,`sort`) VALUES (NULL, '" . $name . "', '" . $link . "', '" . $target . "','" . $sort . "');";
 			if ($DB->query($sql)) {
-				echo '添加导航菜单 ' . $name . ' 成功！';
+				json_response(200, '添加导航菜单 ' . $name . ' 成功！');
 			} else {
-				echo '添加导航菜单失败';
+				json_response(100, '添加导航菜单失败');
 			}
 		}
 		break;
@@ -55,7 +63,7 @@ switch ($submit) {
 		$rows2 = $DB->query("select * from lylme_tags where tag_id='$id' limit 1");
 		$rows = $DB->fetch($rows2);
 		if (!$rows) {
-			exit('该条记录不存在！');
+			json_response(404, '该条记录不存在！');
 		}
 		$name = daddslashes($_POST['name']);
 		$link = daddslashes($_POST['link']);
@@ -65,13 +73,13 @@ switch ($submit) {
 			$target = 0;
 		}
 		if ($name == null or $link == null) {
-			echo '保存错误,请确保带星号的都不为空！';
+			json_response(100, '保存错误,请确保带星号的都不为空！');
 		} else {
 			$sql = "UPDATE `lylme_tags` SET `tag_name` = '" . $name . "', `tag_link` = '" . $link . "', `tag_target` = '" . $target . "', `sort` = '" . $sort . "'  WHERE `lylme_tags`.`tag_id` = " . $id . ";";
 			if ($DB->query($sql)) {
-				echo '修改导航菜单 ' . $name . ' 成功！';
+				json_response(200, '修改导航菜单 ' . $name . ' 成功！');
 			} else {
-				echo '修改导航菜单失败！';
+				json_response(100, '修改导航菜单失败！');
 			}
 		}
 		break;
@@ -91,20 +99,20 @@ switch ($submit) {
 		$link_desc = isset($_POST['link_desc']) ? daddslashes(truncate_text($_POST['link_desc'], 255)) : '';
 		$link_keywords = isset($_POST['link_keywords']) ? daddslashes(truncate_text($_POST['link_keywords'], 512)) : '';
 		if ($name == null or $url == null) {
-			exit('保存错误,请确保带星号的都不为空！');
+			json_response(100, '保存错误,请确保带星号的都不为空！');
 		} else {
 			// 链接查重：已存在则跳过（忽略末尾斜杠差异），防止重复入库
 			$url_check = rtrim($url, '/');
 			$exists = $DB->get_row("SELECT `id` FROM `lylme_links` WHERE `url` = '$url_check' OR `url` = '$url_check/' LIMIT 1");
 			if ($exists) {
-				exit('链接已存在，跳过！ID=' . $exists['id']);
+				json_response(100, '链接已存在，跳过！ID=' . $exists['id']);
 			}
 			$sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`, `link_keywords`, `link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $link_desc . "', '" . $link_keywords . "', '" . $link_order . "');";
 			if ($DB->query($sql)) {
 				$newid = $DB->insert_id();
-				exit('添加链接 ' . $name . ' 成功！ID=' . $newid);
+				json_response(200, '添加链接 ' . $name . ' 成功！', array('id' => $newid));
 			} else {
-				exit('添加链接失败！');
+				json_response(100, '添加链接失败！');
 			}
 		}
 		break;
@@ -114,7 +122,7 @@ switch ($submit) {
 		$rows2 = $DB->query("select * from lylme_links where id='$id' limit 1");
 		$rows = $DB->fetch($rows2);
 		if (!$rows) {
-			exit('该条记录不存在！');
+			json_response(404, '该条记录不存在！');
 		}
 		$color = daddslashes(truncate_text(isset($_POST['color']) ? $_POST['color'] : '', 32));
 		$name = daddslashes(truncate_text(isset($_POST['name']) ? $_POST['name'] : '', 255));
@@ -130,14 +138,13 @@ switch ($submit) {
 		$link_pwd = intval($_POST['link_pwd']);
 		$group_id = intval($_POST['group_id']);
 		if ($name == null or $url == null) {
-			echo '保存错误,请确保带星号的都不为空！';
+			json_response(100, '保存错误,请确保带星号的都不为空！');
 		} else {
 			$sql = "UPDATE `lylme_links` SET `name` = '" . $name1 . "', `link_desc` = '" . $link_desc . "', `link_keywords` = '" . $link_keywords . "', `url` = '" . $url . "', `icon` = '" . $icon . "', `group_id` = '" . $group_id . "', `link_pwd` = " . $link_pwd . " WHERE `lylme_links`.`id` = '" . $id . "';";
-			//   exit($sql);
 			if ($DB->query($sql)) {
-				echo '修改链接 ' . $name . ' 成功！';
+				json_response(200, '修改链接 ' . $name . ' 成功！');
 			} else {
-				echo '修改链接失败！';
+				json_response(100, '修改链接失败！');
 			}
 		}
 		break;
@@ -157,15 +164,15 @@ switch ($submit) {
 		}
 	$sou_order = isset($sousrows) ? (int)$sousrows + 1 : 1;
 		if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon)) {
-			echo '保存错误,请确保带星号的都不为空！';
+			json_response(100, '保存错误,请确保带星号的都不为空！');
 		} else {
 			$sql = "INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `sou_color`, `sou_link`, `sou_waplink`, `sou_icon`, `sou_st`, `sou_order`) VALUES
 (NULL, '" . $alias . "', '" . $name . "', '" . $hint . "', '" . $color . "', '" . $link . "', '" . $waplink . "', '" . $icon . "', '" . $st . "', '" . $sou_order . "');
 ";
 			if ($DB->query($sql)) {
-				echo '添加搜索引擎 ' . $name . ' 成功！';
+				json_response(200, '添加搜索引擎 ' . $name . ' 成功！');
 			} else {
-				echo '添加搜索引擎失败！';
+				json_response(100, '添加搜索引擎失败！');
 			}
 		}
 		break;
@@ -175,7 +182,7 @@ switch ($submit) {
 		$rows2 = $DB->query("select * from lylme_sou where sou_id='$id' limit 1");
 		$rows = $DB->fetch($rows2);
 		if (!$rows) {
-			exit('该条记录不存在！');
+			json_response(404, '该条记录不存在！');
 		}
 		$name = daddslashes($_POST['name']);
 		$alias = daddslashes($_POST['alias']);
@@ -192,13 +199,13 @@ switch ($submit) {
 }
 
 		if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon) && empty($order)) {
-			echo '保存错误,请确保带星号的都不为空！';
+			json_response(100, '保存错误,请确保带星号的都不为空！');
 		} else {
 			$sql = "UPDATE `lylme_sou` SET `sou_alias` = '" . $alias . "', `sou_name` = '" . $name . "', `sou_hint` = '" . $hint . "', `sou_color` = '" . $color . "', `sou_link` = '" . $link . "', `sou_waplink` = '" . $waplink . "', `sou_icon` = '" . $icon . "', `sou_st` = '" . $st . "', `sou_order` = '" . $order . "' WHERE `lylme_sou`.`sou_id` = " . $id . ";";
 			if ($DB->query($sql)) {
-				echo '修改搜索引擎 ' . $name . ' 成功！';
+				json_response(200, '修改搜索引擎 ' . $name . ' 成功！');
 			} else {
-				echo '修改失败！';
+				json_response(100, '修改失败！');
 			}
 		}
 		break;
@@ -300,8 +307,8 @@ switch ($submit) {
 	case 'geturl':
 		$url = $_GET['url'];
 		$head = get_head($url);
-		if (empty($head['title']) && empty($head['icon'])) exit('Unable to access');
-		exit(json_encode($head, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));  //输出json
+		if (empty($head['title']) && empty($head['icon'])) json_response(400, 'Unable to access');
+		exit(json_encode($head, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 		break;
 	//链接编辑表单（iframe 弹窗用，输出精简 HTML）
 	case 'edit_form':
@@ -309,7 +316,7 @@ switch ($submit) {
 		$id = intval($_GET['id']);
 		$row2 = $DB->query("select * from lylme_links where id='$id' limit 1");
 		$row = $DB->fetch($row2);
-		if (!$row) exit('该条记录不存在！');
+		if (!$row) json_response(404, '该条记录不存在！');
 
 		$grouplists = array();
 		$pwd_lists  = array();
@@ -416,6 +423,8 @@ switch ($submit) {
 <script type="text/javascript" src="/assets/admin/js/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/admin/js/layer.min.js"></script>
 <script type="text/javascript" src="/assets/admin/js/coloris.min.js"></script>
+<script type="text/javascript" src="/assets/admin/js/bootstrap-notify.min.js"></script>
+<script type="text/javascript" src="/assets/admin/js/lightyear.js"></script>
 <script type="text/javascript">
   Coloris({
     el: '.coloris',
@@ -512,14 +521,18 @@ switch ($submit) {
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         var text = xhr.responseText;
-        if (text.indexOf('成功') >= 0) {
+        var resp = null;
+        try { resp = JSON.parse(text); } catch(e) {}
+        if ((resp && resp.code == 200) || text.indexOf('成功') >= 0) {
+          var msg = resp ? resp.msg : text;
           if (window.parent && window.parent.editLinkSaved) {
-            window.parent.editLinkSaved(<?php echo $id; ?>, text);
+            window.parent.editLinkSaved(<?php echo $id; ?>, msg);
           } else {
-            layer.alert(text, function () { window.location.href = './link.php'; });
+            lightyear.notify(msg, 'success', 1200);
           }
         } else {
-          layer.alert(text);
+          var msg = resp ? resp.msg : text;
+          lightyear.notify(msg, 'danger', 3000);
         }
       }
     };
@@ -530,6 +543,20 @@ switch ($submit) {
 </html>
 <?php
 		break;
+	//检查更新（异步）
+	case 'check_update':
+		$update = update();
+		$current_version = isset($conf['version']) ? $conf['version'] : (isset($GLOBALS['conf']['version']) ? $GLOBALS['conf']['version'] : '');
+		$result = array(
+			'code' => 200,
+			'version' => isset($update['version']) ? $update['version'] : '',
+			'current_version' => $current_version,
+			'update_log' => isset($update['update_log']) ? $update['update_log'] : '',
+			'file' => isset($update['file']) ? $update['file'] : ''
+		);
+		exit(json_encode($result, JSON_UNESCAPED_UNICODE));
+		break;
+
 	//检测更新
 	case 'update':
 		function zipExtract($src, $dest)

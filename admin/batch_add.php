@@ -209,7 +209,7 @@ input[type=color]{width:44px;height:34px;border:1px solid #dcdfe6;border-radius:
             </ol>
         </div>
 
-        <div class="divider"></div>
+         <div class="divider"></div>
 
         <div class="section-title">方式二：批量粘贴链接导入</div>
         <div class="form-group" style="margin-top:10px">
@@ -284,7 +284,15 @@ function getXhr(url, timeout) {
     });
 }
 function postForm(url, fd) {
-    return fetch(url, { method: 'POST', body: fd, credentials: 'same-origin' }).then(function (r) { return r.text(); });
+    return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.timeout = 30000;
+        xhr.onload = function () { resolve(xhr.responseText); };
+        xhr.onerror = function () { reject(new Error('网络请求失败')); };
+        xhr.ontimeout = function () { reject(new Error('请求超时')); };
+        xhr.send(fd);
+    });
 }
 // 将图标下载保存到服务器本地（参考 apply/apply.js 的 downloadimg），成功返回本地地址，失败返回空字符串
 function saveIcon(iconUrl, referer) {
@@ -343,16 +351,21 @@ document.getElementById('quickAddForm').addEventListener('submit', function (e) 
     btn.disabled = true;
     btn.textContent = '提交中...';
     postForm(this.action, new FormData(this)).then(function (txt) {
-        if (txt.indexOf('成功') > -1) {
-            alert(txt);
-            window.close();
+        var resp = null;
+        try { resp = JSON.parse(txt); } catch(e) {}
+        if (resp && resp.code == 200) {
+            showTip(resp.msg, 'success');
+            setTimeout(function() { window.close(); }, 3000);
+        } else if (txt.indexOf('成功') > -1) {
+            showTip(txt, 'success');
+            setTimeout(function() { window.close(); }, 3000);
         } else {
-            showTip(txt || '添加失败，请重试', 'error');
+            showTip(resp ? resp.msg : (txt || '添加失败，请重试'), 'error');
             btn.disabled = false;
             btn.textContent = '添加链接';
         }
-    }).catch(function () {
-        showTip('提交失败，请检查网络连接', 'error');
+    }).catch(function (err) {
+        showTip('提交失败：' + (err.message || '请检查网络连接'), 'error');
         btn.disabled = false;
         btn.textContent = '添加链接';
     });

@@ -41,7 +41,7 @@ if($set=='icon'){
 <?php 
 }
 else {
- echo '<script>alert("无效的访问！");history.go(-1);</script>';
+ echo '<script>$.alert({title:"错误",content:"无效的访问！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>';
 }
 include './footer.php';
 

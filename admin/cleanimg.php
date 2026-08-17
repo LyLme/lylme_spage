@@ -27,7 +27,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_POST['files
         }
     }
     $msg = '删除成功 ' . $del . ' 个文件' . ($fail ? '，失败 ' . $fail . ' 个' : '');
-    echo '<script>alert("' . $msg . '");window.location.href="cleanimg.php";</script>';
+    echo '<script>$.alert({title:"完成",content:"' . $msg . '",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="cleanimg.php";}}}});</script>';
     exit;
 }
 
@@ -119,11 +119,11 @@ function stat_card($color, $icon, $label, $value)
     echo '<div class="col-sm-6 col-lg-3">';
     echo '<div class="card ' . $color . '">';
     echo '<div class="card-body clearfix">';
-    echo '<div class="pull-right">';
+    echo '<div class="float-end">';
     echo '<p class="h6 text-white m-t-0">' . $label . '</p>';
     echo '<p class="h3 text-white m-b-0 fa-1-5x">' . $value . '</p>';
     echo '</div>';
-    echo '<div class="pull-left"><span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi ' . $icon . ' fa-1-5x"></i></span></div>';
+    echo '<div class="float-start"><span class="img-avatar img-avatar-48 bg-translucent"><i class="mdi ' . $icon . ' fa-1-5x"></i></span></div>';
     echo '</div>';
     echo '</div>';
     echo '</div>';
@@ -167,7 +167,7 @@ function stat_card($color, $icon, $label, $value)
                             <?php foreach ($scan_dirs as $d) { ?>
                                 <div class="tab-pane fade<?php echo $d == 'download' ? ' show active' : ''; ?>" id="tab-<?php echo $d; ?>">
                                     <?php if ($dirs[$d]['unused'] > 0) { ?>
-                                        <form method="post" action="cleanimg.php?action=delete" onsubmit="return confirm('确定删除选中的文件吗？删除后不可恢复！');" id="delForm-<?php echo $d; ?>">
+                                        <form method="post" action="cleanimg.php?action=delete" onsubmit="var f=this;event.preventDefault();$.confirm({title:'警告',content:'确定删除选中的文件吗？删除后不可恢复！',type:'red',buttons:{confirm:{text:'删除',btnClass:'btn-danger',action:function(){f.submit();}},cancel:{text:'取消'}}});return false;" id="delForm-<?php echo $d; ?>">
                                             <div class="m-b-10">
 
                                                 <button type="button" class="btn btn-danger" onclick="delAll('<?php echo $d; ?>')">删除<?php echo $d; ?>全部未使用</button>
@@ -235,11 +235,24 @@ function stat_card($color, $icon, $label, $value)
 
     function delAll(dir) {
         var checks = document.querySelectorAll('.file-check-' + dir);
-        if (!confirm('确定删除 ' + dir + ' 目录全部未使用文件吗？共 ' + checks.length + ' 个，删除后不可恢复！')) return;
-        for (var i = 0; i < checks.length; i++) {
-            checks[i].checked = true;
-        }
-        document.getElementById('delForm-' + dir).submit();
+        $.confirm({
+            title: '警告',
+            content: '确定删除 ' + dir + ' 目录全部未使用文件吗？共 ' + checks.length + ' 个，删除后不可恢复！',
+            type: 'red',
+            buttons: {
+                confirm: {
+                    text: '删除',
+                    btnClass: 'btn-danger',
+                    action: function() {
+                        for (var i = 0; i < checks.length; i++) {
+                            checks[i].checked = true;
+                        }
+                        document.getElementById('delForm-' + dir).submit();
+                    }
+                },
+                cancel: { text: '取消' }
+            }
+        });
     }
 </script>
 <?php include './footer.php'; ?>

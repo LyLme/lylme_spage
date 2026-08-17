@@ -9,11 +9,10 @@ if ($set == 'delete') {
     $id = intval($_GET['id']);
     $sql = "DELETE FROM lylme_tags WHERE tag_id='$id'";
     if ($DB->query($sql)) {
-        echo '<script>alert("删除成功！");window.location.href="./tag.php";</script>';
+        exit('<script>$.alert({title:"成功",content:"删除成功！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./tag.php";}}}});</script>');
     } else {
-        echo '<script>alert("删除失败！");history.go(-1);</script>';
+        exit('<script>$.alert({title:"错误",content:"删除失败！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
-    exit();
 }
 
 $tagsrows = $DB->num_rows($site->getTags());
@@ -51,7 +50,7 @@ $tagsrows = $DB->num_rows($site->getTags());
 <small class="help-block">(*必填) 数字越小越靠前</small>
 </div>
 <div class="form-group">
-<input type="submit" class="btn btn-primary btn-block" value="添加">
+<input type="submit" class="btn btn-primary d-block w-100" value="添加">
 </div>
 </form>
 <br/><a href="./tag.php"><<返回</a>
@@ -62,8 +61,8 @@ $id = intval($_GET['id']);
 $row2 = $DB->query("select * from lylme_tags where tag_id='$id' limit 1");
 $row = $DB->fetch($row2);
 if (!$row) {
-    echo '<script>alert("当前记录不存在！");window.location.href="./tag.php";</script>';
-    exit;
+   exit('<script>$.alert({title:"提示",content:"当前记录不存在！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./tag.php";}}}});</script>');
+  
 }
 $esc_tag_name = htmlspecialchars($row['tag_name'], ENT_QUOTES, 'UTF-8');
 $esc_tag_link = htmlspecialchars($row['tag_link'], ENT_QUOTES, 'UTF-8');
@@ -92,7 +91,7 @@ $esc_tag_link = htmlspecialchars($row['tag_link'], ENT_QUOTES, 'UTF-8');
 <small class="help-block">(*必填) 数字越小越靠前</small>
 </div>
 <div class="form-group">
-<input type="submit" class="btn btn-primary btn-block" value="修改">
+<input type="submit" class="btn btn-primary d-block w-100" value="修改">
 </div>
 </form>
 <br/><a href="./tag.php"><<返回</a>
@@ -107,7 +106,7 @@ $esc_tag_link = htmlspecialchars($row['tag_link'], ENT_QUOTES, 'UTF-8');
         $rs = $site->getTags();
     while ($res = $DB->fetch($rs)) {
 ?>
-<tr><td><?php echo $res['sort']; ?></td><td><?php echo $res['tag_name']; ?></td><td><?php echo $res['tag_link']; ?></td><td><a href="./tag.php?set=edit&id=<?php echo $res['tag_id']; ?>" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./tag.php?set=delete&id=<?php echo $res['tag_id']; ?>" class="btn btn-xs btn-danger" onclick="return confirm('确定删除 <?php echo $res['tag_name']; ?> ？');">删除</a></td></tr>
+<tr><td><?php echo $res['sort']; ?></td><td><?php echo $res['tag_name']; ?></td><td><?php echo $res['tag_link']; ?></td><td><a href="./tag.php?set=edit&id=<?php echo $res['tag_id']; ?>" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./tag.php?set=delete&id=<?php echo $res['tag_id']; ?>" class="btn btn-xs btn-danger" onclick="var h=this.href;event.preventDefault();$.confirm({title:'警告',content:'确定删除 <?php echo $res['tag_name']; ?> ？',type:'red',buttons:{confirm:{text:'删除',btnClass:'btn-danger',action:function(){window.location.href=h;}},cancel:{text:'取消'}}});return false;">删除</a></td></tr>
 <?php
     }
 ?>
@@ -138,7 +137,13 @@ include './footer.php';
             xhr.open('POST', form.action, true); // 打开一个 POST 请求
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    alert(xhr.responseText); // 显示服务器响应信息
+                    try {
+                        var resp = JSON.parse(xhr.responseText);
+                        var _d = resp.code == 200 ? 'success' : 'danger';
+                        lightyear.notify(resp.msg || xhr.responseText, _d, _d == 'success' ? 1000 : 3000);
+                    } catch(e) {
+                        lightyear.notify(xhr.responseText, 'info', 2000);
+                    }
                 }
             };
             xhr.send(formData); // 发送表单数据

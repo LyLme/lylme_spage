@@ -10,9 +10,9 @@ if ($set == 'delete') {
     $id = intval($_GET['id']);
     $sql = "DELETE FROM lylme_sou WHERE sou_id='$id'";
     if ($DB->query($sql)) {
-        echo '<script>alert("删除成功！");window.location.href="./sou.php";</script>';
+       exit('<script>$.alert({title:"成功",content:"删除成功！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./sou.php";}}}});</script>');
     } else {
-        echo '<script>alert("删除失败！");history.go(-1);</script>';
+       exit('<script>$.alert({title:"错误",content:"删除失败！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){history.go(-1);}}}});</script>');
     }
     exit;
 }
@@ -64,7 +64,7 @@ if ($set == 'delete') {
             <small class="help-block">方案1：粘贴图标的<code>SVG</code>代码(推荐) <a href="./help.php?doc=icon" target="_blank">查看教程</a><br>方案2：使用图片地址，需要img标签，如<code>&lt;img src="/assets/img/logo.png" /&gt; </code></small>
         </div>
         <div class="form-group">
-            <label class="btn-block" for="web_tq_status">启用开关</label>
+            <label class="d-block w-100" for="web_tq_status">启用开关</label>
             <label class="lyear-switch switch-solid switch-primary">
                 <input type="checkbox" checked="checked" name="st" value="true">
                 <span></span>
@@ -72,7 +72,7 @@ if ($set == 'delete') {
             <small class="help-block">说明：是否启用该搜索引擎(默认启用) </small>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-primary btn-block" value="添加">
+            <input type="submit" class="btn btn-primary d-block w-100" value="添加">
         </div>
     </form>
     <br/><a href="./sou.php">&lt;&lt;返回</a>
@@ -131,7 +131,7 @@ if ($set == 'delete') {
             <small class="help-block">(*必填) 数字越小越靠前</small>
         </div>
         <div class="form-group">
-            <label class="btn-block" for="web_tq_status">启用开关</label>
+            <label class="d-block w-100" for="web_tq_status">启用开关</label>
             <label class="lyear-switch switch-solid switch-primary">
                 <input type="checkbox"<?php if ($row['sou_st'] == 1) echo ' checked="checked"'; ?> name="st" value="true">
                 <span></span>
@@ -139,7 +139,7 @@ if ($set == 'delete') {
             <small class="help-block">说明：是否启用该搜索引擎(默认启用) </small>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-primary btn-block" value="修改">
+            <input type="submit" class="btn btn-primary d-block w-100" value="修改">
         </div>
     </form>
     <br/><a href="./sou.php">&lt;&lt;返回</a>
@@ -166,7 +166,7 @@ if ($set == 'delete') {
                                     <td><?php echo $esc_alias; ?></td>
                                     <td><?php echo $esc_link; ?></td>
                                     <td><?php if ($res['sou_st'] == 1) echo '<span class="label label-success">开启</span>'; else echo '<span class="label label-danger">关闭</span>'; ?></td>
-                                    <td><a href="./sou.php?set=edit&id=<?php echo $res['sou_id']; ?>" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./sou.php?set=delete&id=<?php echo $res['sou_id']; ?>" class="btn btn-xs btn-danger" onclick="return confirm('确定删除 <?php echo $esc_name; ?>');">删除</a></td>
+                                    <td><a href="./sou.php?set=edit&id=<?php echo $res['sou_id']; ?>" class="btn btn-info btn-xs">编辑</a>&nbsp;<a href="./sou.php?set=delete&id=<?php echo $res['sou_id']; ?>" class="btn btn-xs btn-danger" onclick="var h=this.href;event.preventDefault();$.confirm({title:'警告',content:'确定删除 <?php echo $esc_name; ?>',type:'red',buttons:{confirm:{text:'删除',btnClass:'btn-danger',action:function(){window.location.href=h;}},cancel:{text:'取消'}}});return false;">删除</a></td>
                                 </tr>
 <?php } ?>
                             </tbody>
@@ -194,7 +194,13 @@ if ($set == 'delete') {
             xhr.open('POST', this.action, true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    alert(xhr.responseText);
+                    try {
+                        var resp = JSON.parse(xhr.responseText);
+                        var _d = resp.code == 200 ? 'success' : 'danger';
+                        lightyear.notify(resp.msg || xhr.responseText, _d, _d == 'success' ? 1000 : 3000);
+                    } catch(e) {
+                        lightyear.notify(xhr.responseText, 'info', 2000);
+                    }
                 }
             };
             xhr.send(formData);

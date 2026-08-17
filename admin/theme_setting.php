@@ -40,7 +40,7 @@ include './head.php';
                                         ->form_schema($theme_config)
                                         ->input_hidden("theme_path", $conf['template'])
                                         // ->switch('是否启用', '启用主题配置', 'status', true)
-                                        ->input_submit('保存', 'class="btn btn-primary btn-block"')
+                                        ->input_submit('保存', 'class="btn btn-primary d-block w-100"')
                                         // ->input_submit('确认保存', 'class="btn btn-primary m-r-5"')
                                         ->form_data($form_data)
                                         ->create();

@@ -5,9 +5,9 @@ include './head.php';
 $set = isset($_GET['set']) ? $_GET['set'] : null;
 if (!empty($set)) {
   if (saveSetting('template', $set, "网站主题")) {
-    exit('<script>alert("主题修改成功！");window.location.href="./theme.php";</script>');
+    exit('<script>$.alert({title:"成功",content:"主题修改成功！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./theme.php";}}}});</script>');
   } else {
-    exit('<script>alert("主题修改失败！");window.location.href="./theme.php";</script>');
+    exit('<script>$.alert({title:"错误",content:"主题修改失败！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./theme.php";}}}});</script>');
   }
 }
 ?>

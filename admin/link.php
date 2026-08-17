@@ -47,7 +47,7 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
                 <div class="input-group">
                   <textarea class="form-control" id="add_icon" name="icon" placeholder="网站图标"></textarea>
                   <span class="input-group-btn">
-                    <input type="file" id="file" onchange="uploadimg()" accept="image/png, image/jpeg,image/gif,image/x-icon" style="display: none">
+                    <input type="file" id="file" onchange="uploadimg(this)" accept="image/png, image/jpeg,image/gif,image/x-icon" style="display: none">
                     <button class="btn btn-default" id="uploadImage" onclick="$('#file').click();" type="button">选择</button>
                   </span>
                 </div>
@@ -80,7 +80,7 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
               </div>
 
               <div class="form-group">
-                <input type="submit" class="btn btn-primary btn-block" value="添加">
+                <input type="submit" class="btn btn-primary d-block w-100" value="添加">
               </div>
             </form>
             <br><a href="./link.php"><<返回</a>
@@ -121,8 +121,8 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
                 <div class="input-group">
                   <textarea class="form-control" id="edit_icon" name="icon" placeholder="网站图标"><?php echo htmlspecialchars($row['icon']); ?></textarea>
                   <span class="input-group-btn">
-                    <input type="file" id="file" onchange="uploadimg()" accept="image/png, image/jpeg,image/gif,image/x-icon" style="display: none">
-                    <button class="btn btn-default" id="uploadImage" onclick="$('#file').click();" type="button">选择</button>
+                    <input type="file" id="edit_file" onchange="uploadimg(this)" accept="image/png, image/jpeg,image/gif,image/x-icon" style="display: none">
+                    <button class="btn btn-default" id="edit_uploadImage" onclick="$('#edit_file').click();" type="button">选择</button>
                   </span>
                 </div>
                 <small class="help-block"><b>可选方案：</b><br>
@@ -167,7 +167,7 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
               </div>
 
               <div class="form-group">
-                <input type="submit" class="btn btn-primary btn-block" value="修改">
+                <input type="submit" class="btn btn-primary d-block w-100" value="修改">
               </div>
             </form>
             <br><a href="./link.php"><<返回</a>
@@ -185,12 +185,8 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
 
 <?php include './footer.php'; ?>
 
-<!--页面脚本-->
 <script type="text/javascript" src="/assets/admin/js/jquery.dragsort-0.5.2.min.js"></script>
-<link href="/assets/admin/js/jquery-confirm.min.css" type="text/css" rel="stylesheet" />
 <script src="/assets/admin/js/layer.min.js" type="application/javascript"></script>
-<script src="/assets/admin/js/jquery-confirm.min.js" type="application/javascript"></script>
-<!--选色器-->
 <link rel="stylesheet" type="text/css" href="/assets/admin/css/coloris.min.css" />
 <script type="text/javascript" src="/assets/admin/js/coloris.min.js"></script>
 <script type="text/javascript">
@@ -211,9 +207,6 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
   }
   select_color();
 </script>
-<!--消息提示-->
-<script src="/assets/admin/js/bootstrap-notify.min.js"></script>
-<script type="text/javascript" src="/assets/admin/js/lightyear.js"></script>
 <script type="text/javascript" src="/assets/admin/js/link.js?v=20260813f"></script>
 <script type="text/javascript">
   // 新增/编辑表单 AJAX 提交（阻止默认跳转，弹窗显示服务端返回）
@@ -226,7 +219,13 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
       xhr.open('POST', form.action, true);
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-          alert(xhr.responseText);
+          try {
+            var resp = JSON.parse(xhr.responseText);
+            var _d = resp.code == 200 ? 'success' : 'danger';
+            lightyear.notify(resp.msg || xhr.responseText, _d, _d == 'success' ? 1000 : 3000);
+          } catch(e) {
+            lightyear.notify(xhr.responseText, 'info', 2000);
+          }
         }
       };
       xhr.send(new FormData(form));

@@ -44,7 +44,7 @@ if ($set == 'save') {
     saveSetting('wztj', $wztj, "自定义footer");
     saveSetting('cdnpublic', $cdnpublic, "CDN地址");
     // 注：LOGO/背景图已在页面通过 file.php?target=xxx 白名单接口上传，URL 已写入对应文本框
-    echo '<script>alert("修改成功！");window.location.href="./set.php";</script>';
+    exit('<script>$.alert({title:"成功",content:"网站设置修改成功！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./set.php";}}}});</script>');
 } else {
     ?>
 	<script>
@@ -72,15 +72,15 @@ if ($set == 'save') {
 							btn.innerHTML = "已上传";
 							input.value = ''; // 清空文件选择，避免随表单重复提交
 						} else {
-							alert(res.msg || '上传失败');
+							lightyear.notify(res.msg || '上传失败', 'danger', 3000);
 							btn.innerHTML = "选择图片";
 						}
 					} catch (e) {
-						alert('上传失败');
+						lightyear.notify('上传失败', 'danger', 3000);
 						btn.innerHTML = "选择图片";
 					}
 				} else {
-					alert('上传失败');
+					lightyear.notify('上传失败', 'danger', 3000);
 					btn.innerHTML = "选择图片";
 				}
 			};
@@ -178,7 +178,7 @@ if ($set == 'save') {
 										<input class="form-control" type="text" id="web_site_icp" name="icp" value="<?php echo $conf['icp'] ?>" placeholder="请输入备案号，留空首页不显示备案信息">
 									</div>
 									<div class="form-group">
-										<label class="btn-block" for="web_yan_status">随机一言开关</label>
+										<label class="d-block w-100" for="web_yan_status">随机一言开关</label>
 										<label class="lyear-switch switch-solid switch-cyan">
 											<input type="checkbox" <?php if ($conf['yan'] != 'false') {
 											    echo 'checked="checked"';
@@ -196,7 +196,7 @@ if ($set == 'save') {
 
 						
 									<div class="form-group">
-										<button type="submit" class="btn btn-primary btn-block">保 存</button>
+										<button type="submit" class="btn btn-primary d-block w-100">保 存</button>
 									</div>
 								</form>
 							</div>

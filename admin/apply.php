@@ -24,7 +24,7 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
 if ($set == 'conf_submit') {
     saveSetting('apply', intval($_POST['apply']));
     saveSetting('apply_gg', $_POST['apply_gg']);
-    echo '<script>alert("修改成功！");window.location.href="./apply.php";</script>';
+    echo '<script>$.alert({title:"成功",content:"修改成功！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./apply.php";}}}});</script>';
     exit;
 }
 
@@ -34,7 +34,7 @@ if ($set == 'edit_submit') {
     $rows2 = $DB->query("select * from lylme_apply where apply_id='$id' limit 1");
     $rows = $DB->fetch($rows2);
     if (!$rows) {
-        echo '<script>alert("当前记录不存在！");history.go(-1);</script>';
+        echo '<script>lightyear.notify("当前记录不存在！", "danger", 3000);</script>';
         exit;
     }
     $name = $_POST['apply_name'];
@@ -42,14 +42,14 @@ if ($set == 'edit_submit') {
     $url = $_POST['apply_url'];
     $group = $_POST['apply_group'];
     if ($name == '') {
-        echo '<script>alert("保存错误,请确保带星号的都不为空！");history.go(-1);</script>';
+        echo '<script>lightyear.notify("保存错误,请确保带星号的都不为空！", "danger", 3000);</script>';
         exit;
     }
     $sql = "UPDATE `lylme_apply` SET `apply_name` = '" . $name . "', `apply_group` = '" . $group . "',`apply_icon` = '" . $icon . "',`apply_url` = '" . $url . "' WHERE `lylme_apply`.`apply_id` = '" . $id . "';";
     if ($DB->query($sql)) {
-        echo '<script>alert("修改成功！");window.location.href="./apply.php";</script>';
+        echo '<script>$.alert({title:"成功",content:"修改成功！",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./apply.php";}}}});</script>';
     } else {
-        echo '<script>alert("修改失败！");history.go(-1);</script>';
+        echo '<script>lightyear.notify("修改失败！", "danger", 3000);</script>';
     }
     exit;
 }
@@ -107,7 +107,7 @@ if ($set == 'edit_submit') {
             </select>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-primary btn-block" value="确定修改">
+            <input type="submit" class="btn btn-primary d-block w-100" value="确定修改">
         </div>
     </form>
     <br/><a href="./apply.php">&lt;&lt;返回收录管理列表</a>
@@ -130,7 +130,7 @@ if ($set == 'edit_submit') {
             <small class="help-block">显示在收录页的公告<code>使用HTML代码编写</code><br>工具：<a href="https://www.lylme.com/html/" target="_blank">在线MD编辑器</a> 编辑后复制html代码粘贴</small>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-primary btn-block" value="保存">
+            <input type="submit" class="btn btn-primary d-block w-100" value="保存">
         </div>
     </form>
     <br/><a href="./apply.php">&lt;&lt;返回收录管理列表</a>
@@ -235,10 +235,6 @@ else { ?>
     </div>
 </main>
 <?php include './footer.php'; ?>
-<script src="/assets/admin/js/bootstrap-notify.min.js"></script>
-<script type="text/javascript" src="/assets/admin/js/lightyear.js"></script>
 <script src="/assets/admin/js/jquery.lazyload.min.js" type="application/javascript"></script>
 <script src="/assets/admin/js/layer.min.js" type="application/javascript"></script>
-<link href="/assets/admin/js/jquery-confirm.min.css" type="text/css" rel="stylesheet" />
-<script src="/assets/admin/js/jquery-confirm.min.js" type="application/javascript"></script>
 <script src="/assets/admin/js/apply.js"></script>
