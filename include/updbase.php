@@ -45,6 +45,9 @@ if ($sqlvn < $filevn) {
       if ($sqlvn < 20305) {
         $version = 'v2.3.5';
     }
+     if ($sqlvn < 20400) {
+        $version = 'v2.4.0';
+    }
     // 执行SQL语句
     if (!empty($sql)) {
         $sqlStatements = explode(';', $sql);
