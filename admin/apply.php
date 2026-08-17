@@ -113,34 +113,27 @@ if ($set == 'edit_submit') {
     <br/><a href="./apply.php">&lt;&lt;返回收录管理列表</a>
 <?php } ?>
 <?php elseif ($set == 'conf'): ?>
-                            echo '<h4>修改收录设置</h4>
-<div class="panel-body">
-<form action="./apply.php?set=conf_submit" method="POST">
-<div class="form-group" id="apply">
-<label class="btn-block" for="web_yan_status">申请收录</label>
-<label class="lyear-switch switch-solid switch-cyan">
-<select class="form-control" name="apply">
-<option ';
-                            if ($conf['apply'] == 0) echo 'selected="selected"';
-                            echo 'value="0">开启-需要审核</option><option ';
-                            if ($conf['apply'] == 1) echo 'selected="selected"';
-                            echo 'value="1">开启-无需审核</option><option ';
-                            if ($conf['apply'] == 2) echo 'selected="selected"';
-                            echo 'value="2">关闭-关闭申请</option>
-</select>  
-                      </label>
-                      <small class="help-block">申请收录开关，地址：<code>' . siteurl() . '/apply</code><br>前往<a href="/apply" target="_blank">申请收录</a>提交页</small>
-                    </div>     
-<div class="form-group">
-     <label for="apply_gg">收录页公告</label>
-                      <textarea width="200px" type="text" rows="5" class="form-control" name="apply_gg" placeholder="显示在收录页的公告">' . $conf['apply_gg'] . '</textarea>
-               <small class="help-block">显示在收录页的公告<code>使用HTML代码编写</code></small>
-               工具：<a href="https://www.lylme.com/html/" target="_blank">在线MD编辑器</a> 编辑后复制html代码粘贴
-                    </div>
-<div class="form-apply">
-<input type="submit" class="btn btn-primary btn-block" value="保存"></form>
-</div>
-<br/><a href="./apply.php"><<返回收录管理列表</a></div></div>';
+    <h4>修改收录设置</h4>
+    <form action="./apply.php?set=conf_submit" method="POST">
+        <div class="form-group">
+            <label for="apply_status">申请收录</label>
+            <select class="form-control" id="apply_status" name="apply">
+                <option value="0"<?php if ($conf['apply'] == 0) echo ' selected="selected"'; ?>>开启-需要审核</option>
+                <option value="1"<?php if ($conf['apply'] == 1) echo ' selected="selected"'; ?>>开启-无需审核</option>
+                <option value="2"<?php if ($conf['apply'] == 2) echo ' selected="selected"'; ?>>关闭-关闭申请</option>
+            </select>
+            <small class="help-block">申请收录开关，地址：<code><?php echo siteurl(); ?>/apply</code><br>前往<a href="<?php echo siteurl(); ?>/apply" target="_blank">申请收录</a>提交页</small>
+        </div>
+        <div class="form-group">
+            <label for="apply_gg">收录页公告</label>
+            <textarea rows="5" class="form-control" id="apply_gg" name="apply_gg" placeholder="显示在收录页的公告"><?php echo $conf['apply_gg']; ?></textarea>
+            <small class="help-block">显示在收录页的公告<code>使用HTML代码编写</code><br>工具：<a href="https://www.lylme.com/html/" target="_blank">在线MD编辑器</a> 编辑后复制html代码粘贴</small>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary btn-block" value="保存">
+        </div>
+    </form>
+    <br/><a href="./apply.php">&lt;&lt;返回收录管理列表</a>
 <?php else: ?>
                     <div class="alert alert-info">
                         <div class="alert-stat">
@@ -234,13 +227,13 @@ else { ?>
                                     </tbody>
                                 </table>
                             </div>
+<?php endif; ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </main>
-<?php endif; ?>
 <?php include './footer.php'; ?>
 <script src="/assets/admin/js/bootstrap-notify.min.js"></script>
 <script type="text/javascript" src="/assets/admin/js/lightyear.js"></script>
