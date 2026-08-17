@@ -184,9 +184,10 @@ function downloadimg(url, referer) {
     });
 }
 //上传图标
-function uploadimg(e) {
+function uploadimg(el) {
+    var fileInput = el || document.getElementById('file');
     var formData = new FormData();
-    formData.append("file", $("#file")[0].files[0]);
+    formData.append("file", fileInput.files[0]);
     $.ajax({
         method: 'POST',
         url: '/include/file.php',
