@@ -13,7 +13,8 @@ h2.title{text-align:center;color:#fff;font-size:36px;font-weight:600;text-shadow
 body{font-size:14px;background:#f4f8fb;overflow-x:hidden}
 a{text-decoration:none}
 a:hover{text-decoration:none}
-svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:currentColor;overflow:hidden}
+svg.icon{width:24px;height:24px;margin:0 8px 0 8px;fill:currentColor;overflow:hidden}
+img.lylme-group-img {width: 24px; height: 24px;border-radius: 10px;margin: 0 8px 0 8px;}
 .navbar-light .navbar-nav .nav-link{color:#fff !important;font-size:16px;font-weight:bold;text-shadow:0px 1px 0px #000}
 #search{width:100%;margin:0;padding:0 0 10px;position:relative;z-index:2000;border-radius:5px}
 #search form{position:relative;margin-top:15px}

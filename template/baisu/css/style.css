@@ -72,7 +72,11 @@ p.content {
   height: 24px;
   margin: auto 15px auto 0px;
 }
-
+img.lylme-group-img {
+    width: 24px;
+    height: 24px;
+    margin: auto 15px auto 0px;
+}
 .list svg.icon,
 .list img {
   width: 28px;
