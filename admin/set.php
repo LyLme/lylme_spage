@@ -98,12 +98,12 @@ if ($set == 'save') {
 								<form action="set.php?set=save" method="post" name="edit-form" class="edit-form" enctype="multipart/form-data">
 									<div class="form-group">
 										<label for="web_site_title">网站标题</label>
-										<input class="form-control" type="text" id="web_site_title" name="title" value="<?php echo $conf['title'] ?>" placeholder="请输入站点标题" required>
+										<input class="form-control" type="text" id="web_site_title" name="title" value="<?php echo isset($conf['title']) ? htmlspecialchars($conf['title'], ENT_QUOTES) : '' ?>" placeholder="请输入站点标题" required>
 									</div>
 									<div class="form-group">
 										<label for="web_site_logo">网站LOGO</label>
 										<div class="input-group">
-											<input type="text" class="form-control" name="logo" id="web_site_logo" value="<?php echo $conf['logo'] ?>" />
+											<input type="text" class="form-control" name="logo" id="web_site_logo" value="<?php echo isset($conf['logo']) ? htmlspecialchars($conf['logo'], ENT_QUOTES) : '' ?>" />
 											<div class="input-group-btn">
 												<label class="btn btn-default" for="logoimg" id="checklogo" type="button">选择图片</label>
 												<input type="file" style="display:none" accept=".png,.jpeg,.jpg,.gif,.webp" id="logoimg" name="logoimg" onchange="uploadFixed('web_logo', 'logoimg', 'web_site_logo', 'checklogo');" />
@@ -114,7 +114,7 @@ if ($set == 'save') {
 									<div class="form-group">
 										<label for="web_site_background">网站背景</label>
 										<div class="input-group">
-											<input type="text" class="form-control" name="background" accept="image/png,image/jpeg" id="web_site_background" value="<?php echo $conf['background'] ?>" />
+											<input type="text" class="form-control" name="background" accept="image/png,image/jpeg" id="web_site_background" value="<?php echo isset($conf['background']) ? htmlspecialchars($conf['background'], ENT_QUOTES) : '' ?>" />
 											<div class="input-group-btn">
 												<label class="btn btn-default" id="checkbackground" for="backgroundimg" type="button">选择图片</label>
 												<input type="file" style="display:none" accept=".png,.jpeg,.jpg,.gif,.webp" id="backgroundimg" name="backgroundimg" onchange="uploadFixed('web_background', 'backgroundimg', 'web_site_background', 'checkbackground');" />
@@ -125,7 +125,7 @@ if ($set == 'save') {
 									<div class="form-group">
 										<label for="wap_site_background">手机端背景图片</label>
 										<div class="input-group">
-											<input type="text" class="form-control" name="wapbackground" accept="image/png,image/jpeg" id="wap_site_background" value="<?php echo $conf['wap_background'] ?>" />
+											<input type="text" class="form-control" name="wapbackground" accept="image/png,image/jpeg" id="wap_site_background" value="<?php echo isset($conf['wap_background']) ? htmlspecialchars($conf['wap_background'], ENT_QUOTES) : '' ?>" />
 											<div class="input-group-btn">
 												<label class="btn btn-default" id="checkwapbackground" for="wapbackgroundimg" type="button">选择图片</label>
 												<input type="file" style="display:none" accept=".png,.jpeg,.jpg,.gif,.webp" id="wapbackgroundimg" name="wapbackgroundimg" onchange="uploadFixed('wap_background', 'wapbackgroundimg', 'wap_site_background', 'checkwapbackground');" />
@@ -135,12 +135,12 @@ if ($set == 'save') {
 									</div>
 									<div class="form-group">
 										<label for="web_site_keywords">站点关键词</label>
-										<input class="form-control" type="text" id="web_site_keywords" name="keywords" value="<?php echo $conf['keywords'] ?>" placeholder="请输入站点关键词">
+										<input class="form-control" type="text" id="web_site_keywords" name="keywords" value="<?php echo isset($conf['keywords']) ? htmlspecialchars($conf['keywords'], ENT_QUOTES) : '' ?>" placeholder="请输入站点关键词">
 										<small class="help-block">网站搜索引擎关键字</small>
 									</div>
 									<div class="form-group">
 										<label for="web_site_description">站点描述</label>
-										<textarea class="form-control" id="web_site_description" rows="2" name="description" placeholder="请输入站点描述"><?php echo $conf['description'] ?></textarea>
+										<textarea class="form-control" id="web_site_description" rows="2" name="description" placeholder="请输入站点描述"><?php echo isset($conf['description']) ? htmlspecialchars($conf['description'], ENT_QUOTES) : '' ?></textarea>
 										<small class="help-block">网站描述，用于搜索引擎抓取相关信息</small>
 									</div>
 
@@ -148,7 +148,7 @@ if ($set == 'save') {
 									<div class="form-group">
 										<label for="web_site_home-title">运行模式</label>
 										<label class="lyear-radio radio-primary m-t-10">
-											<input type="radio" <?php if (!$mode = $conf['mode'] == 2) {
+											<input type="radio" <?php if (!$mode = (isset($conf['mode']) ? $conf['mode'] : 1) == 2) {
 											    echo 'checked="checked"';
 											} ?> value="1" name="mode">
 											<span>直接访问(默认)</span>
@@ -165,22 +165,22 @@ if ($set == 'save') {
 
 									<div class="form-group">
 										<label for="web_site_copyright">版权信息</label>
-										<textarea width="200px" type="text" rows="3" class="form-control" name="copyright" placeholder="请输入版权信息，支持HTML代码"><?php echo $conf['copyright'] ?></textarea>
+										<textarea width="200px" type="text" rows="3" class="form-control" name="copyright" placeholder="请输入版权信息，支持HTML代码"><?php echo isset($conf['copyright']) ? htmlspecialchars($conf['copyright'], ENT_QUOTES) : '' ?></textarea>
 										<small class="help-block">显示在首页底部的版权提示，<code>支持HTML代码</code></small>
 									</div>
 									<div class="form-group">
 										<label for="web_site_wztj">自定义footer</label>
-										<textarea type="text" rows="10" class="form-control" name="wztj" placeholder="可填写网站统计、引用JS文件等"><?php echo $conf['wztj'] ?></textarea>
+										<textarea type="text" rows="10" class="form-control" name="wztj" placeholder="可填写网站统计、引用JS文件等"><?php echo isset($conf['wztj']) ? htmlspecialchars($conf['wztj'], ENT_QUOTES) : '' ?></textarea>
 										<small class="help-block">站点底部自定义，可填写网站统计、JS代码(需要script标签)、CSS代码(需要style标签)等<code>支持HTML代码</code> <a href="https://doc.lylme.com/spage/#/footer" target="_blank">查看教程</a></small>
 									</div>
 									<div class="form-group">
 										<label for="web_site_icp">备案号</label>
-										<input class="form-control" type="text" id="web_site_icp" name="icp" value="<?php echo $conf['icp'] ?>" placeholder="请输入备案号，留空首页不显示备案信息">
+										<input class="form-control" type="text" id="web_site_icp" name="icp" value="<?php echo isset($conf['icp']) ? htmlspecialchars($conf['icp'], ENT_QUOTES) : '' ?>" placeholder="请输入备案号，留空首页不显示备案信息">
 									</div>
 									<div class="form-group">
 										<label class="d-block w-100" for="web_yan_status">随机一言开关</label>
 										<label class="lyear-switch switch-solid switch-cyan">
-											<input type="checkbox" <?php if ($conf['yan'] != 'false') {
+											<input type="checkbox" <?php if ((isset($conf['yan']) ? $conf['yan'] : 'true') != 'false') {
 											    echo 'checked="checked"';
 											} ?> name="yan" value="true">
 											<span></span>
@@ -190,7 +190,7 @@ if ($set == 'save') {
 
 									<div class="form-group">
 										<label for="web_site_snapshot">详情页快照生成API</label>
-										<input class="form-control" type="text" id="web_site_snapshot" name="snapshot" value="<?php echo isset($conf['snapshot']) ? $conf['snapshot'] : "" ?>" placeholder="请输入API接口地址">
+										<input class="form-control" type="text" id="web_site_snapshot" name="snapshot" value="<?php echo isset($conf['snapshot']) ? htmlspecialchars($conf['snapshot'], ENT_QUOTES) : '' ?>" placeholder="请输入API接口地址">
 										<small class="help-block">用于详情页生成网站缩略图，不填不启用，若不了解请留空 <a href="https://doc.lylme.com/spage/#/snapshot" target="_blank">查看教程</a></small>
 									</div>
 
