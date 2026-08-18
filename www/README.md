@@ -11,7 +11,7 @@
 
 > 致力于简洁高效无广告的上网导航和搜索入口，支持后台管理、多模板切换与自定义搜索引擎，全站无商业推广，简约而不简单。
 
-**演示站点**：<https://hao.lylme.com> &nbsp;|&nbsp; **项目文档**：<https://doc.lylme.com/spage/#/>
+**演示站点**：<https://hao.lylme.com> &nbsp;|&nbsp; **项目文档**：<https://doc.lylme.com/spage>
 
 ## 快速开始
 
@@ -123,7 +123,7 @@ docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/htm
 </table>
 
 <details>
-<summary>截图</summary>
+<summary>更多后台截图</summary>
 
 <table>
   <tr>

@@ -11,9 +11,7 @@ if(!empty($_GET['url'])) {
 include("common.php");
 
 // 启动session
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+session_start_safe();
 
 // 处理注销登录请求
 if(isset($_POST['exit']) && $_POST['exit'] === 'exit') {
