@@ -21,19 +21,46 @@
 <!--页面主要内容-->
 <main class="lyear-layout-content">
 	<div class="container-fluid">
+		<?php if (defined('DEBUG') && DEBUG === true): ?>
+		<div class="alert alert-warning" role="alert">
+			<i class="mdi mdi-alert mdi-alert-icon"></i>
+			<b>调试模式（DEBUG）已开启</b>：页面将显示详细错误信息，仅排障时使用，正式环境请前往<a href="./user.php#system-security" class="alert-link">系统安全</a>关闭。
+		</div>
+		<?php endif; ?>
+		<style>
+			.notice-card .card-header { position: relative; }
+			.notice-card .notice-close { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); }
+		</style>
 		<?php
             $update = require 'cache.php';
             if (! empty($update)) {
                 if ($update['switch']) {
                     if ($update['msg_switch'] && ! empty($update['msg'])) {
-            echo '<div class="card"><div class="card-header"><h4>' . $update['title'] . '</h4></div><ul class="list-group">' . $update['msg'] . '</ul></div>';
+            echo '<div class="card notice-card"><div class="card-header"><h4>' . $update['title'] . '</h4><button type="button" class="btn-close notice-close" data-notice="msg" aria-label="关闭" title="今日不再提醒"></button></div><ul class="list-group">' . $update['msg'] . '</ul></div>';
                     }
                     if (getver($update['version']) > getver($conf['version'])) {
-            echo '<div class="card"><div class="card-header"><h4>更新提示</h4></div><ul class="list-group">' . $update['update_msg'] . '</ul></div>';
+            echo '<div class="card notice-card"><div class="card-header"><h4>更新提示</h4><button type="button" class="btn-close notice-close" data-notice="update" aria-label="关闭" title="今日不再提醒"></button></div><ul class="list-group">' . $update['update_msg'] . '</ul></div>';
                     }
                 }
             }
         ?>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var NOTICE_EXPIRE_MS = 24 * 60 * 60 * 1000; // 关闭后24小时内不再显示
+				$('.notice-close').each(function() {
+					var key = 'lylme_notice_closed_' + $(this).data('notice');
+					var closedAt = parseInt(localStorage.getItem(key) || '0', 10);
+					if (closedAt > 0 && (Date.now() - closedAt) < NOTICE_EXPIRE_MS) {
+						$(this).closest('.notice-card').hide();
+					}
+				});
+				$('.notice-close').on('click', function() {
+					var key = 'lylme_notice_closed_' + $(this).data('notice');
+					localStorage.setItem(key, String(Date.now()));
+					$(this).closest('.notice-card').fadeOut(200);
+				});
+			});
+		</script>
 		<div class="row">
 			<div class="col-sm-6 col-lg-3">
 				<div class="card bg-primary">
@@ -130,7 +157,7 @@
 					<b>程序名称：</b>六零导航页(LyLme Spage)
 				</li>
 					<li class="list-group-item">
-					<b>主程序版本：</b><?php echo VERSION ?> <a href="./update.php" target="_blank">检查更新</a>
+					<b>主程序版本：</b>v<?php echo VERSION ?> <a href="./update.php" target="_blank">检查更新</a>
 				</li>
 				<li class="list-group-item">
 					<b>数据库版本：</b><?php echo $conf['version'] ?>

@@ -1,5 +1,5 @@
 <?php
-$title = '账号安全';
+$title = '系统安全';
 include './head.php';
 $set = isset($_GET['set']) ? $_GET['set'] : null;
 // 获取当前实际后台目录名（用于"设置为当前目录"按钮）
@@ -150,7 +150,7 @@ if ($set == 'syssave') {
               </form>
             </div>
           </div>
-          <div class="card">
+          <div class="card" id="system-security" style="scroll-margin-top: 80px;">
             <div class="card-body">
             <h4>系统安全</h4>
               <p class="text-danger">非必要请勿修改，修改错误可能导致后台无法访问！</p>
