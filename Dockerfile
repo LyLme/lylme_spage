@@ -3,43 +3,36 @@
 
 FROM php:8.2-apache-bookworm
 
-LABEL maintainer="lylme(六零)"
-LABEL description="六零导航页-简洁高效的上网导航"
+LABEL org.opencontainers.image.title="LyLme Spage" \
+      org.opencontainers.image.description="六零导航页 - 简洁高效的上网导航" \
+      org.opencontainers.image.authors="lylme(六零)"
 
 # 设置环境变量
 ENV DEBIAN_FRONTEND=noninteractive
-ENV MYSQL_HOST=localhost
-ENV MYSQL_USER=lylme
-ENV MYSQL_PASSWORD=lylme123456
-ENV MYSQL_DATABASE=lylme_spage
+# 数据库凭据不写入 ENV（避免 SecretsUsedInArgOrEnv 告警），
+# 默认值在 docker-entrypoint.sh 中提供，可通过 docker run -e 覆盖
 
-# 安装 MariaDB 和 PHP 扩展
+# 安装 MariaDB、Supervisor 及 PHP 扩展构建依赖
+# 注：curl / mbstring / xml(dom、simplexml) / pdo / opcache 基础镜像已内置并默认启用，无需重复编译
 RUN apt-get update && apt-get install -y --no-install-recommends \
     mariadb-server \
     mariadb-client \
+    supervisor \
+    curl \
     libzip-dev \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
-    libxml2-dev \
-    libcurl4-openssl-dev \
-    libonig-dev \
-    supervisor \
-    curl \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         gd \
         mysqli \
-        pdo \
         pdo_mysql \
         zip \
-        curl \
-        mbstring \
-        xml \
         bcmath \
-        opcache \
-    && pecl install redis && docker-php-ext-enable redis || true
+    && (pecl install redis && docker-php-ext-enable redis \
+        || echo "WARN: redis 扩展安装失败(可选)，已跳过")
 
 # 配置 MariaDB 只监听本地 socket，同时兼容 ARM 和 x86
 RUN mkdir -p /var/run/mysqld && \
@@ -62,6 +55,8 @@ RUN { \
         echo 'post_max_size = 50M'; \
         echo 'memory_limit = 256M'; \
         echo 'max_execution_time = 300'; \
+        echo 'mysqli.default_socket = /var/run/mysqld/mysqld.sock'; \
+        echo 'pdo_mysql.default_socket = /var/run/mysqld/mysqld.sock'; \
     } > /usr/local/etc/php/conf.d/custom.ini
 
 # 启用 Apache 模块
@@ -80,8 +75,14 @@ COPY install.sql /init/install.sql
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# 设置权限
-RUN chmod +x /docker-entrypoint.sh \
+# 去除 Windows CRLF 换行符（防止 exec 报 no such file or directory / 配置解析异常），
+# 并移除镜像内的安装锁，确保首次 docker run 能自动初始化数据库
+RUN sed -i 's/\r$//' /docker-entrypoint.sh \
+        /etc/supervisor/conf.d/supervisord.conf \
+        /init/install.sql \
+    && find /var/www/html -name '.htaccess' -exec sed -i 's/\r$//' {} + \
+    && rm -f /var/www/html/install/install.lock \
+    && chmod +x /docker-entrypoint.sh \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
 

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Web服务 - Apache + PHP 8.2 + MariaDB (单容器方案)
   web:
@@ -10,12 +8,6 @@ services:
     container_name: lylme_spage
     ports:
       - "80:80"
-    environment:
-      - MYSQL_HOST=localhost
-      - MYSQL_USER=lylme
-      - MYSQL_PASSWORD=lylme123456
-      - MYSQL_DATABASE=lylme_spage
-      - MYSQL_ROOT_PASSWORD=root123456
     volumes:
       - lylme_data:/var/www/html
       - mysql_data:/var/lib/mysql

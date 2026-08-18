@@ -1,15 +1,17 @@
-# Git
+# Git / 版本控制
 .git
 .gitignore
+.gitattributes
 
 # Docker
 Dockerfile
 docker-compose.yml
 .dockerignore
 
-# 开发文件
+# 开发文件 / 文档
 *.md
 *.log
+USAGE.txt
 
 # 初始化脚本目录（已在Dockerfile中处理）
 # init/

@@ -1,0 +1,7 @@
+# 强制 LF 换行，防止 Windows checkout 转成 CRLF 导致 Docker 构建/运行异常
+*.sh text eol=lf
+*.conf text eol=lf
+*.sql text eol=lf
+*.htaccess text eol=lf
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf

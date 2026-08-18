@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eu
 
 # 颜色输出
 RED='\033[0;31m'
@@ -194,12 +194,9 @@ main() {
         chown -R mysql:mysql /var/lib/mysql
     fi
     
-    # 在后台启动初始化检查
-    (
-        sleep 5
-        do_init
-    ) &
-    
+    # 后台执行初始化（wait_for_mysql 会轮询等待 MariaDB 就绪，无需固定延时）
+    do_init &
+
     # 设置目录权限
     chown -R www-data:www-data /var/www/html 2>/dev/null || true
     
