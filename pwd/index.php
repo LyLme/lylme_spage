@@ -9,6 +9,18 @@
  * @Copyright (c) 2024 by LyLme, All Rights Reserved. 
  */
 include("../include/common.php");
+
+session_start_safe();
+$pwd_enabled = $DB->num_rows($DB->query("SELECT * FROM `lylme_pwd`")) != 0;
+
+// 是否已登录
+$is_logged_in = isset($_SESSION['pass']) && $_SESSION['pass'] == 1;
+
+$body_style = '';
+if (!empty($background = background())) {
+    $background = str_replace('./', '../', $background);
+    $body_style = ' style="background-image: url(' . $background . ');"';
+}
 ?>
 <!DOCTYPE html>
 <html lang="zh-cn">
@@ -169,69 +181,55 @@ include("../include/common.php");
 </head>
 
 <body>
-	<?php
-
-	if (!empty($background = background())) {
-		$background = str_replace('./', '../', $background);
-		echo '<div class="body" style="background-image:  url(' . $background . ');">';
-	}
-	?>
-	<div class="form-wrapper">
-
-		<div class="nav">
-
-			<?php
-			if ($DB->num_rows($DB->query("SELECT * FROM `lylme_pwd`")) != 0) {
-				echo '<h1>访问管理</h1>'; ?>
-
+	<div class="body"<?php echo $body_style; ?>>
+		<div class="form-wrapper">
+			<div class="nav">
+				<?php if ($pwd_enabled) { ?>
+					<h1>访问管理</h1>
+				<?php } else { ?>
+					<h2>当前站点未启用链接加密</h2>
+				<?php } ?>
 			</div>
-			<?php
-			if (session_status() == PHP_SESSION_NONE) {
-				session_start(); //设置session
-			}
-			if (!isset($_SESSION['pass']) || $_SESSION['pass'] != 1) { ?>
-				<p>请输入密码登录</p>
-				<form name="form" action="../include/go.php" method="POST">
-					<div class="form">
-						<?php echo csrf_field(); ?>
-						<div class="form-item">
-							<input type="password" autocomplete="new-password" name="pass" required="required" value=""
-								placeholder="密码" autocomplete="off">
-						</div>
-						<div class="button-panel">
-							<input type="submit" class="button" title="登录" value="登录">
-						</div>
-					</div>
-				</form><?php } else { ?>
-				<form name="form" action="../include/go.php" method="POST">
-					<div class="form">
-						<?php echo csrf_field(); ?>
-						<div class="button-panel">
-							<p> 欢迎回来，您已登录！<br><br>用户组:
-								<?php foreach ($_SESSION['list'] as $list) {
-									echo (' [' . htmlspecialchars($list, ENT_QUOTES, 'UTF-8') . '] ');
-								}
-								?>
-							</p>
+
+			<?php if ($pwd_enabled) { ?>
+				<?php if (!$is_logged_in) { ?>
+					<p>请输入密码登录</p>
+					<form name="form" action="../include/go.php" method="POST">
+						<div class="form">
+							<?php echo csrf_field(); ?>
 							<div class="form-item">
-								<input type="hidden" autocomplete="new-password" name="exit" required="required" value="exit">
+								<input type="password" autocomplete="new-password" name="pass" required="required" value=""
+									placeholder="密码" autocomplete="off">
 							</div>
-							<input type="submit" class="button" title="注销登录" value="注销登录">
+							<div class="button-panel">
+								<input type="submit" class="button" title="登录" value="登录">
+							</div>
 						</div>
-					</div>
-
-				</form>
-				<?php
-			}
-			} else { ?>
-
-			<h2>当前站点未启用链接加密</h2>
-
-		<?php } ?>
-		<div class="button-panel">
-			<a href="../" class="btn_home">返回首页</a>
+					</form>
+				<?php } else { ?>
+					<form name="form" action="../include/go.php" method="POST">
+						<div class="form">
+							<?php echo csrf_field(); ?>
+							<div class="button-panel">
+								<p> 欢迎回来，您已登录！<br><br>用户组:
+									<?php foreach ($_SESSION['list'] as $list) {
+										echo (' [' . htmlspecialchars($list, ENT_QUOTES, 'UTF-8') . '] ');
+									}
+									?>
+								</p>
+								<div class="form-item">
+									<input type="hidden" autocomplete="new-password" name="exit" required="required" value="exit">
+								</div>
+								<input type="submit" class="button" title="注销登录" value="注销登录">
+							</div>
+						</div>
+					</form>
+				<?php } ?>
+			<?php } ?>
+			<div class="button-panel">
+				<a href="../" class="btn_home">返回首页</a>
+			</div>
 		</div>
-	</div>
 	</div>
 </body>
 

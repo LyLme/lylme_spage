@@ -872,14 +872,33 @@ function theme_config($name, $default = '')
 }
 
 /**
+ * 安全启动 session（幂等）
+ *
+ * 必须在任何 HTML / 输出开始之前调用。当 output_buffering=0（PHP 默认值）时，
+ * 一旦有输出发出，PHP 就无法再发送 Set-Cookie 响应头，session 将无法在客户端
+ * 建立，导致 CSRF token 无法写入 session、登录验证必然失败。
+ *
+ * @return bool session 是否处于可用状态（已启动或本次成功启动返回 true）
+ */
+function session_start_safe()
+{
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        return true;
+    }
+    // session 被禁用或响应头已发送时，无法再安全启动，直接返回 false 避免报错
+    if (session_status() === PHP_SESSION_DISABLED || headers_sent()) {
+        return false;
+    }
+    return session_start();
+}
+
+/**
  * 生成CSRF Token
  * @return string
  */
 function csrf_token()
 {
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
+    session_start_safe();
 
     if (!isset($_SESSION['csrf_token'])) {
         if (function_exists('random_bytes')) {
@@ -901,9 +920,7 @@ function csrf_token()
  */
 function csrf_verify($token = null)
 {
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
+    session_start_safe();
 
     if ($token === null) {
         $token = isset($_POST['csrf_token']) ? $_POST['csrf_token'] : '';
