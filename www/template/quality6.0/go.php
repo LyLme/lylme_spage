@@ -1,7 +1,7 @@
 <?php
 function isInternalUrl($url, $currentDomain) {
     $parsedUrl = parse_url($url);
-    $host = $parsedUrl['host'] ?? '';
+    $host = isset($parsedUrl['host']) ? $parsedUrl['host'] : '';
     return strpos($host, $currentDomain) !== false;
 }
 $currentDomain = $_SERVER['HTTP_HOST'];

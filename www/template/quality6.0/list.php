@@ -70,7 +70,7 @@
                     tools.push(item);
                     html += `
                     <div class="col-lg-3 col-md-4 col-6">
-                        <a href="site-${item.id}.html" data-id="${item.id}" class="btn btn-wider btn-block btn-xl btn-outline-light tool-link" ${item.out ? 'target="_blank"' : ''}>
+                        <a href="${item.url}" data-id="${item.id}" class="btn btn-wider btn-block btn-xl btn-outline-light tool-link" ${item.out ? 'target="_blank"' : ''}>
         ${item.icon && item.icon.trim() ? (item.icon.startsWith('<svg') ?
             `<span class="link-icon">${item.icon}</span>` :
             `<span class="link-icon"><img src="${item.icon}"></span>`) :

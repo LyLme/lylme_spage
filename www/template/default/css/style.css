@@ -13,7 +13,8 @@ h2.title{text-align:center;color:#fff;font-size:36px;font-weight:600;text-shadow
 body{font-size:14px;background:#f4f8fb;overflow-x:hidden}
 a{text-decoration:none}
 a:hover{text-decoration:none}
-svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:currentColor;overflow:hidden}
+svg.icon{width:24px;height:24px;margin:0 8px 0 8px;fill:currentColor;overflow:hidden}
+img.lylme-group-img {width: 24px; height: 24px;border-radius: 10px;margin: 0 8px 0 8px;}
 .navbar-light .navbar-nav .nav-link{color:#fff !important;font-size:16px;font-weight:bold;text-shadow:0px 1px 0px #000}
 #search{width:100%;margin:0;padding:0 0 10px;position:relative;z-index:2000;border-radius:5px}
 #search form{position:relative;margin-top:15px}
@@ -48,6 +49,9 @@ svg.icon{width:14px;height:14px;margin:0 5px 0 8px;vertical-align:-0.15em;fill:c
 #word{position:absolute;list-style:none;top:55px;left:0px;width:100%;background:rgba(259,259,259,0.9);border-radius:5px;z-index:20000;padding:15px 10px;box-shadow:0 0 10px #aaa}
 #word li{height:35px;padding:0 5px;text-indent:30px;background-size:20px;line-height:35px;cursor:pointer;font-size:16px;border-radius:5px}
 #word li:hover{background-color:#ddd}
+#word li.sug-site{color:#3e4045;text-indent:0;padding-left:30px;position:relative}
+#word li.sug-site .sug-icon{position:absolute;left:5px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center}
+#word li.sug-site .sug-icon svg{fill:#3e4045}
 .set-check{margin-top:3px;font-size:9pt}
 .set-check label{margin-left:3px}
 .set-check input,.set-check label{opacity:0;transition:all .3s ease}
@@ -125,3 +129,4 @@ ul.navbar-nav.mr-auto{margin-left:60px}
 .type-right{position:fixed;top:38px}
 .type-right svg{width:28px;height:28px}
 @media screen and (max-width:992px){.type-right{position:fixed;top:10px;right:10px}}
+.sug-badge-inner {margin-left: 10px;font-size: 12px;color: #1677ff;background: #e6f4ff;padding: 0 4px;border-radius: 2px;}

@@ -8,9 +8,9 @@ if($set=='save') {
 	saveSetting('wxplus',$userkey);
 	saveSetting('wxplustime',$wxplustime);
 	if(empty($userkey)) {
-		echo '<script>alert("微信推送已关闭");window.location.href="./wxplus.php";</script>';
+		exit('<script>$.alert({title:"提示",content:"微信推送已关闭",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./wxplus.php";}}}});</script>');
 	} else {
-		echo '<script>alert("微信推送密钥配置成功");window.location.href="./wxplus.php";</script>';
+		exit('<script>$.alert({title:"成功",content:"微信推送密钥配置成功",buttons:{confirm:{text:"确定",btnClass:"btn-primary",action:function(){window.location.href="./wxplus.php";}}}});</script>');
 	}
 } else {
 	?>
@@ -37,7 +37,7 @@ if($set=='save') {
 	                   3. 关闭功能：编辑框留空保存即可关闭该功能<br>
 	                   4. 获取密钥：微信关注公众号<code>上云六零</code>回复<code>推送密钥</code>复制到编辑框中保存即可<br>
 	                   5. 温馨提示：为了避免打扰，每天最多推送一次。当日<?php echo $conf['wxplustime'];?>前的提交会在<?php echo $conf['wxplustime'];?>前推送，之后提交的在次日<?php echo $conf['wxplustime'];?>前推送</p>
-	                  <button type="submit" class="btn btn-primary btn-block">保存</button>
+	                  <button type="submit" class="btn btn-primary d-block w-100">保存</button>
 	                </form>
 	              </div>
 	            </div>

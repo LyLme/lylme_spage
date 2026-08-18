@@ -79,20 +79,23 @@
             <div class="hr_10"></div>
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tr align="left" class="head">
-                    <td width="60%" height="36">扩展要求
+                    <td width="30%" height="36">扩展要求
                         </th>
-                    <td width="25%">检查结果
+                    <td width="30%">检查结果
                         </th>
-                    <td width="15%" align="right">建议
+                    <td width="40%">用途
                         </th>
                 </tr>
                 <?php foreach ($extendArray as $item): ?>
                     <tr>
-                        <td height="26" class="firstCol"><?= $item['name'] ?></td>
-                        <td><?= $item['status'] ? '<font color="green">支持</font>' : '<font color="red">不支持</font>' ?></td>
-                        <td class="endCol">
+                        <td height="26" class="firstCol"><?php echo $item['name']; ?><?php echo $item['required'] ? '' : '（可选）'; ?></td>
+                        <td><?php echo $item['status'] ? '<font color="green">支持</font>' : '<font color="red">不支持</font>'; ?></td>
+                        <td>
                             <span
-                                class="<?= $item['status'] ? '' : 'col-red' ?>"><?= $item['status'] ? '无' : '需安装' ?></span>
+                                class="<?php echo $item['status'] ? '' : ($item['required'] ? 'col-red' : ''); ?>"><?php echo $item['desc']; ?></span>
+                            <?php if (!$item['status']): ?>
+                                <span class="<?php echo $item['required'] ? 'col-red' : ''; ?>"><?php echo $item['required'] ? '需安装' : '（可选）'; ?></span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach ?>
@@ -100,29 +103,29 @@
             <div class="hr_10"></div>
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tr align="left" class="head">
-                    <td width="60%" height="36">函数名称
+                    <td width="30%" height="36">函数名称
                         </th>
-                    <td width="25%">检查结果
+                    <td width="30%">检查结果
                         </th>
-                    <td width="15%" align="right">建议
+                    <td width="40%">建议
                         </th>
                 </tr>
                 <?php foreach ($exists_array as $v): ?>
                     <tr>
                         <td height="26" class="firstCol"><?php echo $v; ?>()</td>
-                        <td><?= isFunExists($v) ? '<font color="green">支持</font>' : '<font color="red">不支持</font>' ?></td>
-                        <td class="endCol"><?= isFunExistsTxt($v) ?></td>
+                        <td><?php echo isFunExists($v) ? '<font color="green">支持</font>' : '<font color="red">不支持</font>'; ?></td>
+                        <td><?php echo isFunExistsTxt($v); ?></td>
                     </tr>
                 <?php endforeach ?>
             </table>
             <div class="hr_10"></div>
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tr align="left" class="head">
-                    <td width="60%" height="36">文件权限检测
+                    <td width="30%" height="36">文件权限检测
                         </th>
-                    <td width="25%">所需状态
+                    <td width="30%">所需状态
                         </th>
-                    <td width="15%" align="right">当前状态
+                    <td width="40%">当前状态
                         </th>
                 </tr>
                 <?php
@@ -131,7 +134,7 @@
                     <tr align="left">
                         <td height="26" class="firstCol"><?php echo $v; ?></td>
                         <td>可写</td>
-                        <td class="endCol"><?php isWrite($v); ?></td>
+                        <td><?php isWrite($v); ?></td>
                     </tr>
                     <?php
                 }
@@ -141,7 +144,7 @@
     </div>
     <div class="footer">
         <span class="step2"></span>
-        <span class="copyright"><?= $cfg_copyright; ?></span>
+        <span class="copyright"><?php echo $cfg_copyright; ?></span>
         <span class="formSubBtn">
             <form class="j-form" method="post" action="index.php">
                 <a href="javascript:void(0);" onclick="history.go(-1);return false;" class="back">返 回</a>
@@ -153,7 +156,7 @@
     <script>
         $(function () {
             // 环境检测是否通过
-            var isPass = <?= $GLOBALS['isNext'] ? 'true' : 'false' ?>;
+            var isPass = <?php echo $GLOBALS['isNext'] ? 'true' : 'false'; ?>;
             console.log(isPass)
             // 表单提交
             $('.j-submit').click(function () {

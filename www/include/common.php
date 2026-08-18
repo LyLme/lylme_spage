@@ -8,7 +8,7 @@
 
 // 系统常量定义
 define('ADMIN_PATH', 'admin');  // 后台目录（修改后需同步调整防火墙规则）
-define('DEBUG', false);  // 调试模式(默认关闭：false)
+define('DEBUG', false);  // 调试模式(默认关闭：false, 开启：true)
 
 define('IN_CRONLITE', true);
 define('SYS_KEY', 'lylme_key');
@@ -246,20 +246,21 @@ try {
     $earlyBaseFiles = [
         'lists.php',
         'site.php',
-        'include.php',
+        'include.php' => true,
         'tj.php',
         'updbase.php'
     ];
 
-    foreach ($earlyBaseFiles as $baseFile) {
+    foreach ($earlyBaseFiles as $baseFile => $silent) {
+        $baseFile = is_string($silent) ? $silent : $baseFile;
         $filePath = SYSTEM_ROOT . $baseFile;
+
         if (file_exists($filePath) && is_readable($filePath)) {
-            require $filePath;
+            $silent ? @require $filePath : require $filePath;
         } elseif (defined('DEBUG') && DEBUG === true) {
             error_log("Base file missing: {$baseFile}");
         }
     }
-
     // 包含依赖数据库配置的文件（必须在 $conf 读取之后）
     // member.php 需要 $conf['admin_user'] 和 $conf['admin_pwd'] 来验证登录
     $memberFile = SYSTEM_ROOT . 'member.php';

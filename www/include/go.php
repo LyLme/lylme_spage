@@ -43,16 +43,10 @@ if(!isset($_SESSION['pass']) || $_SESSION['pass'] != 1) {
             exit('<script>alert("安全验证失败，请重试");window.location.href="' . htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8') . '";</script>');
         }
         
-        //用户提交登录
+        //用户提交登录 - 使用精确匹配(exact match)防止通配符绕过
         $show = array();
-        
-        // 使用安全的转义方式 - 保持与原代码兼容的LIKE查询
         $pass_escaped = $DB->escape($pass);
-        // 移除escape()添加的引号(如果有),因为LIKE查询需要直接字符串
-        $pass_clean = trim($pass_escaped, "'");
-        
-        // 使用LIKE查询以保持原功能兼容性
-        $query = "SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '" . $pass_clean . "'";
+        $query = "SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` = '" . $pass_escaped . "'";
         $pwds = $DB->query($query);
         
         if ($pwds) {
@@ -65,7 +59,10 @@ if(!isset($_SESSION['pass']) || $_SESSION['pass'] != 1) {
             //无数据
             exit('<script>alert("密码错误！");window.location.href="' . htmlspecialchars($_SERVER['HTTP_REFERER'], ENT_QUOTES, 'UTF-8') . '";</script>');
         } else {
-            //有数据 - 登录成功,重定向到首页
+            //有数据 - 登录成功，重新生成会话ID防止会话固定攻击
+            if (function_exists('session_regenerate_id')) {
+                session_regenerate_id(true);
+            }
             $_SESSION['list'] = $show;
             $_SESSION['pass'] = 1;
             header("Location: ../");
@@ -76,14 +73,8 @@ if(!isset($_SESSION['pass']) || $_SESSION['pass'] != 1) {
     //已登录
     if(!empty($pass)) {
         $show = array();
-        
-        // 使用安全的转义方式 - 保持与原代码兼容的LIKE查询
         $pass_escaped = $DB->escape($pass);
-        // 移除escape()添加的引号(如果有),因为LIKE查询需要直接字符串
-        $pass_clean = trim($pass_escaped, "'");
-        
-        // 使用LIKE查询以保持原功能兼容性
-        $query = "SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` LIKE '" . $pass_clean . "'";
+        $query = "SELECT `pwd_id`, `pwd_key` FROM `lylme_pwd` WHERE `pwd_key` = '" . $pass_escaped . "'";
         $pwds = $DB->query($query);
         
         if ($pwds) {

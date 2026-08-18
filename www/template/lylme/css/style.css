@@ -207,7 +207,11 @@ svg.icon
     fill: currentColor;
     overflow: hidden;
 }
-
+img.lylme-group-img {
+    width: 20px;
+    height: 20px;
+    margin: 0 5px 0 8px;
+}
 svg.sw
 {
     width: 16px;

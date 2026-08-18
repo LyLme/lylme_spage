@@ -3,9 +3,19 @@ include("../include/common.php");
 $grouplists = $DB->query("SELECT * FROM `lylme_groups` WHERE `group_pwd` = 0");
 if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
     header('Content-Type:application/json');
-    //获取网站信息
-    $head = get_head($_GET['url']);
-    $head = json_encode($head, JSON_UNESCAPED_UNICODE);  //将合并后的数组转换为json
+    $client_ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
+    if (!rate_limit('apply_geturl_' . $client_ip, 5, 60)) {
+        exit('{"code":"-8","msg":"获取请求频繁，请稍后再试"}');
+    }
+
+    // SSRF 防护：拒绝内网/非 http(s) 地址
+    list($ok, ) = ssrf_validate_url($url);
+    if (!$ok) {
+        exit('{"code":"-9","msg":"链接地址不合法"}');
+    }
+
+    $head = get_head($url);
+    $head = json_encode($head, JSON_UNESCAPED_UNICODE);
     exit($head);  //输出json
 
 } elseif (isset($_GET['submit']) == 'post') {
@@ -140,10 +150,17 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
     ?>
     <div class="lylme-form">
         <div class="lylme-center">
-            <?php if ($conf["apply"] == 2) {
-                exit('<div class="lylme-header text-center"><h2>网站已关闭收录</h2></div>' . $conf['apply_gg'] . '</div>');
-            }
-            ?>
+            <?php if ($conf["apply"] == 2): ?>
+            <div class="lylme-header text-center">
+                <h2>网站已关闭收录</h2>
+            </div>
+            <div class="apply_gg">
+                <?php echo $conf['apply_gg'] ?>
+            </div>
+            <center>
+                <p><a href="../" class="home">返回首页</a></p><?php echo $conf['copyright'] ?>
+            </center>
+            <?php else: ?>
             <div class="lylme-header text-center">
                 <h2>申请收录</h2>
             </div>
@@ -167,8 +184,9 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
                         <?php
                         $applygroup = $site->getGroups();
                         while ($grouplist = $DB->fetch($applygroup)) {
-                            echo '
-	<option value="' . $grouplist["group_id"] . '">' . $grouplist["group_name"] . '</option>';
+                        ?>
+	<option value="<?php echo $grouplist['group_id']; ?>"><?php echo $grouplist['group_name']; ?></option>
+                        <?php
                         }
                         ?>
                     </select>
@@ -215,6 +233,7 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
             <center>
                 <p><a href="../" class="home">返回首页</a></p><?php echo $conf['copyright'] ?>
             </center>
+            <?php endif; ?>
         </div>
     </div>
 </body>

@@ -51,7 +51,5 @@ $tagslists = $site->getTags();
 </div>
 <div id="bg">
 </div>
-<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-2-M/jquery/3.5.1/jquery.min.js" type="application/javascript"></script>
-<script src="https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/skel/3.0.1/skel.min.js" type="application/javascript"></script>
 </body>
 </html>

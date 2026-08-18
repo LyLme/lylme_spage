@@ -249,7 +249,11 @@ class DBPdo extends DBBase
 
     public function escape($str)
     {
-        return $this->link->quote($str);
+        if ($str === null) {
+            return '';
+        }
+        $quoted = $this->link->quote((string) $str);
+        return substr($quoted, 1, -1);
     }
 
     public function close()

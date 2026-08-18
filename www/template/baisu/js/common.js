@@ -4,12 +4,6 @@ if (bodyH > winH) {
 	$('footer').addClass('show');
 };
 
-// layui.use(['dropdown', 'layer', 'form'], function() {
-// 	var dropdown = layui.dropdown,
-// 		layer = layui.layer,
-// 		form = layui.form,
-// 		$ = layui.jquery;
-// })
 //搜索引擎切换
 function searchChange() {
 	$(".search-change").click(function () {
