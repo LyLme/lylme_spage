@@ -194,11 +194,25 @@ main() {
         chown -R mysql:mysql /var/lib/mysql
     fi
     
+    # 文件自愈：当 /var/www/html 为空或缺少应用文件时（如 bind mount 空目录、卷被清空），
+    # 从镜像内的备份 /app/www_bak 恢复完整文件，避免 Apache 因找不到 index.php 返回 403
+    if [ ! -f "/var/www/html/index.php" ]; then
+        log_warn "/var/www/html 缺少应用文件(index.php)，正在从镜像备份恢复..."
+        if [ -d "/app/www_bak" ] && [ -f "/app/www_bak/index.php" ]; then
+            cp -a /app/www_bak/. /var/www/html/ || true
+            log_info "应用文件恢复完成"
+        else
+            log_error "找不到 /app/www_bak 备份目录，无法恢复应用文件"
+        fi
+    fi
+
     # 后台执行初始化（wait_for_mysql 会轮询等待 MariaDB 就绪，无需固定延时）
     do_init &
 
     # 设置目录权限
+    # 群晖等平台 bind mount 时 chown 可能失败，追加 chmod 保证 www-data 可读，避免 Apache 403
     chown -R www-data:www-data /var/www/html 2>/dev/null || true
+    chmod -R a+rX /var/www/html 2>/dev/null || true
     
     # 启动 supervisord
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

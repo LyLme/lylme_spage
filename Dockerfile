@@ -68,6 +68,9 @@ WORKDIR /var/www/html
 # 复制应用文件
 COPY www/ /var/www/html/
 
+# 备份一份应用文件，用于 entrypoint 在空卷/bind mount 场景下自动恢复
+COPY www/ /app/www_bak/
+
 # 复制初始化文件
 COPY install.sql /init/install.sql
 
@@ -84,7 +87,8 @@ RUN sed -i 's/\r$//' /docker-entrypoint.sh \
     && rm -f /var/www/html/install/install.lock \
     && chmod +x /docker-entrypoint.sh \
     && chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+    && chown -R www-data:www-data /app/www_bak \
+    && chmod -R 755 /var/www/html /app/www_bak
 
 # 数据目录
 VOLUME ["/var/lib/mysql", "/var/www/html"]
@@ -93,8 +97,10 @@ VOLUME ["/var/lib/mysql", "/var/www/html"]
 EXPOSE 80
 
 # 健康检查
-HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost/ || exit 1
+# 使用 -sS 静默输出（避免失败时刷 curl 进度条），-o /dev/null 丢弃响应体
+# start-period 放宽到 90s，容忍首次初始化（MariaDB 就绪 + 导入 SQL）耗时
+HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 \
+    CMD curl -fsS -o /dev/null http://localhost/ || exit 1
 
 # 入口点
 ENTRYPOINT ["/docker-entrypoint.sh"]
