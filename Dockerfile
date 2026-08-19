@@ -12,6 +12,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 数据库凭据不写入 ENV（避免 SecretsUsedInArgOrEnv 告警），
 # 默认值在 docker-entrypoint.sh 中提供，可通过 docker run -e 覆盖
 
+# 默认时区为北京时间，可通过 docker run -e TZ=xxx 覆盖
+ENV TZ=Asia/Shanghai
+
 # 安装 MariaDB、Supervisor 及 PHP 扩展构建依赖
 # 注：curl / mbstring / xml(dom、simplexml) / pdo / opcache 基础镜像已内置并默认启用，无需重复编译
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -19,11 +22,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     mariadb-client \
     supervisor \
     curl \
+    tzdata \
     libzip-dev \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
     && rm -rf /var/lib/apt/lists/* \
+    && ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo ${TZ} > /etc/timezone \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         gd \

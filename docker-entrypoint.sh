@@ -106,6 +106,22 @@ EOF
     log_info "配置文件已更新"
 }
 
+# 设置时区（默认北京时间，可通过 TZ 环境变量覆盖）
+setup_timezone() {
+    local tz="${TZ:-Asia/Shanghai}"
+    if [ -f "/usr/share/zoneinfo/${tz}" ]; then
+        ln -snf "/usr/share/zoneinfo/${tz}" /etc/localtime
+        echo "${tz}" > /etc/timezone
+        export TZ="${tz}"
+        log_info "时区已设置为 ${tz}"
+    else
+        log_warn "未找到时区文件 /usr/share/zoneinfo/${tz}，回退到 Asia/Shanghai"
+        ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+        echo "Asia/Shanghai" > /etc/timezone
+        export TZ=Asia/Shanghai
+    fi
+}
+
 # 创建安装锁文件
 create_lock_file() {
     log_step "创建安装锁文件..."
@@ -176,7 +192,10 @@ main() {
     log_info "=========================================="
     log_info "  LyLme Spage 启动中..."
     log_info "=========================================="
-    
+
+    # 设置时区
+    setup_timezone
+
     # 初始化 MariaDB 数据目录
     mkdir -p /var/run/mysqld
     chown -R mysql:mysql /var/run/mysqld
