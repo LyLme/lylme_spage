@@ -63,6 +63,7 @@ RUN { \
         echo 'max_execution_time = 300'; \
         echo 'mysqli.default_socket = /var/run/mysqld/mysqld.sock'; \
         echo 'pdo_mysql.default_socket = /var/run/mysqld/mysqld.sock'; \
+        echo 'date.timezone = Asia/Shanghai'; \
     } > /usr/local/etc/php/conf.d/custom.ini
 
 # 启用 Apache 模块
