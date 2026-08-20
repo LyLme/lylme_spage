@@ -1,20 +1,18 @@
-# 🧭 六零导航页 (LyLme Spage)
+# 六零导航页 (LyLme Spage)
 
-**六零导航页** 致力于简洁高效无广告的上网导航和搜索入口，支持后台添加链接、自定义搜索引擎，沉淀最具价值链接，全站无商业推广，简约而不简单。
+**六零导航页**致力于简洁高效无广告的上网导航和搜索入口，支持后台添加链接、自定义搜索引擎，沉淀最具价值链接，全站无商业推广，简约而不简单。
 
-> 🌐 演示站点：<https://hao.lylme.com>
+> 演示站点：<https://hao.lylme.com>
 
-## ✨ 功能特性
+## 功能特性
 
-- 🔍 简洁高效的上网导航与搜索入口
-- 🛠️ 后台可视化添加链接、自定义搜索引擎
-- 🚫 全站无广告、无商业推广
-- 🐳 一键 Docker 部署，开箱即用，自动导入数据库
-- 🕐 默认使用北京时间（CST），时区可配置
+- 简洁高效的上网导航与搜索入口
+- 后台可视化添加链接、自定义搜索引擎
+- 全站无广告、无商业推广
+- 一键 Docker 部署，开箱即用，自动导入数据库
+- 默认使用北京时间（CST），时区可配置
 
----
-
-## 🚀 快速开始
+## 快速开始
 
 安装 [Docker](https://www.runoob.com/docker/windows-docker-install.html) 后，任选以下一种方式部署。
 
@@ -24,7 +22,7 @@
 docker run -d -p 8080:80 lylme/lylme_spage
 ```
 
-> ⚠️ 此方式容器删除后数据会丢失，仅用于体验。
+> 注意：此方式容器删除后数据会丢失，仅用于体验。
 
 ### 方式二：数据持久化（推荐）
 
@@ -36,7 +34,7 @@ docker run -d -p 8080:80 \
   lylme/lylme_spage
 ```
 
-> ✅ 使用命名卷，数据永久保存，容器删除/重建不丢失。
+> 使用命名卷，数据永久保存，容器删除/重建不丢失。
 
 ### 方式三：国内镜像加速
 
@@ -48,7 +46,7 @@ docker run -d -p 8080:80 \
   docker.1ms.run/lylme/lylme_spage:latest
 ```
 
-> ✅ 效果与方式二完全一致，Docker 官方仓库访问不了时使用。
+> 效果与方式二完全一致，Docker 官方仓库访问受限时使用。
 
 ### 方式四：Docker Compose 部署（推荐）
 
@@ -58,12 +56,10 @@ docker run -d -p 8080:80 \
 docker compose up -d
 ```
 
-> ✅ 等效于方式二，另自动启用容器健康检查与 `unless-stopped` 重启策略。
+> 等效于方式二，自动启用容器健康检查与 `unless-stopped` 重启策略。
 > 注意：Compose 方式使用的卷名为 `lylme_mysql_data`、`lylme_web_data`，与方式二/三的 `lylme_mysql`、`lylme_www` 相互独立。
 
----
-
-## 🔐 访问信息
+## 访问信息
 
 | 项目 | 地址 |
 |------|------|
@@ -74,11 +70,9 @@ docker compose up -d
 
 `localhost` 可用 `127.0.0.1`、服务器内网 IP、服务器公网 IP 代替。
 
-> ⚠️ **请登录后台后立即修改默认密码！**
+> 请登录后台后立即修改默认密码！
 
----
-
-## 🌐 域名访问
+## 域名访问
 
 ### 去除端口号
 
@@ -87,6 +81,7 @@ docker compose up -d
 ### 宝塔面板反向代理
 
 添加站点绑定域名后，进入 **站点设置 → 反向代理 → 添加反向代理**：
+
 - 代理名称：任意
 - 目标 URL：`http://localhost:8080`
 
@@ -109,9 +104,7 @@ server {
 }
 ```
 
----
-
-## 💾 数据持久化
+## 数据持久化
 
 ### 持久化卷说明
 
@@ -140,9 +133,7 @@ docker exec -i lylme_spage mysql -u lylme -plylme123456 \
   --socket=/var/run/mysqld/mysqld.sock lylme_spage < backup.sql
 ```
 
----
-
-## 📋 环境变量
+## 环境变量
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
@@ -159,24 +150,20 @@ docker run -d -p 8080:80 -e TZ=Asia/Tokyo \
   --name lylme_spage lylme/lylme_spage
 ```
 
-## 🕐 时区说明
+## 时区说明
 
 - 镜像默认时区为 **Asia/Shanghai（北京时间，UTC+8）**，数据库、日志、安装锁时间均使用该时区。
 - 如需其他时区，设置环境变量 `TZ` 即可（如 `TZ=Asia/Tokyo`）。
 - 容器启动时会自动校验时区文件，若指定的时区不存在则回退到 `Asia/Shanghai`。
 
----
+## 安全配置
 
-## 🛡️ 安全配置
+- 数据库仅监听本机 socket（127.0.0.1），不对外暴露端口
+- 内部通信禁用 SSL
+- 首次启动自动创建安装锁，防止重复安装
+- 内置健康检查，异常时自动重启（Compose 方式）
 
-- ✅ 数据库仅监听本机 socket（127.0.0.1），不对外暴露端口
-- ✅ 内部通信禁用 SSL
-- ✅ 首次启动自动创建安装锁，防止重复安装
-- ✅ 内置健康检查，异常时自动重启（Compose 方式）
-
----
-
-## 🔧 常用命令
+## 常用命令
 
 ### Docker 方式
 
@@ -216,9 +203,7 @@ docker compose restart
 docker compose down
 ```
 
----
-
-## 🔄 重新安装
+## 重新安装
 
 ```bash
 # 方法 1：仅重置数据库（删除安装锁后重启自动重装）
@@ -230,17 +215,15 @@ docker restart lylme_spage
 docker stop lylme_spage
 docker rm -f lylme_spage
 docker volume rm lylme_mysql lylme_www
-
+# 重新启动
 docker run -d -p 8080:80 \
   -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html \
   --name lylme_spage lylme/lylme_spage
 ```
 
-> 💡 网站文件丢失时无需重装：启动脚本会自动从镜像内置备份 `/app/www_bak` 恢复。
+> 网站文件丢失时无需重装：启动脚本会自动从镜像内置备份 `/app/www_bak` 恢复。
 
----
-
-## 📦 包含组件
+## 包含组件
 
 | 组件 | 版本 |
 |------|------|
@@ -257,9 +240,7 @@ docker run -d -p 8080:80 \
 - `xml`、`bcmath`、`opcache`
 - `redis`（可选，安装失败自动跳过）
 
----
-
-## 🏗️ 从源码构建
+## 从源码构建
 
 ```bash
 # 构建镜像
@@ -269,9 +250,7 @@ docker build -t lylme/lylme_spage:latest .
 docker compose build web
 ```
 
----
-
-## 🐛 故障排除
+## 故障排除
 
 ### 容器启动失败
 
@@ -308,12 +287,10 @@ docker exec lylme_spage date
 docker compose up -d --build
 ```
 
----
-
-## 📄 License
+## License
 
 本项目使用 **Apache-2.0** 协议开源。
 
 ---
 
-**项目地址**: <https://github.com/LyLme/lylme_spage>
+**项目地址**：<https://github.com/LyLme/lylme_spage>
