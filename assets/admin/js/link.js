@@ -167,7 +167,9 @@ function geturl() {
         dataType: "json",
         data: { url: url },
         success: function (data) {
-            $("input[name=\'name\']").val(truncateText(data.title, 255));
+            $("input[name='name']").val(truncateText(data.title || '', 255));
+            $("textarea[name='link_desc']").val(truncateText(data.description || '', 255));
+            $("input[name='link_keywords']").val(truncateText(data.keywords || '', 512));
             if (!data.title && !data.icon) {
                 layer.msg('获取失败，请手动填写');
             }
@@ -339,14 +341,14 @@ function save_order() {
         dataType: 'json',
         success: function (data) {
             lightyear.loading('hide');
-           
+
             if (data.code == 200) {
                 lightyear.notify(data.msg, 'success', 1000);
                 // 校验前端顺序是否和后端一致
                 var frontOrder = link_array.join(',');
                 var backOrder = data.order;
                 if (frontOrder === backOrder) {
-                     $("#save_order").hide();
+                    $("#save_order").hide();
                     return;
                 }
 

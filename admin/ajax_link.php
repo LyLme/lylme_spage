@@ -52,7 +52,7 @@ switch ($submit) {
 			if ($DB->query($sql)) {
 				json_response(200, '添加导航菜单 ' . $name . ' 成功！');
 			} else {
-				json_response(100, '添加导航菜单失败');
+				json_response(500, '添加导航菜单失败');
 			}
 		}
 		break;
@@ -79,7 +79,7 @@ switch ($submit) {
 			if ($DB->query($sql)) {
 				json_response(200, '修改导航菜单 ' . $name . ' 成功！');
 			} else {
-				json_response(100, '修改导航菜单失败！');
+				json_response(500, '修改导航菜单失败！');
 			}
 		}
 		break;
@@ -104,15 +104,26 @@ switch ($submit) {
 			// 链接查重：已存在则跳过（忽略末尾斜杠差异），防止重复入库
 			$url_check = rtrim($url, '/');
 			$exists = $DB->get_row("SELECT `id` FROM `lylme_links` WHERE `url` = '$url_check' OR `url` = '$url_check/' LIMIT 1");
+
 			if ($exists) {
-				json_response(100, '链接已存在，跳过！ID=' . $exists['id']);
+				$data = array('data' => array(
+					'id' => $exists['id'],
+					'name' => $name,
+					'url' => $url,
+					'color' => $color,
+					'icon' => $icon,
+					'group_id' => $group_id,
+					'link_desc' => $link_desc,
+					'link_keywords' => $link_keywords
+				));
+				json_response(201, '链接已存在，跳过！ID=' . $exists['id'], $data);
 			}
 			$sql = "INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`, `link_keywords`, `link_order`) VALUES (NULL, '" . $name1 . "', '" . $group_id . "', '" . $url . "', '" . $icon . "', '" . $link_desc . "', '" . $link_keywords . "', '" . $link_order . "');";
 			if ($DB->query($sql)) {
 				$newid = $DB->insert_id();
 				json_response(200, '添加链接 ' . $name . ' 成功！', array('id' => $newid));
 			} else {
-				json_response(100, '添加链接失败！');
+				json_response(500, '添加链接失败！');
 			}
 		}
 		break;
@@ -144,7 +155,7 @@ switch ($submit) {
 			if ($DB->query($sql)) {
 				json_response(200, '修改链接 ' . $name . ' 成功！');
 			} else {
-				json_response(100, '修改链接失败！');
+				json_response(500, '修改链接失败！');
 			}
 		}
 		break;
@@ -172,7 +183,7 @@ switch ($submit) {
 			if ($DB->query($sql)) {
 				json_response(200, '添加搜索引擎 ' . $name . ' 成功！');
 			} else {
-				json_response(100, '添加搜索引擎失败！');
+				json_response(500, '添加搜索引擎失败！');
 			}
 		}
 		break;
@@ -205,7 +216,7 @@ switch ($submit) {
 			if ($DB->query($sql)) {
 				json_response(200, '修改搜索引擎 ' . $name . ' 成功！');
 			} else {
-				json_response(100, '修改失败！');
+				json_response(500, '修改失败！');
 			}
 		}
 		break;
@@ -438,13 +449,13 @@ switch ($submit) {
 
 				<div class="form-group">
 					<label for="edit_desc">链接描述:</label>
-					<textarea rows="2" class="form-control" id="edit_desc" name="link_desc" placeholder="仅部分主题支持，可不填"><?php echo htmlspecialchars($row['link_desc']); ?></textarea>
+					<textarea rows="2" class="form-control" maxlength="255" id="edit_desc" name="link_desc" placeholder="链接描述"><?php echo htmlspecialchars($row['link_desc']); ?></textarea>
 					<small class="help-block">链接描述仅部分主题支持显示和详情页SEO，访问详情页时若为空将自动采集写入，采集失败写入"无"</small>
 				</div>
 
 				<div class="form-group">
 					<label for="edit_keywords">链接关键词:</label>
-					<input type="text" class="form-control" id="edit_keywords" name="link_keywords" maxlength="512" placeholder="多个关键词用逗号分隔" value="<?php echo htmlspecialchars($row['link_keywords']); ?>">
+					<input type="text" class="form-control" maxlength="512" id="edit_keywords" name="link_keywords" maxlength="512" placeholder="多个关键词用逗号分隔" value="<?php echo htmlspecialchars($row['link_keywords']); ?>">
 					<small class="help-block">关键词用于详情页 SEO，为空时访问详情页将自动采集写入</small>
 				</div>
 
@@ -481,19 +492,26 @@ switch ($submit) {
 						if (index) window.parent.layer.close(index);
 					}
 				}
+				function truncateText(s, max) {
+					if (s == null) return '';
+					s = String(s);
+					var chars = Array.from(s);
+					if (chars.length <= max) return s;
+					return chars.slice(0, Math.max(0, max - 3)).join('') + '...';
+				}
 
 				// 获取网站标题/图标
 				function geturl() {
-					var url = $("input[name='url']").val();
+					var url = $("input[name=\'url\']").val();
 					if (!url) {
 						layer.msg('链接地址不能为空');
 						return false;
 					}
-					if (!/^http[s]?:\/\/+/.test(url)) {
-						url = "http://" + url;
-						$("input[name='url']").val(url);
-					}
 					$('#loading').css("display", "flex");
+					if (!/^http[s]?:\/\/+/.test(url) && url != "") {
+						var url = "http://" + url;
+						$("input[name=\'url\']").val(url);
+					}
 					$.ajax({
 						url: "ajax_link.php?submit=geturl",
 						type: "GET",
@@ -502,18 +520,22 @@ switch ($submit) {
 							url: url
 						},
 						success: function(data) {
-							$('#loading').css("display", "none");
-							if (data.title) $("input[name='name']").val(data.title);
+							$("input[name='name']").val(truncateText(data.title || '', 255));
+							$("textarea[name='link_desc']").val(truncateText(data.description || '', 255));
+							$("input[name='link_keywords']").val(truncateText(data.keywords || '', 512));
 							if (!data.title && !data.icon) {
 								layer.msg('获取失败，请手动填写');
-								return false;
+							} else if (!data.icon) {
+								layer.msg('未获取到网站图标');
 							}
+							layer.msg('正则抓取目标网站图标...');
 							downloadimg(data.icon, url);
+							$('#loading').css("display", "none");
 							return true;
 						},
-						error: function() {
-							$('#loading').css("display", "none");
+						error: function(data) {
 							layer.msg('获取失败，目标网站无法访问或防火墙限制！');
+							$('#loading').css("display", "none");
 							return false;
 						}
 					});
@@ -606,6 +628,7 @@ switch ($submit) {
 				});
 			</script>
 		</body>
+
 		</html>
 <?php
 		break;
