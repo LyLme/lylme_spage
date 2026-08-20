@@ -193,12 +193,7 @@ docker compose down
 ## 重新安装
 
 ```bash
-# 方法 1：仅重置数据库（删除安装锁后重启自动重装）
-docker stop lylme_spage
-docker exec lylme_spage rm -f /var/www/html/install/install.lock
-docker restart lylme_spage
-
-# 方法 2：完全重置（清空所有数据）
+# 完全重置（清空所有数据）
 docker stop lylme_spage
 docker rm -f lylme_spage
 docker volume rm lylme_mysql lylme_www

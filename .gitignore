@@ -9,5 +9,5 @@ cache
 include/qrcode.png
 .htaccess
 nginx.htaccess
-config.php
+/config.php
 logs/*
