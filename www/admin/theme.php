@@ -20,7 +20,7 @@ if (!empty($set)) {
             <h4>主题设置 <a href="https://spage.lylme.com/themes" target="_blank">更多主题 >></a></h4>
           </div>
           <div class="card-body">
-            <a href="./theme_setting.php" class="btn btn-label btn btn-default"><label><i class="mdi mdi-contrast-circle"></i></label>主题自定义设置</a>
+            <a href="./theme_setting.php" class="btn btn-label btn btn-default mb-2"><label><i class="mdi mdi-contrast-circle"></i></label>主题自定义设置</a>
             <div class="table-responsive">
               <table class="table">
                 <thead>
