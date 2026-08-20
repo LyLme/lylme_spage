@@ -9,13 +9,19 @@ function truncateText(s, max) {
 
 //当前检测弹窗 ID（0 表示未打开），删除失效链接后用于保留弹窗
 var _checkWin = 0;
-
+var _currentListQuery = (function () {
+    return window.location.search.replace(/^\?/, '');
+})();
 //请求页面；keepLayer=true 时不关闭已打开的 layer 弹窗（如检测进度窗）
 function listTable(query, keepLayer) {
-    var url = window.document.location.href.toString();
-    var queryString = url.split("?")[1];
-    query = query || queryString;
+
+    if (query !== undefined && query !== null && query !== '') {
+        _currentListQuery = query;
+    }
+    query = _currentListQuery;
+
     if (!keepLayer) layer.closeAll();
+
     var ii = layer.load(2, { shade: [0.1, '#fff'] });
     $.ajax({
         type: 'GET',
@@ -31,10 +37,12 @@ function listTable(query, keepLayer) {
                 });
             }
             $("#link").dragsort({
-                dragBetween: true,
+                itemSelector: "tr",
                 dragSelector: "td.lylme",
+                dragCancel: "a, button, input, select, label",
+                dragBetween: true,
                 dragEnd: showbutton,
-                placeHolderTemplate: "<tr></tr>",
+                placeHolderTemplate: "<tr></tr>"
             });
         },
         error: function (data) {
@@ -62,8 +70,17 @@ function get_check() {
 }
 
 //多选启用
-function on_link() {
-    if (get_check().length == 0) {
+function on_link(id) {
+    let links = [];
+    if (id) {
+        links = [String(id)];
+        console.log(links);
+
+    } else {
+        links = get_check();
+    }
+    // 未选择任何链接
+    if (!links || links.length === 0) {
         $.alert("未选择链接");
         return false;
     }
@@ -71,7 +88,7 @@ function on_link() {
     $.ajax({
         url: "ajax_link.php?submit=on",
         method: "POST",
-        data: { links: get_check() },
+        data: { links: links },
         success: function (data) {
             lightyear.loading('hide');
             if (data.code == 200) {
@@ -81,7 +98,7 @@ function on_link() {
             else {
                 lightyear.notify(data.msg, 'danger', 1000);
             }
-            
+
             return true;
         },
         error: function (data) {
@@ -93,20 +110,30 @@ function on_link() {
 }
 
 //多选禁用
-function off_link() {
-    if (get_check().length == 0) {
+function off_link(id) {
+    let links = [];
+    if (id) {
+        links = [String(id)];
+        console.log(links);
+
+    } else {
+        links = get_check();
+    }
+    // 未选择任何链接
+    if (!links || links.length === 0) {
         $.alert("未选择链接");
         return false;
     }
+
     lightyear.loading('show');
     $.ajax({
         url: "ajax_link.php?submit=off",
         method: "POST",
-        data: { links: get_check() },
+        data: { links: links },
         success: function (data) {
             lightyear.loading('hide');
             if (data.code == 200) {
-                lightyear.notify(data.msg, 'success', 1000);
+                lightyear.notify(data.msg, 'warning', 1000);
                 listTable();
             }
             else {
@@ -240,7 +267,7 @@ function del_link(id) {
                         },
                         success: function (data) {
                             lightyear.loading('hide');
-                            
+
                             console.log(data.msg);
                             if (data.code == 200) {
                                 lightyear.notify(data.msg, 'success', 1000);
@@ -280,8 +307,15 @@ function check_all() {
 $(document).ready(function () {
     $("#link").dragsort({
         itemSelector: "tr",
+        dragSelector: "td.lylme",
+        dragCancel: "a, button, input, select, label",
+        dragBetween: true,
         dragEnd: showbutton,
-        dragBetween: true, dragSelector: "tr", placeHolderTemplate: "<tr></tr>"
+        placeHolderTemplate: "<tr></tr>"
+    });
+
+    $(document).on('click', '#refreshBtn', function () {
+        listTable();
     });
 });
 
@@ -293,8 +327,7 @@ function showbutton() {
 //保存拖拽排序
 function save_order() {
     var link_array = [];
-    var $inputArr = $('input[name="link-check"]');
-    $inputArr.each(function () {
+    $('input[name="link-check"]').each(function () {
         link_array.push($(this).val());
     });
 
@@ -303,56 +336,85 @@ function save_order() {
         url: "ajax_link.php?submit=allorder",
         method: "POST",
         data: { link_array: link_array },
+        dataType: 'json',
         success: function (data) {
             lightyear.loading('hide');
+           
             if (data.code == 200) {
                 lightyear.notify(data.msg, 'success', 1000);
+                // 校验前端顺序是否和后端一致
+                var frontOrder = link_array.join(',');
+                var backOrder = data.order;
+                if (frontOrder === backOrder) {
+                     $("#save_order").hide();
+                    return;
+                }
+
+
+                // 顺序不一致再刷新表格
                 listTable();
-            }
-            else {
+            } else {
                 lightyear.notify(data.msg, 'danger', 1000);
+                listTable(); // 出错时强制刷新
             }
-            return true;
         },
-        error: function (data) {
+        error: function () {
             layer.msg('服务器错误');
             lightyear.loading('hide');
-            return false;
         }
     });
 }
 
 //点击排序
 $(document).on('click', '.sort-up', function () {
-    //上移一行
-    if ($(this).parents('tr').prevAll().length > 0) {
-        $(this).parents('tr').prev().before($(this).parents('tr').prop('outerHTML'));
-        $(this).parents('tr').remove();
+    // 上移一行
+    const $tr = $(this).parents('tr');
+    if ($tr.prevAll().length > 0) {
+        const $newTr = $($tr.prop('outerHTML'));
+        $tr.prev().before($newTr);
+        $tr.remove();
+        highlightRow($newTr);
         save_order();
+    } else {
+        layer.msg('已在顶部');
     }
 }).on('click', '.sort-down', function () {
-    //下移一行
-    if ($(this).parents('tr').nextAll().length > 0) {
-        $(this).parents('tr').next().after($(this).parents('tr').prop('outerHTML'));
-        $(this).parents('tr').remove();
+    // 下移一行
+    const $tr = $(this).parents('tr');
+    if ($tr.nextAll().length > 0) {
+        const $newTr = $($tr.prop('outerHTML'));
+        $tr.next().after($newTr);
+        $tr.remove();
+        highlightRow($newTr);
         save_order();
+    } else {
+        layer.msg('已在底部');
     }
 }).on('click', '.sort-goup', function () {
-    //移到顶部
-    if ($(this).parents('tr').prevAll().length > 0) {
-        $(this).parents('tbody').children("tr:first-child").before($(this).parents('tr').prop('outerHTML'));
-        $(this).parents('tr').remove();
+    // 移到顶部
+    const $tr = $(this).parents('tr');
+    if ($tr.prevAll().length > 0) {
+        const $newTr = $($tr.prop('outerHTML'));
+        $tr.parents('tbody').children('tr:first-child').before($newTr);
+        $tr.remove();
+        highlightRow($newTr);
         save_order();
+    } else {
+        layer.msg('已在顶部');
     }
 }).on('click', '.sort-godown', function () {
-    //移到底部
-    if ($(this).parents('tr').nextAll().length > 0) {
-        $(this).parents('tbody').children("tr:last-child").after($(this).parents('tr').prop('outerHTML'));
-        $(this).parents('tr').remove();
+    // 移到底部
+    const $tr = $(this).parents('tr');
+    if ($tr.nextAll().length > 0) {
+        const $newTr = $($tr.prop('outerHTML'));
+        $tr.parents('tbody').children('tr:last-child').after($newTr);
+        $tr.remove();
+        highlightRow($newTr);
         save_order();
+    } else {
+        layer.msg('已在底部');
     }
-})
-
+});
 //移到分组
 function edit_group(mv_group) {
     if (get_check().length == 0) {
@@ -427,7 +489,7 @@ function pwd_link(pwd_list) {
                         method: "POST",
                         data: { links: get_check(), pwd_id: pwd_id },
                         success: function (data) {
-                           
+
                             lightyear.loading('hide');
                             if (data.code == 200) {
                                 lightyear.notify(data.msg, 'success', 1000);
@@ -581,7 +643,7 @@ function do_check(items) {
                 '<b>' + esc(title || it.name) + '</b> <span class="text-muted">' + esc(it.url) + '</span>' +
                 // 正常链接也提供编辑按钮（无需删除）
                 '<span style="margin-left:6px;white-space:nowrap">' +
-                '<button class="btn btn-info btn-xs" onclick="edit_failed_link(' + it.id + ')"><i class="mdi mdi-pencil"></i> 编辑</button>' +
+                '<button class="btn btn-info btn-xs" onclick="edit_link(' + it.id + ')"><i class="mdi mdi-pencil"></i> 编辑</button>' +
                 '</span>');
         } else {
             fail++;
@@ -590,7 +652,7 @@ function do_check(items) {
             setItem(it._i, '<font color="red"><i class="mdi mdi-close-circle"></i> [无法访问]</font> ' +
                 '<b>' + esc(it.name) + '</b> <span class="text-muted">' + esc(it.url) + '</span>' +
                 '<span style="margin-left:6px;white-space:nowrap">' +
-                '<button class="btn btn-info btn-xs" onclick="edit_failed_link(' + it.id + ')"><i class="mdi mdi-pencil"></i> 编辑</button> ' +
+                '<button class="btn btn-info btn-xs" onclick="edit_link(' + it.id + ')"><i class="mdi mdi-pencil"></i> 编辑</button> ' +
                 '<button class="btn btn-danger btn-xs" onclick="del_failed_link(' + it.id + ')"><i class="mdi mdi-delete"></i> 删除</button>' +
                 '</span>');
         }
@@ -749,7 +811,7 @@ function closeCheckWin(checkWin) {
 }
 
 //用弹窗打开链接编辑页（不整页跳转，避免丢失检测结果）
-function edit_failed_link(id) {
+function edit_link(id) {
     var isMobile = window.innerWidth < 768;
     layer.open({
         type: 2,
@@ -780,3 +842,10 @@ function editLinkSaved(id, msg) {
     }
 }
 
+function highlightRow($tr) {
+    $('#listTable').find('tr.tr-highlight').removeClass('tr-highlight');
+    $tr.addClass('tr-highlight');
+    setTimeout(() => {
+        $tr.removeClass('tr-highlight');
+    }, 5000);
+}

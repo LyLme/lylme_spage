@@ -4,7 +4,7 @@ include_once("../include/common.php");
 
 
 if (!isset($islogin) || $islogin !== 1) {
-    exit("<script>window.location.href='./login.php';</script>");
+	exit("<script>window.location.href='./login.php';</script>");
 }
 $submit = isset($_GET['submit']) ? $_GET['submit'] : null;
 $e = 0;
@@ -12,24 +12,24 @@ $e = 0;
 // 统一 JSON 响应输出
 function json_response($code, $msg, $extra = array())
 {
-    $res = array('code' => $code, 'msg' => $msg);
-    if (!empty($extra)) $res = array_merge($res, $extra);
-    exit(json_encode($res, JSON_UNESCAPED_UNICODE));
+	$res = array('code' => $code, 'msg' => $msg);
+	if (!empty($extra)) $res = array_merge($res, $extra);
+	exit(json_encode($res, JSON_UNESCAPED_UNICODE));
 }
 
 // 按字符数截断文本并追加省略号，防止超出数据库字段长度
 function truncate_text($str, $max)
 {
-    $str = (string)$str;
-    $max = max(1, (int)$max);
-    if (function_exists('mb_strlen')) {
-        if (mb_strlen($str, 'UTF-8') > $max) {
-            return mb_substr($str, 0, max(0, $max - 3), 'UTF-8') . '...';
-        }
-    } elseif (strlen($str) > $max) {
-        return substr($str, 0, max(0, $max - 3)) . '...';
-    }
-    return $str;
+	$str = (string)$str;
+	$max = max(1, (int)$max);
+	if (function_exists('mb_strlen')) {
+		if (mb_strlen($str, 'UTF-8') > $max) {
+			return mb_substr($str, 0, max(0, $max - 3), 'UTF-8') . '...';
+		}
+	} elseif (strlen($str) > $max) {
+		return substr($str, 0, max(0, $max - 3)) . '...';
+	}
+	return $str;
 }
 
 switch ($submit) {
@@ -162,7 +162,7 @@ switch ($submit) {
 		} else {
 			$st = 0;
 		}
-	$sou_order = isset($sousrows) ? (int)$sousrows + 1 : 1;
+		$sou_order = isset($sousrows) ? (int)$sousrows + 1 : 1;
 		if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon)) {
 			json_response(100, '保存错误,请确保带星号的都不为空！');
 		} else {
@@ -193,10 +193,10 @@ switch ($submit) {
 		$icon = daddslashes($_POST['icon']);
 		$order = intval($_POST['order']);
 		if (isset($_POST['st']) && $_POST['st'] == true) {
-    $st = 1;
-} else {
-    $st = 0;
-}
+			$st = 1;
+		} else {
+			$st = 0;
+		}
 
 		if (empty($name) && empty($alias) && empty($hint) && empty($link) && empty($color) && empty($icon) && empty($order)) {
 			json_response(100, '保存错误,请确保带星号的都不为空！');
@@ -227,7 +227,9 @@ switch ($submit) {
 		}
 		break;
 	case 'allorder':
+		$order = $_POST['link_array'] ?? [];
 		//拖拽排序
+		$e = 0;
 		for ($i = 0; $i < count($_POST["link_array"]); $i++) {
 			$link_id = intval($_POST["link_array"][$i]);
 			$sql = "UPDATE `lylme_links` SET `link_order` = '" . $i . "' WHERE `lylme_links`.`id` = " . $link_id . ";";
@@ -236,7 +238,7 @@ switch ($submit) {
 			}
 		}
 		if ($e == 0) {
-			exit('{"code": 200,"msg":"操作成功！"}');
+			exit('{"code": 200,"msg":"操作成功！","order":"' . implode(',', $order) . '"}');
 		} else {
 			exit('{"code": 100,"msg":"错误，失败' . $e . '条"}');
 		}
@@ -267,7 +269,7 @@ switch ($submit) {
 			}
 		}
 		if ($e == 0) {
-			exit('{"code": 200,"msg":"操作成功！"}');
+			exit('{"code": 200,"msg":"启用成功！"}');
 		} else {
 			exit('{"code": 100,"msg":"错误，失败' . $e . '条"}');
 		}
@@ -282,7 +284,7 @@ switch ($submit) {
 			}
 		}
 		if ($e == 0) {
-			exit('{"code": 200,"msg":"操作成功！"}');
+			exit('{"code": 200,"msg":"禁用成功！"}');
 		} else {
 			exit('{"code": 100,"msg":"错误，失败' . $e . '条"}');
 		}
@@ -297,7 +299,7 @@ switch ($submit) {
 			}
 		}
 		if ($e == 0) {
-			exit('{"code": 200,"msg":"操作成功！"}');
+			exit('{"code": 200,"msg":"链接删除成功！"}');
 		} else {
 			exit('{"code": 100,"msg":"错误，失败' . $e . '条"}');
 		}
@@ -328,219 +330,283 @@ switch ($submit) {
 		preg_match_all('/<font color=[\"|\']+(.*?)[\"|\']>/i', $row['name'], $color);
 		$link_color = isset($color[1][0]) ? $color[1][0] : '';
 ?>
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>编辑链接</title>
-<link href="/assets/admin/css/bootstrap.min.css" rel="stylesheet">
-<link href="/assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
-<link href="/assets/admin/css/style.min.css" rel="stylesheet">
-<link href="/assets/admin/css/coloris.min.css" rel="stylesheet">
-<style>
-  body{background:#fff;padding:16px 18px;font-size:14px}
-  .form-group{margin-bottom:14px}
-  .form-group label{font-weight:600}
-  .clr-alpha{display:none !important}
-  #loading{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;align-items:center;justify-content:center;background:rgba(255,255,255,.6)}
-</style>
-</head>
-<body>
-<h4 style="margin:0 0 14px"><i class="mdi mdi-pencil"></i> 修改链接信息</h4>
-<form id="editLinkForm" action="./ajax_link.php?submit=edit_link&id=<?php echo $id; ?>" method="POST">
-  <div class="form-group">
-    <label for="edit_url">*URL链接地址:</label>
-    <div class="input-group">
-      <input type="text" class="form-control" id="edit_url" name="url" placeholder="链接" value="<?php echo htmlspecialchars($row['url']); ?>" required>
-      <span class="input-group-btn">
-        <button class="btn btn-default" onclick="geturl()" type="button"><i class="mdi mdi-magnify"></i> 获取</button>
-      </span>
-    </div>
-  </div>
+		<!DOCTYPE html>
+		<html lang="zh-CN">
 
-  <div class="form-group">
-    <label for="urlname">*网站名称:</label>
-    <input type="text" class="form-control" id="urlname" name="name" value="<?php echo htmlspecialchars(strip_tags($row['name'])); ?>" required>
-  </div>
+		<head>
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+			<title>编辑链接</title>
+			<link href="/assets/admin/css/bootstrap.min.css" rel="stylesheet">
+			<link href="/assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
+			<link href="/assets/admin/css/style.min.css" rel="stylesheet">
+			<link href="/assets/admin/css/coloris.min.css" rel="stylesheet">
+			<style>
+				body {
+					background: #fff;
+					padding: 16px 18px;
+					font-size: 14px
+				}
 
-  <div class="form-group">
-    <label for="edit_color">链接颜色(留空默认):</label>
-    <input type="text" class="coloris form-control" id="edit_color" onchange="select_color()" name="color" value="<?php echo htmlspecialchars($link_color); ?>" placeholder="点击选择颜色">
-  </div>
+				.form-group {
+					margin-bottom: 14px
+				}
 
-  <div class="form-group">
-    <label for="edit_icon">链接图标:</label>
-    <div class="input-group">
-      <textarea class="form-control" id="edit_icon" name="icon" placeholder="网站图标"><?php echo htmlspecialchars($row['icon']); ?></textarea>
-      <span class="input-group-btn">
-        <input type="file" id="file" onchange="uploadimg()" accept="image/png, image/jpeg,image/gif,image/x-icon" style="display:none">
-        <button class="btn btn-default" id="uploadImage" onclick="$('#file').click();" type="button">选择</button>
-      </span>
-    </div>
-    <small class="help-block">填写图标 URL / 粘贴 SVG 代码 / 本地上传，留空使用默认图标</small>
-  </div>
+				.form-group label {
+					font-weight: 600
+				}
 
-  <div class="form-group">
-    <label for="edit_group">*分组:</label>
-    <select class="form-control" id="edit_group" name="group_id">
-      <?php foreach ($grouplists as $grouplist): ?>
-        <option value="<?php echo $grouplist['group_id']; ?>"<?php echo $grouplist['group_id'] == $row['group_id'] ? ' selected' : ''; ?>><?php echo $grouplist['group_id']; ?> - <?php echo $grouplist['group_name']; ?></option>
-      <?php endforeach; ?>
-    </select>
-  </div>
+				.clr-alpha {
+					display: none !important
+				}
 
-  <div class="form-group">
-    <label for="edit_pwd">链接加密:</label>
-    <select class="form-control" id="edit_pwd" name="link_pwd" required>
-      <?php foreach ($pwd_lists as $pwd_list): ?>
-        <option value="<?php echo $pwd_list['pwd_id']; ?>"<?php echo $row['link_pwd'] == $pwd_list['pwd_id'] ? ' selected' : ''; ?>><?php echo $pwd_list['pwd_id']; ?> - <?php echo $pwd_list['pwd_name']; ?> | 密码[<?php echo $pwd_list['pwd_key']; ?>]</option>
-      <?php endforeach; ?>
-      <option value="0"<?php echo empty($row['link_pwd']) ? ' selected' : ''; ?>>0 - 不加密</option>
-    </select>
-    <small class="help-block">对链接所在分组加密后，单独设置的链接加密将会失效</small>
-  </div>
+				#loading {
+					display: none;
+					position: fixed;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					z-index: 9999;
+					align-items: center;
+					justify-content: center;
+					background: rgba(255, 255, 255, .6)
+				}
+			</style>
+		</head>
 
-  <div class="form-group">
-    <label for="edit_desc">链接描述:</label>
-    <textarea rows="2" class="form-control" id="edit_desc" name="link_desc" placeholder="仅部分主题支持，可不填"><?php echo htmlspecialchars($row['link_desc']); ?></textarea>
-  </div>
+		<body>
+			<h4 style="margin:0 0 14px"><i class="mdi mdi-pencil"></i> 修改链接信息</h4>
+			<form id="editLinkForm" action="./ajax_link.php?submit=edit_link&id=<?php echo $id; ?>" method="POST">
+				<div class="form-group">
+					<label for="edit_url">*URL链接地址:</label>
+					<div class="input-group">
+						<input type="text" class="form-control" id="edit_url" name="url" placeholder="链接" value="<?php echo htmlspecialchars($row['url']); ?>" required>
+						<span class="input-group-btn">
+							<button class="btn btn-default" onclick="geturl()" type="button"><i class="mdi mdi-magnify"></i> 获取</button>
+						</span>
+					</div>
+				</div>
 
-  <div class="form-group">
-    <label for="edit_keywords">链接关键词:</label>
-    <input type="text" class="form-control" id="edit_keywords" name="link_keywords" maxlength="512" placeholder="多个关键词用逗号分隔" value="<?php echo htmlspecialchars($row['link_keywords']); ?>">
-  </div>
+				<div class="form-group">
+					<label for="urlname">*网站名称:</label>
+					<input type="text" class="form-control" id="urlname" name="name" value="<?php echo htmlspecialchars(strip_tags($row['name'])); ?>" required>
+				</div>
 
-  <div class="form-group" style="display:flex;gap:8px;margin-bottom:0">
-    <button type="submit" class="btn btn-primary" style="flex:1"><i class="mdi mdi-content-save"></i> 保存修改</button>
-    <button type="button" class="btn btn-default" onclick="closeEditFrame()" style="flex:1"><i class="mdi mdi-close"></i> 关闭</button>
-  </div>
-  <div style="height:18px"></div>
-</form>
+				<div class="form-group">
+					<label for="edit_color">链接颜色(留空默认):</label>
+					<input type="text" class="coloris form-control" id="edit_color" onchange="select_color()" name="color" value="<?php echo htmlspecialchars($link_color); ?>" placeholder="点击选择颜色">
+				</div>
 
-<div id="loading"><i class="mdi mdi-loading mdi-spin" style="font-size:40px;color:#4a6cf7"></i></div>
+				<div class="form-group">
+					<label for="edit_icon">链接图标:</label>
+					<div class="input-group">
+						<textarea class="form-control" id="edit_icon" name="icon" placeholder="网站图标"><?php echo htmlspecialchars($row['icon']); ?></textarea>
+						<span class="input-group-btn">
+							<input type="file" id="file" onchange="uploadimg()" accept="image/png, image/jpeg,image/gif,image/x-icon" style="display:none">
+							<button class="btn btn-default" id="uploadImage" onclick="$('#file').click();" type="button">选择</button>
+						</span>
+					</div>
+					<small class="help-block"><b>可选方案：</b><br>
+						1. 填写图标的<code>URL</code>地址，如<code>/img/logo.png</code>或<code>http://www.xxx.com/img/logo.png</code><br>
+						2. 粘贴图标的<code>SVG</code>代码，<a href="./help.php?doc=icon" target="_blank">查看教程</a><br>
+						3. 留空使用默认图标<br>
+						4. 从本地上传</small>
+				</div>
 
-<script type="text/javascript" src="/assets/admin/js/jquery.min.js"></script>
-<script type="text/javascript" src="/assets/admin/js/layer.min.js"></script>
-<script type="text/javascript" src="/assets/admin/js/coloris.min.js"></script>
-<script type="text/javascript" src="/assets/admin/js/bootstrap-notify.min.js"></script>
-<script type="text/javascript" src="/assets/admin/js/lightyear.js"></script>
-<script type="text/javascript">
-  Coloris({
-    el: '.coloris',
-    swatches: ['#000000', '#555555', '#666666', '#264653', '#2a9d8f', '#f4a261', '#e76f51', '#ff0000', '#d62828', '#023e8a', '#0077b6', '#0096c7']
-  });
+				<div class="form-group">
+					<label for="edit_group">*分组:</label>
+					<select class="form-control" id="edit_group" name="group_id">
+						<?php foreach ($grouplists as $grouplist): ?>
+							<option value="<?php echo $grouplist['group_id']; ?>" <?php echo $grouplist['group_id'] == $row['group_id'] ? ' selected' : ''; ?>><?php echo $grouplist['group_id']; ?> - <?php echo $grouplist['group_name']; ?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
 
-  function select_color() {
-    var fontcolor = $('input[name="color"]').val();
-    $('#urlname').css("color", fontcolor);
-  }
-  select_color();
+				<div class="form-group">
+					<label for="edit_pwd">链接加密:</label>
+					<select class="form-control" id="edit_pwd" name="link_pwd" required>
+						<?php foreach ($pwd_lists as $pwd_list): ?>
+							<option value="<?php echo $pwd_list['pwd_id']; ?>" <?php echo $row['link_pwd'] == $pwd_list['pwd_id'] ? ' selected' : ''; ?>><?php echo $pwd_list['pwd_id']; ?> - <?php echo $pwd_list['pwd_name']; ?> | 密码[<?php echo $pwd_list['pwd_key']; ?>]</option>
+						<?php endforeach; ?>
+						<option value="0" <?php echo empty($row['link_pwd']) ? ' selected' : ''; ?>>0 - 不加密</option>
+					</select>
+					<small class="help-block"><code>注意：对链接所在的分组加密后，单独设置的链接加密将会失效</code><br>
+						加密后只能通过输入密码访问，使用该功能先配置加密组
+						<a href="./pwd.php" target="_blank">管理加密组</a></small>
+				</div>
 
-  // 关闭弹窗
-  function closeEditFrame() {
-    if (window.parent && window.parent.layer) {
-      var index = window.parent.layer.getFrameIndex(window.name);
-      if (index) window.parent.layer.close(index);
-    }
-  }
+				<div class="form-group">
+					<label for="edit_desc">链接描述:</label>
+					<textarea rows="2" class="form-control" id="edit_desc" name="link_desc" placeholder="仅部分主题支持，可不填"><?php echo htmlspecialchars($row['link_desc']); ?></textarea>
+					<small class="help-block">链接描述仅部分主题支持显示和详情页SEO，访问详情页时若为空将自动采集写入，采集失败写入"无"</small>
+				</div>
 
-  // 获取网站标题/图标
-  function geturl() {
-    var url = $("input[name='url']").val();
-    if (!url) { layer.msg('链接地址不能为空'); return false; }
-    if (!/^http[s]?:\/\/+/.test(url)) { url = "http://" + url; $("input[name='url']").val(url); }
-    $('#loading').css("display", "flex");
-    $.ajax({
-      url: "ajax_link.php?submit=geturl",
-      type: "GET",
-      dataType: "json",
-      data: { url: url },
-      success: function (data) {
-        $('#loading').css("display", "none");
-        if (data.title) $("input[name='name']").val(data.title);
-        if (!data.title && !data.icon) { layer.msg('获取失败，请手动填写'); return false; }
-        downloadimg(data.icon, url);
-        return true;
-      },
-      error: function () {
-        $('#loading').css("display", "none");
-        layer.msg('获取失败，目标网站无法访问或防火墙限制！');
-        return false;
-      }
-    });
-  }
+				<div class="form-group">
+					<label for="edit_keywords">链接关键词:</label>
+					<input type="text" class="form-control" id="edit_keywords" name="link_keywords" maxlength="512" placeholder="多个关键词用逗号分隔" value="<?php echo htmlspecialchars($row['link_keywords']); ?>">
+					<small class="help-block">关键词用于详情页 SEO，为空时访问详情页将自动采集写入</small>
+				</div>
 
-  // 抓取网站图标
-  function downloadimg(url, referer) {
-    if (!url) return false;
-    $.ajax({
-      url: "/include/file.php",
-      type: "POST",
-      dataType: "json",
-      data: { url: url, referer: referer },
-      success: function (data) {
-        if (data.code == '200') { $("textarea[name='icon']").val(data.url); }
-        else { layer.msg(data.msg); }
-        return true;
-      },
-      error: function () { layer.msg('服务器错误'); return false; }
-    });
-  }
+				<div class="form-group" style="display:flex;gap:8px;margin-bottom:0">
+					<button type="submit" class="btn btn-primary" style="flex:1"><i class="mdi mdi-content-save"></i> 保存修改</button>
+					<button type="button" class="btn btn-default" onclick="closeEditFrame()" style="flex:1"><i class="mdi mdi-close"></i> 关闭</button>
+				</div>
+				<div style="height:18px"></div>
+			</form>
 
-  // 上传图标
-  function uploadimg() {
-    var file = $("#file")[0];
-    if (!file || !file.files || !file.files[0]) return false;
-    var formData = new FormData();
-    formData.append("file", file.files[0]);
-    $.ajax({
-      method: 'POST',
-      url: '/include/file.php',
-      data: formData,
-      timeout: 20000,
-      cache: false,
-      processData: false,
-      contentType: false,
-      dataType: "JSON",
-      success: function (data) {
-        if (data.code == '200') { layer.msg(data.msg); $("textarea[name='icon']").val(data.url); }
-        else { layer.msg(data.msg); }
-        return true;
-      },
-      error: function () { layer.msg('服务器错误'); return false; }
-    });
-  }
+			<div id="loading"><i class="mdi mdi-loading mdi-spin" style="font-size:40px;color:#4a6cf7"></i></div>
 
-  // 表单 AJAX 提交：成功后通知父页面（检测弹窗）刷新并保留结果
-  document.getElementById('editLinkForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-    var form = this;
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', form.action, true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        var text = xhr.responseText;
-        var resp = null;
-        try { resp = JSON.parse(text); } catch(e) {}
-        if ((resp && resp.code == 200) || text.indexOf('成功') >= 0) {
-          var msg = resp ? resp.msg : text;
-          if (window.parent && window.parent.editLinkSaved) {
-            window.parent.editLinkSaved(<?php echo $id; ?>, msg);
-          } else {
-            lightyear.notify(msg, 'success', 1200);
-          }
-        } else {
-          var msg = resp ? resp.msg : text;
-          lightyear.notify(msg, 'danger', 3000);
-        }
-      }
-    };
-    xhr.send(new FormData(form));
-  });
-</script>
-</body>
-</html>
+			<script type="text/javascript" src="/assets/admin/js/jquery.min.js"></script>
+			<script type="text/javascript" src="/assets/admin/js/layer.min.js"></script>
+			<script type="text/javascript" src="/assets/admin/js/coloris.min.js"></script>
+			<script type="text/javascript" src="/assets/admin/js/bootstrap-notify.min.js"></script>
+			<script type="text/javascript" src="/assets/admin/js/lightyear.js"></script>
+			<script type="text/javascript">
+				Coloris({
+					el: '.coloris',
+					swatches: ['#000000', '#555555', '#666666', '#264653', '#2a9d8f', '#f4a261', '#e76f51', '#ff0000', '#d62828', '#023e8a', '#0077b6', '#0096c7']
+				});
+
+				function select_color() {
+					var fontcolor = $('input[name="color"]').val();
+					$('#urlname').css("color", fontcolor);
+				}
+				select_color();
+
+				// 关闭弹窗
+				function closeEditFrame() {
+					if (window.parent && window.parent.layer) {
+						var index = window.parent.layer.getFrameIndex(window.name);
+						if (index) window.parent.layer.close(index);
+					}
+				}
+
+				// 获取网站标题/图标
+				function geturl() {
+					var url = $("input[name='url']").val();
+					if (!url) {
+						layer.msg('链接地址不能为空');
+						return false;
+					}
+					if (!/^http[s]?:\/\/+/.test(url)) {
+						url = "http://" + url;
+						$("input[name='url']").val(url);
+					}
+					$('#loading').css("display", "flex");
+					$.ajax({
+						url: "ajax_link.php?submit=geturl",
+						type: "GET",
+						dataType: "json",
+						data: {
+							url: url
+						},
+						success: function(data) {
+							$('#loading').css("display", "none");
+							if (data.title) $("input[name='name']").val(data.title);
+							if (!data.title && !data.icon) {
+								layer.msg('获取失败，请手动填写');
+								return false;
+							}
+							downloadimg(data.icon, url);
+							return true;
+						},
+						error: function() {
+							$('#loading').css("display", "none");
+							layer.msg('获取失败，目标网站无法访问或防火墙限制！');
+							return false;
+						}
+					});
+				}
+
+				// 抓取网站图标
+				function downloadimg(url, referer) {
+					if (!url) return false;
+					$.ajax({
+						url: "/include/file.php",
+						type: "POST",
+						dataType: "json",
+						data: {
+							url: url,
+							referer: referer
+						},
+						success: function(data) {
+							if (data.code == '200') {
+								$("textarea[name='icon']").val(data.url);
+							} else {
+								layer.msg(data.msg);
+							}
+							return true;
+						},
+						error: function() {
+							layer.msg('服务器错误');
+							return false;
+						}
+					});
+				}
+
+				// 上传图标
+				function uploadimg() {
+					var file = $("#file")[0];
+					if (!file || !file.files || !file.files[0]) return false;
+					var formData = new FormData();
+					formData.append("file", file.files[0]);
+					$.ajax({
+						method: 'POST',
+						url: '/include/file.php',
+						data: formData,
+						timeout: 20000,
+						cache: false,
+						processData: false,
+						contentType: false,
+						dataType: "JSON",
+						success: function(data) {
+							if (data.code == '200') {
+								layer.msg(data.msg);
+								$("textarea[name='icon']").val(data.url);
+							} else {
+								layer.msg(data.msg);
+							}
+							return true;
+						},
+						error: function() {
+							layer.msg('服务器错误');
+							return false;
+						}
+					});
+				}
+
+				// 表单 AJAX 提交：成功后通知父页面（检测弹窗）刷新并保留结果
+				document.getElementById('editLinkForm').addEventListener('submit', function(event) {
+					event.preventDefault();
+					var form = this;
+					var xhr = new XMLHttpRequest();
+					xhr.open('POST', form.action, true);
+					xhr.onreadystatechange = function() {
+						if (xhr.readyState === 4 && xhr.status === 200) {
+							var text = xhr.responseText;
+							var resp = null;
+							try {
+								resp = JSON.parse(text);
+							} catch (e) {}
+							if ((resp && resp.code == 200) || text.indexOf('成功') >= 0) {
+								var msg = resp ? resp.msg : text;
+								if (window.parent && window.parent.editLinkSaved) {
+									window.parent.editLinkSaved(<?php echo $id; ?>, msg);
+								} else {
+									lightyear.notify(msg, 'success', 1200);
+								}
+							} else {
+								var msg = resp ? resp.msg : text;
+								lightyear.notify(msg, 'danger', 3000);
+							}
+						}
+					};
+					xhr.send(new FormData(form));
+				});
+			</script>
+		</body>
+		</html>
 <?php
 		break;
 	//检查更新（异步）

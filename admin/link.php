@@ -9,7 +9,7 @@ $gq = $DB->query("SELECT * FROM `lylme_groups`");
 while ($g = $DB->fetch($gq)) $grouplists[] = $g;
 $pq = $DB->query("SELECT * FROM `lylme_pwd`");
 while ($p = $DB->fetch($pq)) $pwd_lists[] = $p;
-
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $set = isset($_GET['set']) ? $_GET['set'] : null;
 ?>
 <main class="lyear-layout-content">
@@ -20,7 +20,9 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
           <div class="card-body">
 
 <?php if ($set == 'add'): ?>
-            <h4>新增链接</h4>
+
+            <h4>新增链接<a  class="btn"  href="./link.php"><<返回</a></h4>
+          
             <form id="addLinkForm" action="./ajax_link.php?submit=add_link" method="POST">
               <div class="form-group">
                 <label for="add_url">*URL链接地址:</label>
@@ -83,7 +85,7 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
                 <input type="submit" class="btn btn-primary d-block w-100" value="添加">
               </div>
             </form>
-            <br><a href="./link.php"><<返回</a>
+            <a href="./link.php"><<返回</a>
 
 <?php elseif ($set == 'edit'): ?>
             <?php
@@ -94,7 +96,8 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
             preg_match_all('/<font color=[\"|\']+(.*?)[\"|\']>/i', $row['name'], $color);
             $link_color = isset($color[1][0]) ? $color[1][0] : '';
             ?>
-            <h4>修改链接信息</h4>
+            <h4>修改链接信息  <a  class="btn"  href="./link.php?page=<?php echo $page ?>"><<返回</a></h4>
+           
             <form id="editLinkForm" action="./ajax_link.php?submit=edit_link&id=<?php echo $id; ?>" method="POST">
               <div class="form-group">
                 <label for="edit_url">*URL链接地址:</label>
@@ -170,7 +173,7 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
                 <input type="submit" class="btn btn-primary d-block w-100" value="修改">
               </div>
             </form>
-            <br><a href="./link.php"><<返回</a>
+             <a href="./link.php?page=<?php echo $page ?>"><<返回</a>
 
 <?php else: ?>
             <div id="listTable"></div>

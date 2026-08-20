@@ -78,7 +78,7 @@ function on_group(id) {
         data: { group_id: id },
         success: function (data) {
             lightyear.loading('hide');
-            lightyear.notify('操作成功！', 'success', 1000);
+            lightyear.notify('分组启用成功！', 'success', 1000);
             listTable();
             return true;
         },
@@ -98,7 +98,7 @@ function off_group(id) {
         data: { group_id: id },
         success: function (data) {
             lightyear.loading('hide');
-            lightyear.notify('操作成功！', 'success', 1000);
+            lightyear.notify('分组禁用成功！', 'warning', 1000);
             listTable();
             return true;
         },

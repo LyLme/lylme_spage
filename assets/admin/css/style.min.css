@@ -5314,3 +5314,17 @@ a { transition: color 0.15s ease; }
     /* 自动大写 + 禁止中文输入 */
     ime-mode: disabled;
 }
+.table-striped > tbody > tr.tr-highlight {
+  --bs-table-bg: #e8f4ff !important;
+  background-color: #e8f4ff !important;
+  border: 2px solid #0d6efd !important;
+  transition: background-color .3s ease, border-color .3s ease;
+}
+td.lylme {
+    cursor: grab;
+    user-select: text;
+}
+
+td.lylme:active {
+    cursor: grabbing;
+}
