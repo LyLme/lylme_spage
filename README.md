@@ -27,11 +27,7 @@ docker run -d -p 8080:80 lylme/lylme_spage
 ### 方式二：数据持久化（推荐）
 
 ```bash
-docker run -d -p 8080:80 \
-  -v lylme_mysql:/var/lib/mysql \
-  -v lylme_www:/var/www/html \
-  --name lylme_spage \
-  lylme/lylme_spage
+docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage lylme/lylme_spage
 ```
 
 > 使用命名卷，数据永久保存，容器删除/重建不丢失。
@@ -39,11 +35,7 @@ docker run -d -p 8080:80 \
 ### 方式三：国内镜像加速
 
 ```bash
-docker run -d -p 8080:80 \
-  -v lylme_mysql:/var/lib/mysql \
-  -v lylme_www:/var/www/html \
-  --name lylme_spage \
-  docker.1ms.run/lylme/lylme_spage:latest
+docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name docker.1ms.run/lylme/lylme_spage:latest
 ```
 
 > 效果与方式二完全一致，Docker 官方仓库访问受限时使用。
@@ -117,20 +109,17 @@ server {
 
 ```bash
 # 备份数据库
-docker exec lylme_spage mysqldump -u lylme -plylme123456 \
-  --socket=/var/run/mysqld/mysqld.sock lylme_spage > backup.sql
+docker exec lylme_spage mysqldump -u lylme -plylme123456 --socket=/var/run/mysqld/mysqld.sock lylme_spage > backup.sql
 
 # 备份整个数据卷（以 mysql 卷为例）
-docker run --rm -v lylme_mysql:/data -v $(pwd):/backup \
-  alpine tar czf /backup/mysql_backup.tar.gz /data
+docker run --rm -v lylme_mysql:/data -v $(pwd):/backup alpine tar czf /backup/mysql_backup.tar.gz /data
 ```
 
 ### 恢复数据
 
 ```bash
 # 恢复数据库
-docker exec -i lylme_spage mysql -u lylme -plylme123456 \
-  --socket=/var/run/mysqld/mysqld.sock lylme_spage < backup.sql
+docker exec -i lylme_spage mysql -u lylme -plylme123456 --socket=/var/run/mysqld/mysqld.sock lylme_spage < backup.sql
 ```
 
 ## 环境变量
@@ -145,9 +134,7 @@ docker exec -i lylme_spage mysql -u lylme -plylme123456 \
 通过 `docker run -e` 或 `docker-compose.yml` 的 `environment` 覆盖，例如：
 
 ```bash
-docker run -d -p 8080:80 -e TZ=Asia/Tokyo \
-  -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html \
-  --name lylme_spage lylme/lylme_spage
+docker run -d -p 8080:80 -e TZ=Asia/Tokyo -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage lylme/lylme_spage
 ```
 
 ## 时区说明
@@ -216,9 +203,7 @@ docker stop lylme_spage
 docker rm -f lylme_spage
 docker volume rm lylme_mysql lylme_www
 # 重新启动
-docker run -d -p 8080:80 \
-  -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html \
-  --name lylme_spage lylme/lylme_spage
+docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage lylme/lylme_spage
 ```
 
 > 网站文件丢失时无需重装：启动脚本会自动从镜像内置备份 `/app/www_bak` 恢复。
@@ -265,8 +250,7 @@ docker logs lylme_spage
 docker exec lylme_spage ps aux | grep mysql
 
 # 测试数据库连接
-docker exec lylme_spage mysql -u lylme -plylme123456 \
-  --socket=/var/run/mysqld/mysqld.sock -e "SELECT 1;"
+docker exec lylme_spage mysql -u lylme -plylme123456 --socket=/var/run/mysqld/mysqld.sock -e "SELECT 1;"
 ```
 
 ### 页面一直显示安装界面
