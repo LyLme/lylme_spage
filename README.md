@@ -32,7 +32,7 @@ docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/htm
 ```
 #### 国内镜像加速
 ```bash
-docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name docker.1ms.run/lylme/lylme_spage:latest
+docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage docker.1ms.run/lylme/lylme_spage:latest
 ```
 | 项目     | 地址                          |
 | -------- | ----------------------------- |
