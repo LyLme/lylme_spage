@@ -78,7 +78,7 @@ COPY www/ /var/www/html/
 COPY www/ /app/www_bak/
 
 # 复制初始化文件
-COPY install.sql /init/install.sql
+COPY www/install/data/install_struct.sql /init/install.sql
 
 # 复制启动脚本
 COPY docker-entrypoint.sh /docker-entrypoint.sh
