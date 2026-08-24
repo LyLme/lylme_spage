@@ -38,7 +38,8 @@ if ($sqlvn < $filevn) {
         $sql .= "ALTER TABLE `lylme_links` ADD `link_keywords` VARCHAR(512) NULL DEFAULT NULL COMMENT '链接关键词' AFTER `link_desc`;";
     }
 
-     if ($sqlvn < 20600) {
+    if ($sqlvn < 20600) {
+        saveSetting('copyright',  $conf['copyright'] . '<script src="/assets/js/svg.js"></script>'); //注入旧版svg图标
         $version = 'v2.6.0';
     }
     // 执行SQL语句

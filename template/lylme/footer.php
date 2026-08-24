@@ -1,6 +1,6 @@
 <?php if(basename($_SERVER['PHP_SELF']) == basename(__FILE__)) header("Location:/"); ?>
 <script src="<?php echo $cdnpublic ?>/template/lylme/js/script.js?v=20240409"></script>
-<script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
+<script src="<?php echo $cdnpublic ?>/assets/js/icon.js"></script>
 <div style="display:none;" class="back-to" id="toolBackTop"> 
 <a title="返回顶部" onclick="window.scrollTo(0,0);return false;" href="#top" class="back-top"></a> 
 </div> 

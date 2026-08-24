@@ -193,7 +193,7 @@
         <script src="<?php echo $templatepath; ?>/js/nioapp.min.js"></script>
         <script src="<?php echo $templatepath; ?>/js/script.js?v=1001"></script>
         <script src="<?php echo $templatepath; ?>/js/common.js?v=1002"></script>
-        <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
+        <script src="<?php echo $cdnpublic ?>/assets/js/icon.js"></script>
         <?php
         ?>
         <script>

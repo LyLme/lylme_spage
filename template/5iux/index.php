@@ -137,7 +137,7 @@
 
 </body>
 <script src="<?php echo $cdnpublic ?>/assets/js/jquery.min.js"></script>
-<script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
+<script src="<?php echo $cdnpublic ?>/assets/js/icon.js"></script>
 <script src="<?php echo $templatepath; ?>/js/sou.js?v=20240414"></script>
 <script>
     function solist() {

@@ -228,7 +228,7 @@
 	<script src="<?php echo $templatepath; ?>/js/holmes.js" type="text/javascript" charset="utf-8"></script>
 	<script src="<?php echo $templatepath; ?>/js/lunar.js" type="text/javascript" charset="utf-8"></script>
 	<script src="<?php echo $templatepath; ?>/js/common.js?v=20240414" type="text/javascript" charset="utf-8"></script>
-	<script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
+	<script src="<?php echo $cdnpublic ?>/assets/js/icon.js"></script>
 </body>
 
 </html>

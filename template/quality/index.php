@@ -177,7 +177,7 @@ $rel = $conf["mode"] == 2 ? '' : 'rel="nofollow"';
 		lists($html);
 		?>
 <script src="<?php echo  $templatepath;?>/js/script.js?v=20220518"></script>
-<script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
+<script src="<?php echo $cdnpublic ?>/assets/js/icon.js"></script>
 <div style="display:none;" class="back-to" id="toolBackTop"> 
 <a title="返回顶部" onclick="window.scrollTo(0,0);return false;" href="#top" class="back-top"></a> 
 </div> 

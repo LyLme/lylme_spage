@@ -15,7 +15,7 @@
     <meta name="browsermode" content="application">
     <meta name="x5-fullscreen" content="true">
     <meta name="x5-page-mode" content="app">
-    <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
+    <script src="<?php echo $cdnpublic ?>/assets/js/icon.js"></script>
     <link rel="stylesheet" href="<?php echo $templatepath; ?>/css/style.css">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
