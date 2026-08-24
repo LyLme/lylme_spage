@@ -1,7 +1,7 @@
 <?php
 $title = '检查更新';
 include './head.php';
-@unlink('log.txt');
+// @unlink('log.txt');
 $s = isset($_GET['s']) ? $_GET['s'] : null;
 if ($s=="refresh") {
     exit("<script language='javascript'>window.location.href='./';</script>");

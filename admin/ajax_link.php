@@ -635,6 +635,9 @@ switch ($submit) {
 	//检查更新（异步）
 	case 'check_update':
 		$update = update();
+		file_put_contents('log.txt', date("Ym"));
+		$content = "<?php\nreturn " . var_export($update, true) . "\n?>";
+		file_put_contents('cache.php', $content);
 		$current_version = isset($conf['version']) ? $conf['version'] : (isset($GLOBALS['conf']['version']) ? $GLOBALS['conf']['version'] : '');
 		$result = array(
 			'code' => 200,
