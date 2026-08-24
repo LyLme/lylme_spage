@@ -99,7 +99,7 @@
                 <input class="wd soinput" type="text" placeholder="" name="q" x-webkit-speech lang="zh-CN" autocomplete="off">
                 <button onclick="go('');">
                     <svg class="icon" style=" width: 21px; height: 21px; opacity: 0.5;" aria-hidden="true">
-                        <use xlink:href="#icon-sousuo"></use>
+                        <use xlink:href="#lyicon-sousuo"></use>
                     </svg>
                 </button>
                 <div id="word"></div>

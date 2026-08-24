@@ -33,20 +33,13 @@ if ($sqlvn < $filevn) {
     // 文件版本大于数据库版本，执行更新
     $sql = '';
     $version = '';
-
-    if ($sqlvn < 20200) {
-        $version = 'v2.2.0';
-        $sql .= '';
-    }
     if ($sqlvn < 20300) {
         $version = 'v2.3.0';
         $sql .= "ALTER TABLE `lylme_links` ADD `link_keywords` VARCHAR(512) NULL DEFAULT NULL COMMENT '链接关键词' AFTER `link_desc`;";
     }
-      if ($sqlvn < 20305) {
-        $version = 'v2.3.5';
-    }
-     if ($sqlvn < 20400) {
-        $version = 'v2.4.0';
+
+     if ($sqlvn < 20600) {
+        $version = 'v2.6.0';
     }
     // 执行SQL语句
     if (!empty($sql)) {

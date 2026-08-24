@@ -61,7 +61,7 @@
 		<!--<a class="navbar-brand" href="/"><img src="./assets/img/logo.png" height="25"  title="LyLme_Spage"></a>-->
 		<button class="navbar-toggler collapsed" style="border: none; outline: none;" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
 			<svg class="icon" width="200" height="200">
-				<use xlink:href="#icon-menus"></use>
+				<use xlink:href="#lyicon-menu"></use>
 			</svg>
 		</button>
 
@@ -136,7 +136,7 @@
 				<input type="text" id="search-text" placeholder="搜索一下" name="q" style="outline:0" autocomplete="off">
 				<button class="submit" type="submit">
 					<svg style="width: 22px; height: 22px; margin: 0 20px 0 20px; color: #fff;" class="icon" aria-hidden="true" viewBox="0 0 1024 1024">
-						<use xlink:href="#icon-sousuo">
+						<use xlink:href="#lyicon-sousuo">
 						</use>
 					</svg>
 					<span>

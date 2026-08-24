@@ -27,7 +27,9 @@
 	</style>
 </head>
 
-<body>
+<body <?php if (theme_config("background") == '1' && background()) {
+										echo 'style="background-image: url(' . background() . ')"';
+									} ?>>
 	<!--手机顶部 S-->
 	<div class="m-header">
 		<div class="logo">
@@ -102,7 +104,7 @@
 	<div class="index-main">
 		<!--搜索 S-->
 		<div class="search-main-w">
-			<div class="date-main" <?php if (background()) {
+			<div class="date-main" <?php if (theme_config("background") == '2' && background()) {
 										echo 'style="background-image: url(' . background() . ')"';
 									} ?>>
 				<time class="times" id="nowTime"></time>

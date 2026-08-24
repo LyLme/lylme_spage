@@ -28,15 +28,20 @@
 } else {
 	echo '<body onload="FocusOnInput()">';
 } ?>
-
+<?php 
+if(theme_config('glassmorphism')=="1"){
+	echo '<style>.mylist li.lylme-3{box-shadow: 2px 2px 10px 0px rgb(0 0 0 / 40%);
+    backdrop-filter: saturate(100%) blur(30px);}</style>';
+}
+?>
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" style="position: absolute; z-index: 10000;">
 	<button class="navbar-toggler collapsed" style="border: none; outline: none;" type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
 
 		<svg class="icon" width="200" height="200">
-			<use xlink:href="#icon-menus"></use>
+			<use xlink:href="#lyicon-menu"></use>
 		</svg>
 		<span><svg class="bi bi-x" fill="currentColor" id="x">
-				<use xlink:href="#icon-closes"></use>
+				<use xlink:href="#lyicon-closes"></use>
 			</svg><span>
 	</button>
 	<div class="collapse navbar-collapse" id="navbarsExample05">
@@ -82,13 +87,13 @@
 						<form action="https://www.bing.com/search?q=" method="get" target="_blank" id="super-search-fm">
 							<div id="checke-so" onclick="lylme()">
 								<svg class="lylme" viewBox="0 0 1024 1024" aria-hidden="true">
-									<use xlink:href="#icon-icon_baidulogo"></use>
+									<use xlink:href="#lyicon-bing"></use>
 								</svg>
 								<svg class="sw" id="lylme-up" style="display:inline" aria-hidden="true">
-									<use xlink:href="#icon-up"></use>
+									<use xlink:href="#lyicon-up"></use>
 								</svg>
 								<svg class="sw" id="lylme-down" style="display:none" aria-hidden="true">
-									<use xlink:href="#icon-down"></use>
+									<use xlink:href="#lyicon-down"></use>
 								</svg>
 							</div>
 
@@ -96,7 +101,7 @@
 							<input type="text" id="search-text" placeholder="百度一下，你就知道" style="outline:0" autocomplete="off">
 							<button class="submit" id="search-submit" type="submit">
 								<svg style="width: 22px; height: 22px; margin: 0 20px 0 20px; color: #fff;" class="icon" aria-hidden="true">
-									<use xlink:href="#icon-sousuo">
+									<use xlink:href="#lyicon-sousuo">
 									</use>
 								</svg>
 								<span>
@@ -145,6 +150,12 @@
 
 
 	<?php
+	if (theme_config('lytoday', 0) == 1) {
+			echo theme_config('lytodaycode');
+		}
 	include "list.php";
+	if (theme_config('lytoday', 0) == 2) {
+			echo theme_config('lytodaycode');
+		}
 	include "footer.php";
 	?>

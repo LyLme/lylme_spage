@@ -8,12 +8,12 @@ $rel = $conf["mode"] == 2 ? '' : 'rel="nofollow"';
 		}
 
 $html = array(
-    'g1' => '<div class="site-name" id="category-{group_id}">{group_icon}{group_name}</div>', //分组开始标签
+    'g1' => '<div class="site-category"><div class="site-name lycategory" id="category-{group_id}">{group_icon}{group_name}</div>', //分组开始标签
     'g2' => '<div class="site-list">',  //分组内容
-    'g3' => '<div class="list kongs"></div><div class="list kongs"></div><div class="list kongs"></div><div class="list kongs"></div></div>',  //分组结束标签
+    'g3' => '<div class="list kongs"></div><div class="list kongs"></div><div class="list kongs"></div><div class="list kongs"></div></div></div>',  //分组结束标签
 
     'l1' => '<div class="list urllist" id="id_{link_id}" data-id="{link_id}" data-url="{link_url}">',  //链接开始标签
-    'l2' => '<a '.$rel.' href="{link_url}" title="{link_name_text}"  target="_blank">{link_icon}',  //链接内容
-    'l3' => '<p class="name">{link_name}</p></a><p class="desc">'.$link_desc.'</p></div>',  //链接结束标签
+    'l2' => '<a '.$rel.' href="{link_url}" title="{link_name_text}"  target="_blank"><div class="link_logo">{link_icon}</div>',  //链接内容
+    'l3' => '<div class="link_info"><span class="name">{link_name}</span><span class="desc">'.$link_desc.'</span></div></a></div>',  //链接结束标签
 );
 lists($html);

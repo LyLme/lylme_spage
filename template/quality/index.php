@@ -48,7 +48,7 @@
 </div>
 
 <ul class="iconnav">
-  <li><a href="#main"><svg class="icon" aria-hidden="true"  width="200" height="200"><use xlink:href="#icon-sousuo"></use></svg><span>搜索</span></a></li>  
+  <li><a href="#main"><svg class="icon" aria-hidden="true"  width="200" height="200"><use xlink:href="#lyicon-sousuo"></use></svg><span>搜索</span></a></li>  
     
 <?php
 $groups = $site->getGroups();
@@ -66,8 +66,8 @@ $groups = $site->getGroups();
 		<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="position: absolute; z-index: 10000;">
 		<button class="navbar-toggler collapsed" style="border: none; outline: none;"type="button" data-toggle="collapse" data-target="#navbarsExample05" aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation">
 			    
-		<svg class="icon" width="200" height="200"><use xlink:href="#icon-menus"></use></svg>
-		<!---<span><svg class="bi bi-x" 	fill="currentColor" id="x"><use xlink:href="#icon-closes"></use></svg><span>-->
+		<svg class="icon" width="200" height="200"><use xlink:href="#lyicon-menu"></use></svg>
+		<!---<span><svg class="bi bi-x" 	fill="currentColor" id="x"><use xlink:href="#lyicon-close"></use></svg><span>-->
 			</button>
 			<div class="collapse navbar-collapse" id="navbarsExample05">
 				<ul class="navbar-nav mr-auto">
@@ -109,19 +109,19 @@ $groups = $site->getGroups();
 					<div class="search-group group-a s-current">
 						<div class="search-box">
 				<div id="search-lylme">
-				<form action="https://www.baidu.com/s?wd=" method="get" target="_blank"
+				<form action="https://cn.bing.com/search?q=" method="get" target="_blank"
 				id="super-search-fm">
 				    <div id="checke-so" onclick="lylme()">
-				    <svg class="lylme" aria-hidden="true"><use xlink:href="#icon-icon_baidulogo"></use></svg>
-				    <svg class="sw" id="lylme-up" style="display:inline" aria-hidden="true"><use xlink:href="#icon-up"></use></svg>
-				    <svg class="sw" id="lylme-down" style="display:none" aria-hidden="true"><use xlink:href="#icon-down"></use></svg>
+				    <svg class="lylme" aria-hidden="true"><use xlink:href="#lyicon-bing"></use></svg>
+				    <svg class="sw" id="lylme-up" style="display:inline" aria-hidden="true"><use xlink:href="#lyicon-up"></use></svg>
+				    <svg class="sw" id="lylme-down" style="display:none" aria-hidden="true"><use xlink:href="#lyicon-down"></use></svg>
 				    </div>
 				<input type="text" id="search-text" placeholder="百度一下，你就知道" style="outline:0"
 					autocomplete="off">
 					<button class="submit" id="search-submit" type="submit">
 						<svg style="width: 22px; height: 22px; margin: 0 20px 0 20px; color: #fff;"
 						class="icon" aria-hidden="true">
-							<use xlink:href="#icon-sousuo">
+							<use xlink:href="#lyicon-sousuo">
 							</use>
 						</svg>
 						<span>
