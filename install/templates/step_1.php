@@ -18,14 +18,10 @@
         <div class="forms">
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tr align="left" class="head">
-                    <td width="30%" height="36">项目
-                        </th>
-                    <td width="30%">所需配置
-                        </th>
-                    <td width="15%">推荐配置
-                        </th>
-                    <td width="25%" align="right">当前服务器
-                        </th>
+                    <td width="30%" height="36">项目</td>
+                    <td width="30%">所需配置</td>
+                    <td width="15%">推荐配置</td>
+                    <td width="25%" align="right">当前服务器</td>
                 </tr>
                 <tr>
                     <td height="26" class="firstCol">操作系统</td>
@@ -35,8 +31,8 @@
                 </tr>
                 <tr>
                     <td height="26" class="firstCol">PHP 版本</td>
-                    <td>&ge;5.4 </td>
-                    <td>7.4</td>
+                    <td>&ge;5.4</td>
+                    <td>8.2</td>
                     <td class="endCol"><?php echo PHP_VERSION; ?></td>
                 </tr>
                 <tr>
@@ -53,10 +49,9 @@
                     <td>2.1</td>
                     <td class="endCol">
                         <?php
-                        $tmp = function_exists('gd_info') ? gd_info() : array();
-                        @$env_items[$key]['current'] = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
-                        echo @$env_items[$key]['current'];
-                        unset($tmp);
+                        $gdInfo = function_exists('gd_info') ? gd_info() : array();
+                        echo !empty($gdInfo['GD Version']) ? $gdInfo['GD Version'] : 'noext';
+                        unset($gdInfo);
                         ?>
                     </td>
                 </tr>
@@ -67,11 +62,10 @@
                     <td class="endCol">
                         <?php
                         if (function_exists('disk_free_space')) {
-                            @$env_items[$key]['current'] = floor(disk_free_space('../') / (1024 * 1024)) . 'M';
+                            echo floor(disk_free_space('../') / (1024 * 1024)) . 'M';
                         } else {
-                            $env_items[$key]['current'] = 'unknow';
+                            echo 'unknow';
                         }
-                        echo @$env_items[$key]['current'];
                         ?>
                     </td>
                 </tr>
@@ -79,12 +73,9 @@
             <div class="hr_10"></div>
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tr align="left" class="head">
-                    <td width="30%" height="36">扩展要求
-                        </th>
-                    <td width="30%">检查结果
-                        </th>
-                    <td width="40%">用途
-                        </th>
+                    <td width="30%" height="36">扩展要求</td>
+                    <td width="30%">检查结果</td>
+                    <td width="40%">用途</td>
                 </tr>
                 <?php foreach ($extendArray as $item): ?>
                     <tr>
@@ -121,12 +112,9 @@
             <div class="hr_10"></div>
             <table width="100%" border="0" cellpadding="0" cellspacing="0">
                 <tr align="left" class="head">
-                    <td width="30%" height="36">文件权限检测
-                        </th>
-                    <td width="30%">所需状态
-                        </th>
-                    <td width="40%">当前状态
-                        </th>
+                    <td width="30%" height="36">文件权限检测</td>
+                    <td width="30%">所需状态</td>
+                    <td width="40%">当前状态</td>
                 </tr>
                 <?php
                 foreach ($iswrite_array as $v) {

@@ -9,11 +9,13 @@
 
 header('Content-Type:text/html; charset=utf-8');
 
-
-
 // 不限制响应时间
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 set_time_limit(0);
+
+if (function_exists('mysqli_report')) {
+    mysqli_report(MYSQLI_REPORT_OFF);
+}
 
 // 设置系统路径
 define('IN_INSTALL', true);
@@ -21,14 +23,15 @@ define('INSTALL_PATH', str_replace('\\', '/', dirname(__FILE__)));
 define('ROOT_PATH', dirname(INSTALL_PATH . '/'));
 require_once(ROOT_PATH . "/include/version.php");
 
+@session_start();
+
 // 版权信息设置
 $cfg_copyright = '© 2022-' . date("Y") . ' LYLME';
 
 // 获取当前步骤
 $s = getStep();
-
-// 提示已经安装
-if (is_file(INSTALL_PATH . '/install.lock') && $s != md5('done')) {
+$isReinstall = ($s == 3 && isset($_POST['s']) && $_POST['s'] == 3);
+if (is_file(INSTALL_PATH . '/install.lock') && $s != md5('done') && !$isReinstall) {
     require_once(INSTALL_PATH . '/templates/step_5.php');
     exit();
 }
@@ -56,6 +59,10 @@ if ($s == 0) {
 }
 // 环境检测
 if ($s == 1) {
+    // PHP 版本检查（兼容 PHP 5.4+ / 7.x / 8.x，低于 5.4 阻断安装）
+    if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+        setIsNext(false);
+    }
     // 获取检测的路径数据
     $iswrite_array = getIsWriteArray();
     // 获取检测的函数数据
@@ -75,16 +82,25 @@ if ($s == 2) {
 if ($s == 3) {
     require_once(INSTALL_PATH . '/templates/step_3.php');
 
-    if ($_POST['s'] == 3) {
+    if (isset($_POST['s']) && $_POST['s'] == 3) {
 
         // 初始化信息
-        $dbhost = $_POST['dbhost'] ?: '';
-        $dbname = $_POST['dbname'] ?: '';
-        $dbuser = $_POST['dbuser'] ?: '';
-        $dbpwd = $_POST['dbpwd'] ?: '';
-        $dbport = $_POST['dbport'] ?: 3306;
+        $dbhost = isset($_POST['dbhost']) ? trim($_POST['dbhost']) : '';
+        $dbname = isset($_POST['dbname']) ? trim($_POST['dbname']) : '';
+        $dbuser = isset($_POST['dbuser']) ? trim($_POST['dbuser']) : '';
+        $dbpwd = isset($_POST['dbpwd']) ? $_POST['dbpwd'] : '';
+        $dbport = isset($_POST['dbport']) ? intval($_POST['dbport']) : 3306;
 
-        // $testdata = $_POST['testdata'] ?: '';
+        // 管理员信息
+        $admin_user = isset($_POST['admin_user']) ? trim($_POST['admin_user']) : '';
+        $admin_pwd = isset($_POST['admin_pwd']) ? $_POST['admin_pwd'] : '';
+        if ($admin_user === '' || $admin_pwd === '') {
+            insError('管理员账号或密码不能为空！');
+        }
+        if (strlen($admin_pwd) < 6) {
+            insError('管理员密码长度不能小于6位！');
+        }
+
 
         // 连接证数据库
         $con = @mysqli_connect($dbhost, $dbuser, $dbpwd, '', $dbport);
@@ -95,6 +111,9 @@ if ($s == 3) {
 
         // 查询数据库
         $res = mysqli_query($con, 'show Databases');
+        if (!$res) {
+            insError('获取数据库列表失败：' . mysqli_error($con));
+        }
 
         // 遍历所有数据库，存入数组
         $dbnameArr = [];
@@ -102,29 +121,42 @@ if ($s == 3) {
             $dbnameArr[] = $row['Database'];
         }
 
-        // 检查数据库是否存在，没有则创建数据库
+        // 数据库名称合法性校验（仅允许字母/数字/下划线/中文，防止特殊字符注入）
+        if (!preg_match('/^[a-zA-Z0-9_\x{4e00}-\x{9fa5}]+$/u', $dbname)) {
+            insError('数据库名称不合法，仅允许字母、数字、下划线！');
+        }
+
+        // 检查数据库是否存在，没有则创建数据库（并切换当前库）
         if (!in_array(trim($dbname), $dbnameArr)) {
             if (!mysqli_query($con, "CREATE DATABASE `$dbname`")) {
                 insError("创建数据库失败，请检查权限或联系管理员！");
             }
         }
 
-        // 数据库创建完成，开始连接
-        mysqli_select_db($con, $dbname);
+        $con = @mysqli_connect($dbhost, $dbuser, $dbpwd, $dbname, $dbport);
+        if (!$con) {
+            insError('重新连接数据库失败：' . mysqli_connect_error());
+        }
+        mysqli_set_charset($con, 'utf8');
+        if (mysqli_fetch_row(mysqli_query($con, "SELECT DATABASE()"))[0] !== $dbname) {
+            insError('选择数据库失败，当前未选中任何数据库：' . mysqli_error($con));
+        }
 
-        //数据库配置
-        $config_str = '<?php
-        /*数据库配置*/
-        $dbconfig=array(
-            "host" => "' . $dbhost . '", //数据库服务器
-            "port" => ' . $dbport . ', //数据库端口
-            "user" => "' . $dbuser . '", //数据库用户名
-            "pwd" => "' . $dbpwd . '", //数据库密码
-            "dbname" => "' . $dbname . '", //数据库名
-        );
-        ?>';
+        $config_str = "<?php\n"
+            . "/*数据库配置*/\n"
+            . '$dbconfig = ' . var_export(array(
+                'host' => $dbhost,
+                'port' => intval($dbport),
+                'user' => $dbuser,
+                'pwd' => $dbpwd,
+                'dbname' => $dbname,
+            ), true) . ";\n"
+            . "?>";
 
         $fp = fopen(ROOT_PATH . '/config.php', 'w');
+        if (!$fp) {
+            insError('config.php 写入失败，请检查文件权限！');
+        }
         fwrite($fp, $config_str);
         fclose($fp);
 
@@ -140,27 +172,41 @@ if ($s == 3) {
         if (!mysqli_multi_query($con, trim($tbstruct))) {
             insError('数据库导入失败：' . mysqli_error($con));
         }
-        // 循环消费剩余结果集，避免 "Commands out of sync" 错误
-        while (mysqli_more_results($con)) {
-            if (!mysqli_next_result($con)) {
-                break;
-            }
-            $r = mysqli_store_result($con);
-            if ($r) {
+        do {
+            if ($r = mysqli_store_result($con)) {
                 mysqli_free_result($r);
             }
-        }
+        } while (mysqli_next_result($con));
         if (mysqli_error($con)) {
             insError('数据库导入失败：' . mysqli_error($con));
         }
+        mysqli_query($con, 'COMMIT');
         insInfo("数据库导入完成！");
         ob_flush();
         flush();
-        // 结束缓存区
-        ob_end_flush();
 
-        // 安装完成进行跳转
-        echo '<script>setTimeout(function () { location.href="?s=' . md5('done') . '"; }, 3000)</script>';
+        $admin_pwd_md5 = md5('lylme' . $admin_pwd);
+        $safe_admin_user = mysqli_real_escape_string($con, $admin_user);
+        if (!mysqli_query($con, "UPDATE `lylme_config` SET `v` = '$safe_admin_user' WHERE `k` = 'admin_user'")) {
+            insError('设置管理员账号失败：' . mysqli_error($con));
+        }
+        if (!mysqli_query($con, "UPDATE `lylme_config` SET `v` = '$admin_pwd_md5' WHERE `k` = 'admin_pwd'")) {
+            insError('设置管理员密码失败：' . mysqli_error($con));
+        }
+        $rowUser = mysqli_fetch_assoc(mysqli_query($con, "SELECT `v` FROM `lylme_config` WHERE `k` = 'admin_user'"));
+        $rowPwd = mysqli_fetch_assoc(mysqli_query($con, "SELECT `v` FROM `lylme_config` WHERE `k` = 'admin_pwd'"));
+        if (!$rowUser || $rowUser['v'] !== $admin_user || !$rowPwd || $rowPwd['v'] !== $admin_pwd_md5) {
+            insError('管理员信息写入数据库失败，请重新安装或检查数据库权限！当前数据库账号：' . (isset($rowUser['v']) ? $rowUser['v'] : '读取失败') . '，密码校验：' . (isset($rowPwd['v']) && $rowPwd['v'] === $admin_pwd_md5 ? '通过' : '失败'));
+        }
+        mysqli_query($con, 'COMMIT');
+        insInfo("管理员信息设置完成！");
+        ob_flush();
+        flush();
+        $_SESSION['install_admin_user'] = $admin_user;
+        $_SESSION['install_admin_pwd'] = $admin_pwd;
+        ob_end_flush();
+        $doneUrl = '?s=' . md5('done');
+        echo '<script>setTimeout(function () { location.href="' . $doneUrl . '"; }, 2000)</script>';
         exit();
     }
     exit();
@@ -168,10 +214,10 @@ if ($s == 3) {
 
 // 检测数据库信息
 if ($s == 6766) {
-    $dbhost = $_GET['dbhost'] ?: '';
-    $dbuser = $_GET['dbuser'] ?: '';
-    $dbpwd = $_GET['dbpwd'] ?: '';
-    $dbport = intval($_GET['dbport'] ?: 3306);
+    $dbhost = isset($_GET['dbhost']) ? trim($_GET['dbhost']) : '';
+    $dbuser = isset($_GET['dbuser']) ? trim($_GET['dbuser']) : '';
+    $dbpwd = isset($_GET['dbpwd']) ? $_GET['dbpwd'] : '';
+    $dbport = isset($_GET['dbport']) ? intval($_GET['dbport']) : 3306;
     $con = @mysqli_connect($dbhost, $dbuser, $dbpwd, '', $dbport);
     if ($con) {
         echo 'true';
@@ -185,14 +231,46 @@ if ($s == 6766) {
     }
     exit();
 }
+// 检测目标数据库是否已存在 lylme_ 前缀的表（用于安装前提示用户）
+if ($s == 'checktables') {
+    header('Content-Type: application/json; charset=utf-8');
+    $dbhost = isset($_POST['dbhost']) ? trim($_POST['dbhost']) : '';
+    $dbname = isset($_POST['dbname']) ? trim($_POST['dbname']) : '';
+    $dbuser = isset($_POST['dbuser']) ? trim($_POST['dbuser']) : '';
+    $dbpwd = isset($_POST['dbpwd']) ? $_POST['dbpwd'] : '';
+    $dbport = isset($_POST['dbport']) ? intval($_POST['dbport']) : 3306;
+
+    $con = @mysqli_connect($dbhost, $dbuser, $dbpwd, '', $dbport);
+    if (!$con) {
+        echo json_encode(['exists' => false, 'count' => 0, 'tables' => [], 'error' => '数据库连接失败']);
+        exit();
+    }
+    mysqli_set_charset($con, 'utf8');
+
+    // 查询指定库中 lylme_ 前缀的表
+    $tables = [];
+    if (mysqli_select_db($con, $dbname)) {
+        $res = mysqli_query($con, "SHOW TABLES LIKE 'lylme_%'");
+        if ($res) {
+            while ($row = mysqli_fetch_row($res)) {
+                $tables[] = $row[0];
+            }
+        }
+    }
+    mysqli_close($con);
+    echo json_encode(['exists' => count($tables) > 0, 'count' => count($tables), 'tables' => $tables]);
+    exit();
+}
 // 安装完成
 if ($s == md5('done')) {
     require_once(INSTALL_PATH . '/templates/step_4.php');
     @ob_end_flush();
     @flush();
     $fp = fopen(INSTALL_PATH . '/install.lock', 'w');
-    fwrite($fp, '程序已正确安装，重新安装请删除本文件');
-    fclose($fp);
+    if ($fp) {
+        fwrite($fp, '程序已正确安装，重新安装请删除本文件');
+        fclose($fp);
+    }
     msgInfo("aHR0cHM6Ly9kZXYuaGFvLmx5bG1lLmNvbS8/dj0=");
     exit();
 }
@@ -274,7 +352,7 @@ function insSum($url)
     }
     // 无 curl 扩展时：原生 socket 发送请求后立即关闭，不等待响应
     $parts = parse_url($url);
-    if (empty($parts['host'])) {
+    if (!is_array($parts) || empty($parts['host'])) {
         return false;
     }
     $scheme = isset($parts['scheme']) ? strtolower($parts['scheme']) : 'http';
@@ -376,7 +454,8 @@ function setIsNext($bool)
 // 获取data文件夹中的文件内容
 function readDataFile($file)
 {
-    return file_get_contents(INSTALL_PATH . '/data/' . $file);
+    // clearBOM：防止 SQL 文件被编辑工具保存为带 UTF-8 BOM 时导致 mysqli_multi_query 导入失败
+    return clearBOM(file_get_contents(INSTALL_PATH . '/data/' . $file));
 }
 
 function insInfo($str)
@@ -391,6 +470,7 @@ function insError($str, $isExit = false)
 }
 function msgInfo($data)
 {
-    $info = strval(base64_decode($data) . constant("VERSION") . '&url=' . $_SERVER['HTTP_HOST']);
+    $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+    $info = strval(base64_decode($data) . constant("VERSION") . '&url=' . $host);
     return insSum($info);
 }

@@ -11,15 +11,15 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `lylme_apply`;
 CREATE TABLE `lylme_apply` (
-  `apply_id` int(4) NOT NULL COMMENT '收录ID',
-  `apply_name` varchar(20) NOT NULL COMMENT '收录链接名称',
-  `apply_url` varchar(255) NOT NULL COMMENT '收录链接地址',
-  `apply_group` int(2) NOT NULL COMMENT '申请收录分组',
-  `apply_icon` text NOT NULL COMMENT '收录链接图标',
-  `apply_desc` varchar(255) DEFAULT NULL COMMENT '收录链接描述',
-  `apply_time` datetime NOT NULL COMMENT '收录提交时间',
-  `apply_status` int(11) NOT NULL COMMENT '收录状态(0待审核,1通过，2拒绝)'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收录申请';
+  `apply_id` int(11) NOT NULL COMMENT '收录ID',
+  `apply_name` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收录链接名称',
+  `apply_url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收录链接地址',
+  `apply_group` int(11) NOT NULL COMMENT '申请收录分组',
+  `apply_icon` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '收录链接图标',
+  `apply_desc` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '收录链接描述',
+  `apply_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '收录提交时间',
+  `apply_status` tinyint(2) NOT NULL DEFAULT '0' COMMENT '收录状态(0待审核,1通过，2拒绝)'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='收录申请';
 
 DROP TABLE IF EXISTS `lylme_config`;
 CREATE TABLE `lylme_config` (
@@ -57,13 +57,13 @@ INSERT INTO `lylme_config` (`id`, `k`, `v`, `description`) VALUES
 
 DROP TABLE IF EXISTS `lylme_groups`;
 CREATE TABLE `lylme_groups` (
-  `group_id` int(2) NOT NULL COMMENT '分组ID',
-  `group_name` varchar(10) NOT NULL COMMENT '分组名称',
-  `group_icon` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '分组图标',
+  `group_id` int(11) NOT NULL COMMENT '分组ID',
+  `group_name` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '分组名称',
+  `group_icon` text COLLATE utf8mb4_unicode_ci COMMENT '分组图标',
   `group_order` int(4) NOT NULL DEFAULT '5' COMMENT '分组排序',
-  `group_status` int(1) NOT NULL DEFAULT '1' COMMENT '分组状态',
-  `group_pwd` int(2) NOT NULL DEFAULT '0' COMMENT '加密组ID'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
+  `group_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '分组状态',
+  `group_pwd` int(11) NOT NULL DEFAULT '0' COMMENT '加密组ID'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
 INSERT INTO `lylme_groups` (`group_id`, `group_name`, `group_icon`, `group_order`, `group_status`, `group_pwd`) VALUES
 (1, '常用导航', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-changyong\">\r\n</use></svg>', 1, 1, 0),
@@ -80,17 +80,17 @@ INSERT INTO `lylme_groups` (`group_id`, `group_name`, `group_icon`, `group_order
 
 DROP TABLE IF EXISTS `lylme_links`;
 CREATE TABLE `lylme_links` (
-  `id` int(4) NOT NULL COMMENT '链接ID',
-  `name` varchar(255) NOT NULL COMMENT '链接标题',
-  `group_id` int(2) NOT NULL DEFAULT '1' COMMENT '分组名称',
-  `url` varchar(255) NOT NULL COMMENT '链接地址',
-  `icon` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT '链接图标',
-  `link_desc` varchar(255) DEFAULT NULL COMMENT '链接描述',
-  `link_keywords` varchar(512) DEFAULT NULL COMMENT '链接关键词',
+  `id` int(11) NOT NULL COMMENT '链接ID',
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '链接标题',
+  `group_id` int(11) NOT NULL DEFAULT '1' COMMENT '分组名称',
+  `url` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '链接地址',
+  `icon` text COLLATE utf8mb4_unicode_ci COMMENT '链接图标',
+  `link_desc` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '链接描述',
+  `link_keywords` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '链接关键词',
   `link_order` int(4) DEFAULT '10' COMMENT '链接排序',
-  `link_status` int(1) NOT NULL DEFAULT '1' COMMENT '链接状态',
-  `link_pwd` int(2) DEFAULT '0' COMMENT '加密组ID'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPACT;
+  `link_status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '链接状态',
+  `link_pwd` int(11) DEFAULT '0' COMMENT '加密组ID'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
 
 INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`, `link_keywords`, `link_order`, `link_status`, `link_pwd`) VALUES
 (1, '豆包', 2, 'https://www.doubao.com/chat', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-doubao\"></use></svg>', '字节跳动AI助手，支持对话、写作与编程', '豆包,AI对话,AI聊天,AI写作,AI图片生成', 0, 1, 0),
@@ -240,29 +240,32 @@ INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`,
 (145, '淘宝', 1, 'https://www.taobao.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-taobao\"></use></svg>', '阿里旗下大型综合网购平台', '淘宝,网购,网上购物,电商平台', 6, 1, 0),
 (146, '京东', 1, 'https://www.jd.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-jingdong\"></use></svg>', '正品低价的综合网购商城', '京东,网上商城,正品,家电数码', 7, 1, 0),
 (147, '申请收录', 11, '/apply', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-gonggao\">\r\n</use></svg>', '申请本站收录', '申请收录.六零导航页', 147, 1, 0),
-(148, '关于本站', 11, '/about', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-lylme\">\r\n</use></svg>', '简洁高效的网址导航', '关于本站,六零导航页', 148, 1, 0);
+(148, '关于本站', 11, '/about', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-lylme\">\r\n</use></svg>', '简洁高效的网址导航', '关于本站,六零导航页', 148, 1, 0),
+(149, '今日热点', 11, 'https://60s.lylme.com', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-rebang\">\r\n</use></svg>', '每天120秒看世界', 'LyToday,60秒读懂世界,历史上的今天,今日黄历,上云六零,六零,LyLme,今日120秒视界', 148, 1, 0);
 
 DROP TABLE IF EXISTS `lylme_pwd`;
 CREATE TABLE `lylme_pwd` (
-  `pwd_id` int(2) NOT NULL COMMENT '加密组ID',
-  `pwd_name` varchar(20) NOT NULL COMMENT '加密组名称',
-  `pwd_key` varchar(20) NOT NULL COMMENT '加密组密码',
-  `pwd_ps` varchar(30) DEFAULT NULL COMMENT '加密组备注'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `pwd_id` int(11) NOT NULL COMMENT '加密组ID',
+  `pwd_name` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '加密组名称',
+  `pwd_key` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '加密组密码',
+  `pwd_ps` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '加密组备注'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 
 DROP TABLE IF EXISTS `lylme_sou`;
 CREATE TABLE `lylme_sou` (
   `sou_id` int(11) NOT NULL COMMENT '搜索引擎ID',
-  `sou_alias` varchar(20) NOT NULL COMMENT '搜索引擎别名',
-  `sou_name` varchar(20) NOT NULL COMMENT '搜索引擎名称',
-  `sou_hint` varchar(30) NOT NULL DEFAULT '请输入搜索关键词' COMMENT '搜索引擎提示文字',
-  `sou_color` varchar(20) NOT NULL DEFAULT '#696a6d' COMMENT '搜索引擎字体颜色',
-  `sou_link` varchar(255) NOT NULL COMMENT '搜索引擎地址',
-  `sou_waplink` varchar(255) DEFAULT NULL COMMENT '搜索引擎移动端地址',
-  `sou_icon` text NOT NULL COMMENT '搜索引擎图标',
-  `sou_st` int(1) NOT NULL DEFAULT '1' COMMENT '搜索引擎开关',
-  `sou_order` int(2) NOT NULL COMMENT '搜索引擎排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='搜索引擎';
+  `sou_alias` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '搜索引擎别名',
+  `sou_name` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '搜索引擎名称',
+  `sou_hint` varchar(60) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '请输入搜索关键词' COMMENT '搜索引擎提示文字',
+  `sou_color` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '#696a6d' COMMENT '搜索引擎字体颜色',
+  `sou_link` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '搜索引擎地址',
+  `sou_waplink` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '搜索引擎移动端地址',
+  `sou_icon` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '搜索引擎图标',
+  `sou_st` tinyint(1) NOT NULL DEFAULT '1' COMMENT '搜索引擎开关',
+  `sou_order` int(4) NOT NULL COMMENT '搜索引擎排序'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='搜索引擎';
 
 INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `sou_color`, `sou_link`, `sou_waplink`, `sou_icon`, `sou_st`, `sou_order`) VALUES
 (1, 'bing', 'Bing必应', '微软必应搜索', '#696a6d', 'https://cn.bing.com/search?q=', NULL, '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-bing\"></use></svg>', 1, 1),
@@ -278,11 +281,11 @@ INSERT INTO `lylme_sou` (`sou_id`, `sou_alias`, `sou_name`, `sou_hint`, `sou_col
 DROP TABLE IF EXISTS `lylme_tags`;
 CREATE TABLE `lylme_tags` (
   `tag_id` int(11) NOT NULL COMMENT '导航菜单ID',
-  `tag_name` varchar(30) NOT NULL COMMENT '导航菜单名称',
-  `tag_link` varchar(60) NOT NULL COMMENT '导航菜单链接',
-  `tag_target` int(1) NOT NULL DEFAULT '1' COMMENT '打开方式(1新标签,0当前标签)',
+  `tag_name` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '导航菜单名称',
+  `tag_link` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '导航菜单链接',
+  `tag_target` tinyint(1) NOT NULL DEFAULT '1' COMMENT '打开方式(1新标签,0当前标签)',
   `sort` int(11) NOT NULL DEFAULT '10' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`, `sort`) VALUES
 (1, '关于本站', '/about', 1, 10),
@@ -291,44 +294,51 @@ INSERT INTO `lylme_tags` (`tag_id`, `tag_name`, `tag_link`, `tag_target`, `sort`
 
 
 ALTER TABLE `lylme_apply`
-  ADD PRIMARY KEY (`apply_id`);
+  ADD PRIMARY KEY (`apply_id`),
+  ADD KEY `idx_apply_group` (`apply_group`),
+  ADD KEY `idx_apply_status` (`apply_status`);
 
 ALTER TABLE `lylme_config`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `k` (`k`);
+  ADD UNIQUE KEY `uk_k` (`k`);
 
 ALTER TABLE `lylme_groups`
-  ADD PRIMARY KEY (`group_id`) USING BTREE,
-  ADD UNIQUE KEY `group_name` (`group_name`) USING BTREE;
+  ADD PRIMARY KEY (`group_id`),
+  ADD KEY `idx_group_pwd` (`group_pwd`);
 
 ALTER TABLE `lylme_links`
-  ADD PRIMARY KEY (`id`) USING BTREE,
-  ADD KEY `组` (`group_id`) USING BTREE;
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_group_id` (`group_id`),
+  ADD KEY `idx_link_pwd` (`link_pwd`),
+  ADD KEY `idx_link_status` (`link_status`);
 
 ALTER TABLE `lylme_pwd`
   ADD PRIMARY KEY (`pwd_id`);
 
 ALTER TABLE `lylme_sou`
-  ADD PRIMARY KEY (`sou_id`);
+  ADD PRIMARY KEY (`sou_id`),
+  ADD KEY `idx_sou_st` (`sou_st`),
+  ADD KEY `idx_sou_order` (`sou_order`);
 
 ALTER TABLE `lylme_tags`
-  ADD PRIMARY KEY (`tag_id`);
+  ADD PRIMARY KEY (`tag_id`),
+  ADD KEY `idx_tag_sort` (`sort`);
 
 
 ALTER TABLE `lylme_apply`
-  MODIFY `apply_id` int(4) NOT NULL AUTO_INCREMENT COMMENT '收录ID';
+  MODIFY `apply_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '收录ID';
 
 ALTER TABLE `lylme_config`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID', AUTO_INCREMENT=25;
 
 ALTER TABLE `lylme_groups`
-  MODIFY `group_id` int(2) NOT NULL AUTO_INCREMENT COMMENT '分组ID', AUTO_INCREMENT=12;
+  MODIFY `group_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '分组ID', AUTO_INCREMENT=12;
 
 ALTER TABLE `lylme_links`
-  MODIFY `id` int(4) NOT NULL AUTO_INCREMENT COMMENT '链接ID', AUTO_INCREMENT=149;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '链接ID', AUTO_INCREMENT=150;
 
 ALTER TABLE `lylme_pwd`
-  MODIFY `pwd_id` int(2) NOT NULL AUTO_INCREMENT COMMENT '加密组ID';
+  MODIFY `pwd_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '加密组ID';
 
 ALTER TABLE `lylme_sou`
   MODIFY `sou_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '搜索引擎ID', AUTO_INCREMENT=10;
