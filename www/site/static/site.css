@@ -4,11 +4,14 @@
     --text: #1f2329;
     --sub: #8a919f;
     --line: #eceef1;
-    --accent: #14b8a6;
-    --accent-2: #06b6d4;
-    --ink: #111827;
+    --accent: #1d4ed8;
+    --accent-2: #3b82f6;
+    --ink: #3b82f6;
     --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 8px 24px rgba(16, 24, 40, 0.06);
     --radius: 16px;
+    --tagcolor: var(--accent-2);
+    --tagbacolor: rgba(59, 130, 246, 0.149);
+    --tagbacolorborder: 1px solid rgba(59, 130, 246, 0.42);
 }
 
 html.night-mode {
@@ -19,6 +22,9 @@ html.night-mode {
     --line: #2a2f3a;
     --ink: #f3f4f6;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+    --tagcolor: #ffffff;
+    --tagbacolor: rgb(81 81 81 / 15%);
+    --tagbacolorborder: 1px solid rgb(187 187 187 / 42%);
 }
 
 * {
@@ -41,6 +47,11 @@ body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     transition: background 0.3s, color 0.3s;
+}
+
+a {
+    color: #3b82f6;
+    text-decoration: none;
 }
 
 /* 背景图（可选） */
@@ -105,29 +116,21 @@ header {
     justify-content: center;
     width: 38px;
     height: 38px;
-    border-radius: 10px;
-    background: var(--card);
-    border: 1px solid var(--line);
     cursor: pointer;
-    transition: border-color 0.25s, box-shadow 0.25s;
 }
 
 .dropbtn.more:hover,
-.dropdown.open .dropbtn.more {
-    border-color: var(--accent);
-    box-shadow: 0 2px 8px rgba(20, 184, 166, 0.18);
-}
+.dropdown.open .dropbtn.more {}
 
 .dropbtn.more::before {
     content: "";
     width: 16px;
     height: 12px;
-    background: repeating-linear-gradient(to bottom,
-            var(--text) 0 2px,
-            transparent 2px 4px);
+    background: repeating-linear-gradient(to bottom, #ffffff 0 2px, transparent 2px 4px);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
 }
 
 .dropdown-content {
@@ -193,9 +196,9 @@ header {
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    background: var(--card);
+    /* background: var(--card);
     border: 1px solid var(--line);
-    color: var(--text);
+    color: var(--text); */
     cursor: pointer;
     transition: border-color 0.25s, box-shadow 0.25s, color 0.25s;
 }
@@ -203,9 +206,12 @@ header {
 .night-mode-btn svg {
     width: 18px;
     height: 18px;
+    stroke: #fff;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
 }
 
 .night-mode-btn:hover {
+    stroke: #fff;
     color: var(--accent);
 }
 
@@ -387,9 +393,9 @@ html.night-mode .night-mode-btn .icon-moon {
 .site-keywords span {
     padding: 4px 12px;
     border-radius: 999px;
-    background: rgba(20, 184, 166, 0.08);
-    border: 1px solid rgba(20, 184, 166, 0.25);
-    color: var(--accent);
+    background: var(--tagbacolor);
+    border: var(--tagbacolorborder);
+    color: var(--tagcolor);
     font-size: 12px;
     font-weight: 500;
 }
@@ -461,7 +467,7 @@ html.night-mode .night-mode-btn .icon-moon {
     border-radius: 10px;
     box-shadow: var(--shadow);
     z-index: 60;
-    border: 1px solid #14b8a6c2;
+    border: var(--tagbacolorborder);
     color: var(--accent);
 }
 
@@ -594,8 +600,35 @@ html.night-mode .night-mode-btn .icon-moon {
     transform: translateX(-50%) translateY(0);
 }
 
+
+
+
+
 /* ============ 响应式 ============ */
 @media (max-width: 640px) {
+
+    .site-keywords {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .site-keywords::-webkit-scrollbar {
+        display: none;
+    }
+
+    .site-keywords span {
+        flex: 0 0 auto;
+        margin-right: 8px;
+        white-space: nowrap;
+        line-height: 32px;
+    }
+
+
     .container {
         padding: 0 14px 30px;
     }
@@ -632,9 +665,6 @@ html.night-mode .night-mode-btn .icon-moon {
         font-size: 20px;
     }
 
-    .site-keywords {
-        justify-content: center;
-    }
 
     .site-actions {
         justify-content: center;

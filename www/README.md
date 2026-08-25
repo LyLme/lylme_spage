@@ -30,7 +30,10 @@
 ```bash
 docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage lylme/lylme_spage
 ```
-
+#### 国内镜像加速
+```bash
+docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/html --name lylme_spage docker.1ms.run/lylme/lylme_spage:latest
+```
 | 项目     | 地址                          |
 | -------- | ----------------------------- |
 | 前台     | <http://localhost:8080>       |
@@ -38,7 +41,7 @@ docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/htm
 | 默认账号 | `admin`                       |
 | 默认密码 | `123456`                      |
 
-> 国内镜像加速：将 `lylme/lylme_spage` 替换为 `docker.1ms.run/lylme/lylme_spage:latest`
+
 
 详细的 Docker 部署、数据持久化、备份恢复、反向代理等内容请参阅 [Docker.md](Docker.md)。
 
@@ -48,7 +51,7 @@ docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/htm
 |------|------|
 | PHP | >= 5.6（支持 5.x / 7.x / 8.x） |
 | MySQL | >= 5.6（推荐 5.7+） |
-| Web 服务器 | Apache / Nginx / IIS |
+| Web 服务器 | Apache / Nginx |
 
 **PHP 扩展**：mysqli、pdo_mysql、gd、curl、mbstring、xml、zip
 
@@ -88,7 +91,6 @@ docker run -d -p 8080:80 -v lylme_mysql:/var/lib/mysql -v lylme_www:/var/www/htm
 | 验证码 | 收录申请等场景的图形验证码 |
 | 文件校验 | 核心文件完整性校验，检测篡改 |
 | 密码加密 | 管理员密码 MD5 加密存储，链接/分组密码访问 |
-| Token 鉴权 | 后台基于加密 Token 的身份验证 |
 
 ## 前台截图
 
@@ -237,10 +239,10 @@ lylme_spage/
 | Gitee 仓库 | <https://gitee.com/LyLme/lylme_spage> |
 | GitHub 仓库 | <https://github.com/LyLme/lylme_spage> |
 | 演示站点 | <https://hao.lylme.com> |
-| 项目文档 | <https://doc.lylme.com/spage/#/> |
-| 主题开发文档 | <http://doc.lylme.com/dev/theme> |
+| 项目文档 | <https://doc.lylme.com/spage> |
+| 主题开发文档 | <http://doc.lylme.com/spage/#/dev> |
 | Docker 部署文档 | [Docker.md](Docker.md) |
-| 捐赠支持 | <https://www.lylme.com/support/> |
+| 捐赠支持 | <https://www.lylme.com/support> |
 
 ## 鸣谢
 

@@ -15,7 +15,7 @@
     <meta name="browsermode" content="application">
     <meta name="x5-fullscreen" content="true">
     <meta name="x5-page-mode" content="app">
-    <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
+    <script src="<?php echo $cdnpublic ?>/assets/js/icon.js"></script>
     <link rel="stylesheet" href="<?php echo $templatepath; ?>/css/style.css">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -99,7 +99,7 @@
                 <input class="wd soinput" type="text" placeholder="" name="q" x-webkit-speech lang="zh-CN" autocomplete="off">
                 <button onclick="go('');">
                     <svg class="icon" style=" width: 21px; height: 21px; opacity: 0.5;" aria-hidden="true">
-                        <use xlink:href="#icon-sousuo"></use>
+                        <use xlink:href="#lyicon-sousuo"></use>
                     </svg>
                 </button>
                 <div id="word"></div>

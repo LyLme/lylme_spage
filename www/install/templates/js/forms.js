@@ -38,6 +38,24 @@ function CheckForm() {
         return false;
     }
 
+    if ($("#admin_user").val() == "") {
+        alert("请输入管理员账号！");
+        $("#admin_user").focus();
+        return false;
+    }
+
+    if ($("#admin_pwd").val() == "") {
+        alert("请输入管理员密码！");
+        $("#admin_pwd").focus();
+        return false;
+    }
+
+    if ($("#admin_pwd").val().length < 6) {
+        alert("管理员密码长度不得小于6位！");
+        $("#admin_pwd").focus();
+        return false;
+    }
+
     // if ($("#username").val() == "") {
     //     alert("请输入管理员账号！");
     //     $("#username").focus();
@@ -92,8 +110,8 @@ function CheckForm() {
                     $('#cpwdTxt').html('<span class="correct">可用</span>');
                     $('#cpwd').val("true");
 
-                    //验证没有问题，提交表单
-                    document.form.submit();
+                    //验证没有问题，提交表单（提交前检测已有表）
+                    submitWithTableCheck();
                     return;
                 } else {
                     $('#cpwdTxt').html('<span class="error">'+data+'</span>');
@@ -105,10 +123,49 @@ function CheckForm() {
         });
     } else {
 
-        //验证没有问题，提交表单
+        //验证没有问题，提交表单（提交前检测已有表）
+        submitWithTableCheck();
+        return;
+    }
+}
+
+/**
+ * 提交前检测目标库是否已存在 lylme_ 前缀的表，
+ * 若存在则提示用户确认是否覆盖重新安装
+ */
+function submitWithTableCheck() {
+    // 已确认过覆盖，直接提交
+    if ($("#overwriteConfirmed").val() == "true") {
         document.form.submit();
         return;
     }
+    $.ajax({
+        url: 'index.php',
+        data: {
+            s: 'checktables',
+            dbhost: $("#dbhost").val(),
+            dbport: $("#dbport").val(),
+            dbname: $("#dbname").val(),
+            dbuser: $("#dbuser").val(),
+            dbpwd: $("#dbpwd").val(),
+        },
+        type: 'post',
+        dataType: 'json',
+        success: function (data) {
+            if (data.exists) {
+                var msg = '检测到数据库「' + $("#dbname").val() + '」已安装过本程序，继续安装将清空并重新初始化这些数据，是否继续？';
+                if (!confirm(msg)) {
+                    return;
+                }
+                $("#overwriteConfirmed").val("true");
+            }
+            document.form.submit();
+        },
+        error: function () {
+            // 检测失败不阻断安装，直接提交
+            document.form.submit();
+        }
+    });
 }
 
 /**

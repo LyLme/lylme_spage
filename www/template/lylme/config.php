@@ -27,41 +27,27 @@
  * }
  */
 $theme_config =  [
-  [
+   [
     'type' => 'radio',
-    'name' => 'link_desc',
-    'title' => '链接描述',
-    'value' => 1,
-    'enum' => [
-      1 => "显示",
-      2 => "隐藏",
-    ],
-  ],
-  [
-    'type' => 'select',
-    'name' => 'background',
-    'title' => '背景显示',
-    'description' => '背景图片显示位置',
-    "value" => 2,
+    'name' => 'glassmorphism',
+    'title' => '图标毛玻璃',
+    'value' => '0',
     'enum' => [
       0 => "关闭",
-      1 => "主体区域",
-      2 => "时间区域"
+      1 => "开启",
     ],
-
   ],
   [
     'type' => 'select',
     'name' => 'lytoday',
     'title' => '今日热榜',
-    'description' => 'LyToday-JS插件显示位置，每日免费请求上限200次<a href="https://doc.lylme.com/spage/#/lytoday-js" target="_blank">查看文档</a>',
+    'description' => 'LyToday-JS插件显示位置，每日免费请求上限200次 <a href="https://doc.lylme.com/spage/#/lytoday-js" target="_blank">查看文档</a>',
     "value" => 0,
     'enum' => [
       0 => "关闭",
       1 => "搜索栏下方",
       2 => "底部"
     ],
-
   ],
   [
     'type' => 'textarea',
@@ -71,23 +57,11 @@ $theme_config =  [
     'value' => '<div id="lytoday"></div><script src="https://lytoday.lylme.com/"></script>',
   ],
   [
-    'type' => 'radio',
-    'name' => 'logo_show',
-    'title' => '显示LOGO',
-    'value' => 1,
-    'enum' => [
-      1 => "显示",
-      2 => "隐藏",
-    ],
-  ],
-  [
     'type' => 'text',
     'name' => 'gonganbei',
     'title' => '公安备案号',
     'description' => '公安备案号，留空不显示',
     'value' => '',
     'placeholder' => "京公安网备xxxxxxxxxx号"
-
   ],
-
 ];

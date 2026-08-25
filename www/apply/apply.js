@@ -22,6 +22,7 @@ function gurl() {
 //生成验证码
 function recode() {
     $('#captcha_img').attr('src', '../include/validatecode.php?r=' + Math.random());
+      layer.msg('验证码已刷新');
     $("input[name=\'authcode\']").val('');
 }
 //微信相关推送

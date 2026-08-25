@@ -10,7 +10,7 @@
     <title>六零导航页安装向导 - 配置数据文件</title>
     <link href="templates/style/install.css" type="text/css" rel="stylesheet"/>
     <script type="text/javascript" src="templates/js/jquery.min.js"></script>
-    <script type="text/javascript" src="templates/js/forms.js"></script>
+    <script type="text/javascript" src="templates/js/forms.js?v=20260825"></script>
 </head>
 <body>
 <form name="form" id="form" method="post" action="index.php">
@@ -54,23 +54,26 @@
 
                     <span class="cnote"><span id="cpwdTxt"></span></span>
                         <input type="hidden" name="cpwd" id="cpwd" value="false">
+                        <input type="hidden" name="overwriteConfirmed" id="overwriteConfirmed" value="false">
                     </td>
                     <td>
                       </td>
                 </tr>
                 <tr>
-                    <td height="40" colspan="2" align="left"><span class="title">默认管理员信息</span></td>
+                    <td height="40" colspan="2" align="left"><span class="title">管理员信息</span></td>
                 </tr>
                 <tr>
                     <td height="40" align="right">管理员账号：</td>
                     <td>
-                        <div class="readonly">admin</div>
+                        <input type="text" name="admin_user" id="admin_user" class="input" value="admin" autocomplete="off"/>
+                        <span class="cnote">后台登录账号, 默认为 admin</span>
                     </td>
                 </tr>
                 <tr>
                     <td height="40" align="right">管理员密码：</td>
                     <td>
-                        <div class="readonly">123456</div>
+                        <input type="text" name="admin_pwd" id="admin_pwd" class="input" value="123456" autocomplete="off"/>
+                        <span class="cnote">后台登录密码, 至少6位字符</span>
                     </td>
                 </tr>
                 <!--                <tr>-->

@@ -115,12 +115,6 @@ a {
 }
 
 
-input[type="text"]:focus, input[type="password"]:focus {
-    border: none;
-    outline: none;
-}
-
-
 .header, .mainBody, .footer {
     /*width: 960px;*/
     margin: 0 5px;
@@ -208,12 +202,13 @@ input[type="text"]:focus, input[type="password"]:focus {
 }
 
 .mainBody .table .inputOn {
-    width: 280px;
+   width: 60%;
     height: 24px;
     line-height: 24px;
-    padding: 2px 5px;
-    background: url(../images/inputOnBg.png) no-repeat 0 center;
-    border: 0;
+    margin: 1px;
+    padding: 0 3px;
+  box-shadow: 0px 0px 10px 1px #cccccc8f;
+
 }
 
 .mainBody .table .cnote {
@@ -363,4 +358,41 @@ input[type="text"]:focus, input[type="password"]:focus {
 }
 .installed .admin {
     background: #49739a;
+}
+.install-table {
+    border-collapse: collapse;
+    width: 420px;
+    font-size: 14px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    margin-bottom: 10px;
+}
+.install-table caption {
+    caption-side: top;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 12px;
+    background: #f5f7fa;
+    border: 1px solid #e5e5e5;
+    border-bottom: none;
+}
+.install-table th {
+    background: #fafbfc;
+    text-align: left;
+    padding: 10px 12px;
+    width: 90px;
+    border: 1px solid #e5e5e5;
+    font-weight: 600;
+}
+.install-table td {
+    padding: 10px 12px;
+    border: 1px solid #e5e5e5;
+}
+.install-table a {
+    color: #1e80ff;
+    text-decoration: none;
+}
+.install-table a:hover {
+    text-decoration: underline;
 }

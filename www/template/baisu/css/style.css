@@ -59,30 +59,54 @@ li.selected {
 
 p.content {
   text-align: center;
-  color: #999;
+  color: #cdcdcd;
   font-family: cursive;
-  font-size: 15px;
+  font-size: 16px;
   margin: 15px;
+  text-shadow: 1px 1px 1px #656565;
 }
 
 .urllist img,
 .urllist svg,
 .site-name svg {
+  width: 40px;
+  height: 40px;
+}
+
+img.lylme-group-img {
   width: 24px;
   height: 24px;
   margin: auto 15px auto 0px;
 }
-img.lylme-group-img {
-    width: 24px;
-    height: 24px;
-    margin: auto 15px auto 0px;
+
+.lycategory svg,
+.lycategory img {
+  margin: auto 15px auto 0px;
 }
-.list svg.icon,
-.list img {
-  width: 28px;
-  height: 28px;
-  padding: 2px;
-  border: 10px;
+
+.link_info {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.link_info .name {
+  font-size: 17px;
+  padding: 3px 10px;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link_info .desc {
+  font-size: 12px;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 * {
@@ -92,6 +116,7 @@ img.lylme-group-img {
   font-size: 14px;
 }
 
+
 input:focus {
   outline: none;
 }
@@ -100,11 +125,13 @@ textarea:focus {
   outline: none;
 }
 
-input {
-}
 
 body {
   background-color: #f9f9f9;
+  background-attachment: fixed, fixed;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 img {
@@ -534,10 +561,6 @@ a {
   text-shadow: 1px 1px 8px #504b4b;
   width: 100%;
   height: 180px;
-  background-color: #477975;
-  background-repeat: no-repeat;
-  background-position: initial;
-  background-size: cover;
   border-radius: 6px;
   display: flex;
   justify-content: center;
@@ -605,17 +628,25 @@ div#he-plugin-standard {
   margin-top: 30px;
 }
 
+.site-category {
+  background:#ffffffe0;
+  padding: 5px;
+  margin: 15px 0;
+  border-radius: 6px;
+}
+
 .site-main .site-name {
-  background: #fff;
+  /* background: #fff; */
   border-radius: 6px;
   color: #333333;
   padding: 10px;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   font-size: 15px;
   line-height: 30px;
   margin-bottom: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
 }
 
 .site-main .site-name i {
@@ -646,15 +677,29 @@ div#he-plugin-standard {
   display: none;
 }
 
+
+
 .site-main .site-list {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
 }
 
+@media (min-width: 480px) {
+  .site-main .site-list {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+}
+
+@media (min-width: 768px) {
+  .site-main .site-list {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+  }
+}
 .site-main .site-list .list {
-  width: 24%;
-  background-color: #ffffff;
+  background-color: #ffffff96;
   border-radius: 6px;
   transition: 0.3s all;
   margin-bottom: 15px;
@@ -664,18 +709,6 @@ div#he-plugin-standard {
   justify-content: center;
 }
 
-.site-main .site-list .list span {
-  display: block;
-  width: 25px;
-  height: 25px;
-  margin: auto;
-  text-align: center;
-  line-height: 25px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-}
 
 .site-main .site-list .list span i {
   display: block;
@@ -688,8 +721,8 @@ div#he-plugin-standard {
   flex-wrap: nowrap;
   width: 100%;
   padding: 1.5% 5%;
-  justify-content: center;
   flex-direction: row;
+  align-items: center;
 }
 
 .site-main .site-list .list p.name {
@@ -730,8 +763,8 @@ div#he-plugin-standard {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 100%;
-  text-align: center;
+
+  /* text-align: center; */
 }
 
 .site-main .site-list .list:hover {
@@ -786,10 +819,12 @@ footer a:hover {
   z-index: 99;
   width: 45px;
 }
+
 a.icp {
   margin: 5px;
   font-size: 14px;
 }
+
 .tool-list .list {
   width: 45px;
   height: 45px;
@@ -978,9 +1013,11 @@ a.icp {
 .m-header {
   display: none;
 }
+
 .index-nav .type-list .list a i {
   font-size: 14px;
 }
+
 @media only screen and (max-width: 1200px) {
   #word {
     top: 340px;
@@ -1005,8 +1042,6 @@ a.icp {
     margin-top: 60px;
   }
 
-  .search-main-w .date-main {
-  }
 
   #he-plugin-standard {
     padding: 0px !important;
@@ -1022,33 +1057,15 @@ a.icp {
     width: 80%;
   }
 
-  .search-main .search-btnlist {
-  }
+  .search-main .search-btnlist {}
 
   .search-main .search-btnlist .search-lists {
     font-size: 13px;
   }
 
-  .site-main .site-name {
-    margin-bottom: 10px;
-  }
 
-  .site-main .site-list .list {
-    width: 48%;
-    margin-bottom: 10px;
-  }
 
-  .site-main .site-list {
-    margin-bottom: 25px;
-  }
 
-  .site-main .site-list .list span {
-    position: absolute;
-    right: 0px;
-    top: 0;
-    bottom: 0;
-    margin: auto;
-  }
 
   footer {
     padding-left: 0;
@@ -1067,8 +1084,7 @@ a.icp {
     box-shadow: 0px 0px 1px #c0c4cc;
   }
 
-  .m-header .logo {
-  }
+  .m-header .logo {}
 
   .m-header .logo img {
     width: 36px;

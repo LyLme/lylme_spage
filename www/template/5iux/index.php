@@ -74,7 +74,7 @@
 
                     <input class="wd soinput" id="search-text" type="text" placeholder="" name="q" x-webkit-speech lang="zh-CN" autocomplete="off">
                     <button onclick="go('');"><svg class="icon" style=" width: 21px; height: 21px; opacity: 0.5;" aria-hidden="true">
-                            <use xlink:href="#icon-sousuo"></use>
+                            <use xlink:href="#lyicon-sousuo"></use>
                         </svg></button>
 
                     <div id="word"></div>
@@ -137,7 +137,7 @@
 
 </body>
 <script src="<?php echo $cdnpublic ?>/assets/js/jquery.min.js"></script>
-<script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
+<script src="<?php echo $cdnpublic ?>/assets/js/icon.js"></script>
 <script src="<?php echo $templatepath; ?>/js/sou.js?v=20240414"></script>
 <script>
     function solist() {

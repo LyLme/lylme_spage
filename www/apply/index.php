@@ -9,7 +9,7 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
     }
 
     // SSRF 防护：拒绝内网/非 http(s) 地址
-    list($ok, ) = ssrf_validate_url($url);
+    list($ok,) = ssrf_validate_url($url);
     if (!$ok) {
         exit('{"code":"-9","msg":"链接地址不合法"}');
     }
@@ -86,7 +86,7 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
 
         .lylme-center {
             background: #fff;
-            min-width: 29.25rem;
+            min-width:45%;
             padding: 30px;
             border-radius: 20px;
             margin: 2.85714em
@@ -134,6 +134,15 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
         ul {
             padding-left: 10px
         }
+
+        @media (max-width: 768px) {
+            .lylme-center {
+                min-width: auto;
+                padding: 16px;
+                border-radius: 12px;
+                margin: 1em;
+            }
+        }
     </style>
 </head>
 
@@ -151,88 +160,91 @@ if (!empty($url = isset($_GET['url']) ? $_GET['url'] : null)) {
     <div class="lylme-form">
         <div class="lylme-center">
             <?php if ($conf["apply"] == 2): ?>
-            <div class="lylme-header text-center">
-                <h2>网站已关闭收录</h2>
-            </div>
-            <div class="apply_gg">
-                <?php echo $conf['apply_gg'] ?>
-            </div>
-            <center>
-                <p><a href="../" class="home">返回首页</a></p><?php echo $conf['copyright'] ?>
-            </center>
+                <div class="lylme-header text-center">
+                    <h2>网站已关闭收录</h2>
+                </div>
+                <div class="apply_gg">
+                    <?php echo $conf['apply_gg'] ?>
+                </div>
+                <center>
+                    <p><a href="../" class="home">返回首页</a></p><?php echo $conf['copyright'] ?>
+                </center>
             <?php else: ?>
-            <div class="lylme-header text-center">
-                <h2>申请收录</h2>
-            </div>
-            <div class="apply_gg">
-                <?php echo $conf['apply_gg'] ?>
-            </div>
-            <div class="form-group">
-                <label>*URL链接地址:</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" name="url" placeholder="完整链接或域名" value="" onchange="gurl()" required>
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" onclick="get_url()" type="button">自动获取</button>
-                    </span>
+                <div class="lylme-header text-center">
+                    <h2>申请收录</h2>
                 </div>
-            </div>
-            <div class="form-group has-feedback feedback-left row">
-                <div class="col-xs-12">
-                    <label>* 选择分组:</label>
-                    <select title="分组" class="form-control" name="group_id" required>
-                        <option value="">请选择</option>
-                        <?php
-                        $applygroup = $site->getGroups();
-                        while ($grouplist = $DB->fetch($applygroup)) {
-                        ?>
-	<option value="<?php echo $grouplist['group_id']; ?>"><?php echo $grouplist['group_name']; ?></option>
-                        <?php
-                        }
-                        ?>
-                    </select>
-                    <span class="mdi mdi-folder form-control-feedback" aria-hidden="true"></span>
+                <div class="apply_gg">
+                    <?php echo $conf['apply_gg'] ?>
                 </div>
-            </div>
-            <div class="form-group has-feedback feedback-left row">
-                <div class="col-xs-12">
-                    <label>* 网站名称:</label>
-                    <input type="text" class="form-control" id="title" name="name" value="" required placeholder="网站名称">
-                    <span class="mdi mdi-format-title form-control-feedback" aria-hidden="true"></span>
-                    <small class="help-block">填写网站名称</small>
+                <div class="form-group">
+                    <label>*URL链接地址:</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="url" placeholder="完整链接或域名" value="" onchange="gurl()" required>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" onclick="get_url()" type="button">自动获取</button>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>网站图标:</label>
-                <div class="input-group">
-                    <!-- 用于展示上传文件名的表单 -->
-                    <input type="text" id="icon" class="form-control" name="icon" placeholder="填写图标的URL地址">
-                    <!-- 点击触发按钮 -->
-                    <span class="input-group-btn">
-                        <input type="file" id="file" onchange="uploadimg()" accept="image/png, image/jpeg,image/gif,image/x-icon" style="display: none" />
-                        <button class="btn btn-default" id="uploadImage" onclick="$('#file').click();" type="button">选择</button>
-                    </span>
+                <div class="form-group has-feedback feedback-left row">
+                    <div class="col-xs-12">
+                        <label>* 选择分组:</label>
+                        <select title="分组" class="form-control" name="group_id" required>
+                            <option value="">请选择</option>
+                            <?php
+                            $applygroup = $site->getGroups();
+                            while ($grouplist = $DB->fetch($applygroup)) {
+                            ?>
+                                <option value="<?php echo $grouplist['group_id']; ?>"><?php echo $grouplist['group_name']; ?></option>
+                            <?php
+                            }
+                            ?>
+                        </select>
+                        <span class="mdi mdi-folder form-control-feedback" aria-hidden="true"></span>
+                    </div>
                 </div>
-                <img id="review" src="" width="100px" height="100px" class="center-block" style="display: none;" />
-                <span class="mdi mdi-emoticon form-control-feedback" aria-hidden="true"></span>
-                <small class="help-block">填写图标的<code>URL</code>地址，如：<code>http://www.xxx.com/logo.png</code><br>
-                    部分网站无法自动获取，请手动填写</small>
-            </div>
-            <div class="form-group has-feedback feedback-left row">
-                <label>* 验证码:</label>
-                <div class="col-xs-8">
-                    <input type="text" name="authcode" class="form-control" placeholder="验证码" required>
-                    <span class="mdi mdi-check form-control-feedback" aria-hidden="true"></span>
+                <div class="form-group has-feedback feedback-left row">
+                    <div class="col-xs-12">
+                        <label>* 网站名称:</label>
+                        <input type="text" class="form-control" id="title" name="name" value="" required placeholder="网站名称">
+                        <span class="mdi mdi-format-title form-control-feedback" aria-hidden="true"></span>
+                        <small class="help-block">填写网站名称</small>
+                    </div>
                 </div>
-                <div class="col-xs-4">
-                    <img id="captcha_img" title="验证码" src='../include/validatecode.php' class="pull-right code" onclick="recode()" />
+                <div class="form-group">
+                    <label>网站图标:</label>
+                    <div class="input-group">
+                        <!-- 用于展示上传文件名的表单 -->
+                        <input type="text" id="icon" class="form-control" name="icon" placeholder="填写图标的URL地址">
+                        <!-- 点击触发按钮 -->
+                        <span class="input-group-btn">
+                            <input type="file" id="file" onchange="uploadimg()" accept="image/png, image/jpeg,image/gif,image/x-icon" style="display: none" />
+                            <button class="btn btn-default" id="uploadImage" onclick="$('#file').click();" type="button">选择</button>
+                        </span>
+                    </div>
+                    <img id="review" src="" width="100px" height="100px" class="center-block" style="display: none;" />
+                    <span class="mdi mdi-emoticon form-control-feedback" aria-hidden="true"></span>
+                    <small class="help-block">填写图标的<code>URL</code>地址，如：<code>http://www.xxx.com/logo.png</code><br>
+                        部分网站无法自动获取，请手动填写</small>
                 </div>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary btn-block" onclick="submit()">提交</button>
-            </div>
-            <center>
-                <p><a href="../" class="home">返回首页</a></p><?php echo $conf['copyright'] ?>
-            </center>
+                <div class="form-group">
+                    <label>* 验证码:</label>
+                    <div class="input-group">
+                        <input type="text" name="authcode" class="form-control" placeholder="验证码" required>
+                        <span class="input-group-text p-0 border-0 bg-transparent">
+                            <img id="captcha_img" title="验证码" src='../include/validatecode.php' style="height:38px;cursor: pointer;border: 1px solid #ebebeb;border-left: none;border-radius: 0 .375rem .375rem 0;box-sizing: border-box;" onclick="recode()" />
+                        </span>
+                    </div>
+
+
+
+
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" onclick="submit()">提交</button>
+                </div>
+                <center>
+                    <p><a href="../" class="home">返回首页</a></p><?php echo $conf['copyright'] ?>
+                </center>
             <?php endif; ?>
         </div>
     </div>

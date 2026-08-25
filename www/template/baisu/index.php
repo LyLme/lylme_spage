@@ -27,7 +27,9 @@
 	</style>
 </head>
 
-<body>
+<body <?php if (theme_config("background") == '1' && background()) {
+										echo 'style="background-image: url(' . background() . ')"';
+									} ?>>
 	<!--手机顶部 S-->
 	<div class="m-header">
 		<div class="logo">
@@ -102,7 +104,7 @@
 	<div class="index-main">
 		<!--搜索 S-->
 		<div class="search-main-w">
-			<div class="date-main" <?php if (background()) {
+			<div class="date-main" <?php if (theme_config("background") == '2' && background()) {
 										echo 'style="background-image: url(' . background() . ')"';
 									} ?>>
 				<time class="times" id="nowTime"></time>
@@ -226,7 +228,7 @@
 	<script src="<?php echo $templatepath; ?>/js/holmes.js" type="text/javascript" charset="utf-8"></script>
 	<script src="<?php echo $templatepath; ?>/js/lunar.js" type="text/javascript" charset="utf-8"></script>
 	<script src="<?php echo $templatepath; ?>/js/common.js?v=20240414" type="text/javascript" charset="utf-8"></script>
-	<script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
+	<script src="<?php echo $cdnpublic ?>/assets/js/icon.js"></script>
 </body>
 
 </html>
