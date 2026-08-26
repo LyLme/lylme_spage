@@ -132,7 +132,7 @@ try {
             <li class="nav-item<?php echo menu_active('wxplus'); ?>"> <a href="./wxplus.php"><i class="mdi mdi-wechat"></i>微信推送</a> </li>
             <li class="nav-item<?php echo menu_active('license'); ?>"> <a href="./license.php"><i class="mdi mdi-checkbox-marked-circle"></i>网站授权</a> </li>
 
-            <li> <a href="javascript:loginout()"><i class="mdi mdi-logout"></i> 退出登录</a> </li>
+            <li><a href="#logout" onclick="loginout();return false;">退出登录</a> </li>
           </ul>
         </nav>
         <div class="sidebar-footer">
