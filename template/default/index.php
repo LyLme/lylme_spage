@@ -20,7 +20,7 @@
 	<meta name="lsvn" content="<?php echo base64_encode($conf['version']) ?>">
 	<script src="<?php echo $cdnpublic ?>/assets/js/jquery.min.js" type="application/javascript"></script>
 	<link href="<?php echo $cdnpublic ?>/assets/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-	<link rel="stylesheet" href="<?php echo $templatepath; ?>/css/style.css?v=20260806" type="text/css">
+	<link rel="stylesheet" href="<?php echo $templatepath; ?>/css/style.css?v=20260826" type="text/css">
 </head>
 
 <body>

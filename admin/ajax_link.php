@@ -348,9 +348,9 @@ switch ($submit) {
 			<meta charset="utf-8">
 			<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 			<title>编辑链接</title>
-			<link href="/assets/admin/css/bootstrap.min.css" rel="stylesheet">
+			<link href="/assets/admin/css/bootstrap.min.css?v=20260826" rel="stylesheet">
 			<link href="/assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
-			<link href="/assets/admin/css/style.min.css" rel="stylesheet">
+			<link href="/assets/admin/css/style.min.css?v=20260826" rel="stylesheet">
 			<link href="/assets/admin/css/coloris.min.css" rel="stylesheet">
 			<style>
 				body {
