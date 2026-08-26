@@ -2,7 +2,6 @@
 
 include("../include/common.php");
 
-// Bootstrap 5 官方 CDN 地址（可自由更换其他官方版本 CDN）
 
 // 设置响应头
 header('Content-Type: text/html; charset=UTF-8');
