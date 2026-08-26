@@ -86,7 +86,7 @@ try {
   <title><?php echo htmlspecialchars($page_title . ' - ' . $site_title); ?></title>
   <link href="/assets/admin/css/bootstrap.min.css?v=20260826" rel="stylesheet">
   <link href="/assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
-  <link href="/assets/admin/css/style.min.css?v=20260826" rel="stylesheet">
+  <link href="/assets/admin/css/style.min.css?v=260826" rel="stylesheet">
   <link href="/assets/admin/js/jquery-confirm.min.css" type="text/css" rel="stylesheet" />
   <script type="text/javascript" src="/assets/admin/js/jquery.min.js"></script>
   <script type="text/javascript" src="/assets/admin/js/bootstrap-notify.min.js?v=20260826"></script>
@@ -132,7 +132,7 @@ try {
             <li class="nav-item<?php echo menu_active('wxplus'); ?>"> <a href="./wxplus.php"><i class="mdi mdi-wechat"></i>微信推送</a> </li>
             <li class="nav-item<?php echo menu_active('license'); ?>"> <a href="./license.php"><i class="mdi mdi-checkbox-marked-circle"></i>网站授权</a> </li>
 
-            <li> <a href="javascript:loginout()"><i class="mdi mdi-logout"></i> 退出登录</a> </li>
+            <li><a href="#logout" onclick="loginout();return false;">退出登录</a> </li>
           </ul>
         </nav>
         <div class="sidebar-footer">
