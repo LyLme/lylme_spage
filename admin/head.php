@@ -88,7 +88,7 @@ try {
   <meta name="author" content="yinqi">
   <link href="/assets/admin/css/bootstrap.min.css" rel="stylesheet">
   <link href="/assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
-  <link href="/assets/admin/css/style.min.css" rel="stylesheet">
+  <link href="/assets/admin/css/style.min.css?v=20260826" rel="stylesheet">
   <link href="/assets/admin/js/jquery-confirm.min.css" type="text/css" rel="stylesheet" />
   <script type="text/javascript" src="/assets/admin/js/jquery.min.js"></script>
   <script type="text/javascript" src="/assets/admin/js/bootstrap-notify.min.js"></script>
