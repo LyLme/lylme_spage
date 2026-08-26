@@ -237,4 +237,4 @@ else { ?>
 <?php include './footer.php'; ?>
 <script src="/assets/admin/js/jquery.lazyload.min.js" type="application/javascript"></script>
 <script src="/assets/admin/js/layer.min.js" type="application/javascript"></script>
-<script src="/assets/admin/js/apply.js"></script>
+<script src="/assets/admin/js/apply.js?v=20260826"></script>
