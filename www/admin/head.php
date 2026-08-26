@@ -84,14 +84,12 @@ try {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title><?php echo htmlspecialchars($page_title . ' - ' . $site_title); ?></title>
-  <link rel="icon" href="/assets/img/logo.png" type="image/ico">
-  <meta name="author" content="yinqi">
-  <link href="/assets/admin/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/assets/admin/css/bootstrap.min.css?v=20260826" rel="stylesheet">
   <link href="/assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
-  <link href="/assets/admin/css/style.min.css" rel="stylesheet">
+  <link href="/assets/admin/css/style.min.css?v=20260826" rel="stylesheet">
   <link href="/assets/admin/js/jquery-confirm.min.css" type="text/css" rel="stylesheet" />
   <script type="text/javascript" src="/assets/admin/js/jquery.min.js"></script>
-  <script type="text/javascript" src="/assets/admin/js/bootstrap-notify.min.js"></script>
+  <script type="text/javascript" src="/assets/admin/js/bootstrap-notify.min.js?v=20260826"></script>
   <script type="text/javascript" src="/assets/admin/js/lightyear.js"></script>
   <script type="text/javascript" src="/assets/admin/js/jquery-confirm.min.js"></script>
 </head>

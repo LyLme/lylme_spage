@@ -21,7 +21,7 @@
 	<link href="<?php echo $cdnpublic ?>/assets/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 	<script src="<?php echo $cdnpublic ?>/assets/js/jquery.min.js" type="application/javascript"></script>
 	<script src="<?php echo $cdnpublic ?>/assets/js/bootstrap.min.js" type="application/javascript"></script>
-	<link rel="stylesheet" href="<?php echo $templatepath; ?>/css/style.css?v=20240409" type="text/css">
+	<link rel="stylesheet" href="<?php echo $templatepath; ?>/css/style.css?v=20260826" type="text/css">
 </head>
 <?php if (!empty(background())) {
 	echo '<body onload="FocusOnInput()" style="background-image: url(' . background() . ');background-size: cover;">';

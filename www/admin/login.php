@@ -2,8 +2,6 @@
 
 include("../include/common.php");
 
-// Bootstrap 5 官方 CDN 地址（可自由更换其他官方版本 CDN）
-$bootstrap_cdn = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist';
 
 // 设置响应头
 header('Content-Type: text/html; charset=UTF-8');
@@ -309,7 +307,7 @@ $background = background();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>后台登录 - <?php echo htmlspecialchars($page_title); ?></title>
-  <link href="<?php echo $bootstrap_cdn; ?>/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/admin/css/bootstrap.min.css" rel="stylesheet">
   <link href="../assets/admin/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="../assets/admin/css/style.min.css" rel="stylesheet">
   <style>
@@ -454,7 +452,7 @@ $background = background();
     </div>
   </div>
   <script type="text/javascript" src="../assets/admin/js/jquery.min.js"></script>
-  <script type="text/javascript" src="<?php echo $bootstrap_cdn; ?>/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" src="../assets/admin/js/bootstrap.bundle.min.js"></script>
   <script>
     $(document).ready(function() {
       if ($('#captcha_img').length) {

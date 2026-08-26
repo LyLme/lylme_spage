@@ -18,7 +18,7 @@
     <meta name="x5-page-mode" content="app">
     <meta name="lsvn" content="<?php echo isset($conf['version']) ? base64_encode($conf['version']) : ''; ?>">
     <link href="<?php echo $cdnpublic; ?>/assets/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo $templatepath; ?>/css/style.css?v=20250809" type="text/css">
+    <link rel="stylesheet" href="<?php echo $templatepath; ?>/css/style.css?v=202508026" type="text/css">
 </head>
 
 <body>
