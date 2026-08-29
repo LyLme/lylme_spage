@@ -320,6 +320,11 @@ STR;
             $value = is_scalar($value) ? explode(',', $value) : $value;
             $value = is_array($value) ? $value : array($value);
             $enum = array();
+            // 全部取消勾选时浏览器不会提交该字段，导致已保存的值无法清空。
+            // 补一个同名隐藏域：有勾选时被 checkbox 的数组值覆盖，全不选时提交空值。
+            if (!empty($init_data['name'])) {
+                $enum[] = '<input type="hidden" name="' . $init_data['name'] . '" value=""/>';
+            }
             foreach ($init_data['enum'] as $key => $item) {
                 if (is_array($item)) {
                     $item['value'] = isset($item['value']) ? $item['value'] : '';

@@ -238,7 +238,7 @@ switch ($submit) {
 		}
 		break;
 	case 'allorder':
-		$order = $_POST['link_array'] ?? [];
+		$order = isset($_POST['link_array']) ? $_POST['link_array'] : array();
 		//拖拽排序
 		$e = 0;
 		for ($i = 0; $i < count($_POST["link_array"]); $i++) {

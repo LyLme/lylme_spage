@@ -21,6 +21,25 @@ if ($set == "save" && !empty($data)) {
     $theme_name = "theme_config_" . $conf['template'];
     // $data['status'] = isset($data['status']) && $data['status'] == "on" ? true : false;
     unset($data['file']);
+
+    // 浏览器不会提交未勾选的 checkbox / 关闭的 switch，导致该类字段无法清空，
+    // 这里按主题 config.php 的定义补回默认值（多选补空数组、开关补 0）
+    if (function_exists('theme_config_fields')) {
+        foreach (theme_config_fields($conf['template']) as $item) {
+            if (!is_array($item) || !isset($item['type'], $item['name'])) {
+                continue;
+            }
+            $name = (string) $item['name'];
+            if ($item['type'] === 'checkbox') {
+                if (!isset($data[$name]) || (is_scalar($data[$name]) && (string) $data[$name] === '')) {
+                    $data[$name] = array();
+                }
+            } elseif ($item['type'] === 'switch' && !isset($data[$name])) {
+                $data[$name] = 0;
+            }
+        }
+    }
+
     $data = json_encode($data);
     if (saveSetting($theme_name, $data, theme($conf['template'], 'theme_name') . "主题自定义设置")) {
         exit('{"code": 200,"msg":"保存成功"}');
