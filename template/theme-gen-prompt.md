@@ -201,6 +201,7 @@ if (!is_array($modules)) { $modules = array($modules); }
 <body class="<?php echo checkmobile() ? 'is-mobile' : 'is-pc'; ?>">
     <!-- 导航：foreach (theme_tags() as $tag) —— 结构与 class 自定 -->
     <!-- 模块：时钟(in_array('clock',$modules))、随机一言($conf['yan']=='true' 时 yan()) -->
+    <!-- 注意：yan() 返回字符串，需 <?php echo yan(); ?> 输出，并非自输出；background() 同理返回背景图地址，需接收后 echo -->
     <!-- 搜索区：见 2.8 DOM 锚点契约 -->
     <!-- 链接列表：见 2.7 lists() 接口 -->
     <footer>
@@ -219,6 +220,7 @@ if (!is_array($modules)) { $modules = array($modules); }
 ### 2.7 链接列表接口 `lists($html)`
 - 仅以下键：`g1`分组开始 / `g2`分组内容 / `g3`分组结束 / `l1`链接开始 / `l2`链接内容 / `l3`链接结束。
 - 可用占位符：`{group_id}` `{group_name}` `{group_icon}`；`{link_id}` `{link_name}`(可能含`<font>`色标，原样输出不转义) `{link_name_text}`(纯文本) `{link_url}` `{link_icon}`(缺失自动补默认) `{link_desc}`。
+- **图标是官方注入元素（必读）**：`{group_icon}` / `{link_icon}` 以及 §2.8 的 `sou_icon` 都由页面底部 `icon.js`/`svg.js` 注入为**行内 `<svg>` 或 `<img>`**（不是 `<i class="iconfont">` 字体图标），默认无尺寸约束会渲染得很大。**必须**在你的 `style.css` 里显式限制尺寸，且要**同时覆盖 `svg` 和 `img`**，否则选择器命中不到、改了也没效果。详见 §3.6。
 - **注意**：下面 `l1/l2/g2` 里的 class 名（如 `link-item` `link-icon`）只是占位示例，**你必须替换成自己的原创命名**，并在自己的 `style.css` 里写对应的原创样式。不要原样照抄这一套 class。
 
 ```php
@@ -322,6 +324,14 @@ lists($html);
 
 ---
 
+### 3.6 图标尺寸提醒（AI 必读）
+
+> 新手最容易被卡住的点：改完 CSS 图标还是巨大、强制刷新也没用，根因是选择器没命中真实图标元素。请务必注意：
+
+- 系统的搜索图标 `sou_icon`、分组图标 `{group_icon}`、链接图标 `{link_icon}` 都由页面底部 `icon.js` / `svg.js` 注入为**行内 `<svg>` 或 `<img>` 元素**（不是 `<i class="iconfont">` 字体图标），默认无尺寸约束，会按原始尺寸渲染得很大。
+- **必须**在 `style.css` 里对承载图标的自定义 class 显式限制尺寸；**且要同时覆盖 `svg` 和 `img` 两种选择器**（只写 `i` 或只写 `img` 都会漏掉另一种，导致完全不生效）。若遇到字体图标再补 `i` 兜底。
+- **具体尺寸由你（AI）按风格自行决定**，不必与官方一致。
+
 ## 四、生成步骤（AI 执行顺序）
 
 1. 解析「一、风格输入区」→ 选定语义布局原型（来自第三节），形成一整套**原创**视觉规范（配色、间距、圆角/质感、字体、动效）。
@@ -351,6 +361,7 @@ lists($html);
 - [ ] **【创新校验】未使用第三节 3.1 禁止清单里的任何 dev-theme class 名。**
 - [ ] **【创新校验】CSS 变量体系为自创，未原样照搬 `--theme-color/--card-bg/--link-cols` 等。**
 - [ ] **【创新校验】布局不是"顶部导航条 + 居中 1200px 容器 + 卡片网格"的 dev-theme 默认版式，而是明确采用了第三节的某一种（或融合的）原创原型。**
+- [ ] **【图标校验】已对承载 `sou_icon` / `{group_icon}` / `{link_icon}` 的自定义 class 同时写 `svg` 与 `img` 尺寸规则（见 §3.6），避免图标过大、且改动后 `theme_version` 已 +1。**(详见 §3.6)
 - [ ] README 含配置说明、演示地址、**采用的布局原型**。
 
 ---
