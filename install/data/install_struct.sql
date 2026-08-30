@@ -241,7 +241,7 @@ INSERT INTO `lylme_links` (`id`, `name`, `group_id`, `url`, `icon`, `link_desc`,
 (146, '京东', 1, 'https://www.jd.com/', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-jingdong\"></use></svg>', '正品低价的综合网购商城', '京东,网上商城,正品,家电数码', 7, 1, 0),
 (147, '申请收录', 11, '/apply', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-gonggao\">\r\n</use></svg>', '申请本站收录', '申请收录.六零导航页', 147, 1, 0),
 (148, '关于本站', 11, '/about', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-lylme\">\r\n</use></svg>', '简洁高效的网址导航', '关于本站,六零导航页', 148, 1, 0),
-(149, '今日热点', 11, 'https://60s.lylme.com', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-rebang\">\r\n</use></svg>', '每天120秒看世界', 'LyToday,60秒读懂世界,历史上的今天,今日黄历,上云六零,六零,LyLme,今日120秒视界', 148, 1, 0);
+(149, '今日热点', 1, 'https://60s.lylme.com', '<svg class=\"icon\" aria-hidden=\"true\"><use xlink:href=\"#lyicon-rebang\">\r\n</use></svg>', '每天120秒看世界', 'LyToday,60秒读懂世界,历史上的今天,今日黄历,上云六零,六零,LyLme,今日120秒视界', 148, 1, 0);
 
 DROP TABLE IF EXISTS `lylme_pwd`;
 CREATE TABLE `lylme_pwd` (
