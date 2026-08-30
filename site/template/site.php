@@ -16,7 +16,8 @@
     <meta name="x5-fullscreen" content="true">
     <meta name="x5-page-mode" content="app">
     <script src="<?php echo $cdnpublic ?>/assets/js/svg.js"></script>
-    <link rel="stylesheet" href="/site/static/site.css">
+    <script src="<?php echo $cdnpublic ?>/assets/js/icon.js"></script>
+    <link rel="stylesheet" href="<?php echo $cdnpublic ?>/site/static/site.css">
     <script src="<?php echo $cdnpublic ?>/assets/js/jquery.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -61,8 +62,13 @@
                     </div>
                 </div>
                 <span class="night-mode-btn" onclick="toggleNightMode()" title="切换模式" role="button" aria-label="切换深色模式">
-                    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
-                    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+                    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+                    </svg>
+                    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+                    </svg>
                 </span>
             </div>
         </header>
@@ -82,7 +88,7 @@
 
         <!-- 主卡片 -->
         <article class="card main-card">
-             <!-- 面包屑 -->
+            <!-- 面包屑 -->
             <nav class="crumb">
                 <a href="/">首页</a>
                 <span class="sep">/</span>
@@ -98,7 +104,7 @@
                     <p class="site-desc"><?php echo $url_description; ?></p>
                 </div>
             </div>
-          
+
             <div class="site-actions">
                 <a href="<?php echo $url_herf; ?>" rel="nofollow" target="_blank" class="btn btn-primary">立即访问 <i class="fa fa-paper-plane"></i></a>
                 <div class="urls-tools-qr">
@@ -107,7 +113,7 @@
                 </div>
                 <a href="javascript:void(0);" class="btn btn-ghost" onclick="copyLink()">复制链接 <i class="fa fa-link"></i></a>
             </div>
-              <div class="site-keywords" id="site_keyword"><?php echo $url_keywords; ?></div>
+            <div class="site-keywords" id="site_keyword"><?php echo $url_keywords; ?></div>
         </article>
 
         <!-- 网站信息 -->
@@ -165,9 +171,9 @@
 
             </div>
         </div>
-        <link href="/assets/css/viewer.min.css" type="text/css" rel="stylesheet" />
-        <script src="/assets/js/viewer.min.js" type="application/javascript"></script>
-        <script src="/site/static/site.js"></script>
+        <link href="<?php echo $cdnpublic ?>/assets/css/viewer.min.css" type="text/css" rel="stylesheet" />
+        <script src="<?php echo $cdnpublic ?>/assets/js/viewer.min.js" type="application/javascript"></script>
+        <script src="<?php echo $cdnpublic ?>/site/static/site.js"></script>
 
     </div>
 </body>
