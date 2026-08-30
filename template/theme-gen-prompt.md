@@ -90,7 +90,7 @@
     "requires": ">=1.2.5",
     "updated_at": "2026-01-01",
     "license": "MIT",
-    "theme_course": "https://doc.lylme.com/spage/"
+    "theme_course": "https://spage.lylme.com/"
 }
 ```
 - `theme_version` 三段式（`1.0.0`），改动静态资源后 +1 即可刷新缓存（函数自动拼 `?v=`）。
