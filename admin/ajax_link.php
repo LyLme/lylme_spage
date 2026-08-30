@@ -323,6 +323,15 @@ switch ($submit) {
 		if (empty($head['title']) && empty($head['icon'])) json_response(400, 'Unable to access');
 		exit(json_encode($head, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
 		break;
+	//返回全站所有链接
+	case 'all_links':
+		$rs = $DB->query("SELECT `id`, `url`, `name` FROM `lylme_links` ORDER BY `id` ASC");
+		$links = array();
+		while ($r = $DB->fetch($rs)) {
+			$links[] = array('id' => $r['id'], 'url' => $r['url'], 'name' => $r['name']);
+		}
+		json_response(200, 'ok', array('count' => count($links), 'links' => $links));
+		break;
 	//链接编辑表单（iframe 弹窗用，输出精简 HTML）
 	case 'edit_form':
 		header('Content-Type:text/html; charset=utf-8');
