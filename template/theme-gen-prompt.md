@@ -196,6 +196,7 @@ if (!is_array($modules)) { $modules = array($modules); }
 
     <?php echo $conf['wztj']; ?>   <!-- 必须：统计代码，原样输出在最底部 -->
     <script src="<?php echo $cdnpublic; ?>/assets/js/icon.js"></script>  <!-- 必须：图标雪碧图，删除后图标全空白 -->
+    <script src="<?php echo $cdnpublic; ?>/assets/js/svg.js"></script>  <!-- 必须：旧版图标雪碧图，删除后图标全空白 -->
 </body>
 </html>
 ```
@@ -275,7 +276,7 @@ lists($html);
 - [ ] 目录名与 `theme_name` 对应。
 - [ ] PHP 无 7+ 专有语法（PHP 5.4 可解析）；统一 `array()`。
 - [ ] 所有文本输出经 `theme_e()`（`link_name`/`sou_icon` 除外）。
-- [ ] 保留 `$conf['wztj']` 与 `icon.js` 引入。
+- [ ] 保留 `$conf['wztj']` 与 `icon.js`和`svg.js` 引入。
 - [ ] 未依赖白名单外配置键。
 - [ ] 多选项读取已做非数组兜底。
 - [ ] 768px 断点下排版正常（链接列表 2 列）。

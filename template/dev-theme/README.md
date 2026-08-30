@@ -79,14 +79,15 @@ dev-theme/
 
 其他键（`apply`、`about`、`home-title` 等）主题不应依赖。
 
-## 必须保留的两处代码
+## 必须保留的三处代码
 
 ```php
 <?php echo $conf['wztj']; ?>                              <!-- 统计代码，放在最底部 -->
 <script src="<?php echo $cdnpublic; ?>/assets/js/icon.js"></script>  <!-- 图标雪碧图 -->
+<script src="<?php echo $cdnpublic; ?>/assets/js/svg.js"></script>  <!-- 旧版图标雪碧图 -->
 ```
 
-`icon.js` 注入了数据库所有 `#lyicon-*` 图标的 SVG symbol，删除后站点图标将全部空白。
+`svg.js`和`icon.js` 注入了数据库所有 `#lyicon-*` 图标的 SVG symbol，删除后站点图标将全部空白。
 
 ## theme.ini 字段说明
 
@@ -103,6 +104,6 @@ dev-theme/
 - [ ] `theme.ini` 六字段齐全、JSON 合法，版本号三段式
 - [ ] 目录名与 `theme_name` 对应
 - [ ] 所有文本输出都经过 `theme_e()`（`link_name`、`sou_icon` 为官方 HTML，除外）
-- [ ] 保留 `wztj` 输出与 `icon.js` 引入
+- [ ] 保留 `wztj` 输出与 `icon.js`和`svg.js` 引入
 - [ ] 移动端 768px 断点下排版正常
 - [ ] 搜索引擎切换后刷新页面，选择被正确记忆

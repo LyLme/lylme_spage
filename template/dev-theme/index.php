@@ -125,7 +125,7 @@ $body_style = ' style="' . implode('; ', $style_parts) . '"';
             <?php
             $html = array(
                 'g1' => '<div class="link-group">', //分组开始标签
-                'g2' => '<h2 class="group-title">{group_icon}<span>{group_name}</span></h2>',//分组内容
+                'g2' => '<h2 class="group-title">{group_icon}<span>{group_name}</span></h2>', //分组内容
                 'g3' => '</div>', //分组结束标签
                 'l1' => '<a class="link-item" href="{link_url}" target="_blank" rel="nofollow noopener" title="{link_name_text}">',  //链接开始标签
                 'l2' => '<span class="link-icon">{link_icon}</span><span class="link-name">{link_name}</span>',
@@ -139,7 +139,7 @@ $body_style = ' style="' . implode('; ', $style_parts) . '"';
 
     <!-- ===================== 五、底部区 ===================== -->
     <footer class="site-footer">
-        <?php echo $conf['copyright']; ?> 
+        <?php echo $conf['copyright']; ?>
 
         <?php theme_icp(); /* ICP 备案号，留空不显示 */ ?>
         <?php theme_security_filing(); /* 公安备案号（主题配置），留空不显示 */ ?>
@@ -151,6 +151,7 @@ $body_style = ' style="' . implode('; ', $style_parts) . '"';
     ?>
     <!-- 图标雪碧图：数据库所有 #lyicon-* 图标的唯一来源，不可删除 -->
     <script src="<?php echo $cdnpublic; ?>/assets/js/icon.js"></script>
+    <script src="<?php echo $cdnpublic; ?>/assets/js/svg.js"></script>
 
 </body>
 

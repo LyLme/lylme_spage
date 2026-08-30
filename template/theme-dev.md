@@ -487,17 +487,19 @@ while ($taglist = $DB->fetch($tagslists)) {
 
     <?php echo $conf['wztj']; ?>
     <script src="<?php echo $cdnpublic; ?>/assets/js/icon.js"></script>
+    <script src="<?php echo $cdnpublic; ?>/assets/js/svg.js"></script>
 </body>
 </html>
 ```
 
-**必须保留的两处：**
+**必须保留的三处：**
 
 1. `<?php echo $conf['wztj']; ?>` —— 后台自定义的统计代码，放在 `</body>` 前
 2. `<script src="<?php echo $cdnpublic; ?>/assets/js/icon.js"></script>` —— 图标雪碧图
+3. `<script src="<?php echo $cdnpublic; ?>/assets/js/svg.js"></script>` —— 旧版图标雪碧图
 
 > 数据库存储的全部分组 / 链接 / 搜索引擎图标都是 `<use xlink:href="#lyicon-*">` 形式，
-> 其 SVG symbol 由 `assets/js/icon.js` 注入。**不加载该脚本，站点图标将全部空白。**
+> 其 SVG symbol 由 `assets/js/icon.js`和 `assets/js/svg.js`注入。**不加载该脚本，站点图标将全部空白。**
 
 `<body>` 的 class 建议保留 `is-pc` / `is-mobile` 设备类，便于 CSS / JS 做设备差异处理；
 主题自有的状态类（如 `bg-fixed`）追加在后面即可：`class="is-pc bg-fixed"`。
@@ -564,7 +566,7 @@ while ($taglist = $DB->fetch($tagslists)) {
 - [ ] PHP 代码未使用上表中的 PHP 7+ 专有语法（PHP 5.4 可解析）
 - [ ] 所有文本输出经过 `theme_e()`（`link_name`、`sou_icon` 为官方 HTML，除外）
 - [ ] 所有文本输出经过 `theme_e()`（`link_name`、`sou_icon` 为官方 HTML，除外）
-- [ ] 已保留 `$conf['wztj']` 输出，并引入 `$cdnpublic/assets/js/icon.js`
+- [ ] 已保留 `$conf['wztj']` 输出，并引入 `$cdnpublic/assets/js/icon.js`和 `$cdnpublic/assets/js/svg.js`
 - [ ] 未依赖白名单之外的系统配置键
 - [ ] 多选项读取已做非数组类型兜底
 - [ ] 移动端 768px 断点下排版正常
