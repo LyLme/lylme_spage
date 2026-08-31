@@ -47,16 +47,16 @@ function compareMd5s($originalMd5s, $currentMd5s, $whitelist = [])
         'normal' => [],
         'mutable' => []
     ];
-    
+
     // 确保参数是数组类型
     if (!is_array($originalMd5s) || !is_array($currentMd5s)) {
         return $result;
     }
-    
+
     if (empty($originalMd5s)) {
         return $result;
     }
-    
+
     $allFilePaths = array_unique(array_merge(array_keys($originalMd5s), array_keys($currentMd5s)));
     foreach ($allFilePaths as $filePath) {
         $filePath = str_replace('\\', '/', $filePath);
@@ -91,7 +91,7 @@ if (isset($system_settings_modified) && $system_settings_modified === true) {
 }
 
 $currentMd5s = generateFileMd5s($targetDirectory, $whitelist);
-$remoteJsonUrl = 'https://cdn.lylme.com/lylme_spage/file_check/v' . VERSION . '/file.json';
+$remoteJsonUrl = 'https://cdn.lylme.com/lylme_spage/file_check/?v=' . VERSION;
 
 $remoteJson = str_replace('/admin/', '/' . ADMIN_PATH . '/', get_curl($remoteJsonUrl));
 if ($remoteJson === false) {
@@ -102,15 +102,15 @@ if ($remoteJson === false) {
                               <div><i class="mdi mdi-shield-check mdi-alert-icon"></i><b>当前文件版本：v' . VERSION . '</b></div>
                               <a href="https://gitee.com/LyLme/lylme_spage" target="_blank" class="alert-link">[查看源代码]</a>
                             </div>
-                            <span class="alert-help">该页面用于检查网站脚本文件是否被篡改器<br>该页面仅供参考，需注意"篡改"和"冗余"文件是否存在恶意代码并从上方链接对比替换<br>排除完成后建议修改后台账号密码和数据库密码<br>该功能需要服务器支持外网访问，仅适用于Linux内核的服务器，Windows服务器暂不支持</span>
+                            <span class="alert-help">该页面用于检查网站脚本文件是否被篡改器<br>该页面仅供参考，需注意"篡改"和"冗余"文件是否存在恶意代码并从上方链接对比替换<br>排除完成后建议修改后台账号密码和数据库密码<br>该功能需要服务器支持外网访问</span>
                         </div>';
     $originalMd5s = json_decode($remoteJson, true);
-    
+
     // 确保originalMd5s是数组
     if (!is_array($originalMd5s)) {
         $originalMd5s = [];
     }
-    
+
     $comparisonResult = compareMd5s($originalMd5s, $currentMd5s, $whitelist);
 }
 ?>
@@ -121,7 +121,7 @@ if ($remoteJson === false) {
                 <div class="card">
                     <div class="card-body">
                         <?php echo $remotemsg;
-if (isset($comparisonResult)): ?>
+                        if (isset($comparisonResult)): ?>
                             <div class="table-responsive">
                                 <table class="table table-striped">
                                     <thead>
@@ -132,32 +132,35 @@ if (isset($comparisonResult)): ?>
                                     </thead>
                                     <tbody>
                                         <?php
-                foreach ($comparisonResult as $key => $value) {
-                    switch ($key) {
-                        case 'tampered':
-                            $statusy =   '篡改';
-                            break;
-                        case 'new':
-                            $statusy =   '冗余';
-                            break;
-                        case 'missing':
-                            $statusy =  '丢失';
-                            break;
-                        case 'mutable':
-                            $statusy =  '可变';
-                            break;
-                        default:
-                            $statusy =  '正常';
-                            break;
-                    }
-                    foreach ($value as $file) {
-                        $filename = str_replace('/' . ADMIN_PATH . '/', '/admin/', $file);
-?>
-<tr class="filecheck_<?php echo $key; ?>"><td><a rel="noopener noreferrer" href="https://gitee.com/lylme/lylme_spage/blob/master<?php echo $filename; ?>" target="_blank"><?php echo $file; ?></a></td><td><?php echo $statusy; ?></td></tr>
-<?php
-                    }
-                }
-    ?>
+                                        foreach ($comparisonResult as $key => $value) {
+                                            switch ($key) {
+                                                case 'tampered':
+                                                    $statusy =   '篡改';
+                                                    break;
+                                                case 'new':
+                                                    $statusy =   '冗余';
+                                                    break;
+                                                case 'missing':
+                                                    $statusy =  '丢失';
+                                                    break;
+                                                case 'mutable':
+                                                    $statusy =  '可变';
+                                                    break;
+                                                default:
+                                                    $statusy =  '正常';
+                                                    break;
+                                            }
+                                            foreach ($value as $file) {
+                                                $filename = str_replace('/' . ADMIN_PATH . '/', '/admin/', $file);
+                                        ?>
+                                                <tr class="filecheck_<?php echo $key; ?>">
+                                                    <td><a rel="noopener noreferrer" href="https://gitee.com/lylme/lylme_spage/blob/master<?php echo $filename; ?>" target="_blank"><?php echo $file; ?></a></td>
+                                                    <td><?php echo $statusy; ?></td>
+                                                </tr>
+                                        <?php
+                                            }
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -169,24 +172,24 @@ if (isset($comparisonResult)): ?>
     </div>
 </main>
 <style>
-    tr.filecheck_missing {
+    tr.filecheck_missing td {
         color: orange;
     }
 
-    tr.filecheck_new {
+    tr.filecheck_new td {
         color: blue;
     }
 
-    tr.filecheck_tampered {
+    tr.filecheck_tampered td {
         color: red;
     }
 
-    tr.filecheck_normal {
+    tr.filecheck_normal td {
         color: green;
     }
-td a {
-    color: #4d5259 !important;
-}
+    td a {
+        color: #4d5259 !important;
+    }
 </style>
 <?php
 include './footer.php';
