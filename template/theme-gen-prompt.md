@@ -83,14 +83,14 @@
 {
     "author_name": "作者名",
     "author_link": "https://你的主页",
-    "theme_name": "目录名（如 Moonlight）",
+    "theme_name": "目录名(如 lylmelight)",
     "theme_version": "1.0.0",
     "theme_explain": "主题一句话说明",
-    "theme_demo": "https://演示地址,如(https://spage.lylme.com/Moonlight)",
+    "theme_demo": "演示地址,如(https://spage.lylme.com/theme/lylmelight)",
     "requires": ">=1.2.5",
     "updated_at": "2026-01-01",
     "license": "MIT",
-    "theme_course": "主题教程，若无特殊说明为空即可，或填入演示地址(https://spage.lylme.com/Moonlight)"
+    "theme_course": "主题文档(https://spage.lylme.com/doc/lylmelight)"
 }
 ```
 - `theme_version` 三段式（`1.0.0`），改动静态资源后 +1 即可刷新缓存（函数自动拼 `?v=`）。
@@ -337,11 +337,104 @@ lists($html);
 - **A. 平铺直显**：在搜索框下方/上方直接横向/网格展示所有启用的搜索引擎图标或文字，点击即切换，无下拉动作。
 - **B. 下拉列表**：点击搜索框旁的引擎 Logo/名称，弹出下拉菜单供用户选择（默认方案）。
 - **C. 折叠面板**：默认只显示一个默认引擎，点击后展开一个全屏/半屏的引擎面板，支持分组和搜索。
+  
+### 3.8 搜索引擎联想词与站内搜索列表（建议增强）
 
-**设计约束**：
-- 无论选择哪种形态，必须保持与主题整体视觉风格一致（配色、圆角、动效需呼应）。
-- 若选择 A，需注意小屏移动端（≤768px）下的横向滚动或换行适配。
-- 若选择 C，面板弹出动效需在 `js/script.js` 中实现，且不能影响功能区域的布局。
+> 这两项都是**建议增强**（强烈建议实现，而非可选点缀），系统核心**并未提供**联想词接口或站内搜索端点：
+> - `lylme_sou` 表只存了 `sou_link` / `sou_waplink`（搜索跳转地址），**没有**联想词 API 字段；
+> - 站内链接集中在 `lylme_links` 表（字段：`name` `url` `icon` `link_desc` `link_keywords` `link_status` `link_pwd`），需主题自行查询。
+> 二者与 §3.7 的 A/B/C **引擎选择形态正交**——无论选哪种形态，都可叠加下面两类增强。实现时同样遵循 §2 的契约与 §3.1 的禁止清单（下拉浮层、结果列表一律用你自己的 class，禁止复用 `search-*` 等 dev-theme 命名）。
+
+#### 3.8.1 搜索引擎联想词（Suggestions / 自动补全）
+
+**用途**：用户在 `#search-input` 输入时，下拉展示该引擎的联想补全词，点击即填充并提交，提升输入效率。
+
+**默认联想源（优先级）**：**百度联想词优先度最高，Google 最低**。除非用户在「一、风格输入区」明确指定其它联想源，否则**默认只对接一种——百度（JSONP）即可**，不必同时接多个 API。优先级参考：百度 > Bing > Google。
+
+**数据来源（外部联想 API，需主题自行对接）**：
+- **百度（JSONP，默认首选，优先级最高，CORS 友好，国内可用）**：
+  `https://suggestion.baidu.com/su?wd=关键词&cb=全局回调名`
+  返回 `cb({q:"关键词",p:false,s:["词1","词2",...]})`，补全词在 `s` 数组。
+- **Bing（JSON，XHR，优先级次之）**：
+  `https://api.bing.com/osjson.aspx?query=关键词`
+  返回 `["关键词",["词1","词2",...]]`，补全词在索引 `1` 的数组（可能受 CORS 限制，失败需静默降级）。
+- **Google（JSON，XHR，优先级最低）**：
+  `https://www.google.com/complete/search?client=firefox&q=关键词`
+  返回 `["关键词",["词1",...]]`（仅当用户在风格输入区**明确指定**时才启用）。
+
+**与引擎联动**：默认情况下联想词**与所选搜索引擎无关**，统一调用百度联想（仅作输入补全，最终提交仍按 §2.8 的引擎 `value` 跳转）。仅当用户在风格输入区**明确指定**"某引擎使用其自有联想源"时，才在 `js/script.js` 里维护一个按 `data-alias` 映射的表（例如 `var SUG_API = { baidu: 'https://suggestion.baidu.com/su?wd=%s&cb=%s', bing: 'https://api.bing.com/osjson.aspx?query=%s' };`），当前引擎 `data-alias` 命中时启用对应源，未命中则回退到百度。也可在 `config.php` 增加「联想词开关 + 自定义 API 模板」配置项增强可玩性（变量命名贴合你的主题）。
+
+**ES5 实现要点（全部原生，无 fetch/let/const/箭头/Promise）**：
+1. **输入防抖**：监听 `input` 事件，约 200–300ms 后才请求，避免高频打接口。
+2. **JSONP 注入**：默认采用百度 JSONP 接口，动态 `document.createElement('script')` 注入 `src`（回调名用唯一全局函数，请求完成后移除该 `<script>`）；仅当用户明确指定 Bing/Google 时，才改用 `XMLHttpRequest` + `overrideMimeType('application/json')` 读取 JSON。
+3. **渲染浮层**：在搜索框下方插入一个**自定义容器**（你的 class，如 `MY_SUG_BOX`），逐条渲染候选词；浮层只展示、不干扰主搜索。
+4. **键盘交互**：支持 `↑`/`↓` 移动高亮、`Enter` 填充并提交、`Esc` 关闭；点击候选词同样填充并提交。
+5. **失败降级**：请求超时 / 解析失败 / 网络异常时直接隐藏浮层，**绝不**阻塞或报错影响主搜索流程。
+6. **跟随引擎切换**：引擎 `change` 时清空已有联想并刷新（见 §2.8 的 `data-alias`）。
+
+> ⚠️ **JSONP 回调生命周期（高频踩坑，务必照做）**：回调**绝对不能**用"发新请求时删除上一个全局回调"的方式实现。若在新请求发起时 `delete window[cbName]`（或置空），那个**仍可能在途**的旧 `<script>` 响应（HTTP 缓存 / 慢网络）稍后执行时会裸调用 `_xxx_N()`，但全局函数已被删除 → `Uncaught ReferenceError: _xxx_N is not defined`，联想直接瘫痪。同理，**超时 / `onerror` 的兜底 `finish([])` 也绝不能删回调**——否则百度响应比 1600ms 超时才到达时，回调已被超时删掉，真实响应一来照样 `_xxx_N is not defined`。正确做法三条：
+> 1. `cleanup` 只 `removeChild` 旧的 `<script>` 节点（取消请求），**绝不**碰 `window[cbName]`；
+> 2. **删除回调只发生在"真实响应触发的那个 JSONP 回调函数内部"**（在调用 `finish` 之前 `delete window[cbName]`）；超时 / `onerror` 的兜底 `finish([])` **不要**删回调，它只负责渲染空结果并隐藏浮层；
+> 3. 用递增 `reqId` 守卫：过期响应即便误触发也直接 `return` 忽略，绝不渲染旧数据。
+
+**移动端**：浮层在 `≤768px` 下全宽、可独立滚动、不得遮挡搜索按钮与功能区域；候选词点击区域不小于 44px 便于触控。
+
+#### 3.8.2 站内搜索列表（搜索本站导航自身的链接）
+
+**用途**：在站内检索导航页**自己收录的链接**（而非联网搜索），输入时实时过滤，或提交后在浮层/结果区列出匹配项。
+
+**方案 A — 客户端过滤（推荐，零后端）**
+- 若主题已用 `.lg-tile` 渲染链接（§2.7 的 `l1`），**直接遍历 `.lg-tile` 即可**，读取其已有子节点 `.lg-tile-name`（名称）、`.lg-tile-desc`（描述）、`.lg-tile-glyph`（图标 HTML）以及 `getAttribute('href')`（链接），**无需在 `l1/l2` 里额外补 `data-*` 属性**。Icon 色相等可取该瓦片自身的 `--lg-h` 自定义属性（如 `style.getPropertyValue('--lg-h')`）以保持一致。
+- 用户输入时，对 `name` / `desc` / `url` 三者做 `toLowerCase()` + `indexOf` 包含匹配，把命中的链接渲染进一个**自定义结果浮层 / 列表**（你的 class）。
+- 优点：纯前端、离线可用、无数据库压力；缺点：只能匹配**已渲染**的链接（分页 / 懒加载场景需配合方案 B）。
+
+> 💡 **推荐：把「站内结果」与「联想词」合并进同一下拉**：二者数据源不同（站内来自本地 DOM，联想来自外部 API），但都是"输入时的补全建议"。最自然的做法是主搜索框下拉同时包含两组，并用分组头区分——例如先排「站内搜索」命中（最多 5 条，点击在新标签直达该链接），再排「搜索建议」联想词（最多 10 条，点击回填并按当前引擎 `value` 提交）。合并时 `items` 用对象数组区分类型（`{type:'site',...}` / `{type:'suggest',text}`），渲染时按类型插入分组头，**避免**把它们做成两套互相打架的浮层。
+
+**方案 B — 服务端查询（覆盖全量）**
+- 在 `functions.php` 新增 `theme_search_links($kw)`（`theme_` 前缀，加 `function_exists()` 守卫避免重复定义），用全局 `$DB` 查 `lylme_links`：
+  ```php
+  function theme_search_links($kw) {
+      global $DB;
+      $kw = trim((string) $kw);
+      if ($kw === '') { return array(); }
+      $esc = $DB->escape($kw);                 // 必须用 escape 转义，杜绝注入
+      $like = "'%" . $esc . "%'";
+      $sql = "SELECT `name`,`url`,`icon`,`link_desc` FROM `lylme_links` "
+           . "WHERE `link_status` = 1 AND `link_pwd` = 0 "
+           . "AND (`name` LIKE " . $like . " OR `url` LIKE " . $like
+           . " OR `link_desc` LIKE " . $like . " OR `link_keywords` LIKE " . $like . ") "
+           . "ORDER BY `link_order` ASC LIMIT 20";
+      $out = array();
+      $res = $DB->query($sql);
+      while ($row = $DB->fetch($res)) {
+          $out[] = $row;
+      }
+      return $out;
+  }
+  ```
+  > 说明：`link_pwd != 0` 为加密组，默认不对外暴露；若你的主题需要支持加密组，按系统会话逻辑自行补齐。`$DB->escape()` 已在核心提供，不要自己拼 `addslashes` 或裸拼 SQL。
+- 触发方式（保持 ES5、无 fetch）：在 `index.php` 顶部读取 `$_GET['s']`，有值时调用 `theme_search_links()` 渲染一个**站内结果区**（你的 class，独立于 `lists()` 输出）；搜索框可额外加一个「搜本站」模式（例如 `name="scope"` 的 radio 或按钮），选「站内」时 `form` 改为 `action="?s="` 的 GET 提交（拦截后用 `window.location` 跳转或同步提交），避免与联网搜索冲突。
+
+**结果展示约束**：站内结果列表的配色、圆角、卡片/浮层样式必须与主题视觉一致；图标仍须按 §3.6 同时约束 `svg` 与 `img` 尺寸；所有文本经 `theme_e()` 输出。
+
+#### 3.8.3 统一设计约束（收口）
+
+- **风格一致**：联想浮层、站内结果区在配色 / 圆角 / 动效上必须与主题整体视觉呼应，不得出现"另一个风格的控件"。
+- **与 §3.7 形态协同**：
+  - 若选 **A（平铺直显）**：注意 `≤768px` 下引擎条的横向滚动或换行适配，联想浮层宽度与之对齐。
+  - 若选 **C（折叠面板）**：面板弹出动效在 `js/script.js` 内实现，且**不能影响**功能区域布局（用 `position: fixed/absolute` 浮层，而非挤压文档流）。
+- **无依赖**：两项增强都不引入框架或外部 CDN（保持零框架、可离线）；JS 必须 ES5。
+- **性能与降级**：联想词必须防抖、请求失败静默降级（隐藏浮层即可）；列表渲染量过大时做截断（如最多 20 条）并支持滚动。
+- **安全**：站内搜索关键词**必须**经 `$DB->escape()`；联想 API 的回调名用白名单/随机化避免 XSS；所有渲染文本经 `theme_e()`（`{link_name}` / `sou_icon` 等官方 HTML 除外）。
+
+#### 3.8.4 AI 实现避坑清单（来自真实踩坑）
+
+- **`render()` 绝不能先清空数据数组**：渲染函数只应清空 DOM（`boxEl.innerHTML = ''` + 重置 `cursor`），**绝不能**调用会把 `items` 重置为 `[]` 的 `clearBox()` 之后再去遍历 `items`——否则数组已被清空、循环一次不执行，列表永远为空且浮层保持 `hidden`。正确姿态：数据由请求回调在调用 `render()` **之前**赋值，`render()` 只负责把当前 `items` 画出来。
+- **键盘高亮 / 滚动用 `data-idx` 定位，别用 DOM 顺序索引**：当下拉里混有非 `<div>` 行、或插入了分组头（不带 `lg-sug-item` 类）时，`getElementsByTagName('div')` 的下标与 `items[]` 下标会错位。正确：每行带 `data-idx`（= 其在 `items` 的下标），`setCursor` / `scrollCursor` 用 `$$('.lg-sug-item', boxEl)` 仅取有效行，并按 `getAttribute('data-idx')` 匹配，与 `items[cursor]` 一致。
+- **JSONP 回调不要提前删除**：见 §3.8.1 的 ⚠️——只 `removeChild` 旧 `<script>` 节点，回调在自身触发后才自我清除。
+- **合并下拉时 `items` 用类型化对象数组**：`{type:'site',url,name,desc,glyph,hue}` 与 `{type:'suggest',text}` 混排，渲染按类型插分组头（"站内搜索" / "搜索建议"）；分组头**不要**带 `lg-sug-item` 类，否则会被键盘导航计入导致错位。`pick()` 按 `type` 分流：站点行 `window.open(url,'_blank')`，联想行回填并走当前引擎。
+- **站点结果行用 `<div>` 而非 `<a>`**：站点行在 `pick()` 里用 `window.open(url,'_blank')` 打开即可；若用 `<a href>` 又 `preventDefault`，容易触发"原生跳转 + `window.open`"双重打开。
+- **`window.open` 必须在用户手势内调用**：放在 `mousedown` / `click` 回调里（联想词的 `mousedown` 已 `preventDefault` 防输入框失焦），不要放在异步回调里，否则被浏览器当作弹窗拦截。
 
 ## 四、生成步骤（AI 执行顺序）
 
