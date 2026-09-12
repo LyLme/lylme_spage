@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <title>六零导航页 - 官方文档</title>
+  <meta name="description" content="六零导航页 LyLme Spage 官方文档（doc.lylme.com/spage 的 Pages 镜像）">
+  <link rel="icon" href="https://doc.lylme.com/favicon.ico">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <style>
+    /* 侧边栏宽度与正文宽度对齐原站 */
+    :root { --sidebar-width: 300px; }
+    .markdown-section { max-width: 900px; }
+  </style>
+</head>
+<body>
+  <div id="app">加载中…</div>
+
+  <script>
+    // 本文件是手工维护的 Docsify 渲染壳，不参与抓取。
+    // 正文与侧边栏全部由 .github/workflows/sync-docs.yml 从
+    // https://doc.lylme.com/spage 抓取后放进同一个目录。
+    window.$docsify = {
+      name: '六零导航页',
+      // 站点挂在 https://lylme.github.io/lylme_spage/ 子目录下，
+      // 这里必须写子目录，否则点站点名会跳到 lylme.github.io 根目录
+      nameLink: '/lylme_spage/',
+      repo: 'LyLme/lylme_spage',
+
+      // 侧边栏来自抓取到的 _sidebar.md，正文来自抓取到的各篇 .md
+      loadSidebar: true,
+      subMaxLevel: 3,
+      auto2top: true,
+      // 故意不设 basePath：默认取当前路径（/lylme_spage/）。
+      // 若以后把站点挪到别的路径，必须同步补上 basePath。
+      // 部署走官方 Pages Actions，Jekyll 不参与构建，
+      // 所以 _sidebar.md 不会像分支部署那样被下划线规则吞掉。
+
+      search: {
+        placeholder: '搜索文档…',
+        noData: '没有找到相关内容',
+        depth: 2
+      },
+      copyCode: {
+        buttonText: '复制',
+        errorText: '复制失败',
+        successText: '已复制'
+      },
+      pagination: {
+        previousText: '上一章',
+        nextText: '下一章',
+        crossChapter: true
+      }
+    };
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2/dist/docsify-pagination.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+name: 同步官方文档站到 Pages
+
+
+on:
+  schedule:
+    - cron: '0 20 * * *'        # 每天 04:00（北京时间）
+  workflow_dispatch:
+  repository_dispatch:
+    types: [docs-updated]       # 源站更新后可用 API 主动触发
+  push:
+    branches: [master]
+    paths:
+      - '.github/pages/**'
+      - '.github/workflows/sync-docs.yml'
+
+concurrency:
+  group: sync-docs
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  DOCS_BASE: https://doc.lylme.com/spage
+
+jobs:
+  sync:
+    name: 抓取并部署文档
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v5
+
+      - name: 抓取文档
+        run: |
+          set -euo pipefail
+
+          rm -rf _site
+          mkdir -p _site
+
+          # Docsify 外壳（仓库内维护，不抓取）
+          cp .github/pages/index.html _site/index.html
+          # 官方 Pages Actions 部署不会跑 Jekyll，这里只是万一将来改用分支部署的保险
+          touch _site/.nojekyll
+
+          UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+          fetch() {
+            curl -fsSL --compressed --retry 3 --retry-delay 2 \
+                 --connect-timeout 15 --max-time 60 \
+                 -A "$UA" "$DOCS_BASE/$1" -o "_site/$1"
+          }
+
+          echo "源站: $DOCS_BASE"
+          echo "== 抓取 _sidebar.md =="
+          fetch "_sidebar.md"
+
+          # 从侧边栏解析出需要抓取的条目（侧边栏增删改都会自动反映到这里）
+          mapfile -t FILES < <(
+            grep -oE '\]\([^)]+\)' _site/_sidebar.md \
+              | cut -d'(' -f2 \
+              | tr -d ')' \
+              | sed 's/[#?].*//' \
+              | grep -v '://' \
+              | grep -i '\.md$' \
+              | sort -u
+          )
+
+          if [ "${#FILES[@]}" -eq 0 ]; then
+            echo "::error::_sidebar.md 里没解析到任何 .md 条目，源站结构可能变了"
+            exit 1
+          fi
+          echo "侧边栏解析到 ${#FILES[@]} 个条目"
+
+          echo "== 逐个抓取 =="
+          FAILED=()
+          ROWS=()
+          for f in "${FILES[@]}"; do
+            mkdir -p "_site/$(dirname "$f")"
+            if fetch "$f"; then
+              echo "  OK   $f"
+              ROWS+=("| \`$f\` | 已同步 |")
+            else
+              rm -f "_site/$f"
+              echo "  FAIL $f"
+              ROWS+=("| \`$f\` | **抓取失败** |")
+              FAILED+=("$f")
+            fi
+          done
+
+          # 有一篇没抓到就不部署：宁可保留上一次完整的站点，也不上线缺页的版本
+          if [ "${#FAILED[@]}" -gt 0 ]; then
+            echo "::error::${#FAILED[@]} 个文件抓取失败：${FAILED[*]}"
+            exit 1
+          fi
+
+          {
+            echo "## 文档同步结果"
+            echo ""
+            echo "- 源站：$DOCS_BASE"
+            echo "- 条目：${#FILES[@]} 个（由 \`_sidebar.md\` 解析）"
+            echo ""
+            echo "| 文件 | 状态 |"
+            echo "|---|---|"
+            printf '%s\n' "${ROWS[@]}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          echo "== 产物 =="
+          find _site -type f | sort
+
+      - name: 配置 Pages
+        uses: actions/configure-pages@v5
+      - name: 打包 Pages 产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: 部署到 Pages
+        id: deploy
+        uses: actions/deploy-pages@v4
