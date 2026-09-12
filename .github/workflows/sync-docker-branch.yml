@@ -13,6 +13,8 @@ on:
 
 permissions:
   contents: write
+  # 用 GITHUB_TOKEN 调 workflow_dispatch API 主动触发 docker-build.yml 时需要写权限
+  actions: write
 
 jobs:
   sync:
@@ -97,20 +99,36 @@ jobs:
           fi
 
       - name: 提交并推送
+        id: push
         if: steps.diff.outputs.changed == 'true'
         env:
-          # 默认用 GITHUB_TOKEN：能推送，但不会触发后续工作流。
-          # 若希望同步后自动触发 docker-build.yml，请配置 SYNC_PAT
-          # （有 repo 权限的 Personal Access Token）。
+          # 可选：若配置了 SYNC_PAT（含 repo + workflow 权限的 PAT），push 本身就能
+          # 触发下游工作流；未配置时，下一步会用 GITHUB_TOKEN 调 workflow_dispatch 补上。
           SYNC_PAT: ${{ secrets.SYNC_PAT }}
         run: |
           VERSION=$(grep -m1 "VERSION" www/include/version.php | grep -oE "[0-9]+\.[0-9]+(\.[0-9]+)?" | head -n1)
           git commit -m "chore(docker): 同步 master 源码 v${VERSION} ($(git rev-parse --short ${{ github.sha }}))"
           if [ -n "$SYNC_PAT" ]; then
             git push "https://x-access-token:${SYNC_PAT}@github.com/${{ github.repository }}.git" docker
-            echo "已用 SYNC_PAT 推送（可触发下游工作流）"
+            echo "used_pat=true" >> "$GITHUB_OUTPUT"
+            echo "已用 SYNC_PAT 推送（push 本身即可触发下游工作流）"
           else
             git push origin docker
-            echo "已用 GITHUB_TOKEN 推送（不会触发下游工作流，需手动运行 docker-build.yml）"
+            echo "used_pat=false" >> "$GITHUB_OUTPUT"
+            echo "已用 GITHUB_TOKEN 推送（不会触发下游工作流，下一步主动 dispatch）"
           fi
           echo "同步文件数: ${{ steps.diff.outputs.changed_files }}"
+
+      - name: 触发镜像构建
+        # GitHub 禁止 GITHUB_TOKEN 的 push 触发下游工作流，所以这里改用
+        # workflow_dispatch API 主动触发，免去额外配置 PAT 的麻烦（也不用担心过期）。
+        # 若已配置 SYNC_PAT，push 时就会自动触发，这里跳过以免重复构建。
+        if: steps.diff.outputs.changed == 'true' && steps.push.outputs.used_pat != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh workflow run docker-build.yml --ref docker; then
+            echo "✓ 已触发 docker-build.yml，可在 Actions 页查看构建进度"
+          else
+            echo "::warning::自动触发 docker-build.yml 失败，请到 Actions 页手动运行一次"
+          fi
