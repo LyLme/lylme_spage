@@ -24,6 +24,9 @@ permissions:
 
 env:
   DOCS_BASE: https://doc.lylme.com/spage
+  # 镜像站的部署路径。若以后改变 Pages 部署路径，这里必须与
+  # .github/pages/index.html 里的 nameLink 同步修改。
+  SITE_BASE: /lylme_spage
 
 jobs:
   sync:
@@ -98,6 +101,17 @@ jobs:
             echo "::error::${#FAILED[@]} 个文件抓取失败：${FAILED[*]}"
             exit 1
           fi
+
+          # 源站把站内跳转写成了绝对路径（如 [重置后台密码](/spage/#/reset)），
+          # 镜像站挂在 $SITE_BASE 下，这类链接会解析到根目录而 404，因此统一改写前缀。
+          # 只处理这一种前缀，其余内容与源站保持逐字一致。
+          echo "== 改写站内跳转前缀 =="
+          find _site -name '*.md' -print0 | xargs -0 sed -i "s|](/spage/#/|](${SITE_BASE}/#/|g"
+          if grep -rn '](/spage/#/' _site --include='*.md'; then
+            echo "::error::仍有未改写的 /spage/#/ 站内跳转，请检查源站是否新增了别的写法"
+            exit 1
+          fi
+          echo "  已无残留 /spage/#/ 引用"
 
           {
             echo "## 文档同步结果"
