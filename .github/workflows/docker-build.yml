@@ -82,7 +82,13 @@ jobs:
       - name: 计算是否推送镜像
         id: gate
         env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          # ⚠️ 这里的用户名必须用 vars（仓库「变量」），不能用 secrets（仓库「机密」）：
+          #   GitHub 会把 secret 的值在日志和 Step Summary 中无条件替换成 ***，
+          #   而本仓库用户名 lylme 正好是 IMAGE_NAME 的前缀，一旦放进 secret，
+          #   摘要里的 lylme/lylme_spage:vX.Y.Z 会显示成 ***/***_spage:vX.Y.Z，
+          #   ghcr.io/lylme/... 也会被连带打码（因为字符串值是同一个）。
+          #   用户名本身不是敏感信息，只有 DOCKERHUB_TOKEN 需要放在 secrets。
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
           ENABLE_GHCR: ${{ vars.ENABLE_GHCR }}
         run: |
           # 只有存在可用的推送目标（Docker Hub 凭证或 GHCR）时才推送，
@@ -92,7 +98,7 @@ jobs:
             if [ -n "$DOCKERHUB_USERNAME" ] || [ "$ENABLE_GHCR" = "true" ]; then
               PUSH="true"
             else
-              echo "::warning::未配置 DOCKERHUB_USERNAME 且未启用 ENABLE_GHCR，本次仅构建不推送"
+              echo "::warning::未配置仓库变量 DOCKERHUB_USERNAME 且未启用 ENABLE_GHCR，本次仅构建不推送"
             fi
           fi
           if [ -n "$DOCKERHUB_USERNAME" ]; then
@@ -125,7 +131,7 @@ jobs:
         if: ${{ steps.gate.outputs.dockerhub == 'true' }}
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: 登录 GHCR
@@ -139,10 +145,12 @@ jobs:
       - name: 计算镜像标签
         id: meta
         env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          # 同 gate 步骤：用 vars 而非 secrets，否则摘要里的用户名会被打成 ***
+          DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
           ENABLE_GHCR: ${{ vars.ENABLE_GHCR }}
           PUSH_LATEST: ${{ github.event.inputs.push_latest }}
           TAG: ${{ steps.ver.outputs.tag }}
+          # 下面两个仅服务于「可选标签」，当前默认不推，保留以便随时加回
           VERSION: ${{ steps.ver.outputs.version }}
           SHA: ${{ steps.ver.outputs.sha }}
         run: |
@@ -151,11 +159,16 @@ jobs:
             if [ -z "$TAGS" ]; then TAGS="$1"; else TAGS="$TAGS,$1"; fi
           }
 
+          # 每个仓库固定只推两个标签：
+          #   vX.Y.Z —— 固定版本，生产环境用这个（可精确回滚）
+          #   latest —— 跟随最新版本，手动触发时传 push_latest=false 可关闭
+          # 如需额外标签，取消下方对应注释即可。
+
           # Docker Hub 标签：仅在配置了凭证时生成，否则推送会因未认证失败
           if [ -n "$DOCKERHUB_USERNAME" ]; then
             add_tag "${IMAGE_NAME}:${TAG}"
-            add_tag "${IMAGE_NAME}:${VERSION}"
-            add_tag "${IMAGE_NAME}:${TAG}-${SHA}"
+            # add_tag "${IMAGE_NAME}:${VERSION}"     # 无 v 前缀版本号，如 2.7.0
+            # add_tag "${IMAGE_NAME}:${TAG}-${SHA}"  # 带构建号，如 v2.7.0-44ccba7
             if [ "$PUSH_LATEST" != "false" ]; then
               add_tag "${IMAGE_NAME}:latest"
             fi
@@ -168,7 +181,7 @@ jobs:
           if [ "$ENABLE_GHCR" = "true" ]; then
             GHCR_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
             add_tag "ghcr.io/${GHCR_OWNER}/lylme_spage:${TAG}"
-            add_tag "ghcr.io/${GHCR_OWNER}/lylme_spage:${TAG}-${SHA}"
+            # add_tag "ghcr.io/${GHCR_OWNER}/lylme_spage:${TAG}-${SHA}"  # 带构建号
             if [ "$PUSH_LATEST" != "false" ]; then
               add_tag "ghcr.io/${GHCR_OWNER}/lylme_spage:latest"
             fi
