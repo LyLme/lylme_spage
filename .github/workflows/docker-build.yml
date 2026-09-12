@@ -1,0 +1,202 @@
+name: Docker 多架构构建推送
+
+# 替代本地 build-push.py，在 CI 中完成 amd64 / armv7 / arm64 三架构构建并推送
+# 版本号自动从 www/include/version.php 读取（define('VERSION', '2.7.0')）
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+    branches:
+      - docker
+    paths:
+      - 'Dockerfile'
+      - 'docker-entrypoint.sh'
+      - 'supervisord.conf'
+      - 'www/**'
+      - '.github/workflows/docker-build.yml'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: '构建的分支/标签（Dockerfile 所在处，默认 docker 分支）'
+        required: false
+        default: 'docker'
+      platforms:
+        description: '目标架构列表'
+        required: false
+        default: 'linux/amd64,linux/arm/v7,linux/arm64'
+      push_latest:
+        description: '是否同时推送 latest 标签'
+        required: false
+        type: boolean
+        default: true
+
+concurrency:
+  group: docker-build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE_NAME: lylme/lylme_spage
+
+jobs:
+  build:
+    name: buildx 多架构构建
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v5
+        with:
+          # Dockerfile 只存在于 docker 分支，因此默认固定切到 docker 分支。
+          # 注意：这意味着 tag 触发时构建的也是 docker 分支的最新代码，
+          # 而非该 tag 所处的 commit —— 请先跑 sync-docker-branch.yml 再打 tag。
+          # 手动触发时可指定 ref 覆盖。
+          ref: ${{ github.event.inputs.ref || 'docker' }}
+          fetch-depth: 0
+
+      - name: 读取版本号
+        id: ver
+        run: |
+          VERSION=$(grep -m1 "VERSION" www/include/version.php | grep -oE "[0-9]+\.[0-9]+(\.[0-9]+)?" | head -n1)
+          if [ -z "$VERSION" ]; then
+            echo "::error::无法从 www/include/version.php 解析 VERSION"
+            exit 1
+          fi
+          # tag 触发时，确保 tag 与 docker 分支源码版本一致，避免打出与实际内容不符的标签
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            TAGVER="${GITHUB_REF_NAME#v}"
+            if [ "$TAGVER" != "$VERSION" ]; then
+              echo "::error::tag v$TAGVER 与 docker 分支 www/include/version.php ($VERSION) 不一致"
+              echo "::error::请先运行 sync-docker-branch.yml 同步源码，再重新打 tag"
+              exit 1
+            fi
+          fi
+          echo "version=$VERSION"       >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION"          >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          echo "检测到版本 v$VERSION"
+
+      - name: 计算是否推送镜像
+        id: gate
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          ENABLE_GHCR: ${{ vars.ENABLE_GHCR }}
+        run: |
+          # 只有存在可用的推送目标（Docker Hub 凭证或 GHCR）时才推送，
+          # 否则退化为纯构建校验，避免未认证导致的 push 失败。
+          PUSH="false"
+          if [ "$GITHUB_EVENT_NAME" != "pull_request" ]; then
+            if [ -n "$DOCKERHUB_USERNAME" ] || [ "$ENABLE_GHCR" = "true" ]; then
+              PUSH="true"
+            else
+              echo "::warning::未配置 DOCKERHUB_USERNAME 且未启用 ENABLE_GHCR，本次仅构建不推送"
+            fi
+          fi
+          if [ -n "$DOCKERHUB_USERNAME" ]; then
+            echo "dockerhub=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "dockerhub=false" >> "$GITHUB_OUTPUT"
+          fi
+          if [ "$ENABLE_GHCR" = "true" ]; then
+            echo "ghcr=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ghcr=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "push=$PUSH" >> "$GITHUB_OUTPUT"
+
+      - name: 准备 QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm/v7,arm64
+
+      - name: 准备 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 登录 Docker Hub
+        if: ${{ steps.gate.outputs.dockerhub == 'true' }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 登录 GHCR
+        if: ${{ steps.gate.outputs.ghcr == 'true' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 计算镜像标签
+        id: meta
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          ENABLE_GHCR: ${{ vars.ENABLE_GHCR }}
+          PUSH_LATEST: ${{ github.event.inputs.push_latest }}
+          TAG: ${{ steps.ver.outputs.tag }}
+          VERSION: ${{ steps.ver.outputs.version }}
+          SHA: ${{ steps.ver.outputs.sha }}
+        run: |
+          TAGS=""
+          add_tag() {
+            if [ -z "$TAGS" ]; then TAGS="$1"; else TAGS="$TAGS,$1"; fi
+          }
+
+          # Docker Hub 标签：仅在配置了凭证时生成，否则推送会因未认证失败
+          if [ -n "$DOCKERHUB_USERNAME" ]; then
+            add_tag "${IMAGE_NAME}:${TAG}"
+            add_tag "${IMAGE_NAME}:${VERSION}"
+            add_tag "${IMAGE_NAME}:${TAG}-${SHA}"
+            if [ "$PUSH_LATEST" != "false" ]; then
+              add_tag "${IMAGE_NAME}:latest"
+            fi
+          fi
+
+          # GHCR 标签
+          if [ "$ENABLE_GHCR" = "true" ]; then
+            add_tag "ghcr.io/${{ github.repository_owner }}/lylme_spage:${TAG}"
+            if [ "$PUSH_LATEST" != "false" ]; then
+              add_tag "ghcr.io/${{ github.repository_owner }}/lylme_spage:latest"
+            fi
+          fi
+
+          # 纯构建校验场景：给一个本地标签，保证 buildx 有输出
+          if [ -z "$TAGS" ]; then
+            add_tag "${IMAGE_NAME}:${TAG}"
+          fi
+
+          echo "tags=$TAGS" >> "$GITHUB_OUTPUT"
+          echo "生成的标签: $TAGS"
+
+      - name: 构建并推送
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: ${{ github.event.inputs.platforms || 'linux/amd64,linux/arm/v7,linux/arm64' }}
+          push: ${{ steps.gate.outputs.push == 'true' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false
+          labels: |
+            org.opencontainers.image.title=LyLme Spage
+            org.opencontainers.image.description=六零导航页 - 简洁高效的上网导航
+            org.opencontainers.image.version=${{ steps.ver.outputs.tag }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+
+      - name: 输出摘要
+        run: |
+          echo "### 🐳 镜像构建完成"                      >> "$GITHUB_STEP_SUMMARY"
+          echo ""                                          >> "$GITHUB_STEP_SUMMARY"
+          echo "- 版本标签: \`${{ steps.ver.outputs.tag }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- 提交: \`${{ steps.ver.outputs.sha }}\`"    >> "$GITHUB_STEP_SUMMARY"
+          echo "- 架构: \`${{ github.event.inputs.platforms || 'linux/amd64,linux/arm/v7,linux/arm64' }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo ""                                          >> "$GITHUB_STEP_SUMMARY"
+          echo '```'                                       >> "$GITHUB_STEP_SUMMARY"
+          echo "${{ steps.meta.outputs.tags }}" | tr ',' '\n' >> "$GITHUB_STEP_SUMMARY"
+          echo '```'                                       >> "$GITHUB_STEP_SUMMARY"
