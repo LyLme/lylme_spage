@@ -110,7 +110,13 @@ jobs:
       - name: 准备 QEMU
         uses: docker/setup-qemu-action@v3
         with:
-          platforms: arm/v7,arm64
+          # ⚠️ 这里要填 binfmt 的「架构名」，不是 Docker 的「平台名」：
+          #   ARM 32 位（Docker 平台名 linux/arm/v7）对应 binfmt 的 "arm"
+          #   写成 "arm/v7" 会被 binfmt 拒绝：installing: v7 unsupported architecture: v7
+          # 后果就是 arm/v7 的模拟器没装上，构建时容器一启动就
+          #   exec /bin/sh: exec format error
+          # 用 all 一次注册全部架构，以后再加平台也不用改这里。
+          platforms: all
 
       - name: 准备 Docker Buildx
         uses: docker/setup-buildx-action@v3
