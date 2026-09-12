@@ -72,9 +72,11 @@ jobs:
           echo "✓ 校验通过：www/ 与 master 源码完全一致"
 
           # 让 docker 分支也带上构建工作流。
-          # GitHub 的 push 事件只读取「被推送分支上」的工作流文件：docker 分支若没有
-          # .github/workflows/docker-build.yml，那么 master → docker 的同步推送不会
-          # 触发任何镜像构建（配上 SYNC_PAT 也一样）。
+          # 这一份是必需的：下面用 `gh workflow run docker-build.yml --ref docker`
+          # 触发构建，而 workflow_dispatch 是按「指定 ref 上的文件」解析工作流的 ——
+          # docker 分支若没有这个文件，dispatch 会直接失败。
+          # （曾经的理由是「docker 分支没这个文件，同步推送就不会触发构建」，该说法
+          # 已被实测推翻：三次命中 paths 的推送都没产生任何运行，触发路径不成立。）
           # rsync 用 --exclude='.github/' 跳过了整个目录，所以这里单独补这一份，
           # 既避免 docker 分支混入 php-lint / release 等只在 master 有意义的工作流，
           # 又保证两边内容不会漂移。
