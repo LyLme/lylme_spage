@@ -105,6 +105,9 @@ jobs:
             echo "dockerhub=true" >> "$GITHUB_OUTPUT"
           else
             echo "dockerhub=false" >> "$GITHUB_OUTPUT"
+            # 单独告警：ENABLE_GHCR=true 时上面那条整体告警不会触发，Docker Hub
+            # 会「一声不响地」不推送 —— workflow 依然显示成功，镜像却停在旧版本。
+            echo "::warning::仓库变量 DOCKERHUB_USERNAME 为空，本次不会推送 Docker Hub（Settings → Secrets and variables → Actions → Variables）"
           fi
           if [ "$ENABLE_GHCR" = "true" ]; then
             echo "ghcr=true" >> "$GITHUB_OUTPUT"
