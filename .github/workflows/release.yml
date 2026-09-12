@@ -1,0 +1,124 @@
+name: 发版打包（安装包 / 更新包）
+
+# 推送 v*.*.* 标签时，自动从 master 打包源码并上传 Release 资产
+#   安装包 lylme_spage_vX.Y.Z.zip        —— 首次搭建用，含 install 目录
+#   更新包 lylme_spage_vX.Y.Z_update.zip —— 旧版升级用，剔除 install 目录，
+#                                          并排除 config.php、assets/img/*、site/baidu_api.php
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: '打包的分支/标签'
+        required: false
+        default: 'master'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: 打包并发布
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || 'master' }}
+          fetch-depth: 0
+
+      - name: 解析版本号
+        id: ver
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            RAW="${GITHUB_REF_NAME#v}"
+          else
+            RAW=$(grep -m1 "VERSION" include/version.php | grep -oE "[0-9]+\.[0-9]+(\.[0-9]+)?" | head -n1)
+          fi
+          if [ -z "$RAW" ]; then
+            echo "::error::无法解析版本号"
+            exit 1
+          fi
+          echo "version=$RAW" >> "$GITHUB_OUTPUT"
+          echo "版本: $RAW"
+
+      - name: 生成变更日志
+        id: changelog
+        run: |
+          PREV=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          {
+            echo 'body<<CHANGELOG_EOF'
+            if [ -n "$PREV" ]; then
+              echo "## 更新内容"
+              echo ""
+              git log --pretty='- %s (%h)' "$PREV"..HEAD
+            else
+              echo "## 更新内容"
+              echo ""
+              git log --pretty='- %s (%h)' -20
+            fi
+            echo ""
+            echo "## 文件说明"
+            echo ""
+            echo "| 文件 | 用途 |"
+            echo "|---|---|"
+            echo "| \`lylme_spage_v${{ steps.ver.outputs.version }}.zip\` | 安装包，用于首次搭建网站 |"
+            echo "| \`lylme_spage_v${{ steps.ver.outputs.version }}_update.zip\` | 更新包，用于从旧版本升级 |"
+            echo ""
+            echo "> 更新会替换大部分文件（不会删除原有文件）。若修改过源码请先备份。"
+            echo "> 在线更新需保证网站目录权限为 755（应用到子目录）且服务器可访问外网。"
+            echo 'CHANGELOG_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 打包安装包
+        run: |
+          rm -f install/install.lock include/log.txt admin/log.txt
+          zip -rq "lylme_spage_v${{ steps.ver.outputs.version }}.zip" . \
+            -x ".git/*" ".github/*" ".gitignore" ".gitattributes" \
+               "*.zip" "files/*" "cache/*" "logs/*" \
+               "include/qrcode.png" "install/install.lock"
+
+      - name: 打包更新包
+        run: |
+          rm -f install/install.lock include/log.txt admin/log.txt
+          zip -rq "lylme_spage_v${{ steps.ver.outputs.version }}_update.zip" . \
+            -x ".git/*" ".github/*" ".gitignore" ".gitattributes" \
+               "*.zip" "files/*" "cache/*" "logs/*" \
+               "install/*" "config.php" "assets/img/*" "site/baidu_api.php" \
+               "include/qrcode.png" "install/install.lock"
+
+      - name: 校验压缩包
+        run: |
+          for f in *.zip; do
+            echo "== $f =="
+            unzip -l "$f" | tail -n 1
+            [ "$(unzip -l "$f" | grep -c 'index.php')" -gt 0 ] || { echo "::error::$f 缺少 index.php"; exit 1; }
+          done
+          ls -lh *.zip
+
+      - name: 上传为构建产物（手动触发时）
+        if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: lylme_spage_v${{ steps.ver.outputs.version }}
+          path: '*.zip'
+          retention-days: 30
+
+      - name: 创建 Release 并上传
+        # 仅在 tag 触发时创建 Release；workflow_dispatch 手动触发只产出 artifact
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: 六零导航页 v${{ steps.ver.outputs.version }}
+          body: ${{ steps.changelog.outputs.body }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            lylme_spage_v${{ steps.ver.outputs.version }}.zip
+            lylme_spage_v${{ steps.ver.outputs.version }}_update.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,89 @@
+name: 镜像健康检查（每 10 天）
+
+# 每 10 天定时冒烟测试已发布的 Docker 镜像：
+# 启动容器 → 等待健康检查通过 → 验证首页与后台可访问 → 清理。
+# 用于第一时间发现 latest 镜像挂掉的情况。
+
+on:
+  schedule:
+    # 每 10 天一次：每月 1/11/21/31 日触发；UTC 22:00 = 北京时间次日 06:00
+    - cron: '0 22 */10 * *'
+  workflow_dispatch:
+    inputs:
+      image_ref:
+        description: '待检测镜像，默认 latest'
+        required: false
+        default: 'lylme/lylme_spage:latest'
+
+jobs:
+  smoke:
+    name: 冒烟测试
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 启动容器
+        id: run
+        run: |
+          IMAGE="${{ github.event.inputs.image_ref || 'lylme/lylme_spage:latest' }}"
+          echo "检测镜像: $IMAGE"
+          docker run -d --name lylme_smoke -p 8080:80 "$IMAGE"
+          echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
+
+      - name: 等待健康检查通过
+        run: |
+          for i in $(seq 1 40); do
+            STATUS=$(docker inspect -f '{{.State.Health.Status}}' lylme_smoke 2>/dev/null || echo "unknown")
+            echo "[$i/40] health=$STATUS"
+            if [ "$STATUS" = "healthy" ]; then
+              echo "✅ 容器已进入 healthy 状态"
+              exit 0
+            fi
+            if [ "$STATUS" = "unhealthy" ]; then
+              echo "::error::容器健康检查失败"
+              docker logs --tail 100 lylme_smoke
+              exit 1
+            fi
+            sleep 5
+          done
+          echo "::error::等待健康检查超时（200s）"
+          docker logs --tail 100 lylme_smoke
+          exit 1
+
+      - name: 验证页面可访问
+        run: |
+          echo "—— 首页 ——"
+          curl -fsS -o /tmp/home.html -w "HTTP %{http_code}  %{size_download} bytes\n" http://127.0.0.1:8080/
+          grep -qiE '<title>|上网' /tmp/home.html || { echo "::warning::首页内容疑似异常"; }
+
+          echo "—— 后台登录页 ——"
+          CODE=$(curl -s -o /tmp/admin.html -w "%{http_code}" http://127.0.0.1:8080/admin/)
+          echo "HTTP $CODE"
+          [ "$CODE" = "200" ] || { echo "::error::后台返回 $CODE"; exit 1; }
+
+      - name: 输出摘要
+        if: always()
+        run: |
+          VERSION=$(docker exec lylme_smoke grep -m1 "VERSION" /var/www/html/include/version.php 2>/dev/null \
+                    | grep -oE "[0-9]+\.[0-9]+(\.[0-9]+)?" | head -n1 || true)
+          [ -z "$VERSION" ] && VERSION="unknown"
+          {
+            echo "### 🩺 镜像冒烟测试结果"
+            echo ""
+            echo "| 项目 | 结果 |"
+            echo "|---|---|"
+            echo "| 镜像 | \`${{ steps.run.outputs.image }}\` |"
+            echo "| 容器内版本 | \`$VERSION\` |"
+            echo "| 首页 | ✅ |"
+            echo "| 后台 | ✅ |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 清理
+        if: always()
+        run: docker rm -f lylme_smoke || true
+
+      - name: 失败告警
+        if: failure()
+        run: |
+          echo "::error::镜像冒烟测试失败，请检查 latest 镜像是否可用"
+          echo "镜像: ${{ steps.run.outputs.image }}"

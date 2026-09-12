@@ -1,0 +1,102 @@
+name: PHP 多版本语法检查
+
+# 项目宣称兼容 PHP 5.x / 7.x / 8.x，本工作流在多个 PHP 版本上跑语法检查，
+# 防止某个版本引入的语法糖在旧环境里白屏。
+
+on:
+  push:
+    branches: [master, main, docker]
+    paths:
+      - '**.php'
+      - '.github/workflows/php-lint.yml'
+  pull_request:
+    branches: [master, main, docker]
+    paths:
+      - '**.php'
+  workflow_dispatch:
+
+concurrency:
+  group: php-lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: PHP ${{ matrix.php }} 语法检查
+    runs-on: ubuntu-22.04
+    continue-on-error: ${{ matrix.experimental }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '5.6'
+            experimental: true   # 老版本仅作提醒，不阻断合并
+          - php: '7.2'
+            experimental: false
+          - php: '7.4'
+            experimental: false
+          - php: '8.0'
+            experimental: false
+          - php: '8.2'
+            experimental: false  # Docker 镜像使用版本
+          - php: '8.4'
+            experimental: false
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mysqli, pdo_mysql, gd, curl, mbstring, xml, zip
+          coverage: none
+          tools: none
+
+      - name: 确认扩展
+        run: |
+          php -v
+          php -m | grep -Ei '^(mysqli|pdo_mysql|gd|curl|mbstring|zip)$' || true
+
+      - name: 语法检查（并行）
+        run: |
+          set -o pipefail
+          FILES=$(find . -type f -name '*.php' -not -path './.git/*')
+          COUNT=$(echo "$FILES" | wc -l)
+          echo "待检查文件数: $COUNT"
+          echo "$FILES" | xargs -P 8 -I{} php -l {} 2>&1 | tee /tmp/lint.log
+          if grep -qiE 'Parse error|Fatal error' /tmp/lint.log; then
+            echo "::error::PHP ${{ matrix.php }} 存在语法错误"
+            grep -iE 'Parse error|Fatal error' /tmp/lint.log
+            exit 1
+          fi
+          echo "✅ PHP ${{ matrix.php }} 全部 $COUNT 个文件语法通过"
+
+  security:
+    name: 安全扫描
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 敏感文件泄漏检查
+        run: |
+          echo "检查不应入库的文件…"
+          if [ -f install/install.lock ]; then
+            echo "::warning::install/install.lock 不应提交到仓库"
+          fi
+          if [ -f include/log.txt ]; then
+            echo "::warning::include/log.txt 不应提交到仓库"
+          fi
+          if git ls-files | grep -qE '^(\.env|config\.local\.php)$'; then
+            echo "::error::检测到敏感配置文件已入库"
+            exit 1
+          fi
+          echo "✅ 未发现敏感文件入库"
+
+      - name: 检查后台默认口令提示
+        run: |
+          if grep -rn "123456" --include="*.php" --include="*.sql" install/ 2>/dev/null | head -5; then
+            echo "::notice::install 目录含默认口令，属安装向导正常内容"
+          fi

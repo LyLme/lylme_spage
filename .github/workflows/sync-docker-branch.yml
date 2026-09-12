@@ -1,0 +1,87 @@
+name: 自动镜像同步
+
+# 将 master 分支的源码同步到 docker 分支的 www/ 目录，
+# 避免 Dockerfile 构建时用的是过期代码。
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - '.github/**'
+      - '**.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: master → docker/www
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出 docker 分支
+        uses: actions/checkout@v4
+        with:
+          ref: docker
+          fetch-depth: 0
+
+      - name: 同步源码到 www/
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # 拉取 master 源码到临时目录
+          # 用 origin/master（远程跟踪分支）而非 master：checkout 只为当前 ref
+          # 创建本地分支，docker 分支上通常不存在本地 master，直接写 master 会报
+          # "invalid reference: master"。
+          rm -rf /tmp/master_src
+          git worktree add /tmp/master_src origin/master
+
+          # 覆盖 www/（--delete 保证删除 master 上已移除的文件）
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='install/install.lock' \
+            --exclude='include/log.txt' \
+            --exclude='admin/log.txt' \
+            --exclude='files/' \
+            --exclude='cache/' \
+            --exclude='logs/' \
+            /tmp/master_src/ www/
+
+          git worktree remove /tmp/master_src --force
+
+          # 移除安装锁，保证镜像首次运行可自动初始化
+          rm -f www/install/install.lock
+
+      - name: 检测是否有变更
+        id: diff
+        run: |
+          git add -A www
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "www/ 无变化，跳过提交"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "changed_files=$(git diff --cached --name-only | wc -l)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 提交并推送
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          # 默认用 GITHUB_TOKEN：能推送，但不会触发后续工作流。
+          # 若希望同步后自动触发 docker-build.yml，请配置 SYNC_PAT
+          # （有 repo 权限的 Personal Access Token）。
+          SYNC_PAT: ${{ secrets.SYNC_PAT }}
+        run: |
+          VERSION=$(grep -m1 "VERSION" www/include/version.php | grep -oE "[0-9]+\.[0-9]+(\.[0-9]+)?" | head -n1)
+          git commit -m "chore(docker): 同步 master 源码 v${VERSION} ($(git rev-parse --short ${{ github.sha }}))"
+          if [ -n "$SYNC_PAT" ]; then
+            git push "https://x-access-token:${SYNC_PAT}@github.com/${{ github.repository }}.git" docker
+            echo "已用 SYNC_PAT 推送（可触发下游工作流）"
+          else
+            git push origin docker
+            echo "已用 GITHUB_TOKEN 推送（不会触发下游工作流，需手动运行 docker-build.yml）"
+          fi
+          echo "同步文件数: ${{ steps.diff.outputs.changed_files }}"
