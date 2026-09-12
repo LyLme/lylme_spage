@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: 检出 docker 分支
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: docker
           fetch-depth: 0
@@ -39,8 +39,15 @@ jobs:
           git worktree add /tmp/master_src origin/master
 
           # 覆盖 www/（--delete 保证删除 master 上已移除的文件）
-          rsync -a --delete \
-            --exclude='.git/' \
+          #
+          # 必须加 --checksum：rsync 默认只比「文件大小 + mtime」。两次 checkout 的
+          # mtime 可能落在同一秒，于是「大小相同但内容不同」的文件会被静默跳过
+          # —— include/version.php（2.6.0 → 2.7.0）就因此没同步过去。
+          #
+          # 用 --exclude='.git'（不带斜杠）而非 '.git/'：worktree 根目录下的 .git
+          # 是一个「文件」（指向真实 gitdir），带斜杠只能匹配目录，会把它漏进来。
+          rsync -a --checksum --delete \
+            --exclude='.git' \
             --exclude='.github/' \
             --exclude='install/install.lock' \
             --exclude='include/log.txt' \
@@ -49,6 +56,18 @@ jobs:
             --exclude='cache/' \
             --exclude='logs/' \
             /tmp/master_src/ www/
+
+          # 兜底校验：www/ 必须与 master 源码逐字节一致。不一致就当场失败，
+          # 避免把「看起来同步成功、实际仍是旧代码」的结果推到 docker 分支。
+          if ! diff -r \
+              -x .git -x .github -x install.lock -x log.txt \
+              -x files -x cache -x logs \
+              /tmp/master_src/ www/ > /tmp/sync_diff.txt 2>&1; then
+            echo "::error::同步后 www/ 与 master 源码不一致，已中止"
+            head -50 /tmp/sync_diff.txt
+            exit 1
+          fi
+          echo "✓ 校验通过：www/ 与 master 源码完全一致"
 
           git worktree remove /tmp/master_src --force
 

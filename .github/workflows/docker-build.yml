@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # Dockerfile 只存在于 docker 分支，因此默认固定切到 docker 分支。
           # 注意：这意味着 tag 触发时构建的也是 docker 分支的最新代码，
