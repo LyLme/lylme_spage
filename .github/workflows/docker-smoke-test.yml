@@ -57,9 +57,15 @@ jobs:
           grep -qiE '<title>|上网' /tmp/home.html || { echo "::warning::首页内容疑似异常"; }
 
           echo "—— 后台登录页 ——"
-          CODE=$(curl -s -o /tmp/admin.html -w "%{http_code}" http://127.0.0.1:8080/admin/)
+          # 未登录访问 /admin/ 会 302 跳转到 ./login.php（admin/head.php 的登录校验），
+          # 属正常行为，因此必须跟随重定向后再校验最终状态码。
+          LOCATION=$(curl -s -o /dev/null -w "%{redirect_url}" http://127.0.0.1:8080/admin/)
+          echo "重定向目标: ${LOCATION:-（无）}"
+          CODE=$(curl -sL -o /tmp/admin.html -w "%{http_code}" http://127.0.0.1:8080/admin/)
           echo "HTTP $CODE"
-          [ "$CODE" = "200" ] || { echo "::error::后台返回 $CODE"; exit 1; }
+          [ "$CODE" = "200" ] || { echo "::error::后台登录页返回 $CODE"; exit 1; }
+          grep -qiE '后台登录|name="pass"' /tmp/admin.html || { echo "::error::后台登录页内容异常"; exit 1; }
+          echo "✅ 后台登录页正常（200）"
 
       - name: 输出摘要
         if: always()
