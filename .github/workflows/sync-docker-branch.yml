@@ -102,8 +102,8 @@ jobs:
         id: push
         if: steps.diff.outputs.changed == 'true'
         env:
-          # 可选：若配置了 SYNC_PAT（含 repo + workflow 权限的 PAT），push 本身就能
-          # 触发下游工作流；未配置时，下一步会用 GITHUB_TOKEN 调 workflow_dispatch 补上。
+          # 可选：配置 SYNC_PAT（含 repo + workflow 权限的 PAT）后，docker 分支的提交
+          # 会以 PAT 身份推送。下游构建不依赖它——下一步始终会显式 dispatch 一次。
           SYNC_PAT: ${{ secrets.SYNC_PAT }}
         run: |
           VERSION=$(grep -m1 "VERSION" www/include/version.php | grep -oE "[0-9]+\.[0-9]+(\.[0-9]+)?" | head -n1)
@@ -111,19 +111,24 @@ jobs:
           if [ -n "$SYNC_PAT" ]; then
             git push "https://x-access-token:${SYNC_PAT}@github.com/${{ github.repository }}.git" docker
             echo "used_pat=true" >> "$GITHUB_OUTPUT"
-            echo "已用 SYNC_PAT 推送（push 本身即可触发下游工作流）"
+            echo "已用 SYNC_PAT 推送"
           else
             git push origin docker
             echo "used_pat=false" >> "$GITHUB_OUTPUT"
-            echo "已用 GITHUB_TOKEN 推送（不会触发下游工作流，下一步主动 dispatch）"
+            echo "已用 GITHUB_TOKEN 推送"
           fi
           echo "同步文件数: ${{ steps.diff.outputs.changed_files }}"
 
       - name: 触发镜像构建
-        # GitHub 禁止 GITHUB_TOKEN 的 push 触发下游工作流，所以这里改用
-        # workflow_dispatch API 主动触发，免去额外配置 PAT 的麻烦（也不用担心过期）。
-        # 若已配置 SYNC_PAT，push 时就会自动触发，这里跳过以免重复构建。
-        if: steps.diff.outputs.changed == 'true' && steps.push.outputs.used_pat != 'true'
+        # 无论推送走 PAT 还是 GITHUB_TOKEN，这里都显式触发一次构建：
+        #   - GITHUB_TOKEN 的 push 不会触发下游工作流（GitHub 硬性规则），必须补 dispatch；
+        #   - PAT 的 push 理论上会触发，但本仓库实测没有触发（docker 分支上的提交
+        #     没有任何 check-run）。一旦依赖它，就会出现「同步成功、镜像没更新」的
+        #     静默中断，所以不再把 dispatch 当作兜底，而是当作唯一可靠入口。
+        # 代价只是可能多出一个运行：docker-build.yml 的 concurrency 组同为
+        # refs/heads/docker 且 cancel-in-progress=true，后来的会取消先前的，
+        # 最终仍只真正构建一次。
+        if: steps.diff.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
