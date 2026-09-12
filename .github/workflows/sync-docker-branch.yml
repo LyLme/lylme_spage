@@ -2,6 +2,11 @@ name: 自动镜像同步
 
 # 将 master 分支的源码同步到 docker 分支的 www/ 目录，
 # 避免 Dockerfile 构建时用的是过期代码。
+#
+# ⚠️ 本工作流只做同步，不触发构建 —— 镜像构建已改为「只有打 tag 才发生」。
+#    因此发布顺序是：推 master → 等本次同步跑完（约 10~20 秒）→ 再打 tag。
+#    顺序反了，tag 触发的那次构建读到的是 docker 分支上的旧版本，
+#    会在 docker-build.yml 的版本号校验处直接失败。
 
 on:
   push:
@@ -13,8 +18,6 @@ on:
 
 permissions:
   contents: write
-  # 用 GITHUB_TOKEN 调 workflow_dispatch API 主动触发 docker-build.yml 时需要写权限
-  actions: write
 
 jobs:
   sync:
@@ -72,11 +75,9 @@ jobs:
           echo "✓ 校验通过：www/ 与 master 源码完全一致"
 
           # 让 docker 分支也带上构建工作流。
-          # 这一份是必需的：下面用 `gh workflow run docker-build.yml --ref docker`
-          # 触发构建，而 workflow_dispatch 是按「指定 ref 上的文件」解析工作流的 ——
-          # docker 分支若没有这个文件，dispatch 会直接失败。
-          # （曾经的理由是「docker 分支没这个文件，同步推送就不会触发构建」，该说法
-          # 已被实测推翻：三次命中 paths 的推送都没产生任何运行，触发路径不成立。）
+          # 这一份是必需的：`gh workflow run docker-build.yml --ref docker` 手动触发时，
+          # workflow_dispatch 是按「指定 ref 上的文件」解析工作流的 —— docker 分支若
+          # 没有这个文件，dispatch 会直接失败。
           # rsync 用 --exclude='.github/' 跳过了整个目录，所以这里单独补这一份，
           # 既避免 docker 分支混入 php-lint / release 等只在 master 有意义的工作流，
           # 又保证两边内容不会漂移。
@@ -104,8 +105,9 @@ jobs:
         id: push
         if: steps.diff.outputs.changed == 'true'
         env:
-          # 可选：配置 SYNC_PAT（含 repo + workflow 权限的 PAT）后，docker 分支的提交
-          # 会以 PAT 身份推送。下游构建不依赖它——下一步始终会显式 dispatch 一次。
+          # 可选：配置 SYNC_PAT 后，docker 分支的提交会以 PAT 身份推送。
+          # 构建现在只由 tag 触发，同步推送不需要（也不应）连带触发下游，
+          # 所以用 GITHUB_TOKEN 还是 PAT 推送都可以，对下游没有任何区别。
           SYNC_PAT: ${{ secrets.SYNC_PAT }}
         run: |
           VERSION=$(grep -m1 "VERSION" www/include/version.php | grep -oE "[0-9]+\.[0-9]+(\.[0-9]+)?" | head -n1)
@@ -121,21 +123,6 @@ jobs:
           fi
           echo "同步文件数: ${{ steps.diff.outputs.changed_files }}"
 
-      - name: 触发镜像构建
-        # 无论推送走 PAT 还是 GITHUB_TOKEN，这里都显式触发一次构建：
-        #   - GITHUB_TOKEN 的 push 不会触发下游工作流（GitHub 硬性规则），必须补 dispatch；
-        #   - PAT 的 push 理论上会触发，但本仓库实测没有触发（docker 分支上的提交
-        #     没有任何 check-run）。一旦依赖它，就会出现「同步成功、镜像没更新」的
-        #     静默中断，所以不再把 dispatch 当作兜底，而是当作唯一可靠入口。
-        # 代价只是可能多出一个运行：docker-build.yml 的 concurrency 组同为
-        # refs/heads/docker 且 cancel-in-progress=true，后来的会取消先前的，
-        # 最终仍只真正构建一次。
-        if: steps.diff.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if gh workflow run docker-build.yml --ref docker; then
-            echo "✓ 已触发 docker-build.yml，可在 Actions 页查看构建进度"
-          else
-            echo "::warning::自动触发 docker-build.yml 失败，请到 Actions 页手动运行一次"
-          fi
+      # 这里刻意不再触发 docker-build.yml：镜像已改为「只有打 tag 才构建」。
+      # 当初必须显式 dispatch 的两个前提依然成立（GITHUB_TOKEN 的 push 不触发下游；
+      # PAT 的 push 在本仓库实测也没触发），只是现在「不触发」正是我们想要的结果。

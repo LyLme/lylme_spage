@@ -4,17 +4,17 @@ name: Docker 多架构构建推送
 # 版本号自动从 www/include/version.php 读取（define('VERSION', '2.7.0')）
 
 on:
+  # 只由 tag 触发构建；workflow_dispatch 留作手动补构建。
+  #
+  # 刻意不写 branches / paths：
+  #   1) 官方文档明确「Path filters are not evaluated for pushes of tags.」——
+  #      paths 对 tag 推送根本不生效，写了只会让人误以为它在起作用；
+  #   2) 原先的 branches: docker + paths（Dockerfile、www/** …）本意是「源码变更即构建」，
+  #      但实测三次命中 paths 的 docker 分支推送均未产生任何运行，该入口不成立，已移除。
+  #      源码由 sync-docker-branch.yml 同步进 docker 分支，再由打 tag 发布镜像。
   push:
     tags:
       - 'v*.*.*'
-    branches:
-      - docker
-    paths:
-      - 'Dockerfile'
-      - 'docker-entrypoint.sh'
-      - 'supervisord.conf'
-      - 'www/**'
-      - '.github/workflows/docker-build.yml'
   workflow_dispatch:
     inputs:
       ref:
@@ -52,7 +52,8 @@ jobs:
         with:
           # Dockerfile 只存在于 docker 分支，因此默认固定切到 docker 分支。
           # 注意：这意味着 tag 触发时构建的也是 docker 分支的最新代码，
-          # 而非该 tag 所处的 commit —— 请先跑 sync-docker-branch.yml 再打 tag。
+          # 而非该 tag 所处的 commit —— 请严格按「推 master → 等 sync-docker-branch.yml
+          # 跑完 → 再打 tag」的顺序操作，否则下面的版本号校验会失败。
           # 手动触发时可指定 ref 覆盖。
           ref: ${{ github.event.inputs.ref || 'docker' }}
           fetch-depth: 0
