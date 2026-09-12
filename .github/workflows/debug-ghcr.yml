@@ -1,0 +1,53 @@
+name: debug-ghcr
+
+# 临时诊断工作流：用于排查 GHCR 推送 permission_denied: read_package
+# 排查完成后删除本文件。
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: probe ghcr permissions
+        run: |
+          echo "actor    = $GITHUB_ACTOR"
+          echo "owner    = $GITHUB_REPOSITORY_OWNER"
+          echo "repo     = $GITHUB_REPOSITORY"
+
+          echo "--- 1) ghcr token endpoint (lowercase scope, no auth) ---"
+          curl -s -o /tmp/t1.json -w "HTTP=%{http_code}\n" \
+            "https://ghcr.io/token?service=ghcr.io&scope=repository:lylme/lylme_spage:pull,push" || true
+          echo "body bytes: $(wc -c < /tmp/t1.json)"
+
+          echo "--- 2) ghcr token endpoint (with GITHUB_TOKEN auth) ---"
+          curl -s -o /tmp/t2.json -w "HTTP=%{http_code}\n" -u "x:${GITHUB_TOKEN}" \
+            "https://ghcr.io/token?service=ghcr.io&scope=repository:lylme/lylme_spage:pull,push" || true
+          echo "body bytes: $(wc -c < /tmp/t2.json)"
+          if [ -s /tmp/t2.json ]; then
+            echo "has token field: $(grep -c '"token"' /tmp/t2.json || true)"
+          fi
+
+          echo "--- 3) REST api identity check ---"
+          curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" -o /tmp/u.json \
+            -w "GET /repos/... HTTP=%{http_code}\n" "https://api.github.com/repos/${GITHUB_REPOSITORY}" || true
+
+          echo "--- 4) REST packages of owner ---"
+          curl -s -H "Authorization: Bearer ${GITHUB_TOKEN}" -o /tmp/p.json \
+            -w "GET /user/packages HTTP=%{http_code}\n" \
+            "https://api.github.com/user/packages?package_type=container" || true
+          echo "packages body:"; head -c 400 /tmp/p.json; echo
+
+          echo "--- 5) anonymous ghcr tags/list ---"
+          TK1=$(sed -n 's/.*"token":"\([^"]*\)".*/\1/p' /tmp/t1.json 2>/dev/null || true)
+          if [ -n "$TK1" ]; then
+            curl -s -H "Authorization: Bearer ${TK1}" -o /tmp/tags.json \
+              -w "GET tags/list HTTP=%{http_code}\n" "https://ghcr.io/v2/lylme/lylme_spage/tags/list" || true
+            cat /tmp/tags.json; echo
+          else
+            echo "no anonymous token obtained"
+          fi
