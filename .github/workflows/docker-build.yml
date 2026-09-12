@@ -162,10 +162,15 @@ jobs:
           fi
 
           # GHCR 标签
+          # ⚠️ 镜像仓库名必须全小写，而 github.repository_owner 保留账号原始大小写（LyLme），
+          #   直接拼进 tag 会被 buildx 拒绝：
+          #   invalid tag "ghcr.io/LyLme/lylme_spage:vX.Y.Z": repository name must be lowercase
           if [ "$ENABLE_GHCR" = "true" ]; then
-            add_tag "ghcr.io/${{ github.repository_owner }}/lylme_spage:${TAG}"
+            GHCR_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+            add_tag "ghcr.io/${GHCR_OWNER}/lylme_spage:${TAG}"
+            add_tag "ghcr.io/${GHCR_OWNER}/lylme_spage:${TAG}-${SHA}"
             if [ "$PUSH_LATEST" != "false" ]; then
-              add_tag "ghcr.io/${{ github.repository_owner }}/lylme_spage:latest"
+              add_tag "ghcr.io/${GHCR_OWNER}/lylme_spage:latest"
             fi
           fi
 
