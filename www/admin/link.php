@@ -211,7 +211,7 @@ $set = isset($_GET['set']) ? $_GET['set'] : null;
   }
   select_color();
 </script>
-<script type="text/javascript" src="/assets/admin/js/link.js?v=20260826"></script>
+<script type="text/javascript" src="/assets/admin/js/link.js?v=20260830"></script>
 <script type="text/javascript">
   // 新增/编辑表单 AJAX 提交（阻止默认跳转，弹窗显示服务端返回）
   function bindFormAjax(formId) {
