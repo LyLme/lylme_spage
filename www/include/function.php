@@ -871,6 +871,36 @@ function theme_config($name, $default = '')
     return $default;
 }
 
+if (!function_exists('theme_config_fields')) {
+    /**
+     * 读取主题自定义配置的定义（template/{template}/config.php）
+     *
+     * 保存主题设置时用于补回未被提交的表单项（如全部取消勾选的复选框），
+     * 因为浏览器不会提交未勾选的 checkbox / 关闭的 switch。
+     *
+     * @param string $template 主题目录名
+     * @return array 配置项定义数组，文件不存在或格式错误时返回空数组
+     */
+    function theme_config_fields($template)
+    {
+        $template = basename((string) $template); // 防止目录穿越
+        if ($template === '') {
+            return array();
+        }
+
+        $path = defined('ROOT')
+            ? ROOT . 'template/' . $template . '/config.php'
+            : __DIR__ . '/../../template/' . $template . '/config.php';
+
+        $theme_config = array();
+        if (is_file($path) && is_readable($path)) {
+            @include $path;
+        }
+
+        return is_array($theme_config) ? $theme_config : array();
+    }
+}
+
 /**
  * 安全启动 session（幂等）
  *

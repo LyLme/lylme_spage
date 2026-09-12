@@ -42,6 +42,9 @@ if ($sqlvn < $filevn) {
         saveSetting('copyright',  $conf['copyright'] . '<script src="/assets/js/svg.js"></script>'); //注入旧版svg图标
         $version = 'v2.6.0';
     }
+    if ($sqlvn < 20700) {
+        $version = 'v2.7.0';
+    }
     // 执行SQL语句
     if (!empty($sql)) {
         $sqlStatements = explode(';', $sql);

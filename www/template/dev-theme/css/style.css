@@ -1,0 +1,326 @@
+/**
+ * 开发包devTheme 主题样式
+ * 纯原生 CSS，无任何框架依赖；改 :root 里的变量即可换肤
+ * 移动端只有一个断点：768px
+ *
+ * @version 1.0.0
+ */
+
+/* ===== 主题变量：改这里就能换风格 ===== */
+:root {
+    --theme-color: #2f6fed;
+    /* 主色（后台可配） */
+    --text-color: #333;
+    --text-muted: #ffffff;
+    --card-bg: rgba(255, 255, 255, .92);
+    --card-radius: 12px;
+    --card-shadow: 0 2px 12px rgba(0, 0, 0, .08);
+    --gap: 12px;
+    --link-cols: 4;
+    /* 列表列数（后台可配） */
+}
+
+/* ===== 基础 ===== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font: 14px/1.6 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--text-color);
+    background-repeat: no-repeat;
+    /* 不循环（不重复） */
+    background-size: auto auto;
+    /* 不缩放（原始尺寸） */
+    background-attachment: fixed;
+    /* 固定，不随页面滚动 */
+    background-position: center center;
+    /* 居中显示，可按需调整 */
+}
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* ===== 顶部导航 ===== */
+.site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: #ffffff;
+    backdrop-filter: blur(8px);
+}
+
+.site-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.site-logo img {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+}
+
+.site-nav ul {
+    display: flex;
+    gap: 20px;
+}
+
+.site-nav a {
+    color: var(--text-color);
+}
+
+.site-nav a:hover {
+    color: var(--theme-color);
+}
+
+/* ===== 主体 ===== */
+.site-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 24px;
+}
+
+/* 时间显示 / 随机一言（背景图上的文字） */
+.clock,
+.yan {
+    margin-bottom: 16px;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .35);
+}
+
+.clock-time {
+    display: block;
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: 2px;
+}
+
+.clock-date {
+    font-size: 13px;
+    opacity: .9;
+}
+
+/* ===== 搜索区 ===== */
+.search {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto 32px;
+}
+
+.search-form {
+    display: flex;
+    height: 46px;
+    overflow: hidden;
+    background: #fff;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+}
+
+.search-input {
+    flex: 1;
+    padding: 0 20px;
+    border: 0;
+    outline: 0;
+    font-size: 15px;
+    background: transparent;
+}
+
+.search-btn {
+    width: 92px;
+    border: 0;
+    cursor: pointer;
+    font-size: 15px;
+    color: #fff;
+    background: var(--theme-color);
+}
+
+.search-btn:hover {
+    opacity: .9;
+}
+
+/* 搜索引擎列表：radio 隐藏，用兄弟选择器做选中态 */
+.search-engines {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 16px;
+}
+
+.engine {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    color: #fff;
+    background: #ffffffeb;
+    padding: 5px 8px;
+    border-radius: 8px;
+}
+
+.engine input {
+    display: none;
+}
+
+.engine svg,
+.engine img {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+
+.engine-name {
+    color: var(--engine-color, #fff);
+    opacity: .75;
+}
+
+.engine input:checked+svg,
+.engine input:checked+img {
+    transform: scale(1.15);
+}
+
+.engine input:checked~.engine-name {
+    opacity: 1;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+/* ===== 公告 ===== */
+.notice {
+    max-width: 900px;
+    margin: 0 auto 24px;
+    padding: 12px 16px;
+    text-align: center;
+    background: rgba(255, 255, 255, .9);
+    border-radius: var(--card-radius);
+}
+/* ===== 链接列表 ===== */
+.links {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 分组卡片：网格布局，列数由 --link-cols 控制 */
+.link-group {
+    display: grid;
+    grid-template-columns: repeat(var(--link-cols), 1fr);
+    align-content: start;
+    gap: var(--gap);
+    padding: 18px;
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+}
+
+/* 分组标题占满整行 */
+.group-title {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.group-title svg,
+.group-title img {
+    width: 18px;
+    height: 18px;
+}
+
+.link-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.link-item:hover {
+    background: rgba(0, 0, 0, .04);
+}
+
+.link-item:hover .link-name {
+    color: var(--theme-color);
+}
+
+.link-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.link-icon svg,
+.link-icon img {
+    width: 20px;
+    height: 20px;
+}
+
+.link-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* ===== 底部 ===== */
+.site-footer {
+    padding: 24px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.site-footer a {
+    margin: 0 4px;
+}
+
+/* ===== 移动端 ===== */
+@media (max-width: 768px) {
+    .site-header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px 16px;
+    }
+
+    .site-nav ul {
+        gap: 14px;
+        font-size: 13px;
+    }
+
+    .site-main {
+        padding: 28px 16px;
+    }
+
+    .clock-time {
+        font-size: 28px;
+    }
+
+    .link-group {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

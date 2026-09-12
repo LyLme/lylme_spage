@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 if (ob_get_level() === 0) {
     ob_start();
 }
@@ -29,17 +28,20 @@ if (!file_exists($commonFile) || !is_file($commonFile)) {
 require $commonFile;
 
 if (session_status() === PHP_SESSION_NONE) {
-    session_start([
-        'use_strict_mode' => version_compare(PHP_VERSION, '5.5.2', '>=') ? 1 : 0,
-        'use_cookies' => 1,
-        'use_only_cookies' => 1,
-        'cookie_httponly' => true,
-        'cookie_samesite' => version_compare(PHP_VERSION, '7.3.0', '>=') ? 'Strict' : null
-    ]);
+    if (version_compare(PHP_VERSION, '5.5.2', '>=')) {
+        ini_set('session.use_strict_mode', '1');
+    }
+    ini_set('session.use_cookies', '1');
+    ini_set('session.use_only_cookies', '1');
+    ini_set('session.cookie_httponly', '1');
+    if (version_compare(PHP_VERSION, '7.3.0', '>=')) {
+        ini_set('session.cookie_samesite', 'Strict');
+    }
+    session_start_safe();
 }
 
 if (!isset($_SESSION['list'])) {
-    $_SESSION['list'] = [];
+    $_SESSION['list'] = array();
 }
 
 // 引入模板文件

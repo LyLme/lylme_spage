@@ -9,6 +9,8 @@ function truncateText(s, max) {
 
 //当前检测弹窗 ID（0 表示未打开），删除失效链接后用于保留弹窗
 var _checkWin = 0;
+//检测控制对象：stopped 关闭时置 true 停止后续检测；pending 存放进行中的请求以便统一中断
+var _checkCtrl = null;
 var _currentListQuery = (function () {
     return window.location.search.replace(/^\?/, '');
 })();
@@ -529,49 +531,103 @@ $(document).on('click', '.tips', function () {
     });
 });
 
-//检测当前分组链接是否失效（服务端 geturl 抓取优先，客户端 fetch 兜底）
-//已选中链接时只检测选中的，未选中时检测整个分组
-var check_group_links = function () {
+//收集待检测链接
+// scope = 'group' 当前分组（当前表格展示的分组行）
+// scope = 'checked' 选中的链接（勾选的复选框）
+// scope = 'all' 整站所有链接（allLinks 为服务端返回的全站链接数组）
+function buildItems(scope, allLinks) {
     var items = [];
-    var seen = {};
-    var checked = get_check(); // 用户勾选的链接 ID
-    var onlyChecked = checked.length > 0; //有选中项则只检测选中的
-    $('#link tr').each(function () {
-        var $td = $(this).find('.link-url');
-        var u = $td.attr('data-url');
-        if (u) {
-            var id = $(this).find('input[name="link-check"]').val();
-            if (seen[id]) return; //按 ID 去重，防止重复行被收集两次
-            if (onlyChecked && checked.indexOf(id) == -1) return; //已选中时跳过未勾选的
-            seen[id] = 1;
+    if (scope === 'group' || scope === 'checked') {
+        var checked = get_check();
+        var onlyChecked = (scope === 'checked');
+        var seen = {};
+        $('#link tr').each(function () {
+            var $td = $(this).find('.link-url');
+            var u = $td.attr('data-url');
+            if (u) {
+                var id = $(this).find('input[name="link-check"]').val();
+                if (seen[id]) return; //按 ID 去重，防止重复行被收集两次
+                if (onlyChecked && checked.indexOf(id) == -1) return; //已选中时跳过未勾选的
+                seen[id] = 1;
+                items.push({
+                    el: $td[0],
+                    id: id,
+                    url: u,
+                    name: $.trim($(this).find('td.lylme').text())
+                });
+            }
+        });
+    } else if (scope === 'all') {
+        (allLinks || []).forEach(function (lk) {
             items.push({
-                el: $td[0],
-                id: id,
-                url: u,
-                name: $.trim($(this).find('td.lylme').text())
+                el: null, //整站链接不在当前表格中，无对应行引用
+                id: String(lk.id),
+                url: lk.url,
+                name: lk.name || ''
             });
-        }
-    });
-    if (items.length == 0) {
-        layer.msg(onlyChecked ? '所选链接已失效或不存在' : '当前分组没有链接');
-        return false;
+        });
     }
+    return items;
+}
+
+//失效检测：弹窗选择检测范围（当前分组 / 选中的链接 / 整站所有链接）
+var check_group_links = function () {
+    var checkedCount = get_check().length;
+    // 当前分组（当前表格展示的分组行）链接数量
+    var groupCount = 0;
+    $('#link tr').each(function () {
+        if ($(this).find('.link-url').attr('data-url')) groupCount++;
+    });
+
+    var scopeHtml = '' +
+        '<div style="font-size:14px;font-weight:600;margin-bottom:10px">请选择检测范围：</div>' +
+        '<div style="font-size:16px;line-height:2.3;font-weight:bold">' +
+        '<label style="cursor:pointer;display:block"><input type="radio" name="check_scope" value="group" checked> 当前分组（<b>' + groupCount + '</b> 个链接）</label>' +
+        '<label style="cursor:pointer;display:block"><input type="radio" name="check_scope" value="checked"' + (checkedCount == 0 ? ' disabled' : '') + '> 选中的链接（<b>' + checkedCount + '</b> 个' + (checkedCount == 0 ? '，未选择' : '') + '）</label>' +
+        '<label style="cursor:pointer;display:block"><input type="radio" name="check_scope" value="all">  整站所有链接</label>' +
+        '</div>' +
+        '<hr style="margin:12px 0">' +
+        '<div style="text-align:left;font-size:13px;line-height:2.1;padding:0 6px">' +
+        '<div><i class="mdi mdi-check-circle text-success"></i> 优先由<b>服务器抓取</b>检测</div>' +
+        '<div><i class="mdi mdi-check-circle text-success"></i>  服务器抓取失败的链接，再用<b>本地客户端</b>检测连通性(用于检测内网链接)</div>' +
+        '<div><i class="mdi mdi-check-circle text-success"></i>  <b>可能误判失效：</b>反爬拦截、证书异常、HTTPS 页面检测 http 链接等</div>' +
+        '<div><i class="mdi mdi-check-circle text-success"></i> 链接较多时耗时较长，请耐心等待</div>' +
+        '</div>';
+
     $.alert({
-        title: '<i class="mdi mdi-connection text-primary"></i> 开始检测',
+        title: '<i class="mdi mdi-radar text-primary"></i> 链接失效检测',
         width: window.innerWidth < 768 ? '94%' : '600px',
-        content: '<div style="text-align:center;font-size:16px;font-weight:600;margin-bottom:12px">即将检测 <span class="text-primary">' + items.length + '</span> 个链接' + (onlyChecked ? '（已选中）' : '（整个分组）') + '</div>' +
-            '<div style="text-align:left;font-size:13px;line-height:2.1;padding:0 6px">' +
-            '<div><i class="mdi mdi-check-circle text-success"></i> 优先由<b>服务器抓取</b>检测</div>' +
-            '<div><i class="mdi mdi-sync text-info"></i> 服务器抓取失败的链接，再用<b>本地客户端</b>检测连通性(用于检测内网链接)</div>' +
-            '<div><i class="mdi mdi-alert text-primary"></i> <b>可能误判失效：</b>反爬拦截、证书异常、HTTPS 页面检测 http 链接等</div>' +
-            '<div><i class="mdi mdi-timer-sand text-info"></i> 链接较多时耗时较长，请耐心等待</div>' +
-            '</div>',
+        content: scopeHtml,
         buttons: {
             confirm: {
                 text: '开始检测',
                 btnClass: 'btn-primary',
                 action: function () {
-                    do_check(items);
+                    var scope = this.$content.find('input[name="check_scope"]:checked').val();
+                    if (!scope) {
+                        layer.msg('请选择检测范围');
+                        return false; //保留弹窗
+                    }
+                    if (scope === 'checked') {
+                        var items = buildItems('checked');
+                        if (items.length == 0) { layer.msg('所选链接已失效或不存在'); return false; }
+                        do_check(items, '选中的链接');
+                    } else if (scope === 'group') {
+                        var items = buildItems('group');
+                        if (items.length == 0) { layer.msg('当前分组没有链接'); return false; }
+                        do_check(items, '当前分组');
+                    } else if (scope === 'all') {
+                        // 整站所有链接：异步拉取全站数据后再检测
+                        lightyear.loading('show');
+                        getXhr('ajax_link.php?submit=all_links', 20000).then(function (data) {
+                            lightyear.loading('hide');
+                            if (!data || data.code != 200 || !data.links || data.links.length == 0) {
+                                layer.msg('未获取到全站链接');
+                                return;
+                            }
+                            do_check(buildItems('all', data.links), '整站所有链接');
+                        });
+                    }
                 }
             },
             cancel: {
@@ -583,11 +639,14 @@ var check_group_links = function () {
 };
 
 //执行检测（进度条 + 逐条状态，完成后打标记保留，不隐藏）
-function do_check(items) {
+// scopeLabel 仅用于弹窗标题展示，标识本次检测范围
+function do_check(items, scopeLabel) {
     var total = items.length;
     var ok = 0, fail = 0, done = 0;
     var results = [];
     var timeout = 10000; //10秒超时视为无法访问
+    // 初始化检测控制对象：关闭窗口时置 stopped=true 停止后续检测并中断进行中的请求
+    _checkCtrl = { stopped: false, pending: [] };
 
     // 移动端适配：窄屏使用百分比尺寸，避免弹窗超出屏幕
     var isMobile = window.innerWidth < 768;
@@ -604,7 +663,7 @@ function do_check(items) {
     });
     var checkWin = layer.open({
         type: 1,
-        title: '正在检测链接',
+        title: '正在检测链接' + (scopeLabel ? '（' + scopeLabel + '）' : ''),
         area: winArea,
         closeBtn: 0,
         shadeClose: false,
@@ -621,8 +680,8 @@ function do_check(items) {
     var $bar = $('#layui-layer' + checkWin + ' .progress-bar');
     var $list = $('#layui-layer' + checkWin + ' #check_list');
     $list.html(listHtml);
-    // 检测完成后显示的关闭按钮（二次确认，防止误点丢失检测结果）
-    $('#layui-layer' + checkWin + ' #check_footer').html('<button class="btn btn-primary btn-sm" onclick="closeCheckWin(' + checkWin + ')"><i class="mdi mdi-close"></i> 关闭窗口</button>');
+    // 关闭按钮：从检测开始即显示，可随时关闭窗口（二次确认，防止误点丢失检测结果）
+    $('#layui-layer' + checkWin + ' #check_footer').html('<button class="btn btn-primary btn-sm" onclick="closeCheckWin(' + checkWin + ')"><i class="mdi mdi-close"></i> 关闭窗口</button>').show();
 
     var setItem = function (i, html) {
         $('#layui-layer' + checkWin + ' #check_item_' + i).html(html);
@@ -637,6 +696,7 @@ function do_check(items) {
     };
     // 单条检测完成：更新状态标记、统计并推进并发
     var doneOne = function (it, isOk, title) {
+        if (_checkCtrl && _checkCtrl.stopped) return; // 窗口已关闭，丢弃结果
         active--;
         done++;
         if (isOk) {
@@ -662,8 +722,10 @@ function do_check(items) {
         if (done >= total) {
             // 完成后保留进度窗口：表格行打标记，弹窗标题/进度条更新，显示关闭按钮
             results.forEach(function (r) {
-                $(r.el).find('font').remove();
-                $(r.el).html('<font color="red">[无法访问] ' + $(r.el).text().trim() + '</font>');
+                if (r.el) { //整站链接无对应表格行，跳过行内标记
+                    $(r.el).find('font').remove();
+                    $(r.el).html('<font color="red">[无法访问] ' + $(r.el).text().trim() + '</font>');
+                }
             });
             updateBar();
             layer.title('检测完成：共 ' + total + ' 个，可访问 ' + ok + ' 个，无法访问 ' + fail + ' 个', checkWin);
@@ -674,6 +736,7 @@ function do_check(items) {
 
     // 单个链接检测：先服务器抓取，失败再用本地客户端 fetch 兜底
     var checkOne = function (it) {
+        if (_checkCtrl && _checkCtrl.stopped) return; // 已关闭，不再发起检测
         var testUrl = it.url;
         //HTTPS 页面请求 http 链接会被浏览器按混合内容拦截，自动升级为 https 重试
         if (location.protocol === 'https:' && /^http:\/\//i.test(testUrl)) {
@@ -682,6 +745,7 @@ function do_check(items) {
         setItem(it._i, '<font color="#ffc107"><i class="mdi mdi-sync mdi-spin"></i> [服务器检测]</font> <span class="text-muted">' + esc(testUrl) + '</span>');
         // 第一步：服务端抓取（同批量导入 geturl），能取到即判定可访问并显示标题
         getXhr('ajax_link.php?submit=geturl&url=' + encodeURIComponent(testUrl), timeout).then(function (data) {
+            if (_checkCtrl && _checkCtrl.stopped) return;
             if (data && (data.code == 200 || data.title)) {
                 doneOne(it, true, data.title);
                 return;
@@ -692,15 +756,17 @@ function do_check(items) {
             var timer = setTimeout(function () {
                 if (controller) controller.abort();
             }, timeout);
+            if (controller) _checkCtrl.pending.push({ abort: function () { try { controller.abort(); } catch (e) { } } });
             fetch(testUrl, { method: 'GET', mode: 'no-cors', cache: 'no-store', signal: controller ? controller.signal : undefined })
-                .then(function () { clearTimeout(timer); doneOne(it, true, ''); })
-                .catch(function () { clearTimeout(timer); doneOne(it, false, ''); });
+                .then(function () { clearTimeout(timer); if (!(_checkCtrl && _checkCtrl.stopped)) doneOne(it, true, ''); })
+                .catch(function () { clearTimeout(timer); if (!(_checkCtrl && _checkCtrl.stopped)) doneOne(it, false, ''); });
         });
     };
 
     //限制并发数为 5，逐个推进直到全部完成
     var idx = 0, active = 0;
     var startNext = function () {
+        if (_checkCtrl && _checkCtrl.stopped) return;
         while (active < 5 && idx < total) {
             var item = items[idx++];
             active++;
@@ -720,6 +786,7 @@ function esc(s) {
 }
 
 //发起带超时的 GET 请求并解析 JSON（与批量导入 getXhr 一致），失败返回 null
+//若处于检测中，将 XHR 登记到 _checkCtrl.pending，便于关闭窗口时统一中断
 function getXhr(url, timeout) {
     return new Promise(function (resolve) {
         var xhr = new XMLHttpRequest();
@@ -731,6 +798,9 @@ function getXhr(url, timeout) {
         };
         xhr.onerror = xhr.ontimeout = function () { resolve(null); };
         xhr.send();
+        if (typeof _checkCtrl !== 'undefined' && _checkCtrl) {
+            _checkCtrl.pending.push({ abort: function () { try { xhr.abort(); } catch (e) { } } });
+        }
     });
 }
 
@@ -791,16 +861,22 @@ function del_failed_link(id) {
 }
 
 //关闭检测结果弹窗（二次确认，防止误点丢失检测结果）
+//关闭时立即置 stopped=true 并中断所有进行中的请求，避免后台继续占用带宽
 function closeCheckWin(checkWin) {
     $.alert({
         title: '关闭检测窗口',
-        content: '确定要关闭检测窗口吗？关闭后本次检测结果将丢失。',
+        content: '确定要关闭检测窗口吗？关闭后将停止检测并丢失本次检测结果。',
         width: window.innerWidth < 768 ? '92%' : 'auto',
         buttons: {
             confirm: {
                 text: '关闭',
                 btnClass: 'btn-primary',
                 action: function () {
+                    if (_checkCtrl) {
+                        _checkCtrl.stopped = true;
+                        _checkCtrl.pending.forEach(function (p) { try { p.abort(); } catch (e) { } });
+                        _checkCtrl.pending = [];
+                    }
                     layer.close(checkWin);
                     _checkWin = 0;
                 }
