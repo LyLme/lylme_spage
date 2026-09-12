@@ -1,2 +1,5 @@
 # text files stored as LF 
 * text=auto eol=lf 
+/.github export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
