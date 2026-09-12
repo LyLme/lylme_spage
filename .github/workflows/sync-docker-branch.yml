@@ -69,6 +69,16 @@ jobs:
           fi
           echo "✓ 校验通过：www/ 与 master 源码完全一致"
 
+          # 让 docker 分支也带上构建工作流。
+          # GitHub 的 push 事件只读取「被推送分支上」的工作流文件：docker 分支若没有
+          # .github/workflows/docker-build.yml，那么 master → docker 的同步推送不会
+          # 触发任何镜像构建（配上 SYNC_PAT 也一样）。
+          # rsync 用 --exclude='.github/' 跳过了整个目录，所以这里单独补这一份，
+          # 既避免 docker 分支混入 php-lint / release 等只在 master 有意义的工作流，
+          # 又保证两边内容不会漂移。
+          mkdir -p .github/workflows
+          cp /tmp/master_src/.github/workflows/docker-build.yml .github/workflows/docker-build.yml
+
           git worktree remove /tmp/master_src --force
 
           # 移除安装锁，保证镜像首次运行可自动初始化
@@ -77,7 +87,7 @@ jobs:
       - name: 检测是否有变更
         id: diff
         run: |
-          git add -A www
+          git add -A www .github/workflows/docker-build.yml
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "www/ 无变化，跳过提交"
