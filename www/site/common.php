@@ -1,8 +1,12 @@
 <?php
 include("../include/common.php");
-$id = intval($_GET['id']);
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 session_start();
+// 直接访问详情页时会话中可能没有 list（首页才会初始化），PHP8 下后续 array_unshift(null) 会致命错误导致 500
+if (!isset($_SESSION['list']) || !is_array($_SESSION['list'])) {
+    $_SESSION['list'] = array();
+}
 $pwd_list = $_SESSION['list'];
 if (!empty($pwd_list)) {
     $whereClause = '';
@@ -50,6 +54,9 @@ if (!empty($site['link_desc']) && !empty($site['link_keywords'])) {
     );
 } else {
     $info = get_head($site['url'], true);
+    if (!is_array($info)) {
+        $info = array('title' => '', 'description' => '', 'keywords' => '');
+    }
     // 采集链接描述/关键词并写入数据库，采集失败写入"无"，下次访问不再采集
     $save_desc = !empty($info['description']) ? trim(strip_tags($info['description'])) : '无';
     $save_kw = !empty($info['keywords']) ? trim(strip_tags($info['keywords'])) : '无';
@@ -96,6 +103,6 @@ $url_id  =  $site['id']; //链接ID
 $url_name = strip_tags($site['name']); //链接名称
 $url_herf = $site['url']; //链接地址
 $url_icon = $site['icon']; //链接图标
-$url_title = strip_tags($info['title']); //网站标题(在线获取)
+$url_title = strip_tags(isset($info['title']) ? $info['title'] : ''); //网站标题(在线获取)
 $url_keywords = !empty($site['link_keywords']) ? $site['link_keywords'] : (isset($info['keywords']) ? $info['keywords'] : ""); //网站关键词(数据库优先)
 $url_description = isset($tmp_description) ? $tmp_description : "暂无网站描述"; //网站描述(优先本地)在线获取
