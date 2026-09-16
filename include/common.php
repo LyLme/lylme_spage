@@ -87,22 +87,21 @@ if (!defined('SQLITE')) {
     }
 
     if (!empty($missingFields)) {
-        // 数据库配置不完整
+        // 数据库配置不完整，重定向到安装页面
         $errorMsg = '数据库配置无效：请编辑config.php配置数据库或删除install/install.lock文件重新安装本程序';
-        exit('<h3>' . htmlspecialchars($errorMsg, ENT_QUOTES, 'UTF-8') . '</h3>');
 
-        // 重定向到安装页面
         if (!headers_sent()) {
-            // 使用绝对路径重定向
             $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
             $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
-            $redirectUrl = "{$protocol}://{$host}/install/";
-            header('Location: ' . $redirectUrl);
-        } else {
-            // 如果header已发送，使用meta重定向
-            echo '<meta http-equiv="refresh" content="0;url=/install/">';
+            header('Location: ' . "{$protocol}://{$host}/install/");
+            exit();
         }
-        exit();
+
+        // header 已发送，使用 HTML 提示 + meta 跳转兜底
+        exit(
+            '<h3>' . htmlspecialchars($errorMsg, ENT_QUOTES, 'UTF-8') . '</h3>' .
+            '<meta http-equiv="refresh" content="0;url=/install/">'
+        );
     }
 }
 

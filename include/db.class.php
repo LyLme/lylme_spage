@@ -172,6 +172,9 @@ class DBPdo extends DBBase
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES => false,
                 ]);
+
+                // 显式设置排序规则为 utf8mb4_unicode_ci（PDO DSN 不支持 collation 参数）
+                $this->link->exec("SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'");
             }
         } catch (PDOException $e) {
             $this->last_error = $e->getMessage();
@@ -287,8 +290,9 @@ class DBMysqli extends DBBase
             die($this->last_error);
         }
 
-        // 设置字符集
+        // 设置字符集与排序规则为 utf8mb4_unicode_ci
         mysqli_set_charset($this->link, 'utf8mb4');
+        mysqli_query($this->link, "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'");
 
         // 兼容旧版PHP
         if (version_compare(PHP_VERSION, '8.0.0', '<')) {
@@ -387,7 +391,7 @@ if ($enable_old_mysql) {
             }
 
             mysql_select_db($db_name, $this->link);
-            mysql_query("SET NAMES 'utf8mb4'", $this->link);
+            mysql_query("SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'", $this->link);
 
             return true;
         }
