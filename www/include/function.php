@@ -453,7 +453,7 @@ function rearr($data, $arr)
         '{group_icon}' => isset($data['group_icon']) ? $data['group_icon'] : '',
         '{link_id}' => isset($data['id']) ? $data['id'] : (isset($data['link_id']) ? $data['link_id'] : ''),
         '{link_name}' => isset($data['name']) ? $data['name'] : '',
-        '{link_name_text}' => isset($data['name']) ? strip_tags($data['name']) : '',
+        '{link_name_text}' => isset($data['name']) ? htmlspecialchars(strip_tags($data['name']), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', false) : '',
         '{link_desc}' => isset($data['link_desc']) ? $data['link_desc'] : '',
     ];
 
