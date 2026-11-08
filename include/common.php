@@ -20,25 +20,16 @@ if (!defined('PHP_VERSION_ID')) {
 }
 
 // 设置错误报告级别
-if (defined('DEBUG') && DEBUG === true) {
-    error_reporting(E_ALL);
-    ini_set('display_errors', '1');
-    ini_set('display_startup_errors', '1');
-
-    // PHP 8.0+ 移除 E_DEPRECATED
-    if (version_compare(PHP_VERSION, '8.0.0', '>=')) {
-        error_reporting(E_ALL & ~E_DEPRECATED);
-    }
-} else {
-    // PHP 8.2+ 移除 E_DEPRECATED
-    $error_levels = E_ALL & ~E_NOTICE & ~E_STRICT;
-    if (version_compare(PHP_VERSION, '8.0.0', '>=')) {
-        $error_levels &= ~E_DEPRECATED;
-    }
-    error_reporting($error_levels);
-    ini_set('display_errors', '0');
-    ini_set('display_startup_errors', '0');
+// PHP 8.0+ 起 E_DEPRECATED 不再包含在错误报告内；E_STRICT 常量（值 2048）自 PHP 8.4 起被弃用，
+// 因此统一用数值常量组装错误级别，避免在 8.4+ 上触发 Deprecated 提示
+$isDebug = defined('DEBUG') && DEBUG === true;
+$errorLevels = $isDebug ? E_ALL : (E_ALL & ~E_NOTICE & ~2048);
+if (version_compare(PHP_VERSION, '8.0.0', '>=')) {
+    $errorLevels &= ~E_DEPRECATED;
 }
+error_reporting($errorLevels);
+ini_set('display_errors', $isDebug ? '1' : '0');
+ini_set('display_startup_errors', $isDebug ? '1' : '0');
 
 
 
