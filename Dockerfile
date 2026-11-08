@@ -1,7 +1,7 @@
 # LyLme Spage Docker Image - All-in-One
-# Apache + PHP 8.2 + MariaDB (内置)
+# Apache + PHP 8.2.35 + MariaDB (内置)
 
-FROM php:8.2-apache-bookworm
+FROM php:8.2.35-apache-bookworm
 
 LABEL org.opencontainers.image.title="LyLme Spage" \
       org.opencontainers.image.description="六零导航页 - 简洁高效的上网导航" \
