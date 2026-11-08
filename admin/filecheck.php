@@ -45,7 +45,8 @@ function compareMd5s($originalMd5s, $currentMd5s, $whitelist = [])
         'tampered' => [],
         'new' => [],
         'normal' => [],
-        'mutable' => []
+        'mutable' => [],
+        'unknown' => []
     ];
 
     // 确保参数是数组类型
@@ -53,7 +54,16 @@ function compareMd5s($originalMd5s, $currentMd5s, $whitelist = [])
         return $result;
     }
 
+    // 官方版本文件为空/不可用，无法比对，本地文件统一标记为“未知”
     if (empty($originalMd5s)) {
+        foreach (array_keys($currentMd5s) as $filePath) {
+            $filePath = str_replace('\\', '/', $filePath);
+            if (in_array($filePath, $whitelist)) {
+                $result['mutable'][] = $filePath;
+            } else {
+                $result['unknown'][] = $filePath;
+            }
+        }
         return $result;
     }
 
@@ -94,24 +104,31 @@ $currentMd5s = generateFileMd5s($targetDirectory, $whitelist);
 $remoteJsonUrl = 'https://cdn.lylme.com/lylme_spage/file_check/?v=' . VERSION;
 
 $remoteJson = str_replace('/admin/', '/' . ADMIN_PATH . '/', get_curl($remoteJsonUrl));
+$comparisonResult = array();
 if ($remoteJson === false) {
-    $remotemsg =  '<div class="alert alert-danger" role="alert"><i class="mdi mdi-cloud-alert mdi-alert-icon"></i>无法获取远程配置，请检查服务器是否支持外网访问</div>';
+    // 情况1：无法连接远端（网络异常或服务器不支持外网访问）
+    $remotemsg =  '<div class="alert alert-danger" role="alert"><i class="mdi mdi-cloud-alert mdi-alert-icon"></i>无法获取远程配置，请检查服务器是否支持外网访问。以下仅列出本地文件，状态为“未知”</div>';
+    // 远端不可用时，仅展示本地文件列表，全部标记为“未知”
+    $comparisonResult = compareMd5s(array(), $currentMd5s, $whitelist);
 } else {
-    $remotemsg = '<div class="alert alert-success" role="alert">
+    $originalMd5s = json_decode($remoteJson, true);
+
+    // 确保originalMd5s是数组
+    if (!is_array($originalMd5s) || empty($originalMd5s)) {
+        // 情况2：远端有响应，但返回内容无效或版本文件为空，无法进行比对
+        $remotemsg = '<div class="alert alert-warning" role="alert"><i class="mdi mdi-cloud-alert mdi-alert-icon"></i>远程版本文件无效或为空，无法进行对比校验。以下仅列出本地文件，状态为“未知”</div>';
+        $comparisonResult = compareMd5s(array(), $currentMd5s, $whitelist);
+    } else {
+        // 情况3：远端版本文件可用，正常进行完整性比对
+        $remotemsg = '<div class="alert alert-success" role="alert">
                             <div class="alert-stat">
                               <div><i class="mdi mdi-shield-check mdi-alert-icon"></i><b>当前文件版本：v' . VERSION . '</b></div>
                               <a href="https://gitee.com/LyLme/lylme_spage" target="_blank" class="alert-link">[查看源代码]</a>
                             </div>
                             <span class="alert-help">该页面用于检查网站脚本文件是否被篡改器<br>该页面仅供参考，需注意"篡改"和"冗余"文件是否存在恶意代码并从上方链接对比替换<br>排除完成后建议修改后台账号密码和数据库密码<br>该功能需要服务器支持外网访问</span>
                         </div>';
-    $originalMd5s = json_decode($remoteJson, true);
-
-    // 确保originalMd5s是数组
-    if (!is_array($originalMd5s)) {
-        $originalMd5s = [];
+        $comparisonResult = compareMd5s($originalMd5s, $currentMd5s, $whitelist);
     }
-
-    $comparisonResult = compareMd5s($originalMd5s, $currentMd5s, $whitelist);
 }
 ?>
 <main class="lyear-layout-content">
@@ -145,6 +162,9 @@ if ($remoteJson === false) {
                                                     break;
                                                 case 'mutable':
                                                     $statusy =  '可变';
+                                                    break;
+                                                case 'unknown':
+                                                    $statusy =  '未知';
                                                     break;
                                                 default:
                                                     $statusy =  '正常';
@@ -186,6 +206,14 @@ if ($remoteJson === false) {
 
     tr.filecheck_normal td {
         color: green;
+    }
+
+    tr.filecheck_mutable td {
+        color: #6c757d;
+    }
+
+    tr.filecheck_unknown td {
+        color: #999;
     }
     td a {
         color: #4d5259 !important;
